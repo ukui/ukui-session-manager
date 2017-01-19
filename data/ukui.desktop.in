@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=UKUI
+_Comment=This session logs you into UKUI
+Exec=ukui-session
+TryExec=ukui-session
+Icon=
+Type=Application
+DesktopNames=UKUI
+Keywords=launch;UKUI;desktop;session;
+

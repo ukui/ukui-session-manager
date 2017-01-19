@@ -1,0 +1,5 @@
+ukui-session-manager (1.16.0.1) yakkety; urgency=medium
+
+  * Fork from mate-session-manager，rename to ukui-session-manager
+
+ -- yilei <yilei@kylinos.cn>  Wed, 28 Dec 2016 09:21:59 +0800

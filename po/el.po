@@ -1,0 +1,581 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Efstathios Iosifidis <iefstathios@gmail.com>, 2015
+# Jennie Petoumenou <epetoumenou@gmail.com>, 2009
+# Kostas Papadimas <pkst@gmx.net>, 2003
+# Kostas Papadimas <pkst@gnome.org>, 2003, 2005, 2006, 2008
+# Nikos Charonitakis <frolix68@yahoo.gr>, 2003
+# Sarantis Paskalis <paskalis@di.uoa.gr>, 2000
+# Simos Xenitellis <simos@hellug.gr>, , 1999, 2000, 2001, 2002
+# Spiros Papadimitriou <spapadim+@cs.cmu.edu>, 1999
+# thunk <thunk77@gmail.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: UKUI Desktop Environment\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-29 16:47+0800\n"
+"PO-Revision-Date: 2015-12-14 10:18+0000\n"
+"Last-Translator: monsta <monsta@inbox.ru>\n"
+"Language-Team: Greek (http://www.wiki.ukui.org/trans/ukui/UKUI/language/el/)\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../capplet/gsm-app-dialog.c:126
+msgid "Select Command"
+msgstr "Επιλογή εντολής"
+
+#: ../capplet/gsm-app-dialog.c:198
+msgid "Add Startup Program"
+msgstr "Προσθήκη προγραμμάτων εκκίνησης"
+
+#: ../capplet/gsm-app-dialog.c:202
+msgid "Edit Startup Program"
+msgstr "Επεξεργασία προγραμμάτων εκκίνησης"
+
+#: ../capplet/gsm-app-dialog.c:487
+msgid "The startup command cannot be empty"
+msgstr "Η εντολή εκκίνησης δε μπορεί να είναι κενή"
+
+#: ../capplet/gsm-app-dialog.c:493
+msgid "The startup command is not valid"
+msgstr "Η εντολή εκκίνησης δεν είναι έγκυρη"
+
+#: ../capplet/gsm-properties-dialog.c:519
+msgid "Enabled"
+msgstr "Ενεργό"
+
+#: ../capplet/gsm-properties-dialog.c:531
+msgid "Icon"
+msgstr "Εικονίδιο"
+
+#: ../capplet/gsm-properties-dialog.c:543
+msgid "Program"
+msgstr "Πρόγραμμα"
+
+#: ../capplet/gsm-properties-dialog.c:742
+msgid "Startup Applications Preferences"
+msgstr "Προτιμήσεις προγραμμάτων εκκίνησης "
+
+#: ../capplet/gsp-app.c:274
+msgid "No name"
+msgstr "Χωρίς όνομα"
+
+#: ../capplet/gsp-app.c:280
+msgid "No description"
+msgstr "Χωρίς περιγραφή"
+
+#: ../capplet/main.c:36 ../ukui-session/main.c:590
+msgid "Version of this application"
+msgstr "Η έκδοση αυτής της εφαρμογής"
+
+#: ../capplet/main.c:55
+msgid "Could not display help document"
+msgstr "Δεν είναι δυνατή η προβολή του αρχείου βοήθειας"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:1
+msgid "Current session start time"
+msgstr "Χρόνος εκκίνησης της τρέχουσας συνεδρίας"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:2
+msgid "Unix time of the start of the current session."
+msgstr "Ώρα UNIX κατά την αρχή της τρέχουσας συνεδρίας."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:3
+msgid "Save sessions"
+msgstr "Αποθήκευση συνεδριών"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:4
+#, fuzzy
+msgid "If enabled, ukui-session will save the session automatically."
+msgstr "Αν ενεργοποιηθεί, το mate-session θα αποθηκεύει αυτόματα τη συνεδρία."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:5
+msgid "Logout prompt"
+msgstr "Ειδοποίηση αποσύνδεσης"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:6
+#, fuzzy
+msgid "If enabled, ukui-session will prompt the user before ending a session."
+msgstr ""
+"Αν ενεργοποιηθεί, η συνεδρία του mate θα ειδοποιεί το χρήστη πριν το τέλος "
+"της συνεδρίας."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:7
+msgid "Logout timeout"
+msgstr ""
+
+#: ../data/org.ukui.session.gschema.xml.in.h:8
+msgid ""
+"If logout prompt is enabled, this set the timeout in seconds before logout "
+"automatically. If 0, automatic logout is disabled."
+msgstr ""
+
+#: ../data/org.ukui.session.gschema.xml.in.h:9
+msgid "Time before session is considered idle"
+msgstr "Χρόνος μέχρι να θεωρηθεί η συνεδρία αδρανής"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:10
+msgid ""
+"The number of minutes of inactivity before the session is considered idle."
+msgstr "Ο αριθμός των λεπτών αδράνειας μέχρι να θεωρηθεί η συνεδρία αδρανής."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:11
+msgid "Default session"
+msgstr "Προεπιλεγμένη συνεδρία"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:12
+msgid "List of applications that are part of the default session."
+msgstr "Λίστα με εφαρμογές που είναι μέρος της προεπιλεγμένης συνεδρίας."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:13
+msgid "Required session components"
+msgstr "Απαιτούμενα στοιχεία συνεδρίας"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:14
+#, fuzzy
+msgid ""
+"List of components that are required as part of the session. (Each element "
+"names a key under \"/org/ukui/desktop/session/required_components\"). The "
+"Startup Applications preferences tool will not normally allow users to "
+"remove a required component from the session, and the session manager will "
+"automatically add the required components back to the session at login time "
+"if they do get removed."
+msgstr ""
+"Μια λίστα με εξαρτήματα που είναι απαιτούμενα μέρη της συνεδρίας. (Κάθε "
+"στοιχείο ονομάζει ένα κλειδί στο \"/desktop/mate/session/required_components"
+"\"). Οι προτιμήσεις Προγραμμάτων Εκκίνησης κανονικά δεν επιτρέπουν στους "
+"χρήστες να αφαιρέσουν απαραίτητα εξαρτήματα από τη συνεδρία και ο "
+"διαχειριστής συνεδρίας θα τα προσθέσει αυτόματα κατά την επόμενη είσοδο του "
+"χρήστη αν αυτά έχουν αφαιρεθεί."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:15
+msgid "Control gnome compatibility component startup"
+msgstr ""
+
+#: ../data/org.ukui.session.gschema.xml.in.h:16
+msgid "Control which compatibility components to start."
+msgstr ""
+
+#: ../data/org.ukui.session.gschema.xml.in.h:17
+#: ../data/ukui-wm.desktop.in.in.h:1
+msgid "Window Manager"
+msgstr "Διαχειριστής παραθύρων"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:18
+msgid ""
+"The window manager is the program that draws the title bar and borders "
+"around windows, and allows you to move and resize windows."
+msgstr ""
+"Ο διαχειριστής παραθύρων είναι το πρόγραμμα εκείνο που σχεδιάζει την γραμμή "
+"τίτλων και τα περιγράμματα γύρω από τα παράθυρα, και σας επιτρέπει να "
+"μετακινείτε και να αλλάζετε το μέγεθος των παραθύρων."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:19
+msgid "Panel"
+msgstr "Πίνακας εφαρμογών"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:20
+msgid ""
+"The panel provides the bar at the top or bottom of the screen containing "
+"menus, the window list, status icons, the clock, etc."
+msgstr ""
+"Ο πίνακας εφαρμογών παρέχει την μπάρα στο πάνω ή το κάτω μέρος της οθόνης "
+"που περιέχει τα μενού, τη λίστα παραθύρων, τα εικονίδια κατάστασης, το "
+"ρολόι, κτλ."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:21
+msgid "File Manager"
+msgstr "Διαχειριστής αρχείων"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:22
+msgid ""
+"The file manager provides the desktop icons and allows you to interact with "
+"your saved files."
+msgstr ""
+"Ο διαχειριστής αρχείων παρέχει τα εικονίδια της επιφάνειας εργασίας σας και "
+"σας επιτρέπει να διαχειρίζεστε τα αποθηκευμένα σας αρχεία."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:23
+msgid "Dock"
+msgstr ""
+
+#: ../data/org.ukui.session.gschema.xml.in.h:24
+msgid ""
+"A dock provides a dockable area, similar to a panel, for launching and "
+"switching applications."
+msgstr ""
+
+#: ../data/ukui.desktop.in.h:1
+msgid "UKUI"
+msgstr ""
+
+#: ../data/ukui.desktop.in.h:2
+#, fuzzy
+msgid "This session logs you into UKUI"
+msgstr "Αυτή η συνεδρία σας συνδέει στο MATE"
+
+#: ../data/gsm-inhibit-dialog.ui.h:1
+msgid "<b>Some programs are still running:</b>"
+msgstr "<b>Μερικά προγράμματα εκτελούνται ακόμα:</b>"
+
+#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:635
+msgid ""
+"Waiting for the program to finish.  Interrupting the program may cause you "
+"to lose work."
+msgstr ""
+"Αναμονή τερματισμού του προγράμματος. Η διακοπή του προγράμματος μπορεί να "
+"προκαλέσει απώλεια δεδομένων."
+
+#: ../data/ukui-session-properties.desktop.in.in.h:1
+msgid "Startup Applications"
+msgstr "Προγράμματα εκκίνησης"
+
+#: ../data/ukui-session-properties.desktop.in.in.h:2
+msgid "Choose what applications to start when you log in"
+msgstr "Επιλέξτε τα προγράμματα που θα εκκινούνται όταν συνδέεστε στο σύστημα"
+
+#: ../data/session-properties.ui.h:1
+msgid "Additional startup _programs:"
+msgstr "Πρόσθετα _προγράμματα εκκίνησης:"
+
+#: ../data/session-properties.ui.h:2
+msgid "Startup Programs"
+msgstr "Εκκίνηση προγραμμάτων"
+
+#: ../data/session-properties.ui.h:3
+msgid "_Automatically remember running applications when logging out"
+msgstr "_Αυτόματη απομνημόνευση εκτελούμενων εφαρμογών κατά την αποσύνδεση"
+
+#: ../data/session-properties.ui.h:4
+msgid "_Remember Currently Running Application"
+msgstr "Α_πομνημόνευση εφαρμογών που εκτελούνται "
+
+#: ../data/session-properties.ui.h:5
+msgid "Options"
+msgstr "Επιλογές"
+
+#: ../data/session-properties.ui.h:6
+msgid "Browse…"
+msgstr "Περιήγηση…"
+
+#: ../data/session-properties.ui.h:7
+msgid "Comm_ent:"
+msgstr "_Σχόλιο:"
+
+#: ../data/session-properties.ui.h:8
+msgid "Co_mmand:"
+msgstr "_Εντολή:"
+
+#: ../data/session-properties.ui.h:9
+msgid "_Name:"
+msgstr "_Όνομα:"
+
+#: ../egg/eggdesktopfile.c:153
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "Το αρχείο δεν είναι ένα έγκυρο αρχείο .desktop"
+
+#: ../egg/eggdesktopfile.c:173
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "Μη αναγνωρίσιμη έκδοση αρχείου desktop '%s'"
+
+#: ../egg/eggdesktopfile.c:957
+#, c-format
+msgid "Starting %s"
+msgstr "Εκκινείται %s"
+
+#: ../egg/eggdesktopfile.c:1098
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "Η εφαρμογή δεν δέχεται έγγραφα από την γραμμή εντολών"
+
+#: ../egg/eggdesktopfile.c:1166
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "Μη αναγνωρίσιμη επιλογή εκκίνησης: %d"
+
+#: ../egg/eggdesktopfile.c:1365
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr ""
+"Δεν είναι δυνατό το πέρασμα URIs σε μια εγγραφή επιφάνειας εργασίας "
+"'Type=Link'"
+
+#: ../egg/eggdesktopfile.c:1386
+#, c-format
+msgid "Not a launchable item"
+msgstr "Δεν είναι ένα εκκινήσιμο αντικείμενο"
+
+#: ../egg/eggsmclient.c:226
+msgid "Disable connection to session manager"
+msgstr "Απενεργοποίηση σύνδεσης με το διαχειριστή συνεδρίας"
+
+#: ../egg/eggsmclient.c:229
+msgid "Specify file containing saved configuration"
+msgstr "Καθορισμός αρχείου που περιέχει αποθηκευμένες ρυθμίσεις"
+
+#: ../egg/eggsmclient.c:229
+msgid "FILE"
+msgstr "FILE"
+
+#: ../egg/eggsmclient.c:232
+msgid "Specify session management ID"
+msgstr "Καθορίζει ένα όνομα συνεδρίας προς φόρτωση"
+
+#: ../egg/eggsmclient.c:232
+msgid "ID"
+msgstr "ID"
+
+#: ../egg/eggsmclient.c:253
+msgid "Session management options:"
+msgstr "Επιλογές διαχείρισης συνεδρίας:"
+
+#: ../egg/eggsmclient.c:254
+msgid "Show session management options"
+msgstr "Προβολή επιλογών διαχείρισης συνεδρίας"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:253
+#, c-format
+msgid "Icon '%s' not found"
+msgstr "Το εικονίδιο '%s'  δεν βρέθηκε "
+
+#: ../ukui-session/gsm-inhibit-dialog.c:583
+msgid "Unknown"
+msgstr "Άγνωστο"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:634
+msgid "A program is still running:"
+msgstr "Ένα πρόγραμμα εκτελείται ήδη:"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:638
+msgid "Some programs are still running:"
+msgstr "Μερικά προγράμματα εκτελούνται ακόμη:"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:639
+msgid ""
+"Waiting for programs to finish.  Interrupting these programs may cause you "
+"to lose work."
+msgstr ""
+"Αναμονή για το κλείσιμο των προγραμμάτων. Η διακοπή αυτών των προγραμμάτων "
+"μπορεί να προκαλέσει απώλεια δεδομένων."
+
+#: ../ukui-session/gsm-inhibit-dialog.c:869
+msgid "Switch User Anyway"
+msgstr "Αλλαγή χρήστη ούτως ή άλλως"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:872
+msgid "Log Out Anyway"
+msgstr "Αποσύνδεση ούτως ή άλλως"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:875
+msgid "Suspend Anyway"
+msgstr "Αναστολή ούτως ή άλλως"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:878
+msgid "Hibernate Anyway"
+msgstr "Αδρανοποίηση ούτως ή άλλως"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:881
+msgid "Shut Down Anyway"
+msgstr "Κλείσιμο ούτως ή άλλως"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:884
+msgid "Reboot Anyway"
+msgstr "Επανεκκίνηση ούτως ή άλλως"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:892
+msgid "Lock Screen"
+msgstr "Κλείδωμα οθόνης"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:895
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: ../ukui-session/gsm-logout-dialog.c:333
+#, c-format
+msgid "You will be automatically logged out in %d second"
+msgid_plural "You will be automatically logged out in %d seconds"
+msgstr[0] "Θα αποσυνδεθείτε αυτόματα σε %d δευτερόλεπτα."
+msgstr[1] "Θα αποσυνδεθείτε αυτόματα σε %d δευτερόλεπτα."
+
+#: ../ukui-session/gsm-logout-dialog.c:341
+#, c-format
+msgid "This system will be automatically shut down in %d second"
+msgid_plural "This system will be automatically shut down in %d seconds"
+msgstr[0] "Το σύστημα θα κλείσει αυτόματα σε %d δευτερόλεπτα."
+msgstr[1] "Το σύστημα θα κλείσει αυτόματα σε %d δευτερόλεπτα."
+
+#: ../ukui-session/gsm-logout-dialog.c:387
+#, c-format
+msgid "You are currently logged in as \"%s\"."
+msgstr "Είστε συνδεδεμένος ως  \"%s\"."
+
+#: ../ukui-session/gsm-logout-dialog.c:467
+msgid "Log out of this system now?"
+msgstr "Να γίνει αποσύνδεση από το σύστημα τώρα;"
+
+#: ../ukui-session/gsm-logout-dialog.c:473
+msgid "_Switch User"
+msgstr "Α_λλαγή χρήστη"
+
+#: ../ukui-session/gsm-logout-dialog.c:482
+msgid "_Log Out"
+msgstr "Απο_σύνδεση"
+
+#: ../ukui-session/gsm-logout-dialog.c:488
+msgid "Shut down this system now?"
+msgstr "Να κλείσει το σύστημα τώρα;"
+
+#: ../ukui-session/gsm-logout-dialog.c:494
+msgid "S_uspend"
+msgstr "Α_ναστολή"
+
+#: ../ukui-session/gsm-logout-dialog.c:500
+msgid "_Hibernate"
+msgstr "Α_δρανοποίηση"
+
+#: ../ukui-session/gsm-logout-dialog.c:506
+msgid "_Restart"
+msgstr "Επα_νεκκίνηση"
+
+#: ../ukui-session/gsm-logout-dialog.c:516
+msgid "_Shut Down"
+msgstr "Κ_λείσιμο συστήματος"
+
+#: ../ukui-session/gsm-manager.c:1436 ../ukui-session/gsm-manager.c:2155
+msgid "Not responding"
+msgstr "Δεν ανταποκρίνεται"
+
+#. It'd be really surprising to reach this code: if we're here,
+#. * then the XSMP client already has set several XSMP
+#. * properties. But it could still be that SmProgram is not set.
+#.
+#: ../ukui-session/gsm-xsmp-client.c:566
+msgid "Remembered Application"
+msgstr ""
+
+#: ../ukui-session/gsm-xsmp-client.c:1204
+msgid "This program is blocking logout."
+msgstr "Αυτό το πρόγραμμα εμποδίζει την αποσύνδεση."
+
+#: ../ukui-session/gsm-xsmp-server.c:326
+msgid ""
+"Refusing new client connection because the session is currently being shut "
+"down\n"
+msgstr ""
+"Άρνηση σύνδεσης νέου πελάτη επειδή το σύστημα τερματίζεται αυτή τη στιγμή\n"
+
+#: ../ukui-session/gsm-xsmp-server.c:588
+#, c-format
+msgid "Could not create ICE listening socket: %s"
+msgstr "Αδυναμία δημιουργίας ICE listening socket: %s"
+
+#. Oh well, no X for you!
+#: ../ukui-session/gsm-util.c:356
+#, c-format
+msgid "Unable to start login session (and unable to connect to the X server)"
+msgstr ""
+"Αδυναμία εκκίνησης συνεδρίας με σύνδεση ( και αδυναμία σύνδεσης με "
+"εξυπηρετητή X)"
+
+#: ../ukui-session/main.c:587
+msgid "Override standard autostart directories"
+msgstr "Παράκαμψη τυπικών καταλόγων αυτόματης εκκίνησης"
+
+#: ../ukui-session/main.c:588
+msgid "Enable debugging code"
+msgstr "Ενεργοποίηση κώδικα εκσφαλμάτωσης"
+
+#: ../ukui-session/main.c:589
+msgid "Do not load user-specified applications"
+msgstr "Να μην φορτώνονται εφαρμογές καθορισμένες από τον χρήστη"
+
+#: ../ukui-session/main.c:610
+#, fuzzy
+msgid " - the UKUI session manager"
+msgstr "- Διαχείριση της συνεδρίας του MATE"
+
+#: ../tools/ukui-session-save.c:70
+msgid "Log out"
+msgstr "Αποσύνδεση"
+
+#: ../tools/ukui-session-save.c:71
+msgid "Log out, ignoring any existing inhibitors"
+msgstr "Αποσύνδεση, αγνοώντας όποιες παραμένουσες διεργασίες"
+
+#: ../tools/ukui-session-save.c:72
+msgid "Show logout dialog"
+msgstr "Προβολή διαλόγου αποσύνδεσης"
+
+#: ../tools/ukui-session-save.c:73
+msgid "Show shutdown dialog"
+msgstr "Προβολή διαλόγου κλεισίματος"
+
+#: ../tools/ukui-session-save.c:74
+msgid "Use dialog boxes for errors"
+msgstr "Χρήση κουτιών διαλόγων για σφάλματα"
+
+#. deprecated options
+#: ../tools/ukui-session-save.c:76
+msgid "Set the current session name"
+msgstr "Ορισμός του ονόματος της τρέχουσας συνεδρίας"
+
+#: ../tools/ukui-session-save.c:76
+msgid "NAME"
+msgstr "ΟΝΟΜΑ"
+
+#: ../tools/ukui-session-save.c:77
+msgid "Kill session"
+msgstr "Τερματισμός συνεδρίας"
+
+#: ../tools/ukui-session-save.c:78
+msgid "Do not require confirmation"
+msgstr "Να μην απαιτείται επιβεβαίωση"
+
+#. Okay, it wasn't the upgrade case, so now we can give up.
+#: ../tools/ukui-session-save.c:136 ../tools/ukui-session-save.c:151
+msgid "Could not connect to the session manager"
+msgstr "Αδύνατη η σύνδεση με το διαχειριστή συνεδρίας"
+
+#: ../tools/ukui-session-save.c:277
+msgid "Program called with conflicting options"
+msgstr "Το πρόγραμμα κλήθηκε με συγκρουόμενες επιλογές"
+
+#: ../tools/ukui-session-inhibit.c:116
+#, c-format
+msgid ""
+"%s [OPTION...] COMMAND\n"
+"\n"
+"Execute COMMAND while inhibiting some session functionality.\n"
+"\n"
+"  -h, --help        Show this help\n"
+"  --version         Show program version\n"
+"  --app-id ID       The application id to use\n"
+"                    when inhibiting (optional)\n"
+"  --reason REASON   The reason for inhibiting (optional)\n"
+"  --inhibit ARG     Things to inhibit, colon-separated list of:\n"
+"                    logout, switch-user, suspend, idle, automount\n"
+"\n"
+"If no --inhibit option is specified, idle is assumed.\n"
+msgstr ""
+
+#: ../tools/ukui-session-inhibit.c:170 ../tools/ukui-session-inhibit.c:180
+#: ../tools/ukui-session-inhibit.c:190
+#, c-format
+msgid "%s requires an argument\n"
+msgstr ""
+
+#: ../tools/ukui-session-inhibit.c:226
+#, c-format
+msgid "Failed to execute %s\n"
+msgstr "Αποτυχία εκτέλεσης %s\n"
+
+#~ msgid "MATE"
+#~ msgstr "MATE"

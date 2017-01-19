@@ -1,0 +1,23 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+capplet/gsm-app-dialog.c
+capplet/gsm-properties-dialog.c
+capplet/gsp-app.c
+capplet/main.c
+[type: gettext/gsettings]data/org.ukui.session.gschema.xml.in
+data/ukui.desktop.in
+data/ukui-wm.desktop.in.in
+[type: gettext/glade]data/gsm-inhibit-dialog.ui
+data/ukui-session-properties.desktop.in.in
+[type: gettext/glade]data/session-properties.ui
+egg/eggdesktopfile.c
+egg/eggsmclient.c
+ukui-session/gsm-inhibit-dialog.c
+ukui-session/gsm-logout-dialog.c
+ukui-session/gsm-manager.c
+ukui-session/gsm-xsmp-client.c
+ukui-session/gsm-xsmp-server.c
+ukui-session/gsm-util.c
+ukui-session/main.c
+tools/ukui-session-save.c
+tools/ukui-session-inhibit.c

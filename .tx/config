@@ -1,0 +1,7 @@
+[main]
+host = https://www.wiki.ukui.org/trans
+ 
+[UKUI.ukui-session-manager]
+file_filter = po/<lang>.po
+source_file = po/ukui-session-manager.pot
+source_lang = en

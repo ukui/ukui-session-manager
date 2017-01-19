@@ -1,0 +1,68 @@
+Source: ukui-session-manager
+Section: x11
+Priority: optional
+Maintainer:  Kylin Team <ukui@kylinos.cn>
+Uploaders: Mike Gabriel <sunweaver@debian.org>,
+           John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+           Stefano Karapetsas <stefano@karapetsas.com>,
+           Vangelis Mouhtsis <vangelis@gnugr.org>,
+           yilei <yilei@kylinos.cn>,
+Standards-Version: 3.9.8
+Build-Depends: debhelper (>= 9),
+               dpkg-dev (>= 1.16.1.1),
+               intltool,
+               libdbus-glib-1-dev,
+               libglib2.0-dev,
+               libgtk-3-dev (>= 3.14),
+               libice-dev,
+               libsm-dev,
+               libstartup-notification0-dev,
+               libsystemd-dev [linux-any],
+               libx11-dev,
+               libxau-dev,
+               libxext-dev,
+               libxrender-dev,
+               libxt-dev,
+               libxtst-dev,
+               ukui-common (>= 1.16),
+               xmlto,
+               xsltproc,
+Homepage: http://www.ukui.org/
+
+Package: ukui-session-manager
+Architecture: any
+Depends: dbus-x11,
+         ukui-desktop-common (>= 1.16.0),
+         ubuntu-ukui-default-settings | debian-ukui-default-settings (>= ${source:Version}),
+         upower,
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: peony,
+            ukwm,
+            ukui-panel,
+            ukui-polkit,
+            ukui-settings-daemon,
+Breaks: ukui-settings-daemon (<< 1.11.0),
+Provides: x-session-manager,
+Description: Session manager of the UKUI desktop environment
+ This package contains a session that can be started from a display
+ manager such as UIDM. It will load all necessary applications for a
+ full-featured user session.
+ .
+ The session manager also features the ability to save a running session
+ and restore it later.
+ .
+ This version is configured to start the UKUI desktop, based on the
+ UKUI panel.
+
+Package: debian-ukui-default-settings
+Breaks: ukui-session-manager (<< 1.10.2-4~),
+Architecture: all
+Depends: desktop-file-utils,
+         ${misc:Depends},
+Suggests: ukui-desktop-environment-core (>= 1.10.0),
+Conflicts: ubuntu-ukui-default-settings,
+Description: Default settings for UKUI on Debian
+ This package comes together with ukui-session-manager as provided by upstream
+ but does a little tweaking here and there to provide best experience of the
+ UKUI desktop environment on Debian systems.

@@ -1,0 +1,594 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Max Lyashuk <m_lyashuk@ukr.net>, 2015
+# Микола Ткач <Stuartlittle1970@gmail.com>, 2013
+# Oleh, 2015
+# Stefano Karapetsas <stefano@karapetsas.com>, 2012
+# Микола Ткач <Stuartlittle1970@gmail.com>, 2014-2016
+msgid ""
+msgstr ""
+"Project-Id-Version: UKUI Desktop Environment\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-29 16:47+0800\n"
+"PO-Revision-Date: 2016-03-29 18:10+0000\n"
+"Last-Translator: Микола Ткач <Stuartlittle1970@gmail.com>\n"
+"Language-Team: Ukrainian (http://www.wiki.ukui.org/trans/ukui/UKUI/language/uk/)\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: ../capplet/gsm-app-dialog.c:126
+msgid "Select Command"
+msgstr "Оберіть команду"
+
+#: ../capplet/gsm-app-dialog.c:198
+msgid "Add Startup Program"
+msgstr "Додати проґраму, що запускається на початку"
+
+#: ../capplet/gsm-app-dialog.c:202
+msgid "Edit Startup Program"
+msgstr "Змінити проґраму"
+
+#: ../capplet/gsm-app-dialog.c:487
+msgid "The startup command cannot be empty"
+msgstr "Початкова команда не може бути порожньою"
+
+#: ../capplet/gsm-app-dialog.c:493
+msgid "The startup command is not valid"
+msgstr "Початкова команда некоректна"
+
+#: ../capplet/gsm-properties-dialog.c:519
+msgid "Enabled"
+msgstr "Увімкнено"
+
+#: ../capplet/gsm-properties-dialog.c:531
+msgid "Icon"
+msgstr "Піктограма"
+
+#: ../capplet/gsm-properties-dialog.c:543
+msgid "Program"
+msgstr "Проґрама"
+
+#: ../capplet/gsm-properties-dialog.c:742
+msgid "Startup Applications Preferences"
+msgstr "Параметри проґрам, що запускаються"
+
+#: ../capplet/gsp-app.c:274
+msgid "No name"
+msgstr "Без назви"
+
+#: ../capplet/gsp-app.c:280
+msgid "No description"
+msgstr "Опис відсутній"
+
+#: ../capplet/main.c:36 ../ukui-session/main.c:590
+msgid "Version of this application"
+msgstr "Версія цієї проґрами"
+
+#: ../capplet/main.c:55
+msgid "Could not display help document"
+msgstr "Не вдається вивести довідку"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:1
+msgid "Current session start time"
+msgstr "Час запуску поточного сеансу"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:2
+msgid "Unix time of the start of the current session."
+msgstr "Unix-час запуску поточної сесії"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:3
+msgid "Save sessions"
+msgstr "Зберігати сеанси"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:4
+#, fuzzy
+msgid "If enabled, ukui-session will save the session automatically."
+msgstr ""
+"Якщо цей ключ встановлено, mate-session буде автоматично зберігати сеанс."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:5
+msgid "Logout prompt"
+msgstr "Попередження про завершення сеансу"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:6
+#, fuzzy
+msgid "If enabled, ukui-session will prompt the user before ending a session."
+msgstr ""
+"Якщо увімкнено, то mate-session буде попереджувати користувача перед "
+"завершенням сеансу."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:7
+msgid "Logout timeout"
+msgstr "Час сеансу завершився"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:8
+msgid ""
+"If logout prompt is enabled, this set the timeout in seconds before logout "
+"automatically. If 0, automatic logout is disabled."
+msgstr ""
+"Якщо увімкнено діялоґ виходу, це встановлює час очікування у секундах, перед "
+"автоматичним виходом. При значенні, що дорівнює 0 автоматичний вихід з "
+"сеансу вимкнуто. "
+
+#: ../data/org.ukui.session.gschema.xml.in.h:9
+msgid "Time before session is considered idle"
+msgstr "Проміжок часу, по закінченню якого сеанс буде вважатися неактивним"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:10
+msgid ""
+"The number of minutes of inactivity before the session is considered idle."
+msgstr ""
+"Проміжок часу у хвилинах, по закінченню якого сеанс вважатиметься неактивним."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:11
+msgid "Default session"
+msgstr "Типовий сеанс"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:12
+msgid "List of applications that are part of the default session."
+msgstr "Перелік проґрам, які є частиною типового сеансу."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:13
+msgid "Required session components"
+msgstr "Обов'язкові компоненти сеансу"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:14
+#, fuzzy
+msgid ""
+"List of components that are required as part of the session. (Each element "
+"names a key under \"/org/ukui/desktop/session/required_components\"). The "
+"Startup Applications preferences tool will not normally allow users to "
+"remove a required component from the session, and the session manager will "
+"automatically add the required components back to the session at login time "
+"if they do get removed."
+msgstr ""
+"Перелік компонентів, які потрібно запустити як частину цього сеансу. (Кожен "
+"елемент відповідає ключу у піддереві «/org/mate/desktop/session/"
+"required_components»). Додаток «Параметри додатків що запускаються», як "
+"правило, не дозволяє користувачу вилучати з сеансу потрібні компоненти, і "
+"керівник сеансів автоматично додасть потрібні компоненти, якщо вони були "
+"вилучені."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:15
+msgid "Control gnome compatibility component startup"
+msgstr "Контролюйте запуск компонентів сумісности gnome"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:16
+msgid "Control which compatibility components to start."
+msgstr "Перевірте які компоненти сумісности будуть запускатися"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:17
+#: ../data/ukui-wm.desktop.in.in.h:1
+msgid "Window Manager"
+msgstr "Керування вікнами"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:18
+msgid ""
+"The window manager is the program that draws the title bar and borders "
+"around windows, and allows you to move and resize windows."
+msgstr ""
+"Керівник вікнами - це проґрама, яка малює заголовок та оздоблення вікна і "
+"дозволяє пересувати вікна й змінювати їх розмір."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:19
+msgid "Panel"
+msgstr "Панель"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:20
+msgid ""
+"The panel provides the bar at the top or bottom of the screen containing "
+"menus, the window list, status icons, the clock, etc."
+msgstr ""
+"Панель надає смугу згори та знизу екрану, що містять меню, перелік вікон, "
+"піктограми стану, годинник тощо."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:21
+msgid "File Manager"
+msgstr "Керування файлами"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:22
+msgid ""
+"The file manager provides the desktop icons and allows you to interact with "
+"your saved files."
+msgstr ""
+"Керівник файлами надає піктограми стільниці та дозволяє працювати із "
+"збереженими файлами."
+
+#: ../data/org.ukui.session.gschema.xml.in.h:23
+msgid "Dock"
+msgstr "Док"
+
+#: ../data/org.ukui.session.gschema.xml.in.h:24
+msgid ""
+"A dock provides a dockable area, similar to a panel, for launching and "
+"switching applications."
+msgstr ""
+"Док надає закріплювану ділянку, схожу на панель, для запуску та перемикання "
+"між додатками."
+
+#: ../data/ukui.desktop.in.h:1
+msgid "UKUI"
+msgstr ""
+
+#: ../data/ukui.desktop.in.h:2
+#, fuzzy
+msgid "This session logs you into UKUI"
+msgstr "Це - сеанс входу у MATE"
+
+#: ../data/gsm-inhibit-dialog.ui.h:1
+msgid "<b>Some programs are still running:</b>"
+msgstr "<b>Деякі проґрами досі працюють:</b>"
+
+#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:635
+msgid ""
+"Waiting for the program to finish.  Interrupting the program may cause you "
+"to lose work."
+msgstr ""
+"Очікування завершення роботи проґрами.  Переривання роботи проґрами може "
+"призвести до втрати Ваших даних."
+
+#: ../data/ukui-session-properties.desktop.in.in.h:1
+msgid "Startup Applications"
+msgstr "Стартуючі проґрами"
+
+#: ../data/ukui-session-properties.desktop.in.in.h:2
+msgid "Choose what applications to start when you log in"
+msgstr "Оберіть проґрами, що запускаються при вході у сеанс"
+
+#: ../data/session-properties.ui.h:1
+msgid "Additional startup _programs:"
+msgstr "Додаткові по_чаткові проґрами для запуску:"
+
+#: ../data/session-properties.ui.h:2
+msgid "Startup Programs"
+msgstr "Початкові проґрами"
+
+#: ../data/session-properties.ui.h:3
+msgid "_Automatically remember running applications when logging out"
+msgstr "_Автоматично запам'ятовувати запущені проґрами при завершенні"
+
+#: ../data/session-properties.ui.h:4
+msgid "_Remember Currently Running Application"
+msgstr "_Запам'ятати запущені проґрами"
+
+#: ../data/session-properties.ui.h:5
+msgid "Options"
+msgstr "Параметри"
+
+#: ../data/session-properties.ui.h:6
+msgid "Browse…"
+msgstr "Огляд…"
+
+#: ../data/session-properties.ui.h:7
+msgid "Comm_ent:"
+msgstr "Ко_ментар:"
+
+#: ../data/session-properties.ui.h:8
+msgid "Co_mmand:"
+msgstr "_Команда:"
+
+#: ../data/session-properties.ui.h:9
+msgid "_Name:"
+msgstr "_Назва:"
+
+#: ../egg/eggdesktopfile.c:153
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "Файл не є дійсним файлом .desktop"
+
+#: ../egg/eggdesktopfile.c:173
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "Нерозпізнана версія десктоп-файлу «%s»"
+
+#: ../egg/eggdesktopfile.c:957
+#, c-format
+msgid "Starting %s"
+msgstr "Запускється «%s»"
+
+#: ../egg/eggdesktopfile.c:1098
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "Проґрама не приймає документи, вказані у командному рядку"
+
+#: ../egg/eggdesktopfile.c:1166
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "Невизначений параметр запуску: %d"
+
+#: ../egg/eggdesktopfile.c:1365
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr "Не можна передавати URI документів у десктоп-запис 'Type=Link'"
+
+#: ../egg/eggdesktopfile.c:1386
+#, c-format
+msgid "Not a launchable item"
+msgstr "Не є елементом, що запускається"
+
+#: ../egg/eggsmclient.c:226
+msgid "Disable connection to session manager"
+msgstr "Вимкнути з'єднання з керівником сеансами"
+
+#: ../egg/eggsmclient.c:229
+msgid "Specify file containing saved configuration"
+msgstr "Вказати файл, що містить збережені налаштування"
+
+#: ../egg/eggsmclient.c:229
+msgid "FILE"
+msgstr "ФАЙЛ"
+
+#: ../egg/eggsmclient.c:232
+msgid "Specify session management ID"
+msgstr "Вказати ідентифікатор керування сеансом"
+
+#: ../egg/eggsmclient.c:232
+msgid "ID"
+msgstr "ID"
+
+#: ../egg/eggsmclient.c:253
+msgid "Session management options:"
+msgstr "Параметри керування сеансами:"
+
+#: ../egg/eggsmclient.c:254
+msgid "Show session management options"
+msgstr "Показати параметри керування сеансами"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:253
+#, c-format
+msgid "Icon '%s' not found"
+msgstr "Піктограму «%s» не знайдено"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:583
+msgid "Unknown"
+msgstr "Невідомо"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:634
+msgid "A program is still running:"
+msgstr "Проґрама досі працює:"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:638
+msgid "Some programs are still running:"
+msgstr "Деякі проґрами досі працюють:"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:639
+msgid ""
+"Waiting for programs to finish.  Interrupting these programs may cause you "
+"to lose work."
+msgstr ""
+"Очікування завершення роботи проґрам.  Переривання цих проґрам може "
+"призвести до втрати Вашої роботи."
+
+#: ../ukui-session/gsm-inhibit-dialog.c:869
+msgid "Switch User Anyway"
+msgstr "Перемикнути користувача попри усе"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:872
+msgid "Log Out Anyway"
+msgstr "Усе одно вийти з системи"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:875
+msgid "Suspend Anyway"
+msgstr "Призупинити систему попри усе"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:878
+msgid "Hibernate Anyway"
+msgstr "Перевести у режим сну попри усе"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:881
+msgid "Shut Down Anyway"
+msgstr "Усе одно вимкнути"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:884
+msgid "Reboot Anyway"
+msgstr "Перезавантажити попри усе"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:892
+msgid "Lock Screen"
+msgstr "Заблокувати екран"
+
+#: ../ukui-session/gsm-inhibit-dialog.c:895
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: ../ukui-session/gsm-logout-dialog.c:333
+#, c-format
+msgid "You will be automatically logged out in %d second"
+msgid_plural "You will be automatically logged out in %d seconds"
+msgstr[0] "Сеанс буде автоматично завершено через %d секунду"
+msgstr[1] "Сеанс буде автоматично завершено через %d секунди"
+msgstr[2] "Сеанс буде автоматично завершено через %d секунд"
+
+#: ../ukui-session/gsm-logout-dialog.c:341
+#, c-format
+msgid "This system will be automatically shut down in %d second"
+msgid_plural "This system will be automatically shut down in %d seconds"
+msgstr[0] "Систему буде вимкнено автоматично через %d секунду"
+msgstr[1] "Систему буде вимкнено автоматично через %d секунди"
+msgstr[2] "Систему буде вимкнено автоматично через %d секунд"
+
+#: ../ukui-session/gsm-logout-dialog.c:387
+#, c-format
+msgid "You are currently logged in as \"%s\"."
+msgstr "Ви зареєстровані у системі як користувач «%s»."
+
+#: ../ukui-session/gsm-logout-dialog.c:467
+msgid "Log out of this system now?"
+msgstr "Вийти з системи зараз?"
+
+#: ../ukui-session/gsm-logout-dialog.c:473
+msgid "_Switch User"
+msgstr "_Перемикнути користувача"
+
+#: ../ukui-session/gsm-logout-dialog.c:482
+msgid "_Log Out"
+msgstr "_Завершити сеанс"
+
+#: ../ukui-session/gsm-logout-dialog.c:488
+msgid "Shut down this system now?"
+msgstr "Вимкнути систему зараз?"
+
+#: ../ukui-session/gsm-logout-dialog.c:494
+msgid "S_uspend"
+msgstr "_Режим очікування"
+
+#: ../ukui-session/gsm-logout-dialog.c:500
+msgid "_Hibernate"
+msgstr "_Режим сну"
+
+#: ../ukui-session/gsm-logout-dialog.c:506
+msgid "_Restart"
+msgstr "Пе_резавантажити"
+
+#: ../ukui-session/gsm-logout-dialog.c:516
+msgid "_Shut Down"
+msgstr "_Вимкнути"
+
+#: ../ukui-session/gsm-manager.c:1436 ../ukui-session/gsm-manager.c:2155
+msgid "Not responding"
+msgstr "Не відповідає"
+
+#. It'd be really surprising to reach this code: if we're here,
+#. * then the XSMP client already has set several XSMP
+#. * properties. But it could still be that SmProgram is not set.
+#.
+#: ../ukui-session/gsm-xsmp-client.c:566
+msgid "Remembered Application"
+msgstr "Запам’ятовані проґрами"
+
+#: ../ukui-session/gsm-xsmp-client.c:1204
+msgid "This program is blocking logout."
+msgstr "Ця проґрама блокує вихід з системи."
+
+#: ../ukui-session/gsm-xsmp-server.c:326
+msgid ""
+"Refusing new client connection because the session is currently being shut "
+"down\n"
+msgstr "Відхиляються нові клієнти, бо система знаходиться у стані вимикання.\n"
+
+#: ../ukui-session/gsm-xsmp-server.c:588
+#, c-format
+msgid "Could not create ICE listening socket: %s"
+msgstr "Не вдається створити сокет прослуховування ICE: %s"
+
+#. Oh well, no X for you!
+#: ../ukui-session/gsm-util.c:356
+#, c-format
+msgid "Unable to start login session (and unable to connect to the X server)"
+msgstr "Не вдається запустити сеанс (та з'єднатися з X-сервером)"
+
+#: ../ukui-session/main.c:587
+msgid "Override standard autostart directories"
+msgstr "Перевизначити стандартні каталоги автозапуску"
+
+#: ../ukui-session/main.c:588
+msgid "Enable debugging code"
+msgstr "Увімкнути зневаджувальний код"
+
+#: ../ukui-session/main.c:589
+msgid "Do not load user-specified applications"
+msgstr "Не завантажувати вибрані користувачем проґрами"
+
+#: ../ukui-session/main.c:610
+#, fuzzy
+msgid " - the UKUI session manager"
+msgstr " - керування сеансом MATE"
+
+#: ../tools/ukui-session-save.c:70
+msgid "Log out"
+msgstr "Завершити сеанс"
+
+#: ../tools/ukui-session-save.c:71
+msgid "Log out, ignoring any existing inhibitors"
+msgstr "Завершити сеанс, нехтуючи будь-які стримування"
+
+#: ../tools/ukui-session-save.c:72
+msgid "Show logout dialog"
+msgstr "Показати діялоґ завершення сеансу"
+
+#: ../tools/ukui-session-save.c:73
+msgid "Show shutdown dialog"
+msgstr "Показати діялоґ вимикання"
+
+#: ../tools/ukui-session-save.c:74
+msgid "Use dialog boxes for errors"
+msgstr "Використовувати діялоґові вікна для помилок"
+
+#. deprecated options
+#: ../tools/ukui-session-save.c:76
+msgid "Set the current session name"
+msgstr "Встановити назву поточного сеансу"
+
+#: ../tools/ukui-session-save.c:76
+msgid "NAME"
+msgstr "НАЗВА"
+
+#: ../tools/ukui-session-save.c:77
+msgid "Kill session"
+msgstr "Знищити сеанс"
+
+#: ../tools/ukui-session-save.c:78
+msgid "Do not require confirmation"
+msgstr "Не вимагати схвалення"
+
+#. Okay, it wasn't the upgrade case, so now we can give up.
+#: ../tools/ukui-session-save.c:136 ../tools/ukui-session-save.c:151
+msgid "Could not connect to the session manager"
+msgstr "Не вдається з'єднатися з керівником сеансами"
+
+#: ../tools/ukui-session-save.c:277
+msgid "Program called with conflicting options"
+msgstr "Проґраму запущено з несумісними параметрами"
+
+#: ../tools/ukui-session-inhibit.c:116
+#, c-format
+msgid ""
+"%s [OPTION...] COMMAND\n"
+"\n"
+"Execute COMMAND while inhibiting some session functionality.\n"
+"\n"
+"  -h, --help        Show this help\n"
+"  --version         Show program version\n"
+"  --app-id ID       The application id to use\n"
+"                    when inhibiting (optional)\n"
+"  --reason REASON   The reason for inhibiting (optional)\n"
+"  --inhibit ARG     Things to inhibit, colon-separated list of:\n"
+"                    logout, switch-user, suspend, idle, automount\n"
+"\n"
+"If no --inhibit option is specified, idle is assumed.\n"
+msgstr ""
+"%s [ОПЦІЯ...] КОМАНДА\n"
+"\n"
+"Виконати КОМАНДУ в той самий час інгібуючи деякі функції сеансу.\n"
+"\n"
+"  -h, --help        Показати довідку\n"
+"  --version         Показати версію проґрами\n"
+"  --app-id ID       ID додатку для використання\n"
+"                    при інгібуванні (опційно)\n"
+"  --reason REASON   Причина для інгібування (опційно)\n"
+"  --inhibit ARG     Речі для інгібування, розділений двокрапкою перелік:\n"
+"                    вихід, перемикач користувачів, призупинка, режим "
+"очікування, автомонтування\n"
+"\n"
+"If no --inhibit опція не вказана, означає бездіяльність.\n"
+
+#: ../tools/ukui-session-inhibit.c:170 ../tools/ukui-session-inhibit.c:180
+#: ../tools/ukui-session-inhibit.c:190
+#, c-format
+msgid "%s requires an argument\n"
+msgstr "%s потребує аргументу\n"
+
+#: ../tools/ukui-session-inhibit.c:226
+#, c-format
+msgid "Failed to execute %s\n"
+msgstr "Не вдалося виконати %s\n"
+
+#~ msgid "MATE"
+#~ msgstr "MATE"
