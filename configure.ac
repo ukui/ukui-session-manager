@@ -1,4 +1,4 @@
-AC_INIT([ukui-session-manager], [1.16.0], [http://www.ukui.org/])
+AC_INIT([ukui-session-manager], [0.9.0], [http://www.ukui.org/])
 AC_CONFIG_SRCDIR([ukui-session])
 AC_CONFIG_HEADERS([config.h])
 
