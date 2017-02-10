@@ -1,3 +1,9 @@
+ukui-session-manager (0.9.1) yakkety; urgency=medium
+
+  * fix spelling mistake in debian/control (upowe -> upower).
+
+ -- yilei <yilei@kylinos.cn>  Fri, 10 Feb 2017 11:07:38 +0800
+
 ukui-session-manager (0.9) yakkety; urgency=medium
 
   * Fork from mate-session-manager，rename to ukui-session-manager.

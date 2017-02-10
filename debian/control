@@ -30,7 +30,7 @@ Architecture: any
 Depends: dbus-x11,
          ukui-desktop-common,
          ubuntu-kylin-default-settings | debian-ukui-default-settings (>= ${source:Version}) | kylin-default-settings,
-         upowe,
+         upower,
          ${misc:Depends},
          ${shlibs:Depends},
 Recommends: peony,
