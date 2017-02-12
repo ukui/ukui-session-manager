@@ -1,3 +1,9 @@
+ukui-session-manager (1.0.0) zesty; urgency=medium
+
+  * New release. 
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Sun, 12 Feb 2017 15:03:42 +0800
+
 ukui-session-manager (0.9.1) yakkety; urgency=medium
 
   * fix spelling mistake in debian/control (upowe -> upower).
