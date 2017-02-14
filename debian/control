@@ -20,7 +20,7 @@ Build-Depends: debhelper (>= 9),
                libxrender-dev,
                libxt-dev,
                libxtst-dev,
-               ukui-common (>= 0.9),
+               mate-common,
                xmlto,
                xsltproc,
 Homepage: http://www.ukui.org/
@@ -28,16 +28,16 @@ Homepage: http://www.ukui.org/
 Package: ukui-session-manager
 Architecture: any
 Depends: dbus-x11,
-         ukui-desktop-common,
+         mate-desktop-common,
          ubuntu-kylin-default-settings | debian-ukui-default-settings (>= ${source:Version}) | kylin-default-settings,
          upower,
          ${misc:Depends},
          ${shlibs:Depends},
 Recommends: peony,
-            ukwm,
+            marco,
             ukui-panel,
-            ukui-polkit,
-            ukui-settings-daemon,
+            mate-polkit,
+            mate-settings-daemon,
 Provides: x-session-manager,
 Description: Session manager of the UKUI desktop environment
  This package contains a session that can be started from a display

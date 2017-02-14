@@ -12,14 +12,14 @@ PKG_NAME="ukui-session-manager"
     exit 1
 }
 
-which ukui-autogen || {
-    echo "You need to install ukui-common from the ukui Git"
+which mate-autogen || {
+    echo "You need to install mate-common from the ukui Git"
     exit 1
 }
 
 REQUIRED_AUTOMAKE_VERSION=1.9
-USE_UKUI2_MACROS=1
+USE_MATE2_MACROS=1
 USE_COMMON_DOC_BUILD=yes
 
-. ukui-autogen
+. mate-autogen
 
