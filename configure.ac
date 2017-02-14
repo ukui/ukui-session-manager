@@ -80,7 +80,7 @@ dnl ====================================================================
 AC_ARG_WITH(default-wm,
               [AC_HELP_STRING([--with-default-wm],
                               [Specify the default window manager @<:@default=ukwm@:>@])],,
-                              [with_default_wm="ukwm"])
+                              [with_default_wm="marco"])
 
 DEFAULT_WM=$with_default_wm
 AC_SUBST(DEFAULT_WM)
