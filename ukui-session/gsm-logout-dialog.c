@@ -48,7 +48,7 @@
 #define SESSION_SCHEMA     "org.ukui.session"
 #define KEY_LOGOUT_TIMEOUT "logout-timeout"
 
-#define LOCKDOWN_SCHEMA            "org.ukui.lockdown"
+#define LOCKDOWN_SCHEMA            "org.mate.lockdown"
 #define KEY_USER_SWITCHING_DISABLE "disable-user-switching"
 
 typedef enum {

@@ -87,7 +87,7 @@
 #define GDM_FLEXISERVER_ARGS    "--startnew Standard"
 
 
-#define LOCKDOWN_SCHEMA              "org.ukui.lockdown"
+#define LOCKDOWN_SCHEMA              "org.mate.lockdown"
 #define KEY_LOCK_DISABLE             "disable-lock-screen"
 #define KEY_LOG_OUT_DISABLE          "disable-log-out"
 #define KEY_USER_SWITCH_DISABLE      "disable-user-switching"

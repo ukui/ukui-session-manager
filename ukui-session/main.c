@@ -63,13 +63,13 @@
 #define ACCESSIBILITY_SCHEMA  "org.mate.interface"
 
 #define DEBUG_SCHEMA          "org.mate.debug"
-#define DEBUG_KEY             "ukui-session"
+#define DEBUG_KEY             "mate-session"
 
-#define VISUAL_SCHEMA         "org.ukui.applications-at-visual"
+#define VISUAL_SCHEMA         "org.mate.applications-at-visual"
 #define VISUAL_KEY            "exec"
 #define VISUAL_STARTUP_KEY    "startup"
 
-#define MOBILITY_SCHEMA       "org.ukui.applications-at-mobility"
+#define MOBILITY_SCHEMA       "org.mate.applications-at-mobility"
 #define MOBILITY_KEY          "exec"
 #define MOBILITY_STARTUP_KEY  "startup"
 
