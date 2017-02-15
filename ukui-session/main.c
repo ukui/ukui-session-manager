@@ -60,9 +60,9 @@
 #define GSM_REQUIRED_COMPONENTS_LIST_KEY "required-components-list"
 
 #define ACCESSIBILITY_KEY     "accessibility"
-#define ACCESSIBILITY_SCHEMA  "org.ukui.interface"
+#define ACCESSIBILITY_SCHEMA  "org.mate.interface"
 
-#define DEBUG_SCHEMA          "org.ukui.debug"
+#define DEBUG_SCHEMA          "org.mate.debug"
 #define DEBUG_KEY             "ukui-session"
 
 #define VISUAL_SCHEMA         "org.ukui.applications-at-visual"
@@ -73,7 +73,7 @@
 #define MOBILITY_KEY          "exec"
 #define MOBILITY_STARTUP_KEY  "startup"
 
-#define UKUI_INTERFACE_SCHEMA "org.ukui.interface"
+#define UKUI_INTERFACE_SCHEMA "org.mate.interface"
 #define GTK_OVERLAY_SCROLL    "gtk-overlay-scrolling"
 
 #define GSM_DBUS_NAME "org.gnome.SessionManager"

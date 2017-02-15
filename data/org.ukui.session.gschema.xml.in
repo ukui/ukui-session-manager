@@ -27,7 +27,7 @@
       <description>The number of minutes of inactivity before the session is considered idle.</description>
     </key>
     <key name="default-session" type="as">
-      <default>[ 'ukui-settings-daemon' ]</default>
+      <default>[ 'mate-settings-daemon' ]</default>
       <summary>Default session</summary>
       <description>List of applications that are part of the default session.</description>
     </key>

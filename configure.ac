@@ -79,7 +79,7 @@ dnl Option to set the default window manager
 dnl ====================================================================
 AC_ARG_WITH(default-wm,
               [AC_HELP_STRING([--with-default-wm],
-                              [Specify the default window manager @<:@default=ukwm@:>@])],,
+                              [Specify the default window manager @<:@default=marco@:>@])],,
                               [with_default_wm="marco"])
 
 DEFAULT_WM=$with_default_wm
