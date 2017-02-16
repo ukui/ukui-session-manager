@@ -4,7 +4,7 @@
  * Copyright (C) 2008, 2009 Novell, Inc.
  * Copyright (C) 2016 Tianjin KYLIN Information Technology Co., Ltd.
  *
- * Based on code from panel-keyfile.c (from ukui-panel)
+ * Based on code from panel-keyfile.c (from mate-panel)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as

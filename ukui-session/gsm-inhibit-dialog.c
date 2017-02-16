@@ -167,7 +167,7 @@ find_inhibitor (GsmInhibitDialog *dialog,
         return found_item;
 }
 
-/* copied from ukui-panel panel-util.c */
+/* copied from mate-panel panel-util.c */
 static char *
 _util_icon_remove_extension (const char *icon)
 {
@@ -186,7 +186,7 @@ _util_icon_remove_extension (const char *icon)
         return icon_no_extension;
 }
 
-/* copied from ukui-panel panel-util.c */
+/* copied from mate-panel panel-util.c */
 static char *
 _find_icon (GtkIconTheme  *icon_theme,
             const char    *icon_name,
@@ -232,7 +232,7 @@ _find_icon (GtkIconTheme  *icon_theme,
         return retval;
 }
 
-/* copied from ukui-panel panel-util.c */
+/* copied from mate-panel panel-util.c */
 static GdkPixbuf *
 _load_icon (GtkIconTheme  *icon_theme,
             const char    *icon_name,

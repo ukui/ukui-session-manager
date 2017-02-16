@@ -50,7 +50,7 @@
       <description>The window manager is the program that draws the title bar and borders around windows, and allows you to move and resize windows.</description>
     </key>
     <key name="panel" type="s">
-      <default>'ukui-panel'</default>
+      <default>'mate-panel'</default>
       <summary>Panel</summary>
       <description>The panel provides the bar at the top or bottom of the screen containing menus, the window list, status icons, the clock, etc.</description>
     </key>
