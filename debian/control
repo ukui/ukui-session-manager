@@ -35,7 +35,7 @@ Depends: dbus-x11,
          ${shlibs:Depends},
 Recommends: peony,
             marco,
-            ukui-panel,
+            mate-panel,
             mate-polkit,
             mate-settings-daemon,
 Provides: x-session-manager,
@@ -48,7 +48,7 @@ Description: Session manager of the UKUI desktop environment
  and restore it later.
  .
  This version is configured to start the UKUI desktop, based on the
- UKUI panel.
+ MATE panel.
 
 Package: debian-ukui-default-settings
 Architecture: all
