@@ -1,7 +1,3 @@
-# .bzr
-.bzr
-.bzrignore
-
 # Prerequisites
 *.d
 
@@ -53,3 +49,8 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+xmldocs.make
+omf.make
+compile
+# m4
+m4

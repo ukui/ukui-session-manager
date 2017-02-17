@@ -29,7 +29,7 @@ Package: ukui-session-manager
 Architecture: any
 Depends: dbus-x11,
          mate-desktop-common,
-         ubuntu-kylin-default-settings | debian-ukui-default-settings (>= ${source:Version}) | kylin-default-settings,
+         ubuntukylin-default-settings (>= 1.3.16),
          upower,
          ${misc:Depends},
          ${shlibs:Depends},
@@ -49,14 +49,3 @@ Description: Session manager of the UKUI desktop environment
  .
  This version is configured to start the UKUI desktop, based on the
  MATE panel.
-
-Package: debian-ukui-default-settings
-Architecture: all
-Depends: desktop-file-utils,
-         ${misc:Depends},
-Suggests: ukui-desktop-environment-core,
-Conflicts: ubuntu-ukui-default-settings,
-Description: Default settings for UKUI on Debian
- This package comes together with ukui-session-manager as provided by upstream
- but does a little tweaking here and there to provide best experience of the
- UKUI desktop environment on Debian systems.
