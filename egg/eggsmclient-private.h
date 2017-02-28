@@ -1,6 +1,5 @@
 /* eggsmclient-private.h
  * Copyright (C) 2007 Novell, Inc.
- * Copyright (C) 2016, Tianjin KYLIN Information Technology Co., Ltd.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

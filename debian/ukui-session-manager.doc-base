@@ -1,6 +1,7 @@
 Document: ukui-session-manager
 Title: UKUI Session documentation
-Author: William Jon McCann //HOW//
+Author: William Jon McCann
+Modified by: YiLei
 Abstract: This documents describes how UKUI sessions integrate with DBUS.
  This document has been derived from the former ukui session
  documentation.

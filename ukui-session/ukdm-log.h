@@ -21,8 +21,8 @@
  *
  */
 
-#ifndef __UIDM_LOG_H
-#define __UIDM_LOG_H
+#ifndef __UKDM_LOG_H
+#define __UKDM_LOG_H
 
 #include <stdarg.h>
 #include <glib.h>
@@ -31,26 +31,26 @@
 extern "C" {
 #endif
 
-void      uidm_log_default_handler (const gchar   *log_domain,
+void      ukdm_log_default_handler (const gchar   *log_domain,
                                    GLogLevelFlags log_level,
                                    const gchar   *message,
                                    gpointer      unused_data);
-void      uidm_log_set_debug       (gboolean       debug);
-void      uidm_log_toggle_debug    (void);
-void      uidm_log_init            (void);
-void      uidm_log_shutdown        (void);
+void      ukdm_log_set_debug       (gboolean       debug);
+void      ukdm_log_toggle_debug    (void);
+void      ukdm_log_init            (void);
+void      ukdm_log_shutdown        (void);
 
 /* compatibility */
-#define   uidm_fail               g_critical
-#define   uidm_error              g_warning
-#define   uidm_info               g_message
-#define   uidm_debug              g_debug
+#define   ukdm_fail               g_critical
+#define   ukdm_error              g_warning
+#define   ukdm_info               g_message
+#define   ukdm_debug              g_debug
 
-#define   uidm_assert             g_assert
-#define   uidm_assert_not_reached g_assert_not_reached
+#define   ukdm_assert             g_assert
+#define   ukdm_assert_not_reached g_assert_not_reached
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __UIDM_LOG_H */
+#endif /* __UKDM_LOG_H */

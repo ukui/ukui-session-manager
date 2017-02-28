@@ -2,7 +2,6 @@
  * gsp-keyfile.c: GKeyFile extensions
  *
  * Copyright (C) 2008, 2009 Novell, Inc.
- * Copyright (C) 2016 Tianjin KYLIN Information Technology Co., Ltd.
  *
  * Based on code from panel-keyfile.c (from mate-panel)
  *
@@ -23,8 +22,6 @@
  *
  * Authors:
  *        Vincent Untz <vuntz@gnome.org>
- * Modified by:
- *        yilei <yilei@kylinos.cn>
  */
 
 #include <string.h>

@@ -1,4 +1,4 @@
-/* uidm.h
+/* ukdm.h
  * Copyright (C) 2005 Raffaele Sandrini
  * Copyright (C) 2005 Red Hat, Inc.
  * Copyright (C) 2002, 2003 George Lebl
@@ -26,8 +26,8 @@
  *      Mark McLoughlin <mark@skynet.ie>
  */
 
-#ifndef __UIDM_LOGOUT_ACTION_H__
-#define __UIDM_LOGOUT_ACTION_H__
+#ifndef __UKDM_LOGOUT_ACTION_H__
+#define __UKDM_LOGOUT_ACTION_H__
 
 #include <glib.h>
 
@@ -36,24 +36,24 @@ extern "C" {
 #endif
 
 typedef enum {
-	UIDM_LOGOUT_ACTION_NONE = 0,
-	UIDM_LOGOUT_ACTION_SHUTDOWN = 1 << 0,
-	UIDM_LOGOUT_ACTION_REBOOT = 1 << 1,
-	UIDM_LOGOUT_ACTION_SUSPEND = 1 << 2
-} UIdmLogoutAction;
+	UKDM_LOGOUT_ACTION_NONE = 0,
+	UKDM_LOGOUT_ACTION_SHUTDOWN = 1 << 0,
+	UKDM_LOGOUT_ACTION_REBOOT = 1 << 1,
+	UKDM_LOGOUT_ACTION_SUSPEND = 1 << 2
+} UKdmLogoutAction;
 
-gboolean uidm_is_available(void);
+gboolean ukdm_is_available(void);
 
-void uidm_new_login(void);
+void ukdm_new_login(void);
 
-void uidm_set_logout_action(UIdmLogoutAction action);
+void ukdm_set_logout_action(UKdmLogoutAction action);
 
-UIdmLogoutAction uidm_get_logout_action(void);
+UKdmLogoutAction ukdm_get_logout_action(void);
 
-gboolean uidm_supports_logout_action(UIdmLogoutAction action);
+gboolean ukdm_supports_logout_action(UKdmLogoutAction action);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __UIDM_LOGOUT_ACTION_H__ */
+#endif /* __UKDM_LOGOUT_ACTION_H__ */

@@ -35,7 +35,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 
-#include "uidm-log.h"
+#include "ukdm-log.h"
 
 static gboolean initialized = FALSE;
 static int      syslog_levels = (G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL | G_LOG_LEVEL_WARNING);
@@ -100,7 +100,7 @@ log_level_to_priority_and_prefix (GLogLevelFlags log_level,
 }
 
 void
-uidm_log_default_handler (const gchar   *log_domain,
+ukdm_log_default_handler (const gchar   *log_domain,
                          GLogLevelFlags log_level,
                          const gchar   *message,
                          gpointer       unused_data)
@@ -120,7 +120,7 @@ uidm_log_default_handler (const gchar   *log_domain,
         }
 
         if (! initialized) {
-                uidm_log_init ();
+                ukdm_log_init ();
         }
 
         log_level_to_priority_and_prefix (log_level,
@@ -155,7 +155,7 @@ uidm_log_default_handler (const gchar   *log_domain,
 }
 
 void
-uidm_log_toggle_debug (void)
+ukdm_log_toggle_debug (void)
 {
         if (syslog_levels & G_LOG_LEVEL_DEBUG) {
                 g_debug ("Debugging disabled");
@@ -167,7 +167,7 @@ uidm_log_toggle_debug (void)
 }
 
 void
-uidm_log_set_debug (gboolean debug)
+ukdm_log_set_debug (gboolean debug)
 {
         if (debug) {
                 syslog_levels |= G_LOG_LEVEL_DEBUG;
@@ -179,12 +179,12 @@ uidm_log_set_debug (gboolean debug)
 }
 
 void
-uidm_log_init (void)
+ukdm_log_init (void)
 {
         const char *prg_name;
         int         options;
 
-        g_log_set_default_handler (uidm_log_default_handler, NULL);
+        g_log_set_default_handler (ukdm_log_default_handler, NULL);
 
         prg_name = g_get_prgname ();
 
@@ -199,7 +199,7 @@ uidm_log_init (void)
 }
 
 void
-uidm_log_shutdown (void)
+ukdm_log_shutdown (void)
 {
         closelog ();
         initialized = FALSE;

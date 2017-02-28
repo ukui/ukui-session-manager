@@ -41,43 +41,43 @@
 #include <X11/Xauth.h>
 #include <gdk/gdk.h>
 
-#include "uidm.h"
+#include "ukdm.h"
 
-#define UIDM_PROTOCOL_UPDATE_INTERVAL 1 /* seconds */
+#define UKDM_PROTOCOL_UPDATE_INTERVAL 1 /* seconds */
 
-#define UIDM_PROTOCOL_SOCKET_PATH "/var/run/uidm_socket"
+#define UKDM_PROTOCOL_SOCKET_PATH "/var/run/ukdm_socket"
 
-#define UIDM_PROTOCOL_MSG_CLOSE "CLOSE"
-#define UIDM_PROTOCOL_MSG_VERSION "VERSION"
-#define UIDM_PROTOCOL_MSG_AUTHENTICATE "AUTH_LOCAL"
-#define UIDM_PROTOCOL_MSG_QUERY_ACTION "QUERY_LOGOUT_ACTION"
-#define UIDM_PROTOCOL_MSG_SET_ACTION "SET_SAFE_LOGOUT_ACTION"
-#define UIDM_PROTOCOL_MSG_FLEXI_XSERVER "FLEXI_XSERVER"
+#define UKDM_PROTOCOL_MSG_CLOSE "CLOSE"
+#define UKDM_PROTOCOL_MSG_VERSION "VERSION"
+#define UKDM_PROTOCOL_MSG_AUTHENTICATE "AUTH_LOCAL"
+#define UKDM_PROTOCOL_MSG_QUERY_ACTION "QUERY_LOGOUT_ACTION"
+#define UKDM_PROTOCOL_MSG_SET_ACTION "SET_SAFE_LOGOUT_ACTION"
+#define UKDM_PROTOCOL_MSG_FLEXI_XSERVER "FLEXI_XSERVER"
 
-#define UIDM_ACTION_STR_NONE "NONE"
-#define UIDM_ACTION_STR_SHUTDOWN "HALT"
-#define UIDM_ACTION_STR_REBOOT "REBOOT"
-#define UIDM_ACTION_STR_SUSPEND "SUSPEND"
+#define UKDM_ACTION_STR_NONE "NONE"
+#define UKDM_ACTION_STR_SHUTDOWN "HALT"
+#define UKDM_ACTION_STR_REBOOT "REBOOT"
+#define UKDM_ACTION_STR_SUSPEND "SUSPEND"
 
 typedef struct {
 	int fd;
 	char* auth_cookie;
 
-	UIdmLogoutAction available_actions;
-	UIdmLogoutAction current_actions;
+	UKdmLogoutAction available_actions;
+	UKdmLogoutAction current_actions;
 
 	time_t last_update;
-} UIdmProtocolData;
+} UKdmProtocolData;
 
-static UIdmProtocolData uidm_protocol_data = {
+static UKdmProtocolData ukdm_protocol_data = {
 	0,
 	NULL,
-	UIDM_LOGOUT_ACTION_NONE,
-	UIDM_LOGOUT_ACTION_NONE,
+	UKDM_LOGOUT_ACTION_NONE,
+	UKDM_LOGOUT_ACTION_NONE,
 	0
 };
 
-static char* uidm_send_protocol_msg(UIdmProtocolData* data, const char* msg)
+static char* ukdm_send_protocol_msg(UKdmProtocolData* data, const char* msg)
 {
 	GString* retval;
 	char buf[256];
@@ -90,7 +90,7 @@ static char* uidm_send_protocol_msg(UIdmProtocolData* data, const char* msg)
 	{
 		g_free(p);
 
-		g_warning("Failed to send message to UIDM: %s", g_strerror(errno));
+		g_warning("Failed to send message to UKDM: %s", g_strerror(errno));
 
 		return NULL;
 	}
@@ -159,9 +159,9 @@ static char* get_display_number(void)
 	return retval;
 }
 
-static gboolean uidm_authenticate_connection(UIdmProtocolData* data)
+static gboolean ukdm_authenticate_connection(UKdmProtocolData* data)
 {
-	#define UIDM_MIT_MAGIC_COOKIE_LEN 16
+	#define UKDM_MIT_MAGIC_COOKIE_LEN 16
 
 	const char* xau_path;
 	FILE* f;
@@ -174,8 +174,8 @@ static gboolean uidm_authenticate_connection(UIdmProtocolData* data)
 		char* msg;
 		char* response;
 
-		msg = g_strdup_printf(UIDM_PROTOCOL_MSG_AUTHENTICATE " %s", data->auth_cookie);
-		response = uidm_send_protocol_msg(data, msg);
+		msg = g_strdup_printf(UKDM_PROTOCOL_MSG_AUTHENTICATE " %s", data->auth_cookie);
+		response = ukdm_send_protocol_msg(data, msg);
 		g_free(msg);
 
 		if (response && !strcmp(response, "OK"))
@@ -211,21 +211,21 @@ static gboolean uidm_authenticate_connection(UIdmProtocolData* data)
 		char* response;
 		int   i;
 
-		if (xau->family != FamilyLocal || strncmp(xau->number, display_number, xau->number_length) || strncmp(xau->name, "MIT-MAGIC-COOKIE-1", xau->name_length) || xau->data_length != UIDM_MIT_MAGIC_COOKIE_LEN)
+		if (xau->family != FamilyLocal || strncmp(xau->number, display_number, xau->number_length) || strncmp(xau->name, "MIT-MAGIC-COOKIE-1", xau->name_length) || xau->data_length != UKDM_MIT_MAGIC_COOKIE_LEN)
 		{
 			XauDisposeAuth(xau);
 			continue;
 		}
 
-		for (i = 0; i < UIDM_MIT_MAGIC_COOKIE_LEN; i++)
+		for (i = 0; i < UKDM_MIT_MAGIC_COOKIE_LEN; i++)
 		{
 			g_snprintf(buffer + 2 * i, 3, "%02x", (guint)(guchar) xau->data[i]);
 		}
 
 		XauDisposeAuth(xau);
 
-		msg = g_strdup_printf(UIDM_PROTOCOL_MSG_AUTHENTICATE " %s", buffer);
-		response = uidm_send_protocol_msg(data, msg);
+		msg = g_strdup_printf(UKDM_PROTOCOL_MSG_AUTHENTICATE " %s", buffer);
+		response = ukdm_send_protocol_msg(data, msg);
 		g_free(msg);
 
 		if (response && !strcmp(response, "OK"))
@@ -245,10 +245,10 @@ static gboolean uidm_authenticate_connection(UIdmProtocolData* data)
 
 	return retval;
 
-	#undef UIDM_MIT_MAGIC_COOKIE_LEN
+	#undef UKDM_MIT_MAGIC_COOKIE_LEN
 }
 
-static void uidm_shutdown_protocol_connection(UIdmProtocolData *data)
+static void ukdm_shutdown_protocol_connection(UKdmProtocolData *data)
 {
 	if (data->fd)
 	{
@@ -258,20 +258,20 @@ static void uidm_shutdown_protocol_connection(UIdmProtocolData *data)
 	data->fd = 0;
 }
 
-static gboolean uidm_init_protocol_connection(UIdmProtocolData* data)
+static gboolean ukdm_init_protocol_connection(UKdmProtocolData* data)
 {
 	struct sockaddr_un addr;
 	char* response;
 
 	g_assert(data->fd <= 0);
 
-	if (g_file_test(UIDM_PROTOCOL_SOCKET_PATH, G_FILE_TEST_EXISTS))
+	if (g_file_test(UKDM_PROTOCOL_SOCKET_PATH, G_FILE_TEST_EXISTS))
 	{
-		strcpy(addr.sun_path, UIDM_PROTOCOL_SOCKET_PATH);
+		strcpy(addr.sun_path, UKDM_PROTOCOL_SOCKET_PATH);
 	}
-	else if (g_file_test("/tmp/.uidm_socket", G_FILE_TEST_EXISTS))
+	else if (g_file_test("/tmp/.ukdm_socket", G_FILE_TEST_EXISTS))
 	{
-		strcpy(addr.sun_path, "/tmp/.uidm_socket");
+		strcpy(addr.sun_path, "/tmp/.ukdm_socket");
 	}
 	else
 	{
@@ -282,9 +282,9 @@ static gboolean uidm_init_protocol_connection(UIdmProtocolData* data)
 
 	if (data->fd < 0)
 	{
-		g_warning("Failed to create UIDM socket: %s", g_strerror(errno));
+		g_warning("Failed to create UKDM socket: %s", g_strerror(errno));
 
-		uidm_shutdown_protocol_connection(data);
+		ukdm_shutdown_protocol_connection(data);
 
 		return FALSE;
 	}
@@ -293,44 +293,44 @@ static gboolean uidm_init_protocol_connection(UIdmProtocolData* data)
 
 	if (connect(data->fd, (struct sockaddr*) &addr, sizeof(addr)) < 0)
 	{
-		g_warning("Failed to establish a connection with UIDM: %s", g_strerror(errno));
+		g_warning("Failed to establish a connection with UKDM: %s", g_strerror(errno));
 
-		uidm_shutdown_protocol_connection(data);
+		ukdm_shutdown_protocol_connection(data);
 
 		return FALSE;
 	}
 
-	response = uidm_send_protocol_msg(data, UIDM_PROTOCOL_MSG_VERSION);
+	response = ukdm_send_protocol_msg(data, UKDM_PROTOCOL_MSG_VERSION);
 
-	if (!response || strncmp(response, "UIDM ", strlen("UIDM ")) != 0)
+	if (!response || strncmp(response, "UKDM ", strlen("UKDM ")) != 0)
 	{
 		g_free(response);
 
-		g_warning("Failed to get protocol version from UIDM");
-		uidm_shutdown_protocol_connection(data);
+		g_warning("Failed to get protocol version from UKDM");
+		ukdm_shutdown_protocol_connection(data);
 
 		return FALSE;
 	}
 
 	g_free(response);
 
-	if (!uidm_authenticate_connection(data))
+	if (!ukdm_authenticate_connection(data))
 	{
-		g_warning("Failed to authenticate with UIDM");
-		uidm_shutdown_protocol_connection(data);
+		g_warning("Failed to authenticate with UKDM");
+		ukdm_shutdown_protocol_connection(data);
 		return FALSE;
 	}
 
 	return TRUE;
 }
 
-static void uidm_parse_query_response(UIdmProtocolData* data, const char* response)
+static void ukdm_parse_query_response(UKdmProtocolData* data, const char* response)
 {
 	char** actions;
 	int i;
 
-	data->available_actions = UIDM_LOGOUT_ACTION_NONE;
-	data->current_actions = UIDM_LOGOUT_ACTION_NONE;
+	data->available_actions = UKDM_LOGOUT_ACTION_NONE;
+	data->current_actions = UKDM_LOGOUT_ACTION_NONE;
 
 	if (strncmp(response, "OK ", 3) != 0)
 	{
@@ -343,7 +343,7 @@ static void uidm_parse_query_response(UIdmProtocolData* data, const char* respon
 
 	for (i = 0; actions[i]; i++)
 	{
-		UIdmLogoutAction action = UIDM_LOGOUT_ACTION_NONE;
+		UKdmLogoutAction action = UKDM_LOGOUT_ACTION_NONE;
 		gboolean selected = FALSE;
 		char* str = actions [i];
 		int len;
@@ -361,17 +361,17 @@ static void uidm_parse_query_response(UIdmProtocolData* data, const char* respon
 			str[len - 1] = '\0';
 		}
 
-		if (!strcmp(str, UIDM_ACTION_STR_SHUTDOWN))
+		if (!strcmp(str, UKDM_ACTION_STR_SHUTDOWN))
 		{
-				action = UIDM_LOGOUT_ACTION_SHUTDOWN;
+				action = UKDM_LOGOUT_ACTION_SHUTDOWN;
 		}
-		else if (!strcmp(str, UIDM_ACTION_STR_REBOOT))
+		else if (!strcmp(str, UKDM_ACTION_STR_REBOOT))
 		{
-				action = UIDM_LOGOUT_ACTION_REBOOT;
+				action = UKDM_LOGOUT_ACTION_REBOOT;
 		}
-		else if (!strcmp(str, UIDM_ACTION_STR_SUSPEND))
+		else if (!strcmp(str, UKDM_ACTION_STR_SUSPEND))
 		{
-				action = UIDM_LOGOUT_ACTION_SUSPEND;
+				action = UKDM_LOGOUT_ACTION_SUSPEND;
 		}
 
 		data->available_actions |= action;
@@ -385,113 +385,113 @@ static void uidm_parse_query_response(UIdmProtocolData* data, const char* respon
 	g_strfreev(actions);
 }
 
-static void uidm_update_logout_actions(UIdmProtocolData* data)
+static void ukdm_update_logout_actions(UKdmProtocolData* data)
 {
 	time_t current_time;
 	char* response;
 
 	current_time = time(NULL);
 
-	if (current_time <= (data->last_update + UIDM_PROTOCOL_UPDATE_INTERVAL))
+	if (current_time <= (data->last_update + UKDM_PROTOCOL_UPDATE_INTERVAL))
 	{
 		return;
 	}
 
 	data->last_update = current_time;
 
-	if (!uidm_init_protocol_connection(data))
+	if (!ukdm_init_protocol_connection(data))
 	{
 		return;
 	}
 
-	if ((response = uidm_send_protocol_msg(data, UIDM_PROTOCOL_MSG_QUERY_ACTION)))
+	if ((response = ukdm_send_protocol_msg(data, UKDM_PROTOCOL_MSG_QUERY_ACTION)))
 	{
-		uidm_parse_query_response(data, response);
+		ukdm_parse_query_response(data, response);
 		g_free(response);
 	}
 
-	uidm_shutdown_protocol_connection(data);
+	ukdm_shutdown_protocol_connection(data);
 }
 
-gboolean uidm_is_available(void)
+gboolean ukdm_is_available(void)
 {
-	if (!uidm_init_protocol_connection(&uidm_protocol_data))
+	if (!ukdm_init_protocol_connection(&ukdm_protocol_data))
 	{
 		return FALSE;
 	}
 
-	uidm_shutdown_protocol_connection(&uidm_protocol_data);
+	ukdm_shutdown_protocol_connection(&ukdm_protocol_data);
 
 	return TRUE;
 }
 
-gboolean uidm_supports_logout_action(UIdmLogoutAction action)
+gboolean ukdm_supports_logout_action(UKdmLogoutAction action)
 {
-	uidm_update_logout_actions(&uidm_protocol_data);
+	ukdm_update_logout_actions(&ukdm_protocol_data);
 
-	return (uidm_protocol_data.available_actions & action) != 0;
+	return (ukdm_protocol_data.available_actions & action) != 0;
 }
 
-UIdmLogoutAction uidm_get_logout_action(void)
+UKdmLogoutAction ukdm_get_logout_action(void)
 {
-	uidm_update_logout_actions(&uidm_protocol_data);
+	ukdm_update_logout_actions(&ukdm_protocol_data);
 
-	return uidm_protocol_data.current_actions;
+	return ukdm_protocol_data.current_actions;
 }
 
-void uidm_set_logout_action(UIdmLogoutAction action)
+void ukdm_set_logout_action(UKdmLogoutAction action)
 {
 	char* action_str = NULL;
 	char* msg;
 	char* response;
 
-	if (!uidm_init_protocol_connection(&uidm_protocol_data))
+	if (!ukdm_init_protocol_connection(&ukdm_protocol_data))
 	{
 		return;
 	}
 
 	switch (action)
 	{
-		case UIDM_LOGOUT_ACTION_NONE:
-			action_str = UIDM_ACTION_STR_NONE;
+		case UKDM_LOGOUT_ACTION_NONE:
+			action_str = UKDM_ACTION_STR_NONE;
 			break;
-		case UIDM_LOGOUT_ACTION_SHUTDOWN:
-			action_str = UIDM_ACTION_STR_SHUTDOWN;
+		case UKDM_LOGOUT_ACTION_SHUTDOWN:
+			action_str = UKDM_ACTION_STR_SHUTDOWN;
 			break;
-		case UIDM_LOGOUT_ACTION_REBOOT:
-			action_str = UIDM_ACTION_STR_REBOOT;
+		case UKDM_LOGOUT_ACTION_REBOOT:
+			action_str = UKDM_ACTION_STR_REBOOT;
 			break;
-		case UIDM_LOGOUT_ACTION_SUSPEND:
-			action_str = UIDM_ACTION_STR_SUSPEND;
+		case UKDM_LOGOUT_ACTION_SUSPEND:
+			action_str = UKDM_ACTION_STR_SUSPEND;
 			break;
 	}
 
-	msg = g_strdup_printf(UIDM_PROTOCOL_MSG_SET_ACTION " %s", action_str);
+	msg = g_strdup_printf(UKDM_PROTOCOL_MSG_SET_ACTION " %s", action_str);
 
-	response = uidm_send_protocol_msg(&uidm_protocol_data, msg);
+	response = ukdm_send_protocol_msg(&ukdm_protocol_data, msg);
 
 	g_free(msg);
 	g_free(response);
 
-	uidm_protocol_data.last_update = 0;
+	ukdm_protocol_data.last_update = 0;
 
-	uidm_shutdown_protocol_connection(&uidm_protocol_data);
+	ukdm_shutdown_protocol_connection(&ukdm_protocol_data);
 }
 
-void uidm_new_login(void)
+void ukdm_new_login(void)
 {
     char* response;
 
-    if (!uidm_init_protocol_connection(&uidm_protocol_data))
+    if (!ukdm_init_protocol_connection(&ukdm_protocol_data))
     {
         return;
     }
 
-    response = uidm_send_protocol_msg(&uidm_protocol_data, UIDM_PROTOCOL_MSG_FLEXI_XSERVER);
+    response = ukdm_send_protocol_msg(&ukdm_protocol_data, UKDM_PROTOCOL_MSG_FLEXI_XSERVER);
 
     g_free(response);
 
-    uidm_protocol_data.last_update = 0;
+    ukdm_protocol_data.last_update = 0;
 
-    uidm_shutdown_protocol_connection(&uidm_protocol_data);
+    ukdm_shutdown_protocol_connection(&ukdm_protocol_data);
 }

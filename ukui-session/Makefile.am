@@ -37,14 +37,14 @@ ukui_session_SOURCES =				\
 	gs-idle-monitor.c			\
 	gsm-presence.h				\
 	gsm-presence.c				\
-	uidm.h					\
-	uidm.c					\
-	uidm-signal-handler.h			\
-	uidm-signal-handler.c			\
-	uidm-log.h				\
-	uidm-log.c				\
-	uism-gnome.c				\
-	uism-gnome.h				\
+	ukdm.h					\
+	ukdm.c					\
+	ukdm-signal-handler.h			\
+	ukdm-signal-handler.c			\
+	ukdm-log.h				\
+	ukdm-log.c				\
+	uksm-gnome.c				\
+	uksm-gnome.h				\
 	main.c					\
 	gsm-store.h				\
 	gsm-store.c				\

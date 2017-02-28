@@ -40,8 +40,8 @@
 #include <dbus/dbus-glib-bindings.h>
 #include <dbus/dbus-glib-lowlevel.h>
 
-#include "uidm-signal-handler.h"
-#include "uidm-log.h"
+#include "ukdm-signal-handler.h"
+#include "ukdm-log.h"
 
 #include "gsm-consolekit.h"
 #ifdef HAVE_SYSTEMD
@@ -52,7 +52,7 @@
 #include "gsm-xsmp-server.h"
 #include "gsm-store.h"
 
-#include "uism-gnome.h"
+#include "uksm-gnome.h"
 
 #define GSM_SCHEMA "org.ukui.session"
 #define GSM_DEFAULT_SESSION_KEY "default-session"
@@ -464,7 +464,7 @@ static gboolean signal_cb(int signo, gpointer data)
 		case SIGUSR1:
 			g_debug("Got USR1 signal");
 			ret = TRUE;
-			uidm_log_toggle_debug();
+			ukdm_log_toggle_debug();
 			break;
 		default:
 			g_debug("Caught unhandled signal %d", signo);
@@ -534,7 +534,7 @@ static void
 debug_changed (GSettings *settings, gchar *key, gpointer user_data)
 {
 	debug = g_settings_get_boolean (settings, DEBUG_KEY);
-	uidm_log_set_debug (debug);
+	ukdm_log_set_debug (debug);
 }
 
 static gboolean
@@ -580,7 +580,7 @@ int main(int argc, char** argv)
 	GsmXsmpServer* xsmp_server;
 	GSettings* debug_settings = NULL;
 	GSettings* accessibility_settings;
-	UIdmSignalHandler* signal_handler;
+	UKdmSignalHandler* signal_handler;
 	static char** override_autostart_dirs = NULL;
 
 	static GOptionEntry entries[] = {
@@ -621,7 +621,7 @@ int main(int argc, char** argv)
 		exit(1);
 	}
 
-	uidm_log_init();
+	ukdm_log_init();
 
 	/* Allows to enable/disable debug from GSettings only if it is not set from argument */
 	if (!debug && schema_exists(DEBUG_SCHEMA))
@@ -631,7 +631,7 @@ int main(int argc, char** argv)
 		debug = g_settings_get_boolean (debug_settings, DEBUG_KEY);
 	}
 
-	uidm_log_set_debug(debug);
+	ukdm_log_set_debug(debug);
 
 	if (g_getenv ("XDG_CURRENT_DESKTOP") == NULL)
 		gsm_util_setenv ("XDG_CURRENT_DESKTOP", "UKUI");
@@ -672,21 +672,21 @@ int main(int argc, char** argv)
 	acquire_name();
 
 	/* Starts gnome compat mode */
-	uism_gnome_start();
+	uksm_gnome_start();
 
 	/* Set to use Gtk3 overlay scroll */
 	set_overlay_scroll ();
 
 	manager = gsm_manager_new(client_store, failsafe);
 
-	signal_handler = uidm_signal_handler_new();
-	uidm_signal_handler_add_fatal(signal_handler);
-	uidm_signal_handler_add(signal_handler, SIGFPE, signal_cb, NULL);
-	uidm_signal_handler_add(signal_handler, SIGHUP, signal_cb, NULL);
-	uidm_signal_handler_add(signal_handler, SIGUSR1, signal_cb, NULL);
-	uidm_signal_handler_add(signal_handler, SIGTERM, signal_cb, manager);
-	uidm_signal_handler_add(signal_handler, SIGINT, signal_cb, manager);
-	uidm_signal_handler_set_fatal_func(signal_handler, shutdown_cb, manager);
+	signal_handler = ukdm_signal_handler_new();
+	ukdm_signal_handler_add_fatal(signal_handler);
+	ukdm_signal_handler_add(signal_handler, SIGFPE, signal_cb, NULL);
+	ukdm_signal_handler_add(signal_handler, SIGHUP, signal_cb, NULL);
+	ukdm_signal_handler_add(signal_handler, SIGUSR1, signal_cb, NULL);
+	ukdm_signal_handler_add(signal_handler, SIGTERM, signal_cb, manager);
+	ukdm_signal_handler_add(signal_handler, SIGINT, signal_cb, manager);
+	ukdm_signal_handler_set_fatal_func(signal_handler, shutdown_cb, manager);
 
 	if (override_autostart_dirs != NULL)
 	{
@@ -723,8 +723,8 @@ int main(int argc, char** argv)
 		g_object_unref(debug_settings);
 	}
 
-	uism_gnome_stop();
-	uidm_log_shutdown();
+	uksm_gnome_stop();
+	ukdm_log_shutdown();
 
 	return 0;
 }

@@ -40,10 +40,10 @@
 #include <glib/gstdio.h>
 #include <glib-object.h>
 
-#include "uidm-signal-handler.h"
+#include "ukdm-signal-handler.h"
 
-#define UIDM_SIGNAL_HANDLER_GET_PRIVATE(o) \
-	(G_TYPE_INSTANCE_GET_PRIVATE((o), UIDM_TYPE_SIGNAL_HANDLER, UIdmSignalHandlerPrivate))
+#define UKDM_SIGNAL_HANDLER_GET_PRIVATE(o) \
+	(G_TYPE_INSTANCE_GET_PRIVATE((o), UKDM_TYPE_SIGNAL_HANDLER, UKdmSignalHandlerPrivate))
 
 #ifdef __GNUC__
 #define UNUSED_VARIABLE __attribute__ ((unused))
@@ -53,12 +53,12 @@
 
 typedef struct {
 	int signal_number;
-	UIdmSignalHandlerFunc func;
+	UKdmSignalHandlerFunc func;
 	gpointer data;
 	guint id;
 } CallbackData;
 
-struct UIdmSignalHandlerPrivate {
+struct UKdmSignalHandlerPrivate {
 	GHashTable* lookup;
 	GHashTable* id_lookup;
 	GHashTable* action_lookup;
@@ -67,9 +67,9 @@ struct UIdmSignalHandlerPrivate {
 	gpointer fatal_data;
 };
 
-static void uidm_signal_handler_class_init(UIdmSignalHandlerClass* klass);
-static void uidm_signal_handler_init(UIdmSignalHandler* signal_handler);
-static void uidm_signal_handler_finalize(GObject* object);
+static void ukdm_signal_handler_class_init(UKdmSignalHandlerClass* klass);
+static void ukdm_signal_handler_init(UKdmSignalHandler* signal_handler);
+static void ukdm_signal_handler_finalize(GObject* object);
 
 static gpointer signal_handler_object = NULL;
 static int signal_pipes[2];
@@ -77,7 +77,7 @@ static int signals_blocked = 0;
 static sigset_t signals_block_mask;
 static sigset_t signals_oldmask;
 
-G_DEFINE_TYPE(UIdmSignalHandler, uidm_signal_handler, G_TYPE_OBJECT)
+G_DEFINE_TYPE(UKdmSignalHandler, ukdm_signal_handler, G_TYPE_OBJECT)
 
 static void block_signals_push(void)
 {
@@ -103,7 +103,7 @@ static void block_signals_pop(void)
 	}
 }
 
-static gboolean signal_io_watch(GIOChannel* ioc, GIOCondition condition, UIdmSignalHandler* handler)
+static gboolean signal_io_watch(GIOChannel* ioc, GIOCondition condition, UKdmSignalHandler* handler)
 {
 	char buf[256];
 	gboolean is_fatal;
@@ -124,10 +124,10 @@ static gboolean signal_io_watch(GIOChannel* ioc, GIOCondition condition, UIdmSig
 
 		signum = (gint32) buf[i];
 
-		g_debug("UIdmSignalHandler: handling signal %d", signum);
+		g_debug("UKdmSignalHandler: handling signal %d", signum);
 		handlers = g_hash_table_lookup(handler->priv->lookup, GINT_TO_POINTER(signum));
 
-		g_debug("UIdmSignalHandler: Found %u callbacks", g_slist_length(handlers));
+		g_debug("UKdmSignalHandler: Found %u callbacks", g_slist_length(handlers));
 
 		for (l = handlers; l != NULL; l = l->next)
 		{
@@ -140,7 +140,7 @@ static gboolean signal_io_watch(GIOChannel* ioc, GIOCondition condition, UIdmSig
 			{
 				if (data->func != NULL)
 				{
-					g_debug("UIdmSignalHandler: running %d handler: %p", signum, data->func);
+					g_debug("UKdmSignalHandler: running %d handler: %p", signum, data->func);
 
 					res = data->func(signum, data->data);
 
@@ -159,19 +159,19 @@ static gboolean signal_io_watch(GIOChannel* ioc, GIOCondition condition, UIdmSig
 	{
 		if (handler->priv->fatal_func != NULL)
 		{
-			g_debug("UIdmSignalHandler: Caught termination signal - calling fatal func");
+			g_debug("UKdmSignalHandler: Caught termination signal - calling fatal func");
 			handler->priv->fatal_func(handler->priv->fatal_data);
 		}
 		else
 		{
-			g_debug("UIdmSignalHandler: Caught termination signal - exiting");
+			g_debug("UKdmSignalHandler: Caught termination signal - exiting");
 			exit (1);
 		}
 
 		return FALSE;
 	}
 
-	g_debug("UIdmSignalHandler: Done handling signals");
+	g_debug("UKdmSignalHandler: Done handling signals");
 
 	return TRUE;
 }
@@ -201,7 +201,7 @@ static void fallback_get_backtrace(void)
 		else
 		{
 	#endif
-			g_warning ("UIDM crashed, but symbols couldn't be retrieved.");
+			g_warning ("UKDM crashed, but symbols couldn't be retrieved.");
 	#if HAVE_EXECINFO_H
 		}
 	#endif
@@ -231,23 +231,23 @@ static gboolean crashlogger_get_backtrace(void)
 	else if (pid == 0)
 	{
 		/* Child process */
-		execl(LIBEXECDIR "/uidm-crash-logger", LIBEXECDIR "/uidm-crash-logger", NULL);
+		execl(LIBEXECDIR "/ukdm-crash-logger", LIBEXECDIR "/ukdm-crash-logger", NULL);
 	}
 
 	return success;
 }
 
 
-static void uidm_signal_handler_backtrace(void)
+static void ukdm_signal_handler_backtrace(void)
 {
 	struct stat s;
 	gboolean fallback = TRUE;
 
-	/* Try to use gdb via uidm-crash-logger if it exists, since
+	/* Try to use gdb via ukdm-crash-logger if it exists, since
 	 * we get much better information out of it.  Otherwise
 	 * fall back to execinfo.
 	 */
-	if (g_stat(LIBEXECDIR "/uidm-crash-logger", &s) == 0)
+	if (g_stat(LIBEXECDIR "/ukdm-crash-logger", &s) == 0)
 	{
 		fallback = crashlogger_get_backtrace() ? FALSE : TRUE;
 	}
@@ -279,14 +279,14 @@ static void signal_handler(int signo)
 		case SIGILL:
 		case SIGABRT:
 		case SIGTRAP:
-			uidm_signal_handler_backtrace();
+			ukdm_signal_handler_backtrace();
 			exit(1);
 			break;
 		case SIGFPE:
 		case SIGPIPE:
 			/* let the fatal signals interrupt us */
 			--in_fatal;
-			uidm_signal_handler_backtrace();
+			ukdm_signal_handler_backtrace();
 			ignore = write(signal_pipes [1], &signo_byte, 1);
 			break;
 		default:
@@ -296,12 +296,12 @@ static void signal_handler(int signo)
 	}
 }
 
-static void catch_signal(UIdmSignalHandler *handler, int signal_number)
+static void catch_signal(UKdmSignalHandler *handler, int signal_number)
 {
 	struct sigaction action;
 	struct sigaction* old_action;
 
-	g_debug("UIdmSignalHandler: Registering for %d signals", signal_number);
+	g_debug("UKdmSignalHandler: Registering for %d signals", signal_number);
 
 	action.sa_handler = signal_handler;
 	sigemptyset(&action.sa_mask);
@@ -314,11 +314,11 @@ static void catch_signal(UIdmSignalHandler *handler, int signal_number)
 	g_hash_table_insert(handler->priv->action_lookup, GINT_TO_POINTER(signal_number), old_action);
 }
 
-static void uncatch_signal(UIdmSignalHandler* handler, int signal_number)
+static void uncatch_signal(UKdmSignalHandler* handler, int signal_number)
 {
 	struct sigaction* old_action;
 
-	g_debug("UIdmSignalHandler: Unregistering for %d signals", signal_number);
+	g_debug("UKdmSignalHandler: Unregistering for %d signals", signal_number);
 
 	old_action = g_hash_table_lookup(handler->priv->action_lookup, GINT_TO_POINTER(signal_number));
 	g_hash_table_remove(handler->priv->action_lookup, GINT_TO_POINTER(signal_number));
@@ -328,12 +328,12 @@ static void uncatch_signal(UIdmSignalHandler* handler, int signal_number)
 	g_free(old_action);
 }
 
-guint uidm_signal_handler_add(UIdmSignalHandler* handler, int signal_number, UIdmSignalHandlerFunc callback, gpointer data)
+guint ukdm_signal_handler_add(UKdmSignalHandler* handler, int signal_number, UKdmSignalHandlerFunc callback, gpointer data)
 {
 	CallbackData* cdata;
 	GSList* list;
 
-	g_return_val_if_fail(UIDM_IS_SIGNAL_HANDLER(handler), 0);
+	g_return_val_if_fail(UKDM_IS_SIGNAL_HANDLER(handler), 0);
 
 	cdata = g_new0(CallbackData, 1);
 	cdata->signal_number = signal_number;
@@ -341,7 +341,7 @@ guint uidm_signal_handler_add(UIdmSignalHandler* handler, int signal_number, UId
 	cdata->data = data;
 	cdata->id = handler->priv->next_id++;
 
-	g_debug("UIdmSignalHandler: Adding handler %u: signum=%d %p", cdata->id, cdata->signal_number, cdata->func);
+	g_debug("UKdmSignalHandler: Adding handler %u: signum=%d %p", cdata->id, cdata->signal_number, cdata->func);
 
 	if (g_hash_table_lookup(handler->priv->action_lookup, GINT_TO_POINTER(signal_number)) == NULL)
 	{
@@ -359,15 +359,15 @@ guint uidm_signal_handler_add(UIdmSignalHandler* handler, int signal_number, UId
 	return cdata->id;
 }
 
-void uidm_signal_handler_add_fatal(UIdmSignalHandler* handler)
+void ukdm_signal_handler_add_fatal(UKdmSignalHandler* handler)
 {
-	g_return_if_fail(UIDM_IS_SIGNAL_HANDLER(handler));
+	g_return_if_fail(UKDM_IS_SIGNAL_HANDLER(handler));
 
-	uidm_signal_handler_add(handler, SIGILL, NULL, NULL);
-	uidm_signal_handler_add(handler, SIGBUS, NULL, NULL);
-	uidm_signal_handler_add(handler, SIGSEGV, NULL, NULL);
-	uidm_signal_handler_add(handler, SIGABRT, NULL, NULL);
-	uidm_signal_handler_add(handler, SIGTRAP, NULL, NULL);
+	ukdm_signal_handler_add(handler, SIGILL, NULL, NULL);
+	ukdm_signal_handler_add(handler, SIGBUS, NULL, NULL);
+	ukdm_signal_handler_add(handler, SIGSEGV, NULL, NULL);
+	ukdm_signal_handler_add(handler, SIGABRT, NULL, NULL);
+	ukdm_signal_handler_add(handler, SIGTRAP, NULL, NULL);
 }
 
 static void callback_data_free(CallbackData* d)
@@ -375,11 +375,11 @@ static void callback_data_free(CallbackData* d)
 	g_free(d);
 }
 
-static void uidm_signal_handler_remove_and_free_data(UIdmSignalHandler* handler, CallbackData* cdata)
+static void ukdm_signal_handler_remove_and_free_data(UKdmSignalHandler* handler, CallbackData* cdata)
 {
 	GSList* list;
 
-	g_return_if_fail(UIDM_IS_SIGNAL_HANDLER(handler));
+	g_return_if_fail(UKDM_IS_SIGNAL_HANDLER(handler));
 
 	list = g_hash_table_lookup(handler->priv->lookup, GINT_TO_POINTER(cdata->signal_number));
 	list = g_slist_remove_all(list, GUINT_TO_POINTER(cdata->id));
@@ -389,29 +389,29 @@ static void uidm_signal_handler_remove_and_free_data(UIdmSignalHandler* handler,
 		uncatch_signal(handler, cdata->signal_number);
 	}
 
-	g_debug("UIdmSignalHandler: Removing handler %u: signum=%d %p", cdata->signal_number, cdata->id, cdata->func);
+	g_debug("UKdmSignalHandler: Removing handler %u: signum=%d %p", cdata->signal_number, cdata->id, cdata->func);
 	/* put changed list back in */
 	g_hash_table_insert(handler->priv->lookup, GINT_TO_POINTER(cdata->signal_number), list);
 
 	g_hash_table_remove(handler->priv->id_lookup, GUINT_TO_POINTER(cdata->id));
 }
 
-void uidm_signal_handler_remove(UIdmSignalHandler* handler, guint id)
+void ukdm_signal_handler_remove(UKdmSignalHandler* handler, guint id)
 {
 	CallbackData* found;
 
-	g_return_if_fail(UIDM_IS_SIGNAL_HANDLER(handler));
+	g_return_if_fail(UKDM_IS_SIGNAL_HANDLER(handler));
 
 	found = g_hash_table_lookup(handler->priv->id_lookup, GUINT_TO_POINTER(id));
 
 	if (found != NULL)
 	{
-		uidm_signal_handler_remove_and_free_data(handler, found);
+		ukdm_signal_handler_remove_and_free_data(handler, found);
 		found = NULL;
 	}
 }
 
-static CallbackData* find_callback_data_by_func(UIdmSignalHandler* handler, guint signal_number, UIdmSignalHandlerFunc callback, gpointer data)
+static CallbackData* find_callback_data_by_func(UKdmSignalHandler* handler, guint signal_number, UKdmSignalHandlerFunc callback, gpointer data)
 {
 	GSList* list;
 	GSList* l;
@@ -440,30 +440,30 @@ static CallbackData* find_callback_data_by_func(UIdmSignalHandler* handler, guin
 	return found;
 }
 
-void uidm_signal_handler_remove_func(UIdmSignalHandler* handler, guint signal_number, UIdmSignalHandlerFunc callback, gpointer data)
+void ukdm_signal_handler_remove_func(UKdmSignalHandler* handler, guint signal_number, UKdmSignalHandlerFunc callback, gpointer data)
 {
 	CallbackData* found;
 
-	g_return_if_fail(UIDM_IS_SIGNAL_HANDLER(handler));
+	g_return_if_fail(UKDM_IS_SIGNAL_HANDLER(handler));
 
 	found = find_callback_data_by_func(handler, signal_number, callback, data);
 
 	if (found != NULL)
 	{
-		uidm_signal_handler_remove_and_free_data(handler, found);
+		ukdm_signal_handler_remove_and_free_data(handler, found);
 		found = NULL;
 	}
 
 	/* FIXME: once all handlers are removed deregister signum handler */
 }
 
-static void uidm_signal_handler_class_init(UIdmSignalHandlerClass* klass)
+static void ukdm_signal_handler_class_init(UKdmSignalHandlerClass* klass)
 {
 	GObjectClass* object_class = G_OBJECT_CLASS(klass);
 
-	object_class->finalize = uidm_signal_handler_finalize;
+	object_class->finalize = ukdm_signal_handler_finalize;
 
-	g_type_class_add_private(klass, sizeof(UIdmSignalHandlerPrivate));
+	g_type_class_add_private(klass, sizeof(UKdmSignalHandlerPrivate));
 }
 
 static void signal_list_free(GSList *list)
@@ -471,19 +471,19 @@ static void signal_list_free(GSList *list)
 	g_slist_free(list);
 }
 
-void uidm_signal_handler_set_fatal_func(UIdmSignalHandler* handler, UIdmShutdownHandlerFunc func, gpointer user_data)
+void ukdm_signal_handler_set_fatal_func(UKdmSignalHandler* handler, UKdmShutdownHandlerFunc func, gpointer user_data)
 {
-	g_return_if_fail(UIDM_IS_SIGNAL_HANDLER(handler));
+	g_return_if_fail(UKDM_IS_SIGNAL_HANDLER(handler));
 
 	handler->priv->fatal_func = func;
 	handler->priv->fatal_data = user_data;
 }
 
-static void uidm_signal_handler_init(UIdmSignalHandler* handler)
+static void ukdm_signal_handler_init(UKdmSignalHandler* handler)
 {
 	GIOChannel* ioc;
 
-	handler->priv = UIDM_SIGNAL_HANDLER_GET_PRIVATE(handler);
+	handler->priv = UKDM_SIGNAL_HANDLER_GET_PRIVATE(handler);
 
 	handler->priv->next_id = 1;
 
@@ -503,17 +503,17 @@ static void uidm_signal_handler_init(UIdmSignalHandler* handler)
 	g_io_channel_unref(ioc);
 }
 
-static void uidm_signal_handler_finalize(GObject* object)
+static void ukdm_signal_handler_finalize(GObject* object)
 {
-	UIdmSignalHandler* handler;
+	UKdmSignalHandler* handler;
 	GList* l;
 
 	g_return_if_fail(object != NULL);
-	g_return_if_fail(UIDM_IS_SIGNAL_HANDLER(object));
+	g_return_if_fail(UKDM_IS_SIGNAL_HANDLER(object));
 
-	handler = UIDM_SIGNAL_HANDLER(object);
+	handler = UKDM_SIGNAL_HANDLER(object);
 
-	g_debug("UIdmSignalHandler: Finalizing signal handler");
+	g_debug("UKdmSignalHandler: Finalizing signal handler");
 
 	g_return_if_fail(handler->priv != NULL);
 
@@ -541,10 +541,10 @@ static void uidm_signal_handler_finalize(GObject* object)
 	close(signal_pipes[0]);
 	close(signal_pipes[1]);
 
-	G_OBJECT_CLASS(uidm_signal_handler_parent_class)->finalize(object);
+	G_OBJECT_CLASS(ukdm_signal_handler_parent_class)->finalize(object);
 }
 
-UIdmSignalHandler* uidm_signal_handler_new(void)
+UKdmSignalHandler* ukdm_signal_handler_new(void)
 {
 	if (signal_handler_object != NULL)
 	{
@@ -552,9 +552,9 @@ UIdmSignalHandler* uidm_signal_handler_new(void)
 	}
 	else
 	{
-		signal_handler_object = g_object_new(UIDM_TYPE_SIGNAL_HANDLER, NULL);
+		signal_handler_object = g_object_new(UKDM_TYPE_SIGNAL_HANDLER, NULL);
 		g_object_add_weak_pointer(signal_handler_object, (gpointer*) &signal_handler_object);
 	}
 
-	return UIDM_SIGNAL_HANDLER(signal_handler_object);
+	return UKDM_SIGNAL_HANDLER(signal_handler_object);
 }

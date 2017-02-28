@@ -2,7 +2,7 @@
 Type=Application
 _Name=Window Manager
 Exec=ukui-wm
-Keywords=UKUI;window;manager;launch;UIDM;
+Keywords=UKUI;window;manager;launch;UKDM;
 NoDisplay=true
 X-UKUI-Autostart-Phase=WindowManager
 X-UKUI-Provides=windowmanager

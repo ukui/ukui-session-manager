@@ -41,7 +41,7 @@ Recommends: peony,
 Provides: x-session-manager,
 Description: Session manager of the UKUI desktop environment
  This package contains a session that can be started from a display
- manager such as UIDM. It will load all necessary applications for a
+ manager such as UKDM. It will load all necessary applications for a
  full-featured user session.
  .
  The session manager also features the ability to save a running session

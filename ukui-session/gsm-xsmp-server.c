@@ -3,7 +3,6 @@
  * Copyright (C) 2007 Novell, Inc.
  * Copyright (C) 2008 Red Hat, Inc.
  * Copyright (C) 2008 William Jon McCann <jmccann@redhat.com>
- * Copyright (C) 2016 Tianjin KYLIN Information Technology Co., Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

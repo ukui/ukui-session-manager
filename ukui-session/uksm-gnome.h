@@ -22,10 +22,10 @@
  * gnome-session.
  */
 
-#ifndef __UISM_GNOME_H__
-#define __UISM_GNOME_H__
+#ifndef __UKSM_GNOME_H__
+#define __UKSM_GNOME_H__
 
-void uism_gnome_start (void);
-void uism_gnome_stop (void);
+void uksm_gnome_start (void);
+void uksm_gnome_stop (void);
 
-#endif /* !__UISM_GNOME_H__ */
+#endif /* !__UKSM_GNOME_H__ */

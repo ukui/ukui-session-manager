@@ -59,7 +59,7 @@
 #include "gsm-autostart-app.h"
 
 #include "gsm-util.h"
-#include "uidm.h"
+#include "ukdm.h"
 #include "gsm-logout-dialog.h"
 #include "gsm-inhibit-dialog.h"
 #include "gsm-consolekit.h"
@@ -80,8 +80,8 @@
  */
 #define GSM_MANAGER_EXIT_PHASE_TIMEOUT 1 /* seconds */
 
-#define UIDM_FLEXISERVER_COMMAND "uidmflexiserver"
-#define UIDM_FLEXISERVER_ARGS    "--startnew Standard"
+#define UKDM_FLEXISERVER_COMMAND "ukdmflexiserver"
+#define UKDM_FLEXISERVER_ARGS    "--startnew Standard"
 
 #define GDM_FLEXISERVER_COMMAND "gdmflexiserver"
 #define GDM_FLEXISERVER_ARGS    "--startnew Standard"
@@ -111,10 +111,10 @@ typedef enum
         GSM_MANAGER_LOGOUT_LOGOUT,
         GSM_MANAGER_LOGOUT_REBOOT,
         GSM_MANAGER_LOGOUT_REBOOT_INTERACT,
-        GSM_MANAGER_LOGOUT_REBOOT_UIDM,
+        GSM_MANAGER_LOGOUT_REBOOT_UKDM,
         GSM_MANAGER_LOGOUT_SHUTDOWN,
         GSM_MANAGER_LOGOUT_SHUTDOWN_INTERACT,
-        GSM_MANAGER_LOGOUT_SHUTDOWN_UIDM
+        GSM_MANAGER_LOGOUT_SHUTDOWN_UKDM
 } GsmManagerLogoutType;
 
 struct GsmManagerPrivate
@@ -420,10 +420,10 @@ quit_request_completed_consolekit (GsmConsolekit *consolekit,
                                    GError        *error,
                                    gpointer       user_data)
 {
-        UIdmLogoutAction fallback_action = GPOINTER_TO_INT (user_data);
+        UKdmLogoutAction fallback_action = GPOINTER_TO_INT (user_data);
 
         if (error != NULL) {
-                uidm_set_logout_action (fallback_action);
+                ukdm_set_logout_action (fallback_action);
         }
 
         g_object_unref (consolekit);
@@ -437,10 +437,10 @@ quit_request_completed_systemd (GsmSystemd *systemd,
                                 GError     *error,
                                 gpointer    user_data)
 {
-        UIdmLogoutAction fallback_action = GPOINTER_TO_INT (user_data);
+        UKdmLogoutAction fallback_action = GPOINTER_TO_INT (user_data);
 
         if (error != NULL) {
-                uidm_set_logout_action (fallback_action);
+                ukdm_set_logout_action (fallback_action);
         }
 
         g_object_unref (systemd);
@@ -466,7 +466,7 @@ gsm_manager_quit (GsmManager *manager)
                 break;
         case GSM_MANAGER_LOGOUT_REBOOT:
         case GSM_MANAGER_LOGOUT_REBOOT_INTERACT:
-                uidm_set_logout_action (UIDM_LOGOUT_ACTION_NONE);
+                ukdm_set_logout_action (UKDM_LOGOUT_ACTION_NONE);
 
                 #ifdef HAVE_SYSTEMD
                 if (LOGIND_RUNNING()) {
@@ -474,7 +474,7 @@ gsm_manager_quit (GsmManager *manager)
                     g_signal_connect (systemd,
                                       "request-completed",
                                       G_CALLBACK (quit_request_completed_systemd),
-                                      GINT_TO_POINTER (UIDM_LOGOUT_ACTION_REBOOT));
+                                      GINT_TO_POINTER (UKDM_LOGOUT_ACTION_REBOOT));
                     gsm_systemd_attempt_restart (systemd);
                 }
                 else {
@@ -483,19 +483,19 @@ gsm_manager_quit (GsmManager *manager)
                 g_signal_connect (consolekit,
                                   "request-completed",
                                   G_CALLBACK (quit_request_completed_consolekit),
-                                  GINT_TO_POINTER (UIDM_LOGOUT_ACTION_REBOOT));
+                                  GINT_TO_POINTER (UKDM_LOGOUT_ACTION_REBOOT));
                 gsm_consolekit_attempt_restart (consolekit);
                 #ifdef HAVE_SYSTEMD
                 }
                 #endif
                 break;
-        case GSM_MANAGER_LOGOUT_REBOOT_UIDM:
-                uidm_set_logout_action (UIDM_LOGOUT_ACTION_REBOOT);
+        case GSM_MANAGER_LOGOUT_REBOOT_UKDM:
+                ukdm_set_logout_action (UKDM_LOGOUT_ACTION_REBOOT);
                 gtk_main_quit ();
                 break;
         case GSM_MANAGER_LOGOUT_SHUTDOWN:
         case GSM_MANAGER_LOGOUT_SHUTDOWN_INTERACT:
-                uidm_set_logout_action (UIDM_LOGOUT_ACTION_NONE);
+                ukdm_set_logout_action (UKDM_LOGOUT_ACTION_NONE);
 
                 #ifdef HAVE_SYSTEMD
                 if (LOGIND_RUNNING()) {
@@ -503,7 +503,7 @@ gsm_manager_quit (GsmManager *manager)
                     g_signal_connect (systemd,
                                       "request-completed",
                                       G_CALLBACK (quit_request_completed_systemd),
-                                      GINT_TO_POINTER (UIDM_LOGOUT_ACTION_SHUTDOWN));
+                                      GINT_TO_POINTER (UKDM_LOGOUT_ACTION_SHUTDOWN));
                     gsm_systemd_attempt_stop (systemd);
                 }
                 else {
@@ -512,14 +512,14 @@ gsm_manager_quit (GsmManager *manager)
                 g_signal_connect (consolekit,
                                   "request-completed",
                                   G_CALLBACK (quit_request_completed_consolekit),
-                                  GINT_TO_POINTER (UIDM_LOGOUT_ACTION_SHUTDOWN));
+                                  GINT_TO_POINTER (UKDM_LOGOUT_ACTION_SHUTDOWN));
                 gsm_consolekit_attempt_stop (consolekit);
                 #ifdef HAVE_SYSTEMD
                 }
                 #endif
                 break;
-        case GSM_MANAGER_LOGOUT_SHUTDOWN_UIDM:
-                uidm_set_logout_action (UIDM_LOGOUT_ACTION_SHUTDOWN);
+        case GSM_MANAGER_LOGOUT_SHUTDOWN_UKDM:
+                ukdm_set_logout_action (UKDM_LOGOUT_ACTION_SHUTDOWN);
                 gtk_main_quit ();
                 break;
         default:
@@ -1032,7 +1032,7 @@ cancel_end_session (GsmManager *manager)
         manager->priv->logout_mode = GSM_MANAGER_LOGOUT_MODE_NORMAL;
 
         manager->priv->logout_type = GSM_MANAGER_LOGOUT_NONE;
-        uidm_set_logout_action (UIDM_LOGOUT_ACTION_NONE);
+        ukdm_set_logout_action (UKDM_LOGOUT_ACTION_NONE);
 
         start_phase (manager);
 }
@@ -1071,11 +1071,11 @@ manager_switch_user (GsmManager *manager)
                 return;
         }
 
-        if (process_is_running("uidm")) {
-                /* UIDM */
+        if (process_is_running("ukdm")) {
+                /* UKDM */
                 command = g_strdup_printf ("%s %s",
-                                           UIDM_FLEXISERVER_COMMAND,
-                                           UIDM_FLEXISERVER_ARGS);
+                                           UKDM_FLEXISERVER_COMMAND,
+                                           UKDM_FLEXISERVER_ARGS);
 
                 error = NULL;
                 res = g_spawn_command_line_sync (command, NULL, NULL, NULL, &error);
@@ -1083,7 +1083,7 @@ manager_switch_user (GsmManager *manager)
                 g_free (command);
 
                 if (! res) {
-                        g_debug ("GsmManager: Unable to start UIDM greeter: %s", error->message);
+                        g_debug ("GsmManager: Unable to start UKDM greeter: %s", error->message);
                         g_error_free (error);
                 }
         }
@@ -1338,12 +1338,12 @@ query_end_session_complete (GsmManager *manager)
                 break;
         case GSM_MANAGER_LOGOUT_REBOOT:
         case GSM_MANAGER_LOGOUT_REBOOT_INTERACT:
-        case GSM_MANAGER_LOGOUT_REBOOT_UIDM:
+        case GSM_MANAGER_LOGOUT_REBOOT_UKDM:
                 action = GSM_LOGOUT_ACTION_REBOOT;
                 break;
         case GSM_MANAGER_LOGOUT_SHUTDOWN:
         case GSM_MANAGER_LOGOUT_SHUTDOWN_INTERACT:
-        case GSM_MANAGER_LOGOUT_SHUTDOWN_UIDM:
+        case GSM_MANAGER_LOGOUT_SHUTDOWN_UKDM:
                 action = GSM_LOGOUT_ACTION_SHUTDOWN;
                 break;
         default:
@@ -2870,7 +2870,7 @@ request_reboot (GsmManager *manager)
          * different cases here:
          *
          *   - no systemd: we fallback on ConsoleKit
-         *   - no ConsoleKit: we fallback on UIDM
+         *   - no ConsoleKit: we fallback on UKDM
          *   - no password required: everything is fine
          *   - password asked once: we ask for it now. If the user enters it
          *     fine, then all is great. If the user doesn't enter it fine, we
@@ -2878,7 +2878,7 @@ request_reboot (GsmManager *manager)
          *   - password asked each time: we don't ask it for now since we don't
          *     want to ask for it twice. Instead we'll ask for it at the very
          *     end. If the user will enter it fine, then all is great again. If
-         *     the user doesn't enter it fine, then we'll just fallback to UIDM.
+         *     the user doesn't enter it fine, then we'll just fallback to UKDM.
          *
          * The last case (password asked each time) is a bit broken, but
          * there's really nothing we can do about it. Generally speaking,
@@ -2903,7 +2903,7 @@ request_reboot (GsmManager *manager)
                                                               manager);
                         g_object_unref (systemd);
 
-                        manager->priv->logout_type = GSM_MANAGER_LOGOUT_REBOOT_UIDM;
+                        manager->priv->logout_type = GSM_MANAGER_LOGOUT_REBOOT_UKDM;
                         end_phase (manager);
                 }
         }
@@ -2922,7 +2922,7 @@ request_reboot (GsmManager *manager)
                                                       manager);
                 g_object_unref (consolekit);
 
-                manager->priv->logout_type = GSM_MANAGER_LOGOUT_REBOOT_UIDM;
+                manager->priv->logout_type = GSM_MANAGER_LOGOUT_REBOOT_UKDM;
                 end_phase (manager);
         }
 #ifdef HAVE_SYSTEMD
@@ -3015,7 +3015,7 @@ request_shutdown (GsmManager *manager)
                                                               manager);
                         g_object_unref (systemd);
 
-                        manager->priv->logout_type = GSM_MANAGER_LOGOUT_SHUTDOWN_UIDM;
+                        manager->priv->logout_type = GSM_MANAGER_LOGOUT_SHUTDOWN_UKDM;
                         end_phase (manager);
                 }
         }
@@ -3034,7 +3034,7 @@ request_shutdown (GsmManager *manager)
                                                       manager);
                 g_object_unref (consolekit);
 
-                manager->priv->logout_type = GSM_MANAGER_LOGOUT_SHUTDOWN_UIDM;
+                manager->priv->logout_type = GSM_MANAGER_LOGOUT_SHUTDOWN_UKDM;
                 end_phase (manager);
         }
 #ifdef HAVE_SYSTEMD

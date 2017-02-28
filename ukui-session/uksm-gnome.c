@@ -40,7 +40,7 @@
 #include <gdk/gdkx.h>
 #include <gio/gio.h>
 
-#include "uism-gnome.h"
+#include "uksm-gnome.h"
 
 #define GSM_SCHEMA "org.ukui.session"
 #define GSM_GNOME_COMPAT_STARTUP_KEY "gnome-compat-startup"
@@ -167,7 +167,7 @@ gnome_keyring_daemon_shutdown (void)
 
 
 static void
-uism_compat_gnome_smproxy_startup (void)
+uksm_compat_gnome_smproxy_startup (void)
 {
   Atom gnome_sm_proxy;
   Display *dpy;
@@ -202,7 +202,7 @@ uism_compat_gnome_smproxy_startup (void)
 
 
 static void
-uism_compat_gnome_smproxy_shutdown (void)
+uksm_compat_gnome_smproxy_shutdown (void)
 {
   gdk_error_trap_push ();
 
@@ -217,7 +217,7 @@ uism_compat_gnome_smproxy_shutdown (void)
 
 
 void
-uism_gnome_start (void)
+uksm_gnome_start (void)
 {
   GSettings* settings;
   gchar **array;
@@ -232,37 +232,37 @@ uism_gnome_start (void)
 
     for (i = 0; array[i]; i++) {
       if (strcmp (array[i], "smproxy") == 0) {
-        g_debug ("UIsmGnome: starting smproxy");
-        uism_compat_gnome_smproxy_startup ();
+        g_debug ("UKsmGnome: starting smproxy");
+        uksm_compat_gnome_smproxy_startup ();
         gnome_compat_started = TRUE;
       } else if (strcmp (array[i], "keyring") == 0) {
-        g_debug ("UIsmGnome: starting keyring");
+        g_debug ("UKsmGnome: starting keyring");
         gnome_keyring_daemon_startup ();
         gnome_compat_started = TRUE;
       } else {
-        g_debug ("UIsmGnome: ignoring unknown component \"%s\"", array[i]);
+        g_debug ("UKsmGnome: ignoring unknown component \"%s\"", array[i]);
       }
     }
     g_strfreev (array);
   } else {
-    g_debug ("UIsmGnome: No components found to start");
+    g_debug ("UKsmGnome: No components found to start");
   }
   g_object_unref (settings);
 }
 
 
 void
-uism_gnome_stop (void)
+uksm_gnome_stop (void)
 {
   if (gnome_compat_started == FALSE)
     return;
 
-  g_debug ("UIsmGnome: stopping");
+  g_debug ("UKsmGnome: stopping");
 
   /* shutdown the keyring daemon */
   gnome_keyring_daemon_shutdown ();
 
-  uism_compat_gnome_smproxy_shutdown ();
+  uksm_compat_gnome_smproxy_shutdown ();
 
   gnome_compat_started = FALSE;
 }

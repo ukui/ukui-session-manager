@@ -8,9 +8,12 @@ Files: ukui-session/gs-idle-monitor.c
        ukui-session/gsm-dbus-client.h
        ukui-session/gsm-inhibitor.c
        ukui-session/gsm-inhibitor.h
-       ukui-session/gsm-presence.c
        ukui-session/gsm-presence.h
        ukui-session/test-client-dbus.c
+Copyright: 2008-2009 Red Hat, Inc.
+License: GPL-2+
+
+Files: ukui-session/gsm-presence.c
        ukui-session/test-inhibit.c
 Copyright: 2008-2009 Red Hat, Inc.
            2016, Tianjin KYLIN Information Technology Co., Ltd.
@@ -18,10 +21,14 @@ License: GPL-2+
 
 Files: ukui-session/gsm-app.c
        ukui-session/gsm-app.h
-       ukui-session/gsm-autostart-app.c
-       ukui-session/gsm-autostart-app.h
        ukui-session/gsm-client.c
        ukui-session/gsm-client.h
+Copyright: 2006-2007 Novell, Inc.
+           2008, Red Hat, Inc.
+License: GPL-2+
+
+Files: ukui-session/gsm-autostart-app.c
+       ukui-session/gsm-autostart-app.h
        ukui-session/gsm-xsmp-client.c
        ukui-session/main.c
 Copyright: 2006-2007 Novell, Inc.
@@ -33,18 +40,28 @@ Files: ukui-session/gsm-inhibit-dialog.c
        ukui-session/gsm-inhibit-dialog.h
        ukui-session/gsm-store.c
        ukui-session/gsm-store.h
-       ukui-session/uidm-log.c
-       ukui-session/uidm-log.h
-       ukui-session/uidm-signal-handler.h
+Copyright: 2007-2008 William Jon McCann <mccann@jhu.edu>
+           2016, Tianjin KYLIN Information Technology Co., Ltd.
+License: GPL-2+
+
+Files: ukui-session/ukdm-log.c
+       ukui-session/ukdm-log.h
+       ukui-session/ukdm-signal-handler.h
 Copyright: 2007-2008 William Jon McCann <mccann@jhu.edu>
            2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 
 Files: capplet/gsm-properties-dialog.c
-       capplet/gsp-app-manager.c
        capplet/gsp-app-manager.h
-       capplet/gsp-app.c
        capplet/gsp-app.h
+Copyright: 1999, Free Software Foundation, Inc.
+           2007-2009 Vincent Untz
+           2008, Lucas Rocha
+           2008, William Jon McCann <jmccann@redhat.com>
+License: GPL-2+
+
+Files: capplet/gsp-app-manager.c
+       capplet/gsp-app.c
 Copyright: 1999, Free Software Foundation, Inc.
            2007-2009 Vincent Untz
            2008, Lucas Rocha
@@ -52,46 +69,58 @@ Copyright: 1999, Free Software Foundation, Inc.
            2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 
-Files: capplet/gsm-app-dialog.c
-       capplet/gsm-app-dialog.h
+Files: capplet/gsm-app-dialog.h
        capplet/gsm-properties-dialog.h
-       ukui-session/gsm-manager.h
        ukui-session/gsm-xsmp-server.h
+Copyright: 2008, William Jon McCann <jmccann@redhat.com>  
+License: GPL-2+
+
+Files: capplet/gsm-app-dialog.c
+       ukui-session/gsm-manager.h
 Copyright: 2008, William Jon McCann <jmccann@redhat.com>
            2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 
 Files: ukui-session/gsm-session-save.c
        ukui-session/gsm-session-save.h
-       ukui-session/gsm-util.c
        ukui-session/gsm-util.h
+Copyright: 2008, Lucas Rocha
+License: GPL-2+
+
+Files: ukui-session/gsm-util.c
 Copyright: 2008, Lucas Rocha
            2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 
 Files: egg/eggdesktopfile.h
        egg/eggsmclient-private.h
-       egg/eggsmclient.c
        egg/eggsmclient.h
+Copyright: 2007, Novell, Inc.
+License: LGPL-2+
+
+Files: egg/eggsmclient.c
 Copyright: 2007, Novell, Inc.
            2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: LGPL-2+
 
 Files: capplet/gsp-keyfile.c
-       capplet/gsp-keyfile.h
        ukui-session/gsm-xsmp-client.h
+Copyright: 2007-2009 Novell, Inc.
+License: GPL-2+
+
+Files: capplet/gsp-keyfile.h
 Copyright: 2007-2009 Novell, Inc.
            2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 
-Files: ukui-session/uism-gnome.c
-       ukui-session/uism-gnome.h
+Files: ukui-session/uksm-gnome.c
+       ukui-session/uksm-gnome.h
 Copyright: 2004-2005 Benedikt Meurer <benny@xfce.org>
            2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 
-Files: ukui-session/uidm.c
-       ukui-session/uidm.h
+Files: ukui-session/ukdm.c
+       ukui-session/ukdm.h
 Copyright: 2001, Queen of England
            2002-2003, George Lebl
            2005, Raffaele Sandrini
@@ -102,11 +131,15 @@ License: GPL-2+
 Files: ukui-session/gsm-consolekit.c
        ukui-session/gsm-consolekit.h
 Copyright: 2008, Jon McCann <jmccann@redhat.com>
-           2016, Tianjin KYLIN Information Technology Co., Ltd.
+License: GPL-2+
+
+Files: ukui-session/gsm-xsmp-server.c
+Copyright: 2007, Novell, Inc.
+           2008, Red Hat, Inc.
+           2008, William Jon McCann <jmccann@redhat.com>
 License: GPL-2+
 
 Files: ukui-session/gsm-manager.c
-       ukui-session/gsm-xsmp-server.c
 Copyright: 2007, Novell, Inc.
            2008, Red Hat, Inc.
            2008, William Jon McCann <jmccann@redhat.com>
@@ -136,26 +169,22 @@ Copyright: 2006, Vincent Untz
            2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 
-Files: ukui-session/uidm-signal-handler.c
+Files: ukui-session/ukdm-signal-handler.c
 Copyright: 2006, Red Hat, Inc.
            2007, William Jon McCann <mccann@jhu.edu>
            2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 
-Files: ukui-session/gsm-systemd.c
-       ukui-session/gsm-systemd.h
+Files: ukui-session/gsm-systemd.h
 Copyright: 2013, Stefano Karapetsas
-           2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 
-Files: ./ukui-session/gsm-systemd.c
+Files: ukui-session/gsm-systemd.c
 Copyright: 2013, Stefano Karapetsas <stefano@karapetsas.com>
-           2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 
 Files: ukui-session/gsm-logout-dialog.h
 Copyright: 2006, Vincent Untz
-           2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 
 Files: egg/eggsmclient-xsmp.c
@@ -169,7 +198,6 @@ Files: egg/eggdesktopfile.c
 Copyright: 1999-2000, Red Hat Inc.
            2001, George Lebl
            2007, Novell, Inc.
-           2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: LGPL-2+
 
 Files: po/*.po
@@ -187,7 +215,6 @@ Copyright: 2004, Zuza Software Foundation
            2006, Ubuntu Georgian Translators
            2004, Kakilik Project <kakilik.sourceforge.net>
            THE PACKAGE'S COPYRIGHT HOLDER
-           2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 Comment:
  Using license from COPYING file.
@@ -243,7 +270,6 @@ Files: .tx/config
        autogen.sh
        configure.ac
 Copyright: *No copyright*
-           2016, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-2+
 Comment:
  Using license from COPYING file.
