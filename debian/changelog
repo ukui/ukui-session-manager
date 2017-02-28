@@ -1,6 +1,9 @@
 ukui-session-manager (1.0.0) zesty; urgency=medium
 
-  * New release. 
+  * Replace ukwm with marco.
+  * Replace ukui-panel with mate-panel.
+  * Drop debian-ukui-default-settings.
+  * Rename uidm to ukdm, uism to uksm.
 
  -- handsome_feng <jianfengli@ubuntukylin.com>  Sun, 12 Feb 2017 15:03:42 +0800
 

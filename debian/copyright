@@ -72,7 +72,7 @@ License: GPL-2+
 Files: capplet/gsm-app-dialog.h
        capplet/gsm-properties-dialog.h
        ukui-session/gsm-xsmp-server.h
-Copyright: 2008, William Jon McCann <jmccann@redhat.com>  
+Copyright: 2008, William Jon McCann <jmccann@redhat.com>
 License: GPL-2+
 
 Files: capplet/gsm-app-dialog.c
