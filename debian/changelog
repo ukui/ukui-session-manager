@@ -1,4 +1,4 @@
-ukui-session-manager (1.0.0) zesty; urgency=medium
+ukui-session-manager (1.0.0-1) zesty; urgency=medium
 
   * Initial release (LP: #1664256)
 
