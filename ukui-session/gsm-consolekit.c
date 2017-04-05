@@ -243,7 +243,7 @@ gsm_consolekit_ensure_ck_connection (GsmConsolekit  *manager,
 
         is_connected = TRUE;
 
- out:
+out:
         if (manager->priv->is_connected != is_connected) {
                 manager->priv->is_connected = is_connected;
                 g_object_notify (G_OBJECT (manager), "is-connected");
@@ -480,6 +480,65 @@ gsm_consolekit_attempt_stop (GsmConsolekit *manager)
         }
 }
 
+void
+gsm_consolekit_attempt_suspend (GsmConsolekit *manager)
+{
+        gboolean res;
+        GError  *error;
+
+        error = NULL;
+
+        if (!gsm_consolekit_ensure_ck_connection (manager, &error)) {
+                g_warning ("Could not connect to ConsoleKit: %s",
+                           error->message);
+                g_error_free (error);
+                return;
+        }
+
+        res = dbus_g_proxy_call_with_timeout (manager->priv->ck_proxy,
+                                              "Suspend",
+                                              INT_MAX,
+                                              &error,
+                                              G_TYPE_BOOLEAN, TRUE, /* interactive */
+                                              G_TYPE_INVALID,
+                                              G_TYPE_INVALID);
+
+        if (!res) {
+                g_warning ("Unable to suspend system: %s", error->message);
+                g_error_free (error);
+        }
+}
+
+void
+gsm_consolekit_attempt_hibernate (GsmConsolekit *manager)
+{
+        gboolean res;
+        GError  *error;
+
+        error = NULL;
+
+        if (!gsm_consolekit_ensure_ck_connection (manager, &error)) {
+                g_warning ("Could not connect to ConsoleKit: %s",
+                           error->message);
+                g_error_free (error);
+                return;
+        }
+
+        res = dbus_g_proxy_call_with_timeout (manager->priv->ck_proxy,
+                                              "Hibernate",
+                                              INT_MAX,
+                                              &error,
+                                              G_TYPE_BOOLEAN, TRUE, /* interactive */
+                                              G_TYPE_INVALID,
+                                              G_TYPE_INVALID);
+
+
+        if (!res) {
+                g_warning ("Unable to hibernate system: %s", error->message);
+                g_error_free (error);
+        }
+}
+
 static gboolean
 get_current_session_id (DBusConnection *connection,
                         char          **session_id)
@@ -523,7 +582,7 @@ get_current_session_id (DBusConnection *connection,
         }
 
         ret = TRUE;
- out:
+out:
         if (message != NULL) {
                 dbus_message_unref (message);
         }
@@ -578,7 +637,7 @@ get_seat_id_for_session (DBusConnection *connection,
         }
 
         ret = TRUE;
- out:
+out:
         if (message != NULL) {
                 dbus_message_unref (message);
         }
@@ -709,7 +768,7 @@ seat_can_activate_sessions (DBusConnection *connection,
         dbus_message_iter_init (reply, &iter);
         dbus_message_iter_get_basic (&iter, &can_activate);
 
- out:
+out:
         if (message != NULL) {
                 dbus_message_unref (message);
         }
@@ -752,28 +811,28 @@ gsm_consolekit_can_switch_user (GsmConsolekit *manager)
 gboolean
 gsm_consolekit_get_restart_privileges (GsmConsolekit *manager)
 {
-	g_signal_emit (G_OBJECT (manager),
-		       signals [PRIVILEGES_COMPLETED],
-		       0, TRUE, TRUE, NULL);
+        g_signal_emit (G_OBJECT (manager),
+                       signals [PRIVILEGES_COMPLETED],
+                       0, TRUE, TRUE, NULL);
 
-	return TRUE;
+        return TRUE;
 }
 
 gboolean
 gsm_consolekit_get_stop_privileges (GsmConsolekit *manager)
 {
-	g_signal_emit (G_OBJECT (manager),
-		       signals [PRIVILEGES_COMPLETED],
-		       0, TRUE, TRUE, NULL);
+        g_signal_emit (G_OBJECT (manager),
+                       signals [PRIVILEGES_COMPLETED],
+                       0, TRUE, TRUE, NULL);
 
-	return TRUE;
+        return TRUE;
 }
 
 gboolean
 gsm_consolekit_can_restart (GsmConsolekit *manager)
 {
         gboolean res;
-	gboolean can_restart;
+        gboolean can_restart;
         GError  *error;
 
         error = NULL;
@@ -797,16 +856,16 @@ gsm_consolekit_can_restart (GsmConsolekit *manager)
                            error->message);
                 g_error_free (error);
                 return FALSE;
-	}
+        }
 
-	return can_restart;
+        return can_restart;
 }
 
 gboolean
 gsm_consolekit_can_stop (GsmConsolekit *manager)
 {
         gboolean res;
-	gboolean can_stop;
+        gboolean can_stop;
         GError  *error;
 
         error = NULL;
@@ -831,76 +890,150 @@ gsm_consolekit_can_stop (GsmConsolekit *manager)
                            error->message);
                 g_error_free (error);
                 return FALSE;
-	}
+        }
 
-	return can_stop;
+        return can_stop;
+}
+
+gboolean
+gsm_consolekit_can_suspend (GsmConsolekit *manager)
+{
+        gboolean res;
+        gboolean can_suspend;
+        gchar *retval;
+        GError *error = NULL;
+
+        if (!gsm_consolekit_ensure_ck_connection (manager, &error)) {
+                g_warning ("Could not connect to ConsoleKit: %s",
+                           error->message);
+                g_error_free (error);
+                return FALSE;
+        }
+
+        res = dbus_g_proxy_call_with_timeout (manager->priv->ck_proxy,
+                                              "CanSuspend",
+                                              INT_MAX,
+                                              &error,
+                                              G_TYPE_INVALID,
+                                              G_TYPE_STRING, &retval,
+                                              G_TYPE_INVALID);
+
+        if (res == FALSE) {
+                g_warning ("Could not make DBUS call: %s",
+                           error->message);
+                g_error_free (error);
+                return FALSE;
+        }
+
+        can_suspend = g_strcmp0 (retval, "yes") == 0 ||
+                      g_strcmp0 (retval, "challenge") == 0;
+
+        g_free (retval);
+        return can_suspend;
+}
+
+gboolean
+gsm_consolekit_can_hibernate (GsmConsolekit *manager)
+{
+        gboolean res;
+        gboolean can_hibernate;
+        gchar *retval;
+        GError *error = NULL;
+
+        if (!gsm_consolekit_ensure_ck_connection (manager, &error)) {
+                g_warning ("Could not connect to ConsoleKit: %s",
+                           error->message);
+                g_error_free (error);
+                return FALSE;
+        }
+
+        res = dbus_g_proxy_call_with_timeout (manager->priv->ck_proxy,
+                                              "CanHibernate",
+                                              INT_MAX,
+                                              &error,
+                                              G_TYPE_INVALID,
+                                              G_TYPE_STRING, &retval,
+                                              G_TYPE_INVALID);
+
+        if (res == FALSE) {
+                g_warning ("Could not make DBUS call: %s",
+                           error->message);
+                g_error_free (error);
+                return FALSE;
+        }
+
+        can_hibernate = g_strcmp0 (retval, "yes") == 0 ||
+                        g_strcmp0 (retval, "challenge") == 0;
+
+        g_free (retval);
+        return can_hibernate;
 }
 
 gchar *
 gsm_consolekit_get_current_session_type (GsmConsolekit *manager)
 {
         GError *gerror;
-	DBusConnection *connection;
-	DBusError error;
-	DBusMessage *message = NULL;
-	DBusMessage *reply = NULL;
-	gchar *session_id;
-	gchar *ret;
-	DBusMessageIter iter;
-	const char *value;
+        DBusConnection *connection;
+        DBusError error;
+        DBusMessage *message = NULL;
+        DBusMessage *reply = NULL;
+        gchar *session_id;
+        gchar *ret;
+        DBusMessageIter iter;
+        const char *value;
 
-	session_id = NULL;
-	ret = NULL;
+        session_id = NULL;
+        ret = NULL;
         gerror = NULL;
 
         if (!gsm_consolekit_ensure_ck_connection (manager, &gerror)) {
                 g_warning ("Could not connect to ConsoleKit: %s",
                            gerror->message);
                 g_error_free (gerror);
-		goto out;
+                goto out;
         }
 
-	connection = dbus_g_connection_get_connection (manager->priv->dbus_connection);
-	if (!get_current_session_id (connection, &session_id)) {
-		goto out;
-	}
+        connection = dbus_g_connection_get_connection (manager->priv->dbus_connection);
+        if (!get_current_session_id (connection, &session_id)) {
+                goto out;
+        }
 
-	dbus_error_init (&error);
-	message = dbus_message_new_method_call (CK_NAME,
-						session_id,
-						CK_SESSION_INTERFACE,
-						"GetSessionType");
-	if (message == NULL) {
-		goto out;
-	}
+        dbus_error_init (&error);
+        message = dbus_message_new_method_call (CK_NAME,
+                                                session_id,
+                                                CK_SESSION_INTERFACE,
+                                                "GetSessionType");
+        if (message == NULL) {
+                goto out;
+        }
 
-	reply = dbus_connection_send_with_reply_and_block (connection,
-							   message,
-							   -1,
-							   &error);
+        reply = dbus_connection_send_with_reply_and_block (connection,
+                                                           message,
+                                                           -1,
+                                                           &error);
 
-	if (reply == NULL) {
-		if (dbus_error_is_set (&error)) {
-			g_warning ("Unable to determine session type: %s", error.message);
-			dbus_error_free (&error);
-		}
-		goto out;
-	}
+        if (reply == NULL) {
+                if (dbus_error_is_set (&error)) {
+                        g_warning ("Unable to determine session type: %s", error.message);
+                        dbus_error_free (&error);
+                }
+                goto out;
+        }
 
-	dbus_message_iter_init (reply, &iter);
-	dbus_message_iter_get_basic (&iter, &value);
-	ret = g_strdup (value);
+        dbus_message_iter_init (reply, &iter);
+        dbus_message_iter_get_basic (&iter, &value);
+        ret = g_strdup (value);
 
 out:
-	if (message != NULL) {
-		dbus_message_unref (message);
-	}
-	if (reply != NULL) {
-		dbus_message_unref (reply);
-	}
-	g_free (session_id);
+        if (message != NULL) {
+                dbus_message_unref (message);
+        }
+        if (reply != NULL) {
+                dbus_message_unref (reply);
+        }
+        g_free (session_id);
 
-	return ret;
+        return ret;
 }
 
 
