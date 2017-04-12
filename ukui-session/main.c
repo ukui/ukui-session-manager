@@ -104,7 +104,7 @@ initialize_gsettings (void)
 
         return ret;
 }
-	
+
 static void on_bus_name_lost(DBusGProxy* bus_proxy, const char* name, gpointer data)
 {
 	g_warning("Lost name on bus: %s, exiting", name);
@@ -642,10 +642,10 @@ int main(int argc, char** argv)
 	display_str = gdk_display_get_name (gdk_display_get_default());
 	gsm_util_setenv("DISPLAY", display_str);
 
-	/* Some third-party programs rely on UKUI_DESKTOP_SESSION_ID to
-	 * detect if UKUI is running. We keep this for compatibility reasons.
+	/* Some third-party programs rely on GNOME_DESKTOP_SESSION_ID to
+	 * pick up the correct theme. We keep this for compatibility reasons.
 	 */
-	gsm_util_setenv("UKUI_DESKTOP_SESSION_ID", "this-is-deprecated");
+	gsm_util_setenv("GNOME_DESKTOP_SESSION_ID", "this-is-deprecated");
 
 	/*
 	 * Make sure gsettings is set up correctly.  If not, then bail.
