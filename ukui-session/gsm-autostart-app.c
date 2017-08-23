@@ -134,7 +134,8 @@ is_disabled (GsmApp *app)
         }
 
         /* Check OnlyShowIn/NotShowIn/TryExec */
-        if (!egg_desktop_file_can_launch (priv->desktop_file, "UKUI")) {
+        if (!egg_desktop_file_can_launch (priv->desktop_file, "UKUI") &&
+            !egg_desktop_file_can_launch (priv->desktop_file, "MATE")) {
                 g_debug ("app %s not installed or not for UKUI",
                          gsm_app_peek_id (app));
                 return TRUE;
