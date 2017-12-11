@@ -1,4 +1,6 @@
-SUBDIRS = icons
+SUBDIRS = \
+	icons \
+	images
 
 bin_SCRIPTS = ukui-wm
 

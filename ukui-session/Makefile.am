@@ -12,10 +12,12 @@ AM_CPPFLAGS =					\
 AM_CFLAGS = $(WARN_CFLAGS)
 
 ukui_session_SOURCES =				\
-	gsm-app.h				\
-	gsm-app.c				\
+        gsm-app.h				\
+        gsm-app.c				\
 	gsm-autostart-app.h			\
 	gsm-autostart-app.c			\
+        gsm-blur.h				\
+        gsm-blur.c				\
 	gsm-client.c				\
 	gsm-client.h				\
 	gsm-xsmp-client.h			\
@@ -28,25 +30,27 @@ ukui_session_SOURCES =				\
 	gsm-consolekit.h			\
 	gsm-systemd.c 				\
 	gsm-systemd.h				\
+	gsm-logout-button.h			\
+	gsm-logout-button.c			\
 	gsm-logout-dialog.h			\
 	gsm-logout-dialog.c			\
-	gsm-inhibit-dialog.h			\
-	gsm-inhibit-dialog.c			\
+        gsm-inhibit-dialog.h			\
+        gsm-inhibit-dialog.c			\
 	gs-idle-monitor.h			\
 	gs-idle-monitor.c			\
 	gsm-presence.h				\
 	gsm-presence.c				\
-	ukdm.h					\
-	ukdm.c					\
-	ukdm-signal-handler.h			\
-	ukdm-signal-handler.c			\
-	ukdm-log.h				\
-	ukdm-log.c				\
+        ukdm.h					\
+        ukdm.c					\
+        ukdm-signal-handler.h			\
+        ukdm-signal-handler.c			\
+        ukdm-log.h				\
+        ukdm-log.c				\
 	uksm-gnome.c				\
 	uksm-gnome.h				\
-	main.c					\
-	gsm-store.h				\
-	gsm-store.c				\
+        main.c					\
+        gsm-store.h				\
+        gsm-store.c				\
 	gsm-inhibitor.h				\
 	gsm-inhibitor.c				\
 	gsm-manager.c				\
@@ -58,13 +62,13 @@ ukui_session_SOURCES =				\
 
 ukui_session_CPPFLAGS =			\
 	$(AM_CPPFLAGS)				\
-	$(X11_CFLAGS)                           \
+	$(X11_CFLAGS)				\
 	$(SM_CFLAGS)				\
 	$(ICE_CFLAGS)				\
 	$(XEXT_CFLAGS)				\
 	-I$(top_srcdir)/egg			\
 	-DLOCALE_DIR=\""$(datadir)/locale"\"	\
-	-DDATA_DIR=\""$(datadir)/ukui-session"\" \
+	-DDATA_DIR=\""$(datadir)/ukui-session-manager"\" \
 	-DLIBEXECDIR=\"$(libexecdir)\"		\
 	-DGTKBUILDER_DIR=\""$(pkgdatadir)"\"	\
 	-DI_KNOW_THE_DEVICEKIT_POWER_API_IS_SUBJECT_TO_CHANGE
@@ -78,9 +82,10 @@ ukui_session_LDADD =				\
 	$(XRENDER_LIBS)				\
 	$(XTEST_LIBS)				\
 	$(XEXT_LIBS)				\
-	$(UKUI_SESSION_LIBS)			\
+        $(UKUI_SESSION_LIBS)			\
 	$(SYSTEMD_LIBS)				\
-	$(EXECINFO_LIBS)
+	$(EXECINFO_LIBS)			\
+	-lm
 
 libgsmutil_la_SOURCES =				\
 	gsm-util.c				\

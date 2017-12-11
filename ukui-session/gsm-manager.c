@@ -3185,7 +3185,7 @@ show_shutdown_dialog (GsmManager *manager)
                           "response",
                           G_CALLBACK (logout_dialog_response),
                           manager);
-        gtk_widget_show (dialog);
+        gtk_widget_show_all (dialog);
 }
 
 static void
@@ -3207,7 +3207,7 @@ show_logout_dialog (GsmManager *manager)
                           "response",
                           G_CALLBACK (logout_dialog_response),
                           manager);
-        gtk_widget_show (dialog);
+        gtk_widget_show_all (dialog);
 }
 
 static void

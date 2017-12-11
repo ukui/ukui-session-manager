@@ -53,14 +53,17 @@ typedef struct _GsmLogoutDialogPrivate  GsmLogoutDialogPrivate;
 
 struct _GsmLogoutDialog
 {
-        GtkMessageDialog        parent;
+        GtkWindow        parent;
 
         GsmLogoutDialogPrivate *priv;
 };
 
 struct _GsmLogoutDialogClass
 {
-        GtkMessageDialogClass  parent_class;
+        GtkWindowClass  parent_class;
+
+        /* signals */
+        void (*response) (GsmLogoutDialog *gsm_logout_dialog, gint response_id);
 };
 
 GType        gsm_logout_dialog_get_type   (void) G_GNUC_CONST;
