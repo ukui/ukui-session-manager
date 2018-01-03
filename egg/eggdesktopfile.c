@@ -1171,20 +1171,19 @@ egg_desktop_file_launchv (EggDesktopFile *desktop_file,
 
   if (screen)
     {
-      char *display_name = gdk_screen_make_display_name (screen);
+      display = gdk_screen_get_display (screen);
+      char *display_name = g_strdup (gdk_display_get_name (display));
       char *display_env = g_strdup_printf ("DISPLAY=%s", display_name);
       env = array_putenv (env, display_env);
       g_free (display_name);
       g_free (display_env);
-
-      display = gdk_screen_get_display (screen);
     }
   else
     {
       display = gdk_display_get_default ();
       screen = gdk_display_get_default_screen (display);
     }
-  screen_num = gdk_screen_get_number (screen);
+  screen_num = gdk_x11_screen_get_screen_number (screen);
 
   translated_documents = translate_document_list (desktop_file, documents);
   docs = translated_documents;
