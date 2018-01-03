@@ -479,7 +479,7 @@ gboolean
 gsm_util_export_activation_environment (GError **error)
 {
         GDBusConnection *connection;
-        gboolean         environment_update = FALSE;
+        gboolean         environment_updated = FALSE;
         char           **entry_names;
         int              i = 0;
         GVariantBuilder  builder;
@@ -543,7 +543,7 @@ gsm_util_export_activation_environment (GError **error)
         if (bus_error != NULL) {
                 g_propagate_error (error, bus_error);
         } else {
-                environment_update = TRUE;
+                environment_updated = TRUE;
                 g_variant_unref (reply);
         }
 
