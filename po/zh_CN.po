@@ -14,11 +14,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-29 16:47+0800\n"
+"POT-Creation-Date: 2018-02-27 11:59+0800\n"
 "PO-Revision-Date: 2015-12-14 10:28+0000\n"
 "Last-Translator: liushuyu011 <liushuyu011@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
-"zh_CN/)\n"
+"Language-Team: Chinese (China) (http://www.wiki.ukui.org/trans/ukui/UKUI/"
+"language/zh_CN/)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,7 +73,7 @@ msgstr "无描述"
 msgid "Version of this application"
 msgstr "此应用程序的版本"
 
-#: ../capplet/main.c:55
+#: ../capplet/main.c:65
 msgid "Could not display help document"
 msgstr "不能显示帮助文档"
 
@@ -212,7 +212,7 @@ msgstr "此会话将您登录到 UKUI"
 msgid "<b>Some programs are still running:</b>"
 msgstr "<b>某些程序仍在运行中：</b>"
 
-#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:635
+#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:634
 msgid ""
 "Waiting for the program to finish.  Interrupting the program may cause you "
 "to lose work."
@@ -262,37 +262,37 @@ msgstr "命令(_M)："
 msgid "_Name:"
 msgstr "名称(_N)："
 
-#: ../egg/eggdesktopfile.c:153
+#: ../egg/eggdesktopfile.c:152
 #, c-format
 msgid "File is not a valid .desktop file"
 msgstr "文件不是有效的 .desktop 文件"
 
-#: ../egg/eggdesktopfile.c:173
+#: ../egg/eggdesktopfile.c:172
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
 msgstr "不可识别的桌面文件版本“%s”"
 
-#: ../egg/eggdesktopfile.c:957
+#: ../egg/eggdesktopfile.c:956
 #, c-format
 msgid "Starting %s"
 msgstr "正在启动 %s"
 
-#: ../egg/eggdesktopfile.c:1098
+#: ../egg/eggdesktopfile.c:1097
 #, c-format
 msgid "Application does not accept documents on command line"
 msgstr "应用程序不在命令行上接受文档"
 
-#: ../egg/eggdesktopfile.c:1166
+#: ../egg/eggdesktopfile.c:1165
 #, c-format
 msgid "Unrecognized launch option: %d"
 msgstr "无法识别的调用选项：%d"
 
-#: ../egg/eggdesktopfile.c:1365
+#: ../egg/eggdesktopfile.c:1363
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr "无法将文档 URI 传送给“Type=Link”桌面项"
 
-#: ../egg/eggdesktopfile.c:1386
+#: ../egg/eggdesktopfile.c:1384
 #, c-format
 msgid "Not a launchable item"
 msgstr "不是可调用项"
@@ -325,111 +325,111 @@ msgstr "会话管理选项："
 msgid "Show session management options"
 msgstr "显示会话管理选项"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:253
+#: ../ukui-session/gsm-inhibit-dialog.c:252
 #, c-format
 msgid "Icon '%s' not found"
 msgstr "图标“%s”未找到"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:583
+#: ../ukui-session/gsm-inhibit-dialog.c:582
 msgid "Unknown"
 msgstr "未知"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:634
+#: ../ukui-session/gsm-inhibit-dialog.c:633
 msgid "A program is still running:"
 msgstr "程序仍在运行中："
 
-#: ../ukui-session/gsm-inhibit-dialog.c:638
+#: ../ukui-session/gsm-inhibit-dialog.c:637
 msgid "Some programs are still running:"
 msgstr "程序仍在运行中："
 
-#: ../ukui-session/gsm-inhibit-dialog.c:639
+#: ../ukui-session/gsm-inhibit-dialog.c:638
 msgid ""
 "Waiting for programs to finish.  Interrupting these programs may cause you "
 "to lose work."
 msgstr "正在等候程序完成。中断程序可能导致您的工作成果丢失。"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:869
+#: ../ukui-session/gsm-inhibit-dialog.c:868
 msgid "Switch User Anyway"
 msgstr "强制切换用户"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:872
+#: ../ukui-session/gsm-inhibit-dialog.c:871
 msgid "Log Out Anyway"
 msgstr "强制注销"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:875
+#: ../ukui-session/gsm-inhibit-dialog.c:874
 msgid "Suspend Anyway"
 msgstr "强制挂起"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:878
+#: ../ukui-session/gsm-inhibit-dialog.c:877
 msgid "Hibernate Anyway"
 msgstr "强制休眠"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:881
+#: ../ukui-session/gsm-inhibit-dialog.c:880
 msgid "Shut Down Anyway"
 msgstr "强制关机"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:884
+#: ../ukui-session/gsm-inhibit-dialog.c:883
 msgid "Reboot Anyway"
 msgstr "强制重新启动"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:892
+#: ../ukui-session/gsm-inhibit-dialog.c:891
 msgid "Lock Screen"
 msgstr "锁定屏幕"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:895
+#: ../ukui-session/gsm-inhibit-dialog.c:894
 msgid "Cancel"
 msgstr "取消"
 
-#: ../ukui-session/gsm-logout-dialog.c:333
+#: ../ukui-session/gsm-logout-dialog.c:477
 #, c-format
 msgid "You will be automatically logged out in %d second"
 msgid_plural "You will be automatically logged out in %d seconds"
 msgstr[0] "您即将在 %d 秒后自动注销"
 
-#: ../ukui-session/gsm-logout-dialog.c:341
+#: ../ukui-session/gsm-logout-dialog.c:485
 #, c-format
 msgid "This system will be automatically shut down in %d second"
 msgid_plural "This system will be automatically shut down in %d seconds"
 msgstr[0] "系统即将在 %d 秒后自动关机"
 
-#: ../ukui-session/gsm-logout-dialog.c:387
+#: ../ukui-session/gsm-logout-dialog.c:531
 #, c-format
 msgid "You are currently logged in as \"%s\"."
 msgstr "您目前以“%s”身份登录。"
 
-#: ../ukui-session/gsm-logout-dialog.c:467
+#: ../ukui-session/gsm-logout-dialog.c:664
 msgid "Log out of this system now?"
 msgstr "现在注销系统吗？"
 
-#: ../ukui-session/gsm-logout-dialog.c:473
-msgid "_Switch User"
-msgstr "切换用户(_S)"
+#: ../ukui-session/gsm-logout-dialog.c:674
+msgid "Switch User"
+msgstr "切换用户"
 
-#: ../ukui-session/gsm-logout-dialog.c:482
-msgid "_Log Out"
-msgstr "注销(_L)"
+#: ../ukui-session/gsm-logout-dialog.c:687
+msgid "Log Out"
+msgstr "注销"
 
-#: ../ukui-session/gsm-logout-dialog.c:488
+#: ../ukui-session/gsm-logout-dialog.c:699
 msgid "Shut down this system now?"
 msgstr "现在关闭此系统吗？"
 
-#: ../ukui-session/gsm-logout-dialog.c:494
-msgid "S_uspend"
-msgstr "挂起(_U)"
+#: ../ukui-session/gsm-logout-dialog.c:709
+msgid "Suspend"
+msgstr "挂起"
 
-#: ../ukui-session/gsm-logout-dialog.c:500
-msgid "_Hibernate"
-msgstr "休眠(_H)"
+#: ../ukui-session/gsm-logout-dialog.c:722
+msgid "Hibernate"
+msgstr "休眠"
 
-#: ../ukui-session/gsm-logout-dialog.c:506
-msgid "_Restart"
-msgstr "重启(_R)"
+#: ../ukui-session/gsm-logout-dialog.c:735
+msgid "Restart"
+msgstr "重启"
 
-#: ../ukui-session/gsm-logout-dialog.c:516
-msgid "_Shut Down"
-msgstr "关闭系统(_S)"
+#: ../ukui-session/gsm-logout-dialog.c:749
+msgid "Shut Down"
+msgstr "关机"
 
-#: ../ukui-session/gsm-manager.c:1436 ../ukui-session/gsm-manager.c:2155
+#: ../ukui-session/gsm-manager.c:1414 ../ukui-session/gsm-manager.c:2133
 msgid "Not responding"
 msgstr "无响应"
 
@@ -445,13 +445,13 @@ msgstr "已记住的应用程序"
 msgid "This program is blocking logout."
 msgstr "程序禁止注销。"
 
-#: ../ukui-session/gsm-xsmp-server.c:326
+#: ../ukui-session/gsm-xsmp-server.c:325
 msgid ""
 "Refusing new client connection because the session is currently being shut "
 "down\n"
 msgstr "拒绝新客户连接，原因是会话正在关闭\n"
 
-#: ../ukui-session/gsm-xsmp-server.c:588
+#: ../ukui-session/gsm-xsmp-server.c:587
 #, c-format
 msgid "Could not create ICE listening socket: %s"
 msgstr "无法创建 ICE 监听套接字：%s"

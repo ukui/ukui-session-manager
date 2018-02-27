@@ -10,11 +10,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-29 16:47+0800\n"
+"POT-Creation-Date: 2018-02-27 11:59+0800\n"
 "PO-Revision-Date: 2015-12-27 01:18+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
-"Language-Team: English (United Kingdom) (http://www.wiki.ukui.org/trans/ukui/UKUI/"
-"language/en_GB/)\n"
+"Language-Team: English (United Kingdom) (http://www.wiki.ukui.org/trans/ukui/"
+"UKUI/language/en_GB/)\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +69,7 @@ msgstr "No description"
 msgid "Version of this application"
 msgstr "Version of this application"
 
-#: ../capplet/main.c:55
+#: ../capplet/main.c:65
 msgid "Could not display help document"
 msgstr "Could not display help document"
 
@@ -220,7 +220,7 @@ msgstr "This session logs you into UKUI"
 msgid "<b>Some programs are still running:</b>"
 msgstr "<b>Some programs are still running:</b>"
 
-#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:635
+#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:634
 msgid ""
 "Waiting for the program to finish.  Interrupting the program may cause you "
 "to lose work."
@@ -272,37 +272,37 @@ msgstr "Co_mmand:"
 msgid "_Name:"
 msgstr "_Name:"
 
-#: ../egg/eggdesktopfile.c:153
+#: ../egg/eggdesktopfile.c:152
 #, c-format
 msgid "File is not a valid .desktop file"
 msgstr "File is not a valid .desktop file"
 
-#: ../egg/eggdesktopfile.c:173
+#: ../egg/eggdesktopfile.c:172
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
 msgstr "Unrecognised desktop file Version '%s'"
 
-#: ../egg/eggdesktopfile.c:957
+#: ../egg/eggdesktopfile.c:956
 #, c-format
 msgid "Starting %s"
 msgstr "Starting %s"
 
-#: ../egg/eggdesktopfile.c:1098
+#: ../egg/eggdesktopfile.c:1097
 #, c-format
 msgid "Application does not accept documents on command line"
 msgstr "Application does not accept documents on command line"
 
-#: ../egg/eggdesktopfile.c:1166
+#: ../egg/eggdesktopfile.c:1165
 #, c-format
 msgid "Unrecognized launch option: %d"
 msgstr "Unrecognised launch option: %d"
 
-#: ../egg/eggdesktopfile.c:1365
+#: ../egg/eggdesktopfile.c:1363
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr "Can't pass document URIs to a 'Type=Link' desktop entry"
 
-#: ../egg/eggdesktopfile.c:1386
+#: ../egg/eggdesktopfile.c:1384
 #, c-format
 msgid "Not a launchable item"
 msgstr "Not a launchable item"
@@ -335,24 +335,24 @@ msgstr "Session management options:"
 msgid "Show session management options"
 msgstr "Show session management options"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:253
+#: ../ukui-session/gsm-inhibit-dialog.c:252
 #, c-format
 msgid "Icon '%s' not found"
 msgstr "Icon '%s' not found"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:583
+#: ../ukui-session/gsm-inhibit-dialog.c:582
 msgid "Unknown"
 msgstr "Unknown"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:634
+#: ../ukui-session/gsm-inhibit-dialog.c:633
 msgid "A program is still running:"
 msgstr "A program is still running:"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:638
+#: ../ukui-session/gsm-inhibit-dialog.c:637
 msgid "Some programs are still running:"
 msgstr "Some programs are still running:"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:639
+#: ../ukui-session/gsm-inhibit-dialog.c:638
 msgid ""
 "Waiting for programs to finish.  Interrupting these programs may cause you "
 "to lose work."
@@ -360,90 +360,90 @@ msgstr ""
 "Waiting for programs to finish.  Interrupting these programs may cause you "
 "to lose work."
 
-#: ../ukui-session/gsm-inhibit-dialog.c:869
+#: ../ukui-session/gsm-inhibit-dialog.c:868
 msgid "Switch User Anyway"
 msgstr "Switch User Anyway"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:872
+#: ../ukui-session/gsm-inhibit-dialog.c:871
 msgid "Log Out Anyway"
 msgstr "Log Out Anyway"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:875
+#: ../ukui-session/gsm-inhibit-dialog.c:874
 msgid "Suspend Anyway"
 msgstr "Suspend Anyway"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:878
+#: ../ukui-session/gsm-inhibit-dialog.c:877
 msgid "Hibernate Anyway"
 msgstr "Hibernate Anyway"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:881
+#: ../ukui-session/gsm-inhibit-dialog.c:880
 msgid "Shut Down Anyway"
 msgstr "Shut Down Anyway"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:884
+#: ../ukui-session/gsm-inhibit-dialog.c:883
 msgid "Reboot Anyway"
 msgstr "Reboot Anyway"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:892
+#: ../ukui-session/gsm-inhibit-dialog.c:891
 msgid "Lock Screen"
 msgstr "Lock Screen"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:895
+#: ../ukui-session/gsm-inhibit-dialog.c:894
 msgid "Cancel"
 msgstr "Cancel"
 
-#: ../ukui-session/gsm-logout-dialog.c:333
+#: ../ukui-session/gsm-logout-dialog.c:477
 #, c-format
 msgid "You will be automatically logged out in %d second"
 msgid_plural "You will be automatically logged out in %d seconds"
 msgstr[0] "You will be automatically logged out in %d second"
 msgstr[1] "You will be automatically logged out in %d seconds"
 
-#: ../ukui-session/gsm-logout-dialog.c:341
+#: ../ukui-session/gsm-logout-dialog.c:485
 #, c-format
 msgid "This system will be automatically shut down in %d second"
 msgid_plural "This system will be automatically shut down in %d seconds"
 msgstr[0] "This system will be automatically shut down in %d second"
 msgstr[1] "This system will be automatically shut down in %d seconds"
 
-#: ../ukui-session/gsm-logout-dialog.c:387
+#: ../ukui-session/gsm-logout-dialog.c:531
 #, c-format
 msgid "You are currently logged in as \"%s\"."
 msgstr "You are currently logged in as \"%s\"."
 
-#: ../ukui-session/gsm-logout-dialog.c:467
+#: ../ukui-session/gsm-logout-dialog.c:664
 msgid "Log out of this system now?"
 msgstr "Log out of this system now?"
 
-#: ../ukui-session/gsm-logout-dialog.c:473
-msgid "_Switch User"
-msgstr "_Switch User"
+#: ../ukui-session/gsm-logout-dialog.c:674
+msgid "Switch User"
+msgstr "Switch User"
 
-#: ../ukui-session/gsm-logout-dialog.c:482
-msgid "_Log Out"
-msgstr "_Log Out"
+#: ../ukui-session/gsm-logout-dialog.c:687
+msgid "Log Out"
+msgstr "Log Out"
 
-#: ../ukui-session/gsm-logout-dialog.c:488
+#: ../ukui-session/gsm-logout-dialog.c:699
 msgid "Shut down this system now?"
 msgstr "Shut down this system now?"
 
-#: ../ukui-session/gsm-logout-dialog.c:494
-msgid "S_uspend"
-msgstr "S_uspend"
+#: ../ukui-session/gsm-logout-dialog.c:709
+msgid "Suspend"
+msgstr "Suspend"
 
-#: ../ukui-session/gsm-logout-dialog.c:500
-msgid "_Hibernate"
-msgstr "_Hibernate"
+#: ../ukui-session/gsm-logout-dialog.c:722
+msgid "Hibernate"
+msgstr "Hibernate"
 
-#: ../ukui-session/gsm-logout-dialog.c:506
-msgid "_Restart"
-msgstr "_Restart"
+#: ../ukui-session/gsm-logout-dialog.c:735
+msgid "Restart"
+msgstr "Restart"
 
-#: ../ukui-session/gsm-logout-dialog.c:516
-msgid "_Shut Down"
-msgstr "_Shut Down"
+#: ../ukui-session/gsm-logout-dialog.c:749
+msgid "Shut Down"
+msgstr "Shut Down"
 
-#: ../ukui-session/gsm-manager.c:1436 ../ukui-session/gsm-manager.c:2155
+#: ../ukui-session/gsm-manager.c:1414 ../ukui-session/gsm-manager.c:2133
 msgid "Not responding"
 msgstr "Not responding"
 
@@ -459,7 +459,7 @@ msgstr "Remembered Application"
 msgid "This program is blocking logout."
 msgstr "This program is blocking logout."
 
-#: ../ukui-session/gsm-xsmp-server.c:326
+#: ../ukui-session/gsm-xsmp-server.c:325
 msgid ""
 "Refusing new client connection because the session is currently being shut "
 "down\n"
@@ -467,7 +467,7 @@ msgstr ""
 "Refusing new client connection because the session is currently being shut "
 "down\n"
 
-#: ../ukui-session/gsm-xsmp-server.c:588
+#: ../ukui-session/gsm-xsmp-server.c:587
 #, c-format
 msgid "Could not create ICE listening socket: %s"
 msgstr "Could not create ICE listening socket: %s"
