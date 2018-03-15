@@ -75,8 +75,8 @@ if [ -z "$WINDOW_MANAGER" ] ; then
   if [ $IS_X_COMPOSITED -eq 0 ] ; then
     KNOWN_WM="mutter compiz-manager compiz beryl $KNOWN_WM"
   fi
-  # marco is still the default wm in UKUI
-  KNOWN_WM="marco $KNOWN_WM"
+  # ukwm is the default wm in UKUI
+  KNOWN_WM="ukwm $KNOWN_WM"
 
   OLDIFS=$IFS
   if [ -z "$DEFWM" -o "x$DEFWM" = "xukui-wm" ]; then

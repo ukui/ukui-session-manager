@@ -1,4 +1,4 @@
-AC_INIT([ukui-session-manager], [1.0.1], [http://www.ukui.org/])
+AC_INIT([ukui-session-manager], [1.1.1], [http://www.ukui.org/])
 AC_CONFIG_SRCDIR([ukui-session])
 AC_CONFIG_HEADERS([config.h])
 
@@ -77,8 +77,8 @@ dnl Option to set the default window manager
 dnl ====================================================================
 AC_ARG_WITH(default-wm,
               [AC_HELP_STRING([--with-default-wm],
-                              [Specify the default window manager @<:@default=marco@:>@])],,
-                              [with_default_wm="marco"])
+                              [Specify the default window manager @<:@default=ukwm@:>@])],,
+                              [with_default_wm="ukwm"])
 
 DEFAULT_WM=$with_default_wm
 AC_SUBST(DEFAULT_WM)
