@@ -718,7 +718,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
                 }
 
                 if (gsm_logout_supports_system_hibernate (logout_dialog)) {
-                        GsmLogoutButton *hibernate_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_SHUTDOWN,
+                        GsmLogoutButton *hibernate_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_HIBERNATE,
                                                                                    _("Hibernate"),
                                                                                   DATA_DIR "/hibernate.png",
                                                                                   DATA_DIR "/hibernate_prelight.png");
@@ -731,7 +731,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
                 }
 
                 if (gsm_logout_supports_reboot (logout_dialog)) {
-                        GsmLogoutButton *reboot_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_SHUTDOWN,
+                        GsmLogoutButton *reboot_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_REBOOT,
                                                                                 _("Restart"),
                                                                                 DATA_DIR "/reboot.png",
                                                                                 DATA_DIR "/reboot_prelight.png");
