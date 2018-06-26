@@ -2,7 +2,7 @@ Source: ukui-session-manager
 Section: x11
 Priority: optional
 Maintainer: Kylin Team <pkg-kylin-devel@lists.alioth.debian.org>
-Uploaders: Aron Xu <aron@debian.org>
+Uploaders: Aron Xu <aron@debian.org>,
            handsome_feng <jianfengli@ubuntukylin.com>,
 Standards-Version: 4.1.4
 Build-Depends: debhelper (>= 11),
@@ -25,6 +25,8 @@ Build-Depends: debhelper (>= 11),
                xmlto,
                xsltproc,
 Homepage: http://www.ukui.org/
+Vcs-Git: https://github.com/ukui/ukui-session-manager.git
+Vcs-Browser: https://github.com/ukui/ukui-session-manager
 
 Package: ukui-session-manager
 Architecture: any
