@@ -1,3 +1,10 @@
+ukui-session-manager (1.1.2-2) unstable; urgency=medium
+
+  * Remove useless gsettings.
+  * Use mate-settings-daemon to replace ukui-settings-daemon.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Wed, 15 Aug 2018 14:00:05 +0800
+
 ukui-session-manager (1.1.2-1) unstable; urgency=medium
 
   * Use $(DEB_HOST_MULTIARCH) to replace the hard code in desktop
