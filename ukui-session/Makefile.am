@@ -11,13 +11,13 @@ AM_CPPFLAGS =					\
 
 AM_CFLAGS = $(WARN_CFLAGS)
 
-ukui_session_SOURCES =				\
-        gsm-app.h				\
-        gsm-app.c				\
+ukui_session_SOURCES =			\
+	gsm-app.h					\
+	gsm-app.c					\
 	gsm-autostart-app.h			\
 	gsm-autostart-app.c			\
-        gsm-blur.h				\
-        gsm-blur.c				\
+	gsm-blur.h					\
+	gsm-blur.c					\
 	gsm-client.c				\
 	gsm-client.h				\
 	gsm-xsmp-client.h			\
@@ -34,23 +34,23 @@ ukui_session_SOURCES =				\
 	gsm-logout-button.c			\
 	gsm-logout-dialog.h			\
 	gsm-logout-dialog.c			\
-        gsm-inhibit-dialog.h			\
-        gsm-inhibit-dialog.c			\
+	gsm-inhibit-dialog.h		\
+	gsm-inhibit-dialog.c		\
 	gs-idle-monitor.h			\
 	gs-idle-monitor.c			\
 	gsm-presence.h				\
 	gsm-presence.c				\
-        ukdm.h					\
-        ukdm.c					\
-        ukdm-signal-handler.h			\
-        ukdm-signal-handler.c			\
-        ukdm-log.h				\
-        ukdm-log.c				\
+	ukdm.h						\
+	ukdm.c						\
+	ukdm-signal-handler.h		\
+	ukdm-signal-handler.c		\
+	ukdm-log.h					\
+	ukdm-log.c					\
 	uksm-gnome.c				\
 	uksm-gnome.h				\
-        main.c					\
-        gsm-store.h				\
-        gsm-store.c				\
+	main.c						\
+	gsm-store.h					\
+	gsm-store.c					\
 	gsm-inhibitor.h				\
 	gsm-inhibitor.c				\
 	gsm-manager.c				\
@@ -58,7 +58,9 @@ ukui_session_SOURCES =				\
 	gsm-session-save.c			\
 	gsm-session-save.h			\
 	gsm-xsmp-server.c			\
-	gsm-xsmp-server.h
+	gsm-xsmp-server.h			\
+	uksm-shortcuts-dialog.c		\
+	uksm-shortcuts-dialog.h
 
 ukui_session_CPPFLAGS =			\
 	$(AM_CPPFLAGS)				\
@@ -82,7 +84,7 @@ ukui_session_LDADD =				\
 	$(XRENDER_LIBS)				\
 	$(XTEST_LIBS)				\
 	$(XEXT_LIBS)				\
-        $(UKUI_SESSION_LIBS)			\
+	$(UKUI_SESSION_LIBS)			\
 	$(SYSTEMD_LIBS)				\
 	$(EXECINFO_LIBS)			\
 	-lm
