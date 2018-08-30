@@ -17,10 +17,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-29 16:47+0800\n"
+"POT-Creation-Date: 2018-08-30 17:30+0800\n"
 "PO-Revision-Date: 2015-12-14 10:18+0000\n"
 "Last-Translator: monsta <monsta@inbox.ru>\n"
-"Language-Team: Japanese (http://www.wiki.ukui.org/trans/ukui/UKUI/language/ja/)\n"
+"Language-Team: Japanese (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
+"ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,11 +72,11 @@ msgstr "名前なし"
 msgid "No description"
 msgstr "(説明なし)"
 
-#: ../capplet/main.c:36 ../ukui-session/main.c:590
+#: ../capplet/main.c:36 ../ukui-session/main.c:642
 msgid "Version of this application"
 msgstr "このアプリのバージョンを表示する"
 
-#: ../capplet/main.c:55
+#: ../capplet/main.c:52
 msgid "Could not display help document"
 msgstr "ヘルプドキュメントを表示できませんでした"
 
@@ -225,7 +226,7 @@ msgstr "このセッションで MATE にログインします"
 msgid "<b>Some programs are still running:</b>"
 msgstr "<b>いくつかのプログラムが未だ実行中です:</b>"
 
-#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:635
+#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:634
 msgid ""
 "Waiting for the program to finish.  Interrupting the program may cause you "
 "to lose work."
@@ -277,37 +278,37 @@ msgstr "コマンド(_M):"
 msgid "_Name:"
 msgstr "名前(_N):"
 
-#: ../egg/eggdesktopfile.c:153
+#: ../egg/eggdesktopfile.c:152
 #, c-format
 msgid "File is not a valid .desktop file"
 msgstr "妥当な .desktop ファイルではありません"
 
-#: ../egg/eggdesktopfile.c:173
+#: ../egg/eggdesktopfile.c:172
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
 msgstr "バージョン '%s' の .desktop ファイルはサポートしていません"
 
-#: ../egg/eggdesktopfile.c:957
+#: ../egg/eggdesktopfile.c:956
 #, c-format
 msgid "Starting %s"
 msgstr "%s の起動中です"
 
-#: ../egg/eggdesktopfile.c:1098
+#: ../egg/eggdesktopfile.c:1097
 #, c-format
 msgid "Application does not accept documents on command line"
 msgstr "コマンドラインからドキュメントにはアクセスできません"
 
-#: ../egg/eggdesktopfile.c:1166
+#: ../egg/eggdesktopfile.c:1165
 #, c-format
 msgid "Unrecognized launch option: %d"
 msgstr "不明な起動オプションです: %d"
 
-#: ../egg/eggdesktopfile.c:1365
+#: ../egg/eggdesktopfile.c:1363
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr "ドキュメントの URI を 'Type=Link' な .desktop エントリには渡せません"
 
-#: ../egg/eggdesktopfile.c:1386
+#: ../egg/eggdesktopfile.c:1384
 #, c-format
 msgid "Not a launchable item"
 msgstr "起動可能なアイテムではありません"
@@ -340,24 +341,24 @@ msgstr "セッション管理のオプション:"
 msgid "Show session management options"
 msgstr "セッション管理のオプションを表示する"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:253
+#: ../ukui-session/gsm-inhibit-dialog.c:252
 #, c-format
 msgid "Icon '%s' not found"
 msgstr "'%s' というアイコンが見つかりませんでした"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:583
+#: ../ukui-session/gsm-inhibit-dialog.c:582
 msgid "Unknown"
 msgstr "不明"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:634
+#: ../ukui-session/gsm-inhibit-dialog.c:633
 msgid "A program is still running:"
 msgstr "プログラムが未だ実行中です:"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:638
+#: ../ukui-session/gsm-inhibit-dialog.c:637
 msgid "Some programs are still running:"
 msgstr "いくつかのプログラムが未だ実行中です:"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:639
+#: ../ukui-session/gsm-inhibit-dialog.c:638
 msgid ""
 "Waiting for programs to finish.  Interrupting these programs may cause you "
 "to lose work."
@@ -365,88 +366,94 @@ msgstr ""
 "プログラムが終了するのを待っています。実行中のプログラムを強制終了させてしま"
 "うと、作業内容を失うことになるかもしれません。"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:869
+#: ../ukui-session/gsm-inhibit-dialog.c:868
 msgid "Switch User Anyway"
 msgstr "とにかくユーザを切り替える"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:872
+#: ../ukui-session/gsm-inhibit-dialog.c:871
 msgid "Log Out Anyway"
 msgstr "とにかくログアウトする"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:875
+#: ../ukui-session/gsm-inhibit-dialog.c:874
 msgid "Suspend Anyway"
 msgstr "とにかくサスペンドする"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:878
+#: ../ukui-session/gsm-inhibit-dialog.c:877
 msgid "Hibernate Anyway"
 msgstr "とにかくハイバネートする"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:881
+#: ../ukui-session/gsm-inhibit-dialog.c:880
 msgid "Shut Down Anyway"
 msgstr "とにかくシャットダウンする"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:884
+#: ../ukui-session/gsm-inhibit-dialog.c:883
 msgid "Reboot Anyway"
 msgstr "とにかく再起動する"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:892
+#: ../ukui-session/gsm-inhibit-dialog.c:891
 msgid "Lock Screen"
 msgstr "画面をロックする"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:895
+#: ../ukui-session/gsm-inhibit-dialog.c:894
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: ../ukui-session/gsm-logout-dialog.c:333
+#: ../ukui-session/gsm-logout-dialog.c:477
 #, c-format
 msgid "You will be automatically logged out in %d second"
 msgid_plural "You will be automatically logged out in %d seconds"
 msgstr[0] "%d 秒後に自動的にログアウトします"
 
-#: ../ukui-session/gsm-logout-dialog.c:341
+#: ../ukui-session/gsm-logout-dialog.c:485
 #, c-format
 msgid "This system will be automatically shut down in %d second"
 msgid_plural "This system will be automatically shut down in %d seconds"
 msgstr[0] "%d 秒後に自動的にシャットダウンします"
 
-#: ../ukui-session/gsm-logout-dialog.c:387
+#: ../ukui-session/gsm-logout-dialog.c:531
 #, c-format
 msgid "You are currently logged in as \"%s\"."
 msgstr "あなたは現在 \"%s\" でログインしています。"
 
-#: ../ukui-session/gsm-logout-dialog.c:467
+#: ../ukui-session/gsm-logout-dialog.c:664
 msgid "Log out of this system now?"
 msgstr "このシステムから今すぐログアウトしますか?"
 
-#: ../ukui-session/gsm-logout-dialog.c:473
-msgid "_Switch User"
+#: ../ukui-session/gsm-logout-dialog.c:674
+#, fuzzy
+msgid "Switch User"
 msgstr "ユーザーを切り替える(_S)"
 
-#: ../ukui-session/gsm-logout-dialog.c:482
-msgid "_Log Out"
+#: ../ukui-session/gsm-logout-dialog.c:687
+#, fuzzy
+msgid "Log Out"
 msgstr "ログアウト(_L)"
 
-#: ../ukui-session/gsm-logout-dialog.c:488
+#: ../ukui-session/gsm-logout-dialog.c:699
 msgid "Shut down this system now?"
 msgstr "このシステムを今すぐシャットダウンしますか?"
 
-#: ../ukui-session/gsm-logout-dialog.c:494
-msgid "S_uspend"
+#: ../ukui-session/gsm-logout-dialog.c:709
+#, fuzzy
+msgid "Suspend"
 msgstr "サスペンド(_U)"
 
-#: ../ukui-session/gsm-logout-dialog.c:500
-msgid "_Hibernate"
+#: ../ukui-session/gsm-logout-dialog.c:722
+#, fuzzy
+msgid "Hibernate"
 msgstr "ハイバーネート(_H)"
 
-#: ../ukui-session/gsm-logout-dialog.c:506
-msgid "_Restart"
+#: ../ukui-session/gsm-logout-dialog.c:735
+#, fuzzy
+msgid "Restart"
 msgstr "再起動(_R)"
 
-#: ../ukui-session/gsm-logout-dialog.c:516
-msgid "_Shut Down"
+#: ../ukui-session/gsm-logout-dialog.c:749
+#, fuzzy
+msgid "Shut Down"
 msgstr "シャットダウン(_S)"
 
-#: ../ukui-session/gsm-manager.c:1436 ../ukui-session/gsm-manager.c:2155
+#: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136
 msgid "Not responding"
 msgstr "応答なし"
 
@@ -462,7 +469,7 @@ msgstr "記憶したアプリケーション"
 msgid "This program is blocking logout."
 msgstr "このプログラムがログアウトをブロックしています。"
 
-#: ../ukui-session/gsm-xsmp-server.c:326
+#: ../ukui-session/gsm-xsmp-server.c:325
 msgid ""
 "Refusing new client connection because the session is currently being shut "
 "down\n"
@@ -470,7 +477,7 @@ msgstr ""
 "セッションをシャットダウン中のため、新しいクライアントとの接続を拒否しまし"
 "た。\n"
 
-#: ../ukui-session/gsm-xsmp-server.c:588
+#: ../ukui-session/gsm-xsmp-server.c:587
 #, c-format
 msgid "Could not create ICE listening socket: %s"
 msgstr "ICE の監視ソケットを生成できませんでした: %s"
@@ -481,22 +488,182 @@ msgstr "ICE の監視ソケットを生成できませんでした: %s"
 msgid "Unable to start login session (and unable to connect to the X server)"
 msgstr "ログインセッションを起動できません (X サーバーにも接続できません)"
 
-#: ../ukui-session/main.c:587
+#: ../ukui-session/main.c:639
 msgid "Override standard autostart directories"
 msgstr "標準の自動起動フォルダーをオーバーライドする"
 
-#: ../ukui-session/main.c:588
+#: ../ukui-session/main.c:640
 msgid "Enable debugging code"
 msgstr "デバッグモードにする"
 
-#: ../ukui-session/main.c:589
+#: ../ukui-session/main.c:641
 msgid "Do not load user-specified applications"
 msgstr "ユーザーが指定したアプリケーションを起動しない"
 
-#: ../ukui-session/main.c:610
+#: ../ukui-session/main.c:643
+msgid "Show the keyboard shortcuts"
+msgstr ""
+
+#: ../ukui-session/main.c:663
 #, fuzzy
 msgid " - the UKUI session manager"
 msgstr "- MATE セッションマネージャー"
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:350
+#, fuzzy, c-format
+msgid "This window will be automatically closed in %d second"
+msgid_plural "This window will be automatically closed in %d seconds"
+msgstr[0] "%d 秒後に自動的にログアウトします"
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:466
+msgid "Keyboard Shortcuts"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:468
+#, fuzzy
+msgid "Application"
+msgstr "自動起動するアプリ"
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:469
+msgid "Super"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:470
+msgid "Open start menu."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:471
+msgid "Ctrl+Alt+T"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:472
+msgid "Open termianl."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:473
+msgid "Ctrl+Alt+D"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:474
+msgid "Show desktop."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:475
+msgid "Ctrl+Alt+L"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:476
+#, fuzzy
+msgid "Lock screen."
+msgstr "画面をロックする"
+
+#. Separator
+#: ../ukui-session/uksm-shortcuts-dialog.c:479
+#: ../ukui-session/uksm-shortcuts-dialog.c:500
+msgid "  "
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:481
+msgid "Screenshot"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:482
+msgid "Print"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:483
+msgid "Take a full-screen screenshot."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:484
+msgid "Ctrl+Print"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:485
+msgid "Take a screenshot of the current window."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:486
+msgid "Shift+Print"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:487
+msgid "Select area to grab."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:489
+msgid "Switching"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:490
+msgid "Alt+Tab"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:491
+#, fuzzy
+msgid "Switches between applications."
+msgstr "自動起動するアプリ"
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:492
+msgid "Alt+Shift+Tab"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:493
+msgid "Switches between applications in reverse order."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:494
+msgid "Super_L+P/F3/F7"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:495
+msgid "Switches between display."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:496
+msgid "Ctrl+Alt+ArrowKeys"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:497
+msgid "Switches between workspaces."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:502
+msgid "Windows"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:503
+msgid "Alt+F9"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:504
+msgid "Maximize the current window."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:505
+msgid "Alt+F10"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:506
+msgid "Minimize the current window."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:507
+msgid "Alt+F5"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:508
+msgid "Cancel maximize the current window."
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:509
+msgid "Alt+F4"
+msgstr ""
+
+#: ../ukui-session/uksm-shortcuts-dialog.c:510
+#, fuzzy
+msgid "Close the current window."
+msgstr "現在のセッション名をセットする"
 
 #: ../tools/ukui-session-save.c:70
 msgid "Log out"

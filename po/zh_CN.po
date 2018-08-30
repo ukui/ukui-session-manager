@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-30 16:26+0800\n"
+"POT-Creation-Date: 2018-08-30 17:30+0800\n"
 "PO-Revision-Date: 2015-12-14 10:28+0000\n"
 "Last-Translator: liushuyu011 <liushuyu011@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.wiki.ukui.org/trans/ukui/UKUI/"
@@ -69,7 +69,7 @@ msgstr "无名称"
 msgid "No description"
 msgstr "无描述"
 
-#: ../capplet/main.c:36 ../ukui-session/main.c:639
+#: ../capplet/main.c:36 ../ukui-session/main.c:642
 msgid "Version of this application"
 msgstr "此应用程序的版本"
 
@@ -462,175 +462,175 @@ msgstr "无法创建 ICE 监听套接字：%s"
 msgid "Unable to start login session (and unable to connect to the X server)"
 msgstr "无法启动登录会话(并且无法连接到 X 服务器)"
 
-#: ../ukui-session/main.c:636
+#: ../ukui-session/main.c:639
 msgid "Override standard autostart directories"
 msgstr "取代默认的自动启动目录"
 
-#: ../ukui-session/main.c:637
+#: ../ukui-session/main.c:640
 msgid "Enable debugging code"
 msgstr "启用调试代码"
 
-#: ../ukui-session/main.c:638
+#: ../ukui-session/main.c:641
 msgid "Do not load user-specified applications"
 msgstr "不装入用户指定的应用程序"
 
-#: ../ukui-session/main.c:640
+#: ../ukui-session/main.c:643
 msgid "Show the keyboard shortcuts"
 msgstr "显示系统快捷键"
 
-#: ../ukui-session/main.c:660
+#: ../ukui-session/main.c:663
 msgid " - the UKUI session manager"
 msgstr "- UKUI 会话管理器"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:348
+#: ../ukui-session/uksm-shortcuts-dialog.c:350
 #, c-format
 msgid "This window will be automatically closed in %d second"
 msgid_plural "This window will be automatically closed in %d seconds"
 msgstr[0] "此窗口将在 %d 秒后自动关闭"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:464
+#: ../ukui-session/uksm-shortcuts-dialog.c:466
 msgid "Keyboard Shortcuts"
 msgstr "系统快捷键"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:466
+#: ../ukui-session/uksm-shortcuts-dialog.c:468
 msgid "Application"
 msgstr "启动应用程序"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:467
+#: ../ukui-session/uksm-shortcuts-dialog.c:469
 msgid "Super"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:468
+#: ../ukui-session/uksm-shortcuts-dialog.c:470
 msgid "Open start menu."
 msgstr "打开开始菜单"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:469
+#: ../ukui-session/uksm-shortcuts-dialog.c:471
 msgid "Ctrl+Alt+T"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:470
+#: ../ukui-session/uksm-shortcuts-dialog.c:472
 msgid "Open termianl."
 msgstr "打开终端"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:471
+#: ../ukui-session/uksm-shortcuts-dialog.c:473
 msgid "Ctrl+Alt+D"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:472
+#: ../ukui-session/uksm-shortcuts-dialog.c:474
 msgid "Show desktop."
 msgstr "显示桌面"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:473
+#: ../ukui-session/uksm-shortcuts-dialog.c:475
 msgid "Ctrl+Alt+L"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:474
+#: ../ukui-session/uksm-shortcuts-dialog.c:476
 msgid "Lock screen."
 msgstr "锁定屏幕"
 
 #. Separator
-#: ../ukui-session/uksm-shortcuts-dialog.c:477
-#: ../ukui-session/uksm-shortcuts-dialog.c:498
+#: ../ukui-session/uksm-shortcuts-dialog.c:479
+#: ../ukui-session/uksm-shortcuts-dialog.c:500
 msgid "  "
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:479
+#: ../ukui-session/uksm-shortcuts-dialog.c:481
 msgid "Screenshot"
 msgstr "截图"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:480
+#: ../ukui-session/uksm-shortcuts-dialog.c:482
 msgid "Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:481
+#: ../ukui-session/uksm-shortcuts-dialog.c:483
 msgid "Take a full-screen screenshot."
 msgstr "截取整个屏幕"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:482
+#: ../ukui-session/uksm-shortcuts-dialog.c:484
 msgid "Ctrl+Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:483
+#: ../ukui-session/uksm-shortcuts-dialog.c:485
 msgid "Take a screenshot of the current window."
 msgstr "截取当前窗口"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:484
+#: ../ukui-session/uksm-shortcuts-dialog.c:486
 msgid "Shift+Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:485
+#: ../ukui-session/uksm-shortcuts-dialog.c:487
 msgid "Select area to grab."
 msgstr "选择一个截取区域"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:487
+#: ../ukui-session/uksm-shortcuts-dialog.c:489
 msgid "Switching"
 msgstr "切换"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:488
+#: ../ukui-session/uksm-shortcuts-dialog.c:490
 msgid "Alt+Tab"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:489
+#: ../ukui-session/uksm-shortcuts-dialog.c:491
 msgid "Switches between applications."
 msgstr "切换应用程序"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:490
+#: ../ukui-session/uksm-shortcuts-dialog.c:492
 msgid "Alt+Shift+Tab"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:491
+#: ../ukui-session/uksm-shortcuts-dialog.c:493
 msgid "Switches between applications in reverse order."
 msgstr "以倒序切换应用程序"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:492
+#: ../ukui-session/uksm-shortcuts-dialog.c:494
 msgid "Super_L+P/F3/F7"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:493
+#: ../ukui-session/uksm-shortcuts-dialog.c:495
 msgid "Switches between display."
 msgstr "切换显示输出"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:494
+#: ../ukui-session/uksm-shortcuts-dialog.c:496
 msgid "Ctrl+Alt+ArrowKeys"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:495
+#: ../ukui-session/uksm-shortcuts-dialog.c:497
 msgid "Switches between workspaces."
 msgstr "切换工作区"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:500
+#: ../ukui-session/uksm-shortcuts-dialog.c:502
 msgid "Windows"
 msgstr "窗口"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:501
+#: ../ukui-session/uksm-shortcuts-dialog.c:503
 msgid "Alt+F9"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:502
+#: ../ukui-session/uksm-shortcuts-dialog.c:504
 msgid "Maximize the current window."
 msgstr "最大化当前窗口"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:503
+#: ../ukui-session/uksm-shortcuts-dialog.c:505
 msgid "Alt+F10"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:504
+#: ../ukui-session/uksm-shortcuts-dialog.c:506
 msgid "Minimize the current window."
 msgstr "最小化当前窗口"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:505
+#: ../ukui-session/uksm-shortcuts-dialog.c:507
 msgid "Alt+F5"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:506
+#: ../ukui-session/uksm-shortcuts-dialog.c:508
 msgid "Cancel maximize the current window."
 msgstr "取消最大化当前窗口"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:507
+#: ../ukui-session/uksm-shortcuts-dialog.c:509
 msgid "Alt+F4"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:508
+#: ../ukui-session/uksm-shortcuts-dialog.c:510
 msgid "Close the current window."
 msgstr "关闭当前窗口"
 
