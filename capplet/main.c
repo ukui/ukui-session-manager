@@ -44,7 +44,7 @@ static void dialog_response(GsmPropertiesDialog* dialog, guint response_id, gpoi
     if (response_id == GTK_RESPONSE_HELP)
     {
             error = NULL;
-            gtk_show_uri_on_window (GTK_WINDOW (dialog), "help:ukui-user-guide/gosstartsession-2",
+            gtk_show_uri_on_window (GTK_WINDOW (dialog), "help:ubuntu-kylin-help:index",
                                     gtk_get_current_event_time (), &error);
 
 		if (error != NULL)
