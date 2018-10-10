@@ -500,9 +500,9 @@ uksm_get_shortcuts_dialog (GdkScreen                *screen,
         uksm_add_shortcut (label_grid, _("  "), UKSM_LABEL_TYPE_KEY, 2, 6, 2, 1);
 
         uksm_add_shortcut (label_grid, _("Windows"), UKSM_LABEL_TYPE_SUBTITLE, 2, 7, 2, 1);
-        uksm_add_shortcut (label_grid, _("Alt+F9"), UKSM_LABEL_TYPE_KEY, 2, 8, 1, 1);
+        uksm_add_shortcut (label_grid, _("Alt+F10"), UKSM_LABEL_TYPE_KEY, 2, 8, 1, 1);
         uksm_add_shortcut (label_grid, _("Maximize the current window."), UKSM_LABEL_TYPE_FUNCTION, 3, 8, 1, 1);
-        uksm_add_shortcut (label_grid, _("Alt+F10"), UKSM_LABEL_TYPE_KEY, 2, 9, 1, 1);
+        uksm_add_shortcut (label_grid, _("Alt+F9"), UKSM_LABEL_TYPE_KEY, 2, 9, 1, 1);
         uksm_add_shortcut (label_grid, _("Minimize the current window."), UKSM_LABEL_TYPE_FUNCTION, 3, 9, 1, 1);
         uksm_add_shortcut (label_grid, _("Alt+F5"), UKSM_LABEL_TYPE_KEY, 2, 10, 1, 1);
         uksm_add_shortcut (label_grid, _("Cancel maximize the current window."), UKSM_LABEL_TYPE_FUNCTION, 3, 10, 1, 1);
