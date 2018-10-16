@@ -1,107 +1,98 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-# Translators:
-# Asier Iturralde Sarasola <asier.iturralde@gmail.com>, 2012,2014
-# Hizkuntza Politikarako Sailburuordetza <hizpol@ej-gv.es>, 2004
-# Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>, 2005, 2006, 2007, 2008, 2009, 2010
-# Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2007
-# Joseba Bidaurrazaga van Dierdonck <gcpbivaj@lg.ehu.es>, 2000
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: UKUI Desktop Environment\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-16 09:59+0800\n"
-"PO-Revision-Date: 2015-12-14 10:18+0000\n"
-"Last-Translator: monsta <monsta@inbox.ru>\n"
-"Language-Team: Basque (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
-"eu/)\n"
-"Language: eu\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: ../capplet/gsm-app-dialog.c:126
 msgid "Select Command"
-msgstr "Hautatu komandoa"
+msgstr ""
 
 #: ../capplet/gsm-app-dialog.c:198
 msgid "Add Startup Program"
-msgstr "Gehitu abioko programa"
+msgstr ""
 
 #: ../capplet/gsm-app-dialog.c:202
 msgid "Edit Startup Program"
-msgstr "Editatu abioko programa"
+msgstr ""
 
 #: ../capplet/gsm-app-dialog.c:487
 msgid "The startup command cannot be empty"
-msgstr "Abioko komandoa ezin da hutsik egon"
+msgstr ""
 
 #: ../capplet/gsm-app-dialog.c:493
 msgid "The startup command is not valid"
-msgstr "Abioko komandoa ez da baliozkoa"
+msgstr ""
 
 #: ../capplet/gsm-properties-dialog.c:519
 msgid "Enabled"
-msgstr "Gaituta"
+msgstr ""
 
 #: ../capplet/gsm-properties-dialog.c:531
 msgid "Icon"
-msgstr "Ikonoa"
+msgstr ""
 
 #: ../capplet/gsm-properties-dialog.c:543
 msgid "Program"
-msgstr "Programa"
+msgstr ""
 
 #: ../capplet/gsm-properties-dialog.c:742
 msgid "Startup Applications Preferences"
-msgstr "Abioko aplikazioen hobespenak"
+msgstr ""
 
 #: ../capplet/gsp-app.c:274
 msgid "No name"
-msgstr "Izenik ez"
+msgstr ""
 
 #: ../capplet/gsp-app.c:280
 msgid "No description"
-msgstr "Azalpenik ez"
+msgstr ""
 
 #: ../capplet/main.c:36 ../ukui-session/main.c:642
 msgid "Version of this application"
-msgstr "Aplikazio honen bertsioa"
+msgstr ""
 
 #: ../capplet/main.c:52
 msgid "Could not display help document"
-msgstr "Ezin izan da laguntzako dokumentua bistaratu"
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:1
 msgid "Current session start time"
-msgstr "Uneko saioaren hasierako denbora"
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:2
 msgid "Unix time of the start of the current session."
-msgstr "Uneko saioaren hasierako Unix denbora."
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:3
 msgid "Save sessions"
-msgstr "Gorde saioak"
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:4
-#, fuzzy
 msgid "If enabled, ukui-session will save the session automatically."
-msgstr "Gaituta badago, mate-session-ek saioa automatikoki gordeko du."
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:5
 msgid "Logout prompt"
-msgstr "Saio-amaierako gonbita"
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:6
-#, fuzzy
 msgid "If enabled, ukui-session will prompt the user before ending a session."
 msgstr ""
-"Gaituta badago, mate-session-ek erabiltzaileari galdetuko dio saioa bukatu "
-"aurretik."
 
 #: ../data/org.ukui.session.gschema.xml.in.h:7
 msgid "Logout timeout"
@@ -115,24 +106,24 @@ msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:9
 msgid "Time before session is considered idle"
-msgstr "Denbora saioa inaktibotzat hartu arte"
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:10
 msgid ""
 "The number of minutes of inactivity before the session is considered idle."
-msgstr "Inaktibitateko minutu kopurua, saioa inaktibotzat hartu arte."
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:11
 msgid "Default session"
-msgstr "Saio lehenetsia"
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:12
 msgid "List of applications that are part of the default session."
-msgstr "Saio lehenetsiko zati diren aplikazioen zerrenda."
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:13
 msgid "Required session components"
-msgstr "Saioaren beharrezko osagaiak"
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:14
 msgid ""
@@ -155,39 +146,33 @@ msgstr ""
 #: ../data/org.ukui.session.gschema.xml.in.h:17
 #: ../data/ukui-wm.desktop.in.in.h:1
 msgid "Window Manager"
-msgstr "Leiho-kudeatzailea"
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:18
 msgid ""
 "The window manager is the program that draws the title bar and borders "
 "around windows, and allows you to move and resize windows."
 msgstr ""
-"Leiho-kudeatzailea leihoen inguruan titulu-barra eta ertzak marrazten ditu, "
-"eta leihoak lekuz edo tamainaz aldatzea uzten du."
 
 #: ../data/org.ukui.session.gschema.xml.in.h:19
 msgid "Panel"
-msgstr "Panela"
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:20
 msgid ""
 "The panel provides the bar at the top or bottom of the screen containing "
 "menus, the window list, status icons, the clock, etc."
 msgstr ""
-"Panelak pantailaren goiko edo beheko barra eskaintzen du. Panel batek "
-"menuak, leihoen zerrenda, egoera-ikonoak, ordularia e.a. eduki ditzake."
 
 #: ../data/org.ukui.session.gschema.xml.in.h:21
 msgid "File Manager"
-msgstr "Fitxategi-kudeatzailea"
+msgstr ""
 
 #: ../data/org.ukui.session.gschema.xml.in.h:22
 msgid ""
 "The file manager provides the desktop icons and allows you to interact with "
 "your saved files."
 msgstr ""
-"Fitxategi-kudeatzaileak mahaigaineko ikonoak eskaintzen ditu, eta gordetako "
-"fitxategiekin elkarreragitea baimentzen dizu."
 
 #: ../data/org.ukui.session.gschema.xml.in.h:23
 msgid "Dock"
@@ -204,246 +189,235 @@ msgid "UKUI"
 msgstr ""
 
 #: ../data/ukui.desktop.in.h:2
-#, fuzzy
 msgid "This session logs you into UKUI"
-msgstr "Saio honek MATEn sartuko zaitu"
+msgstr ""
 
 #: ../data/gsm-inhibit-dialog.ui.h:1
 msgid "<b>Some programs are still running:</b>"
-msgstr "<b>Programa batzuk oraindik exekutatzen ari dira:</b>"
+msgstr ""
 
 #: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:634
 msgid ""
 "Waiting for the program to finish.  Interrupting the program may cause you "
 "to lose work."
 msgstr ""
-"Programak amaitu zain. Programa hau eteteak zure lanak galtzea eragin dezake."
 
 #: ../data/ukui-session-properties.desktop.in.in.h:1
 msgid "Startup Applications"
-msgstr "Abioko aplikazioak"
+msgstr ""
 
 #: ../data/ukui-session-properties.desktop.in.in.h:2
 msgid "Choose what applications to start when you log in"
-msgstr "Aukeratu zein aplikazio abiarazi saioa-hasten duzunean"
+msgstr ""
 
 #: ../data/session-properties.ui.h:1
 msgid "Additional startup _programs:"
-msgstr "Abioko _programa osagarriak:"
+msgstr ""
 
 #: ../data/session-properties.ui.h:2
 msgid "Startup Programs"
-msgstr "Abioko programak"
+msgstr ""
 
 #: ../data/session-properties.ui.h:3
 msgid "_Automatically remember running applications when logging out"
 msgstr ""
-"Gogoratu _automatikoki exekutatzen ari diren aplikazioak saioa amaitzean"
 
 #: ../data/session-properties.ui.h:4
 msgid "_Remember Currently Running Application"
-msgstr "_Gogoratu unean exekutatzen ari diren aplikazioak"
+msgstr ""
 
 #: ../data/session-properties.ui.h:5
 msgid "Options"
-msgstr "Aukerak"
+msgstr ""
 
 #: ../data/session-properties.ui.h:6
 msgid "Browse…"
-msgstr "Arakatu..."
+msgstr ""
 
 #: ../data/session-properties.ui.h:7
 msgid "Comm_ent:"
-msgstr "_Iruzkina:"
+msgstr ""
 
 #: ../data/session-properties.ui.h:8
 msgid "Co_mmand:"
-msgstr "_Komandoa:"
+msgstr ""
 
 #: ../data/session-properties.ui.h:9
 msgid "_Name:"
-msgstr "_Izena:"
+msgstr ""
 
 #: ../egg/eggdesktopfile.c:152
 #, c-format
 msgid "File is not a valid .desktop file"
-msgstr "Fitxategia ez da baliozko '.desktop' fitxategia"
+msgstr ""
 
 #: ../egg/eggdesktopfile.c:172
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
-msgstr "Mahaigaineko fitxategiaren '%s' bertsioa ezezaguna"
+msgstr ""
 
 #: ../egg/eggdesktopfile.c:956
 #, c-format
 msgid "Starting %s"
-msgstr "%s abiarazten"
+msgstr ""
 
 #: ../egg/eggdesktopfile.c:1097
 #, c-format
 msgid "Application does not accept documents on command line"
-msgstr "Aplikazioak ez ditu dokumenturik onartzen komando-lerroan"
+msgstr ""
 
 #: ../egg/eggdesktopfile.c:1165
 #, c-format
 msgid "Unrecognized launch option: %d"
-msgstr "Abiarazteko aukera ezezaguna: %d"
+msgstr ""
 
 #: ../egg/eggdesktopfile.c:1363
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "Ezin zaio dokumentuaren URIrik eman mahaigaineko 'Type=Link' sarrerari"
+msgstr ""
 
 #: ../egg/eggdesktopfile.c:1384
 #, c-format
 msgid "Not a launchable item"
-msgstr "Ez da elementu abiarazgarria"
+msgstr ""
 
 #: ../egg/eggsmclient.c:226
 msgid "Disable connection to session manager"
-msgstr "Desgaitu konexioa saio-kudeatzailearekin"
+msgstr ""
 
 #: ../egg/eggsmclient.c:229
 msgid "Specify file containing saved configuration"
-msgstr "Zehaztu gordetako konfigurazioa duen fitxategia"
+msgstr ""
 
 #: ../egg/eggsmclient.c:229
 msgid "FILE"
-msgstr "FITXATEGIA"
+msgstr ""
 
 #: ../egg/eggsmclient.c:232
 msgid "Specify session management ID"
-msgstr "Zehaztu saio-kudeatzailearen IDa"
+msgstr ""
 
 #: ../egg/eggsmclient.c:232
 msgid "ID"
-msgstr "IDa"
+msgstr ""
 
 #: ../egg/eggsmclient.c:253
 msgid "Session management options:"
-msgstr "Saio-kudeatzailearen aukerak:"
+msgstr ""
 
 #: ../egg/eggsmclient.c:254
 msgid "Show session management options"
-msgstr "Erakutsi saio-kudeatzailearen aukerak"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:252
 #, c-format
 msgid "Icon '%s' not found"
-msgstr "Ez da '%s' ikonoa aurkitu"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:582
 msgid "Unknown"
-msgstr "Ezezaguna"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:633
 msgid "A program is still running:"
-msgstr "Programa bat oraindik exekutatzen ari da:"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:637
 msgid "Some programs are still running:"
-msgstr "Programa batzuk oraindik exekutatzen ari dira:"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:638
 msgid ""
 "Waiting for programs to finish.  Interrupting these programs may cause you "
 "to lose work."
 msgstr ""
-"Programek amaitu zain. Programa hauek eteteak zure lanak galtzea eragin "
-"dezake."
 
 #: ../ukui-session/gsm-inhibit-dialog.c:868
 msgid "Switch User Anyway"
-msgstr "Aldatu erabiltzailez hala ere"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:871
 msgid "Log Out Anyway"
-msgstr "Amaitu saioa dena den"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:874
 msgid "Suspend Anyway"
-msgstr "Eseki hala ere"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:877
 msgid "Hibernate Anyway"
-msgstr "Hibernatu hala ere"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:880
 msgid "Shut Down Anyway"
-msgstr "Itzali dena den"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:883
 msgid "Reboot Anyway"
-msgstr "Berrabiarazi hala ere"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:891
 msgid "Lock Screen"
-msgstr "Blokeatu pantaila"
+msgstr ""
 
 #: ../ukui-session/gsm-inhibit-dialog.c:894
 msgid "Cancel"
-msgstr "Utzi"
+msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:477
 #, c-format
 msgid "You will be automatically logged out in %d second"
 msgid_plural "You will be automatically logged out in %d seconds"
-msgstr[0] "Saioa automatikoki amaituko duzu segundo %d igarotzean"
-msgstr[1] "Saioa automatikoki amaituko duzu %d segundo igarotzean"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../ukui-session/gsm-logout-dialog.c:485
 #, c-format
 msgid "This system will be automatically shut down in %d second"
 msgid_plural "This system will be automatically shut down in %d seconds"
-msgstr[0] "Sistema automatikoki itzaliko da segundo %d igarotzean"
-msgstr[1] "Sistema automatikoki itzaliko da %d segundo igarotzean"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../ukui-session/gsm-logout-dialog.c:531
 #, c-format
 msgid "You are currently logged in as \"%s\"."
-msgstr "Unean \"%s\" gisa zaude saioan hasita."
+msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:664
 msgid "Log out of this system now?"
-msgstr "Amaitu saioa sistematik orain?"
+msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:674
-#, fuzzy
 msgid "Switch User"
-msgstr "_Aldatu erabiltzailez"
+msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:687
-#, fuzzy
 msgid "Log Out"
-msgstr "Amaitu _saioa"
+msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:699
 msgid "Shut down this system now?"
-msgstr "Itzali sistema orain?"
+msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:709
-#, fuzzy
 msgid "Suspend"
-msgstr "_Eseki"
+msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:722
-#, fuzzy
 msgid "Hibernate"
-msgstr "_Hibernatu"
+msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:735
-#, fuzzy
 msgid "Restart"
-msgstr "_Berrabiarazi"
+msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:749
-#, fuzzy
 msgid "Shut Down"
-msgstr "_Itzali"
+msgstr ""
 
 #: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136
 msgid "Not responding"
-msgstr "Ez du erantzuten"
+msgstr ""
 
 #. It'd be really surprising to reach this code: if we're here,
 #. * then the XSMP client already has set several XSMP
@@ -455,61 +429,59 @@ msgstr ""
 
 #: ../ukui-session/gsm-xsmp-client.c:1204
 msgid "This program is blocking logout."
-msgstr "Programa hau saioa amaitzea blokeatzen ari da."
+msgstr ""
 
 #: ../ukui-session/gsm-xsmp-server.c:325
 msgid ""
 "Refusing new client connection because the session is currently being shut "
 "down\n"
-msgstr "Bezero berrien konexioa ukatzen, unean saioa itzaltzen ari delako\n"
+msgstr ""
 
 #: ../ukui-session/gsm-xsmp-server.c:587
 #, c-format
 msgid "Could not create ICE listening socket: %s"
-msgstr "Ezin izan da entzuteko ICE socket-a sortu: %s"
+msgstr ""
 
 #. Oh well, no X for you!
 #: ../ukui-session/gsm-util.c:356
 #, c-format
 msgid "Unable to start login session (and unable to connect to the X server)"
-msgstr "Ezin da saio-hasiera hasi (eta ezin da X zerbitzariarekin konektatu)"
+msgstr ""
 
 #: ../ukui-session/main.c:639
 msgid "Override standard autostart directories"
-msgstr "Jaramonik ez egin hasiera automatikoko direktorio estandarrei"
+msgstr ""
 
 #: ../ukui-session/main.c:640
 msgid "Enable debugging code"
-msgstr "Gaitu arazketa-kodea"
+msgstr ""
 
 #: ../ukui-session/main.c:641
 msgid "Do not load user-specified applications"
-msgstr "Ez kargatu erabiltzaileak zehaztutako aplikazioak"
+msgstr ""
 
 #: ../ukui-session/main.c:643
 msgid "Show the keyboard shortcuts"
 msgstr ""
 
 #: ../ukui-session/main.c:663
-#, fuzzy
 msgid " - the UKUI session manager"
-msgstr "- MATEren saio-kudeatzailea"
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:350
-#, fuzzy, c-format
+#, c-format
 msgid "This window will be automatically closed in %d second"
 msgid_plural "This window will be automatically closed in %d seconds"
-msgstr[0] "Saioa automatikoki amaituko duzu segundo %d igarotzean"
-msgstr[1] "Saioa automatikoki amaituko duzu %d segundo igarotzean"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:466
 msgid "Keyboard Shortcuts"
 msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:468
-#, fuzzy
 msgid "Application"
-msgstr "Abioko aplikazioak"
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:469
 msgid "Super"
@@ -540,9 +512,8 @@ msgid "Ctrl+Alt+L"
 msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:476
-#, fuzzy
 msgid "Lock screen."
-msgstr "Blokeatu pantaila"
+msgstr ""
 
 #. Separator
 #: ../ukui-session/uksm-shortcuts-dialog.c:479
@@ -587,9 +558,8 @@ msgid "Alt+Tab"
 msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:491
-#, fuzzy
 msgid "Switches between applications."
-msgstr "Abioko aplikazioak"
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:492
 msgid "Alt+Shift+Tab"
@@ -648,55 +618,54 @@ msgid "Alt+F4"
 msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:510
-#, fuzzy
 msgid "Close the current window."
-msgstr "Ezarri uneko saioaren izena"
+msgstr ""
 
 #: ../tools/ukui-session-save.c:70
 msgid "Log out"
-msgstr "Amaitu saioa"
+msgstr ""
 
 #: ../tools/ukui-session-save.c:71
 msgid "Log out, ignoring any existing inhibitors"
-msgstr "Amaitu saioa (ezikusi egin dauden inhibitzaileei)"
+msgstr ""
 
 #: ../tools/ukui-session-save.c:72
 msgid "Show logout dialog"
-msgstr "Erakutsi 'Amaitu saioa' elkarrizketa-koadroa"
+msgstr ""
 
 #: ../tools/ukui-session-save.c:73
 msgid "Show shutdown dialog"
-msgstr "Erakutsi 'Itzali' elkarrizketa-koadroa"
+msgstr ""
 
 #: ../tools/ukui-session-save.c:74
 msgid "Use dialog boxes for errors"
-msgstr "Erabili erroreen elkarrizketa-koadroak"
+msgstr ""
 
 #. deprecated options
 #: ../tools/ukui-session-save.c:76
 msgid "Set the current session name"
-msgstr "Ezarri uneko saioaren izena"
+msgstr ""
 
 #: ../tools/ukui-session-save.c:76
 msgid "NAME"
-msgstr "IZENA"
+msgstr ""
 
 #: ../tools/ukui-session-save.c:77
 msgid "Kill session"
-msgstr "Hil saioa"
+msgstr ""
 
 #: ../tools/ukui-session-save.c:78
 msgid "Do not require confirmation"
-msgstr "Ez du baieztapenik behar"
+msgstr ""
 
 #. Okay, it wasn't the upgrade case, so now we can give up.
 #: ../tools/ukui-session-save.c:136 ../tools/ukui-session-save.c:151
 msgid "Could not connect to the session manager"
-msgstr "Ezin izan da saio-kudeatzailearekin konektatu"
+msgstr ""
 
 #: ../tools/ukui-session-save.c:277
 msgid "Program called with conflicting options"
-msgstr "Gatazkan dauden aukerekin deitu da programa"
+msgstr ""
 
 #: ../tools/ukui-session-inhibit.c:116
 #, c-format
@@ -726,6 +695,3 @@ msgstr ""
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr ""
-
-#~ msgid "MATE"
-#~ msgstr "MATE"

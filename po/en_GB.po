@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-30 17:30+0800\n"
+"POT-Creation-Date: 2018-10-16 09:59+0800\n"
 "PO-Revision-Date: 2015-12-27 01:18+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) (http://www.wiki.ukui.org/trans/ukui/"
@@ -625,7 +625,7 @@ msgid "Windows"
 msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:503
-msgid "Alt+F9"
+msgid "Alt+F10"
 msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:504
@@ -633,7 +633,7 @@ msgid "Maximize the current window."
 msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:505
-msgid "Alt+F10"
+msgid "Alt+F9"
 msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:506

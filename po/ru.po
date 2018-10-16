@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-30 17:30+0800\n"
+"POT-Creation-Date: 2018-10-16 09:59+0800\n"
 "PO-Revision-Date: 2016-02-10 15:23+0000\n"
 "Last-Translator: Иван <pentuh@tut.by>\n"
 "Language-Team: Russian (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -90,21 +90,16 @@ msgid "Save sessions"
 msgstr "Сохранять сеансы"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:4
-#, fuzzy
 msgid "If enabled, ukui-session will save the session automatically."
-msgstr ""
-"Если этот ключ установлен, mate-session будет автоматически сохранять сеанс."
+msgstr "Если включено, ukui-сессия автоматически сохранит сеанс."
 
 #: ../data/org.ukui.session.gschema.xml.in.h:5
 msgid "Logout prompt"
 msgstr "Запрос при выходе из сеанса"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:6
-#, fuzzy
 msgid "If enabled, ukui-session will prompt the user before ending a session."
-msgstr ""
-"Если этот ключ установлен, mate-session будет спрашивать пользователя перед "
-"окончанием сеанса."
+msgstr "Если включено, ukui-session предложит пользователю завершить сеанс."
 
 #: ../data/org.ukui.session.gschema.xml.in.h:7
 msgid "Logout timeout"
@@ -143,7 +138,6 @@ msgid "Required session components"
 msgstr "Требуемые компоненты сеанса"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:14
-#, fuzzy
 msgid ""
 "List of components that are required as part of the session. (Each element "
 "names a key under \"/org/ukui/desktop/session/required_components\"). The "
@@ -153,7 +147,7 @@ msgid ""
 "if they do get removed."
 msgstr ""
 "Список компонентов, которые требуются запустить как часть этого сеанса. "
-"(каждый элемент соответствует ключу в поддереве «/org/mate/desktop/session/"
+"(каждый элемент соответствует ключу в поддереве «/org/ukui/desktop/session/"
 "required_components»). Приложение «Параметры запускаемых приложений», как "
 "правило, не позволяет пользователю удалять из сеанса требуемые компоненты, и "
 "менеджер сеансов автоматически добавит требуемые компоненты, если они были "
@@ -221,9 +215,8 @@ msgid "UKUI"
 msgstr ""
 
 #: ../data/ukui.desktop.in.h:2
-#, fuzzy
 msgid "This session logs you into UKUI"
-msgstr "Этот сеанс позволяет вам войти в MATE"
+msgstr "Этот сеанс позволяет вам войти в UKUI"
 
 #: ../data/gsm-inhibit-dialog.ui.h:1
 msgid "<b>Some programs are still running:</b>"
@@ -429,12 +422,10 @@ msgid "Log out of this system now?"
 msgstr "Выйти из системы сейчас?"
 
 #: ../ukui-session/gsm-logout-dialog.c:674
-#, fuzzy
 msgid "Switch User"
 msgstr "_Переключить пользователя"
 
 #: ../ukui-session/gsm-logout-dialog.c:687
-#, fuzzy
 msgid "Log Out"
 msgstr "_Завершить сеанс"
 
@@ -443,22 +434,18 @@ msgid "Shut down this system now?"
 msgstr "Выключить систему сейчас?"
 
 #: ../ukui-session/gsm-logout-dialog.c:709
-#, fuzzy
 msgid "Suspend"
 msgstr "_Ждущий режим"
 
 #: ../ukui-session/gsm-logout-dialog.c:722
-#, fuzzy
 msgid "Hibernate"
 msgstr "_Спящий режим"
 
 #: ../ukui-session/gsm-logout-dialog.c:735
-#, fuzzy
 msgid "Restart"
 msgstr "Пе_резагрузить"
 
 #: ../ukui-session/gsm-logout-dialog.c:749
-#, fuzzy
 msgid "Shut Down"
 msgstr "В_ыключить"
 
@@ -511,12 +498,11 @@ msgstr "Не загружать выбранные пользователем п
 
 #: ../ukui-session/main.c:643
 msgid "Show the keyboard shortcuts"
-msgstr ""
+msgstr "Показать сочетания клавиш"
 
 #: ../ukui-session/main.c:663
-#, fuzzy
 msgid " - the UKUI session manager"
-msgstr "— менеджер сеансов MATE"
+msgstr "— менеджер сеансов UKUI"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:350
 #, fuzzy, c-format
@@ -529,43 +515,41 @@ msgstr[3] "Вы автоматически выйдете из системы ч
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:466
 msgid "Keyboard Shortcuts"
-msgstr ""
+msgstr "Горячие клавиши"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:468
-#, fuzzy
 msgid "Application"
 msgstr "Запускаемые приложения"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:469
 msgid "Super"
-msgstr ""
+msgstr "Super"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:470
-msgid "Open start menu."
-msgstr ""
+msgid "Откройте меню «Пуск»."
+msgstr "Откройте меню «Пуск»."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:471
 msgid "Ctrl+Alt+T"
-msgstr ""
+msgstr "Ctrl+Alt+T"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:472
 msgid "Open termianl."
-msgstr ""
+msgstr "Открытый терминал."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:473
 msgid "Ctrl+Alt+D"
-msgstr ""
+msgstr "Ctrl+Alt+D"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:474
 msgid "Show desktop."
-msgstr ""
+msgstr "Показать рабочий стол."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:475
 msgid "Ctrl+Alt+L"
-msgstr ""
+msgstr "Ctrl+Alt+L"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:476
-#, fuzzy
 msgid "Lock screen."
 msgstr "Заблокировать экран"
 
@@ -581,99 +565,97 @@ msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:482
 msgid "Print"
-msgstr ""
+msgstr "печать"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:483
 msgid "Take a full-screen screenshot."
-msgstr ""
+msgstr "Сделайте снимок экрана в полноэкранном режиме."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:484
 msgid "Ctrl+Print"
-msgstr ""
+msgstr "Ctrl+Print"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:485
 msgid "Take a screenshot of the current window."
-msgstr ""
+msgstr "Сделайте снимок экрана текущего окна."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:486
 msgid "Shift+Print"
-msgstr ""
+msgstr "Shift+Print"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:487
 msgid "Select area to grab."
-msgstr ""
+msgstr "Выберите область для захвата."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:489
 msgid "Switching"
-msgstr ""
+msgstr "Переключение"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:490
 msgid "Alt+Tab"
 msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:491
-#, fuzzy
 msgid "Switches between applications."
 msgstr "Запускаемые приложения"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:492
 msgid "Alt+Shift+Tab"
-msgstr ""
+msgstr "Alt+Shift+Tab"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:493
 msgid "Switches between applications in reverse order."
-msgstr ""
+msgstr "Переключение между приложениями в обратном порядке."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:494
 msgid "Super_L+P/F3/F7"
-msgstr ""
+msgstr "Super_L+P/F3/F7"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:495
 msgid "Switches between display."
-msgstr ""
+msgstr "Переключение между дисплеем."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:496
 msgid "Ctrl+Alt+ArrowKeys"
-msgstr ""
+msgstr "Ctrl+Alt+ArrowKeys"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:497
 msgid "Switches between workspaces."
-msgstr ""
+msgstr "Переключение между рабочими пространствами."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:502
 msgid "Windows"
-msgstr ""
+msgstr "Увеличьте текущее окно."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:503
-msgid "Alt+F9"
-msgstr ""
+msgid "Alt+F10"
+msgstr "Alt+F10"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:504
 msgid "Maximize the current window."
-msgstr ""
+msgstr "Увеличьте текущее окно."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:505
-msgid "Alt+F10"
+msgid "Alt+F9"
 msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:506
 msgid "Minimize the current window."
-msgstr ""
+msgstr "Минимизируйте текущее окно."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:507
 msgid "Alt+F5"
-msgstr ""
+msgstr "Alt+F5"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:508
 msgid "Cancel maximize the current window."
-msgstr ""
+msgstr "Отменить максимизировать текущее окно."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:509
 msgid "Alt+F4"
-msgstr ""
+msgstr "Alt+F4"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:510
-#, fuzzy
 msgid "Close the current window."
 msgstr "Установить название текущего сеанса"
 
