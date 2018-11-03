@@ -69,7 +69,7 @@
 #define GSM_MANAGER_DBUS_PATH "/org/gnome/SessionManager"
 #define GSM_MANAGER_DBUS_NAME "org.gnome.SessionManager"
 
-#define GSM_MANAGER_PHASE_TIMEOUT 30 /* seconds */
+#define GSM_MANAGER_PHASE_TIMEOUT 3 /* seconds */
 
 /* In the exit phase, all apps were already given the chance to inhibit the session end
  * At that stage we don't want to wait much for apps to respond, we want to exit, and fast.

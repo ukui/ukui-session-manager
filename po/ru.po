@@ -561,7 +561,7 @@ msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:481
 msgid "Screenshot"
-msgstr ""
+msgstr "Скриншот"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:482
 msgid "Print"
@@ -573,7 +573,7 @@ msgstr "Сделайте снимок экрана в полноэкранном
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:484
 msgid "Ctrl+Print"
-msgstr "Ctrl+Print"
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:485
 msgid "Take a screenshot of the current window."
@@ -581,7 +581,7 @@ msgstr "Сделайте снимок экрана текущего окна."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:486
 msgid "Shift+Print"
-msgstr "Shift+Print"
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:487
 msgid "Select area to grab."
@@ -601,7 +601,7 @@ msgstr "Запускаемые приложения"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:492
 msgid "Alt+Shift+Tab"
-msgstr "Alt+Shift+Tab"
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:493
 msgid "Switches between applications in reverse order."
@@ -609,7 +609,7 @@ msgstr "Переключение между приложениями в обра
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:494
 msgid "Super_L+P/F3/F7"
-msgstr "Super_L+P/F3/F7"
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:495
 msgid "Switches between display."
@@ -617,7 +617,7 @@ msgstr "Переключение между дисплеем."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:496
 msgid "Ctrl+Alt+ArrowKeys"
-msgstr "Ctrl+Alt+ArrowKeys"
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:497
 msgid "Switches between workspaces."
@@ -625,11 +625,11 @@ msgstr "Переключение между рабочими пространс�
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:502
 msgid "Windows"
-msgstr "Увеличьте текущее окно."
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:503
 msgid "Alt+F10"
-msgstr "Alt+F10"
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:504
 msgid "Maximize the current window."
@@ -645,7 +645,7 @@ msgstr "Минимизируйте текущее окно."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:507
 msgid "Alt+F5"
-msgstr "Alt+F5"
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:508
 msgid "Cancel maximize the current window."
@@ -653,7 +653,7 @@ msgstr "Отменить максимизировать текущее окно.
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:509
 msgid "Alt+F4"
-msgstr "Alt+F4"
+msgstr ""
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:510
 msgid "Close the current window."
