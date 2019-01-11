@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-16 09:59+0800\n"
+"POT-Creation-Date: 2019-01-10 16:08+0800\n"
 "PO-Revision-Date: 2016-02-10 15:23+0000\n"
 "Last-Translator: Иван <pentuh@tut.by>\n"
 "Language-Team: Russian (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -417,36 +417,42 @@ msgstr[3] "Система будет выключена автоматическ
 msgid "You are currently logged in as \"%s\"."
 msgstr "Вы вошли в систему как пользователь «%s»."
 
-#: ../ukui-session/gsm-logout-dialog.c:664
+#: ../ukui-session/gsm-logout-dialog.c:693
 msgid "Log out of this system now?"
 msgstr "Выйти из системы сейчас?"
 
-#: ../ukui-session/gsm-logout-dialog.c:674
-msgid "Switch User"
+#: ../ukui-session/gsm-logout-dialog.c:703
+#, fuzzy
+msgid "_Switch User"
 msgstr "_Переключить пользователя"
 
-#: ../ukui-session/gsm-logout-dialog.c:687
-msgid "Log Out"
+#: ../ukui-session/gsm-logout-dialog.c:721
+#, fuzzy
+msgid "_Log Out"
 msgstr "_Завершить сеанс"
 
-#: ../ukui-session/gsm-logout-dialog.c:699
+#: ../ukui-session/gsm-logout-dialog.c:738
 msgid "Shut down this system now?"
 msgstr "Выключить систему сейчас?"
 
-#: ../ukui-session/gsm-logout-dialog.c:709
-msgid "Suspend"
+#: ../ukui-session/gsm-logout-dialog.c:748
+#, fuzzy
+msgid "S_uspend"
 msgstr "_Ждущий режим"
 
-#: ../ukui-session/gsm-logout-dialog.c:722
-msgid "Hibernate"
+#: ../ukui-session/gsm-logout-dialog.c:766
+#, fuzzy
+msgid "_Hibernate"
 msgstr "_Спящий режим"
 
-#: ../ukui-session/gsm-logout-dialog.c:735
-msgid "Restart"
+#: ../ukui-session/gsm-logout-dialog.c:784
+#, fuzzy
+msgid "_Restart"
 msgstr "Пе_резагрузить"
 
-#: ../ukui-session/gsm-logout-dialog.c:749
-msgid "Shut Down"
+#: ../ukui-session/gsm-logout-dialog.c:803
+#, fuzzy
+msgid "_Shut Down"
 msgstr "В_ыключить"
 
 #: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136
@@ -526,8 +532,9 @@ msgid "Super"
 msgstr "Super"
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:470
-msgid "Откройте меню «Пуск»."
-msgstr "Откройте меню «Пуск»."
+#, fuzzy
+msgid "Open start menu."
+msgstr "Открытый терминал."
 
 #: ../ukui-session/uksm-shortcuts-dialog.c:471
 msgid "Ctrl+Alt+T"
@@ -746,6 +753,9 @@ msgstr "%s требует аргумент\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "Не удалось выполнить %s\n"
+
+#~ msgid "Откройте меню «Пуск»."
+#~ msgstr "Откройте меню «Пуск»."
 
 #~ msgid "MATE"
 #~ msgstr "MATE"

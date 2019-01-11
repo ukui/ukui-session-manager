@@ -44,11 +44,18 @@ struct _GsmLogoutButtonPrivate
 };
 
 enum {
+        CLICKED,
+        LAST_SIGNAL
+};
+
+enum {
         PROP_0,
         PROP_LABEL_TEXT,
         PROP_NORMAL_IMG,
         PROP_PRELIGHT_IMG
 };
+
+static guint button_signals[LAST_SIGNAL] = { 0 };
 
 static void gsm_logout_button_class_init (GsmLogoutButtonClass *klass);
 static void gsm_logout_button_init       (GsmLogoutButton      *button);
@@ -57,8 +64,16 @@ static void gsm_logout_button_finalize   (GObject              *object);
 
 G_DEFINE_TYPE (GsmLogoutButton, gsm_logout_button, GTK_TYPE_EVENT_BOX);
 
+ static gboolean
+ gsm_logout_button_enter (GsmLogoutButton *logout_button, gpointer data)
+ {
+        gtk_widget_grab_focus(GTK_WIDGET(logout_button));
+
+        return TRUE;
+ }
+
 static gboolean
-gsm_logout_button_enter (GsmLogoutButton *logout_button, gpointer data)
+gsm_logout_button_focus_in (GsmLogoutButton *logout_button, gpointer data)
 {
         gtk_image_set_from_file(GTK_IMAGE(logout_button->priv->image), logout_button->priv->prelight_img);
         const char *format = "<span color=\"white\" alpha=\"65535\">\%s</span>";
@@ -70,7 +85,7 @@ gsm_logout_button_enter (GsmLogoutButton *logout_button, gpointer data)
 }
 
 static gboolean
-gsm_logout_button_leave (GsmLogoutButton *logout_button, gpointer data)
+gsm_logout_button_focus_out (GsmLogoutButton *logout_button, gpointer data)
 {
         gtk_image_set_from_file(GTK_IMAGE(logout_button->priv->image), logout_button->priv->normal_img);
         const char *format = "<span alpha=\"1\">\%s</span>";
@@ -82,7 +97,7 @@ gsm_logout_button_leave (GsmLogoutButton *logout_button, gpointer data)
 
 static void
 gsm_logout_button_set_label_text (GsmLogoutButton *button,
-                                  const char      *label_text)
+                                  const char *label_text)
 {
         g_return_if_fail (GSM_IS_LOGOUT_BUTTON (button));
 
@@ -170,15 +185,15 @@ gsm_logout_button_get_property (GObject     *object,
 }
 
 static GObject *
-gsm_logout_button_constructor (GType                  type,
-                               guint                  n_construct_app,
+gsm_logout_button_constructor (GType type,
+                               guint    n_construct_app,
                                GObjectConstructParam *construct_app)
 {
         GsmLogoutButton *logout_button;
 
         logout_button = GSM_LOGOUT_BUTTON (G_OBJECT_CLASS (gsm_logout_button_parent_class)->constructor (type,
-                                                                                                  n_construct_app,
-                                                                                                  construct_app));
+                                                                                                         n_construct_app,
+                                                                                                         construct_app));
         GtkWidget *box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 
         logout_button->priv->image = gtk_image_new_from_file (logout_button->priv->normal_img);
@@ -193,16 +208,14 @@ gsm_logout_button_constructor (GType                  type,
 
         gtk_container_add (GTK_CONTAINER (logout_button), box);
 
+        g_signal_connect (logout_button, "enter-notify-event",
+                          G_CALLBACK (gsm_logout_button_enter), NULL);
 
-        g_signal_connect (logout_button,
-                          "enter-notify-event",
-                          G_CALLBACK (gsm_logout_button_enter),
-                          NULL);
+        g_signal_connect (logout_button, "focus-in-event",
+                          G_CALLBACK(gsm_logout_button_focus_in), NULL);
 
-        g_signal_connect (logout_button,
-                          "leave-notify-event",
-                          G_CALLBACK (gsm_logout_button_leave),
-                          NULL);
+        g_signal_connect (logout_button, "focus-out-event",
+                          G_CALLBACK(gsm_logout_button_focus_out), NULL);
 
         return G_OBJECT (logout_button);
 }
@@ -218,6 +231,8 @@ gsm_logout_button_class_init (GsmLogoutButtonClass *klass)
         gobject_class->constructor = gsm_logout_button_constructor;
         gobject_class->dispose = gsm_logout_button_dispose;
         gobject_class->finalize = gsm_logout_button_finalize;
+
+        klass->clicked = NULL;
 
         g_object_class_install_property (gobject_class,
                                          PROP_LABEL_TEXT,
@@ -241,6 +256,15 @@ gsm_logout_button_class_init (GsmLogoutButtonClass *klass)
                                                               "prelight_img",
                                                               NULL,
                                                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+
+        button_signals[CLICKED] =
+                g_signal_new ("clicked",
+                G_OBJECT_CLASS_TYPE (gobject_class),
+                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                G_STRUCT_OFFSET (GsmLogoutButtonClass, clicked),
+                NULL, NULL,
+                NULL,
+                G_TYPE_NONE, 0);
 
         g_type_class_add_private (klass, sizeof (GsmLogoutButtonPrivate));
 }

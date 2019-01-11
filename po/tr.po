@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-16 09:59+0800\n"
+"POT-Creation-Date: 2019-01-10 16:08+0800\n"
 "PO-Revision-Date: 2015-12-20 16:16+0000\n"
 "Last-Translator: mauron\n"
 "Language-Team: Turkish (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -419,42 +419,42 @@ msgstr[1] "Bu sistem %d saniye içerisinde kendiliğinden kapatılacak"
 msgid "You are currently logged in as \"%s\"."
 msgstr "Şu anda \"%s\" olarak giriş yaptınız."
 
-#: ../ukui-session/gsm-logout-dialog.c:664
+#: ../ukui-session/gsm-logout-dialog.c:693
 msgid "Log out of this system now?"
 msgstr "Bu sistemden şimdi çıkılsın mı?"
 
-#: ../ukui-session/gsm-logout-dialog.c:674
+#: ../ukui-session/gsm-logout-dialog.c:703
 #, fuzzy
-msgid "Switch User"
+msgid "_Switch User"
 msgstr "_Kullanıcı Değiştir"
 
-#: ../ukui-session/gsm-logout-dialog.c:687
+#: ../ukui-session/gsm-logout-dialog.c:721
 #, fuzzy
-msgid "Log Out"
+msgid "_Log Out"
 msgstr "Çı_kış"
 
-#: ../ukui-session/gsm-logout-dialog.c:699
+#: ../ukui-session/gsm-logout-dialog.c:738
 msgid "Shut down this system now?"
 msgstr "Sistem şimdi kapatılsın mı?"
 
-#: ../ukui-session/gsm-logout-dialog.c:709
+#: ../ukui-session/gsm-logout-dialog.c:748
 #, fuzzy
-msgid "Suspend"
+msgid "S_uspend"
 msgstr "_Beklemeye Al"
 
-#: ../ukui-session/gsm-logout-dialog.c:722
+#: ../ukui-session/gsm-logout-dialog.c:766
 #, fuzzy
-msgid "Hibernate"
+msgid "_Hibernate"
 msgstr "_Uyku Kipi"
 
-#: ../ukui-session/gsm-logout-dialog.c:735
+#: ../ukui-session/gsm-logout-dialog.c:784
 #, fuzzy
-msgid "Restart"
+msgid "_Restart"
 msgstr "_Yeniden Başlat"
 
-#: ../ukui-session/gsm-logout-dialog.c:749
+#: ../ukui-session/gsm-logout-dialog.c:803
 #, fuzzy
-msgid "Shut Down"
+msgid "_Shut Down"
 msgstr "_Kapat"
 
 #: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136

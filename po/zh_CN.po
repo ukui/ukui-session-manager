@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-16 09:59+0800\n"
+"POT-Creation-Date: 2019-01-10 16:08+0800\n"
 "PO-Revision-Date: 2015-12-14 10:28+0000\n"
 "Last-Translator: liushuyu011 <liushuyu011@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.wiki.ukui.org/trans/ukui/UKUI/"
@@ -99,7 +99,6 @@ msgid "Logout prompt"
 msgstr "注销提示"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:6
-#, fuzzy
 msgid "If enabled, ukui-session will prompt the user before ending a session."
 msgstr "如果启用，ukui-session 将在结束会话之前提示。"
 
@@ -135,7 +134,6 @@ msgid "Required session components"
 msgstr "所需的会话组件"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:14
-#, fuzzy
 msgid ""
 "List of components that are required as part of the session. (Each element "
 "names a key under \"/org/ukui/desktop/session/required_components\"). The "
@@ -144,7 +142,7 @@ msgid ""
 "automatically add the required components back to the session at login time "
 "if they do get removed."
 msgstr ""
-"列出会话所包含的必需组件。(每个元素代表了“/org/ukui/:desktop/session/"
+"列出会话所包含的必需组件。(每个元素代表了“/org/ukui/desktop/session/"
 "required_components”下的一个键)。启动应用程序首选项通常不允许用户从会话中删除"
 "所需组件，而会话管理器也会在所需组件被删除时自动在登录时添加这些组件。"
 
@@ -204,7 +202,6 @@ msgid "UKUI"
 msgstr "UKUI"
 
 #: ../data/ukui.desktop.in.h:2
-#, fuzzy
 msgid "This session logs you into UKUI"
 msgstr "此会话将您登录到 UKUI"
 
@@ -397,37 +394,37 @@ msgstr[0] "系统即将在 %d 秒后自动关机"
 msgid "You are currently logged in as \"%s\"."
 msgstr "您目前以“%s”身份登录。"
 
-#: ../ukui-session/gsm-logout-dialog.c:664
+#: ../ukui-session/gsm-logout-dialog.c:693
 msgid "Log out of this system now?"
 msgstr "现在注销系统吗？"
 
-#: ../ukui-session/gsm-logout-dialog.c:674
-msgid "Switch User"
-msgstr "切换用户"
+#: ../ukui-session/gsm-logout-dialog.c:703
+msgid "_Switch User"
+msgstr "切换用户(_S)"
 
-#: ../ukui-session/gsm-logout-dialog.c:687
-msgid "Log Out"
-msgstr "注销"
+#: ../ukui-session/gsm-logout-dialog.c:721
+msgid "_Log Out"
+msgstr "注销(_L)"
 
-#: ../ukui-session/gsm-logout-dialog.c:699
+#: ../ukui-session/gsm-logout-dialog.c:738
 msgid "Shut down this system now?"
 msgstr "现在关闭此系统吗？"
 
-#: ../ukui-session/gsm-logout-dialog.c:709
-msgid "Suspend"
-msgstr "挂起"
+#: ../ukui-session/gsm-logout-dialog.c:748
+msgid "S_uspend"
+msgstr "挂起(_U)"
 
-#: ../ukui-session/gsm-logout-dialog.c:722
-msgid "Hibernate"
-msgstr "休眠"
+#: ../ukui-session/gsm-logout-dialog.c:766
+msgid "_Hibernate"
+msgstr "休眠(_H)"
 
-#: ../ukui-session/gsm-logout-dialog.c:735
-msgid "Restart"
-msgstr "重启"
+#: ../ukui-session/gsm-logout-dialog.c:784
+msgid "_Restart"
+msgstr "重启(_R)"
 
-#: ../ukui-session/gsm-logout-dialog.c:749
-msgid "Shut Down"
-msgstr "关机"
+#: ../ukui-session/gsm-logout-dialog.c:803
+msgid "_Shut Down"
+msgstr "关机(_S)"
 
 #: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136
 msgid "Not responding"

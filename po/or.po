@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-16 09:59+0800\n"
+"POT-Creation-Date: 2019-01-10 16:08+0800\n"
 "PO-Revision-Date: 2015-12-14 10:18+0000\n"
 "Last-Translator: monsta <monsta@inbox.ru>\n"
 "Language-Team: Oriya (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -395,42 +395,42 @@ msgstr[1] ""
 msgid "You are currently logged in as \"%s\"."
 msgstr "ଆପଣ \"%s\" ପରି ଭାବରେ ବର୍ତ୍ତମାନ ଲଗଇନ ହୋଇଛନ୍ତି।"
 
-#: ../ukui-session/gsm-logout-dialog.c:664
+#: ../ukui-session/gsm-logout-dialog.c:693
 msgid "Log out of this system now?"
 msgstr "ଏହି ତନ୍ତ୍ରରୁ ବର୍ତ୍ତମାନ ଲଗଆଉଟ କରିବେ କି?"
 
-#: ../ukui-session/gsm-logout-dialog.c:674
+#: ../ukui-session/gsm-logout-dialog.c:703
 #, fuzzy
-msgid "Switch User"
+msgid "_Switch User"
 msgstr "ବ୍ଯବହାରକାରୀ ବଦଳାନ୍ତୁ (_S)"
 
-#: ../ukui-session/gsm-logout-dialog.c:687
+#: ../ukui-session/gsm-logout-dialog.c:721
 #, fuzzy
-msgid "Log Out"
+msgid "_Log Out"
 msgstr "ଲଗଆଉଟ କରନ୍ତୁ (_L)"
 
-#: ../ukui-session/gsm-logout-dialog.c:699
+#: ../ukui-session/gsm-logout-dialog.c:738
 msgid "Shut down this system now?"
 msgstr "ଯନ୍ତ୍ରକୁ ବର୍ତ୍ତମାନ ବନ୍ଦ କରିବେ କି?"
 
-#: ../ukui-session/gsm-logout-dialog.c:709
+#: ../ukui-session/gsm-logout-dialog.c:748
 #, fuzzy
-msgid "Suspend"
+msgid "S_uspend"
 msgstr "ନିଲମ୍ବନ କରନ୍ତୁ (_u)"
 
-#: ../ukui-session/gsm-logout-dialog.c:722
+#: ../ukui-session/gsm-logout-dialog.c:766
 #, fuzzy
-msgid "Hibernate"
+msgid "_Hibernate"
 msgstr "ସୁପ୍ତ କରନ୍ତୁ (_H)"
 
-#: ../ukui-session/gsm-logout-dialog.c:735
+#: ../ukui-session/gsm-logout-dialog.c:784
 #, fuzzy
-msgid "Restart"
+msgid "_Restart"
 msgstr "ପୁନଃ ଚାଳନ କରନ୍ତୁ (_R)"
 
-#: ../ukui-session/gsm-logout-dialog.c:749
+#: ../ukui-session/gsm-logout-dialog.c:803
 #, fuzzy
-msgid "Shut Down"
+msgid "_Shut Down"
 msgstr "ବନ୍ଦ କରନ୍ତୁ (_S)"
 
 #: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136

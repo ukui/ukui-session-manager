@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-16 09:59+0800\n"
+"POT-Creation-Date: 2019-01-10 16:08+0800\n"
 "PO-Revision-Date: 2016-03-25 10:13+0000\n"
 "Last-Translator: Ivan Nieto <ivan.n.s@tuta.io>\n"
 "Language-Team: Spanish (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -420,36 +420,42 @@ msgstr[1] "El sistema se apagará automáticamente en %d segundos"
 msgid "You are currently logged in as \"%s\"."
 msgstr "Ha iniciado sesión como «%s»."
 
-#: ../ukui-session/gsm-logout-dialog.c:664
+#: ../ukui-session/gsm-logout-dialog.c:693
 msgid "Log out of this system now?"
 msgstr "¿Quiere cerrar la sesión en este sistema ahora?"
 
-#: ../ukui-session/gsm-logout-dialog.c:674
-msgid "Switch User"
+#: ../ukui-session/gsm-logout-dialog.c:703
+#, fuzzy
+msgid "_Switch User"
 msgstr "Cambiar usuario"
 
-#: ../ukui-session/gsm-logout-dialog.c:687
-msgid "Log Out"
+#: ../ukui-session/gsm-logout-dialog.c:721
+#, fuzzy
+msgid "_Log Out"
 msgstr "Cerrar la sesión"
 
-#: ../ukui-session/gsm-logout-dialog.c:699
+#: ../ukui-session/gsm-logout-dialog.c:738
 msgid "Shut down this system now?"
 msgstr "¿Quiere apagar este sistema ahora?"
 
-#: ../ukui-session/gsm-logout-dialog.c:709
-msgid "Suspend"
+#: ../ukui-session/gsm-logout-dialog.c:748
+#, fuzzy
+msgid "S_uspend"
 msgstr "Suspender"
 
-#: ../ukui-session/gsm-logout-dialog.c:722
-msgid "Hibernate"
+#: ../ukui-session/gsm-logout-dialog.c:766
+#, fuzzy
+msgid "_Hibernate"
 msgstr "Hibernar"
 
-#: ../ukui-session/gsm-logout-dialog.c:735
-msgid "Restart"
+#: ../ukui-session/gsm-logout-dialog.c:784
+#, fuzzy
+msgid "_Restart"
 msgstr "Reiniciar"
 
-#: ../ukui-session/gsm-logout-dialog.c:749
-msgid "Shut Down"
+#: ../ukui-session/gsm-logout-dialog.c:803
+#, fuzzy
+msgid "_Shut Down"
 msgstr "Apagar"
 
 #: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136

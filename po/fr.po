@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-16 09:59+0800\n"
+"POT-Creation-Date: 2019-01-10 16:08+0800\n"
 "PO-Revision-Date: 2015-12-29 09:40+0000\n"
 "Last-Translator: Lothaire <translations@lothai.re>\n"
 "Language-Team: French (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -426,36 +426,42 @@ msgstr[1] "Cet ordinateur va s'éteindre automatiquement dans %d secondes"
 msgid "You are currently logged in as \"%s\"."
 msgstr "Vous êtes actuellement connecté en tant que « %s »."
 
-#: ../ukui-session/gsm-logout-dialog.c:664
+#: ../ukui-session/gsm-logout-dialog.c:693
 msgid "Log out of this system now?"
 msgstr "Se déconnecter du système maintenant ?"
 
-#: ../ukui-session/gsm-logout-dialog.c:674
-msgid "Switch User"
+#: ../ukui-session/gsm-logout-dialog.c:703
+#, fuzzy
+msgid "_Switch User"
 msgstr "Changer d'_utilisateur"
 
-#: ../ukui-session/gsm-logout-dialog.c:687
-msgid "Log Out"
+#: ../ukui-session/gsm-logout-dialog.c:721
+#, fuzzy
+msgid "_Log Out"
 msgstr "_Fermer la session"
 
-#: ../ukui-session/gsm-logout-dialog.c:699
+#: ../ukui-session/gsm-logout-dialog.c:738
 msgid "Shut down this system now?"
 msgstr "Éteindre cet ordinateur maintenant ?"
 
-#: ../ukui-session/gsm-logout-dialog.c:709
-msgid "Suspend"
+#: ../ukui-session/gsm-logout-dialog.c:748
+#, fuzzy
+msgid "S_uspend"
 msgstr "_Mettre en veille"
 
-#: ../ukui-session/gsm-logout-dialog.c:722
-msgid "Hibernate"
+#: ../ukui-session/gsm-logout-dialog.c:766
+#, fuzzy
+msgid "_Hibernate"
 msgstr "_Hiberner"
 
-#: ../ukui-session/gsm-logout-dialog.c:735
-msgid "Restart"
+#: ../ukui-session/gsm-logout-dialog.c:784
+#, fuzzy
+msgid "_Restart"
 msgstr "_Redémarrer"
 
-#: ../ukui-session/gsm-logout-dialog.c:749
-msgid "Shut Down"
+#: ../ukui-session/gsm-logout-dialog.c:803
+#, fuzzy
+msgid "_Shut Down"
 msgstr "Ét_eindre"
 
 #: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136

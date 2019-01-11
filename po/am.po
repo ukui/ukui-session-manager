@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-16 09:59+0800\n"
+"POT-Creation-Date: 2019-01-10 16:08+0800\n"
 "PO-Revision-Date: 2015-12-14 10:18+0000\n"
 "Last-Translator: monsta <monsta@inbox.ru>\n"
 "Language-Team: Amharic (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -385,42 +385,42 @@ msgstr[1] ""
 msgid "You are currently logged in as \"%s\"."
 msgstr ""
 
-#: ../ukui-session/gsm-logout-dialog.c:664
+#: ../ukui-session/gsm-logout-dialog.c:693
 msgid "Log out of this system now?"
 msgstr ""
 
-#: ../ukui-session/gsm-logout-dialog.c:674
+#: ../ukui-session/gsm-logout-dialog.c:703
 #, fuzzy
-msgid "Switch User"
+msgid "_Switch User"
 msgstr "ተጠቃሚ _መቀየሪያ"
 
-#: ../ukui-session/gsm-logout-dialog.c:687
+#: ../ukui-session/gsm-logout-dialog.c:721
 #, fuzzy
-msgid "Log Out"
+msgid "_Log Out"
 msgstr "_መውጫ"
 
-#: ../ukui-session/gsm-logout-dialog.c:699
+#: ../ukui-session/gsm-logout-dialog.c:738
 msgid "Shut down this system now?"
 msgstr "ይህን ስርአት አሁን መዝጊያ"
 
-#: ../ukui-session/gsm-logout-dialog.c:709
+#: ../ukui-session/gsm-logout-dialog.c:748
 #, fuzzy
-msgid "Suspend"
+msgid "S_uspend"
 msgstr "ማ_ገጃ "
 
-#: ../ukui-session/gsm-logout-dialog.c:722
+#: ../ukui-session/gsm-logout-dialog.c:766
 #, fuzzy
-msgid "Hibernate"
+msgid "_Hibernate"
 msgstr "_ማስተኛ"
 
-#: ../ukui-session/gsm-logout-dialog.c:735
+#: ../ukui-session/gsm-logout-dialog.c:784
 #, fuzzy
-msgid "Restart"
+msgid "_Restart"
 msgstr "_እንደገና ማስጀመሪያ "
 
-#: ../ukui-session/gsm-logout-dialog.c:749
+#: ../ukui-session/gsm-logout-dialog.c:803
 #, fuzzy
-msgid "Shut Down"
+msgid "_Shut Down"
 msgstr "_ማጥፊያ"
 
 #: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136

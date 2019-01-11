@@ -60,6 +60,8 @@ struct _GsmLogoutButton
 struct _GsmLogoutButtonClass
 {
         GtkEventBoxClass  parent_class;
+
+        void (* clicked) (GsmLogoutButton *button);
 };
 
 GType        gsm_logout_button_get_type   (void) G_GNUC_CONST;

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-16 09:59+0800\n"
+"POT-Creation-Date: 2019-01-10 16:08+0800\n"
 "PO-Revision-Date: 2016-02-08 15:26+0000\n"
 "Last-Translator: monsta <monsta@inbox.ru>\n"
 "Language-Team: Hebrew (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -395,42 +395,42 @@ msgstr[1] ""
 msgid "You are currently logged in as \"%s\"."
 msgstr "אתה כרגע מחובר כ־\"%s\"."
 
-#: ../ukui-session/gsm-logout-dialog.c:664
+#: ../ukui-session/gsm-logout-dialog.c:693
 msgid "Log out of this system now?"
 msgstr "להתנתק מהמערכת?"
 
-#: ../ukui-session/gsm-logout-dialog.c:674
+#: ../ukui-session/gsm-logout-dialog.c:703
 #, fuzzy
-msgid "Switch User"
+msgid "_Switch User"
 msgstr "_החלף משתמש"
 
-#: ../ukui-session/gsm-logout-dialog.c:687
+#: ../ukui-session/gsm-logout-dialog.c:721
 #, fuzzy
-msgid "Log Out"
+msgid "_Log Out"
 msgstr "_התנתק"
 
-#: ../ukui-session/gsm-logout-dialog.c:699
+#: ../ukui-session/gsm-logout-dialog.c:738
 msgid "Shut down this system now?"
 msgstr "לכבות את המערכת?"
 
-#: ../ukui-session/gsm-logout-dialog.c:709
+#: ../ukui-session/gsm-logout-dialog.c:748
 #, fuzzy
-msgid "Suspend"
+msgid "S_uspend"
 msgstr "_השהה"
 
-#: ../ukui-session/gsm-logout-dialog.c:722
+#: ../ukui-session/gsm-logout-dialog.c:766
 #, fuzzy
-msgid "Hibernate"
+msgid "_Hibernate"
 msgstr "_מצב שינה"
 
-#: ../ukui-session/gsm-logout-dialog.c:735
+#: ../ukui-session/gsm-logout-dialog.c:784
 #, fuzzy
-msgid "Restart"
+msgid "_Restart"
 msgstr "_אתחול"
 
-#: ../ukui-session/gsm-logout-dialog.c:749
+#: ../ukui-session/gsm-logout-dialog.c:803
 #, fuzzy
-msgid "Shut Down"
+msgid "_Shut Down"
 msgstr "_כבה"
 
 #: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136

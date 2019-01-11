@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-16 09:59+0800\n"
+"POT-Creation-Date: 2019-01-10 16:08+0800\n"
 "PO-Revision-Date: 2016-03-31 10:40+0000\n"
 "Last-Translator: 박정규(Jung-Kyu Park) <bagjunggyu@gmail.com>\n"
 "Language-Team: Korean (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -410,42 +410,42 @@ msgstr[0] "%d초 후 자동으로 시스템을 종료합니다"
 msgid "You are currently logged in as \"%s\"."
 msgstr "\"%s\" 사용자로 로그인했습니다."
 
-#: ../ukui-session/gsm-logout-dialog.c:664
+#: ../ukui-session/gsm-logout-dialog.c:693
 msgid "Log out of this system now?"
 msgstr "지금 시스템에서 로그아웃하시겠습니까?"
 
-#: ../ukui-session/gsm-logout-dialog.c:674
+#: ../ukui-session/gsm-logout-dialog.c:703
 #, fuzzy
-msgid "Switch User"
+msgid "_Switch User"
 msgstr "사용자 바꾸기(_S)"
 
-#: ../ukui-session/gsm-logout-dialog.c:687
+#: ../ukui-session/gsm-logout-dialog.c:721
 #, fuzzy
-msgid "Log Out"
+msgid "_Log Out"
 msgstr "로그아웃(_L)"
 
-#: ../ukui-session/gsm-logout-dialog.c:699
+#: ../ukui-session/gsm-logout-dialog.c:738
 msgid "Shut down this system now?"
 msgstr "지금 시스템을 끄시겠습니까?"
 
-#: ../ukui-session/gsm-logout-dialog.c:709
+#: ../ukui-session/gsm-logout-dialog.c:748
 #, fuzzy
-msgid "Suspend"
+msgid "S_uspend"
 msgstr "절전(_U)"
 
-#: ../ukui-session/gsm-logout-dialog.c:722
+#: ../ukui-session/gsm-logout-dialog.c:766
 #, fuzzy
-msgid "Hibernate"
+msgid "_Hibernate"
 msgstr "최대 절전(_H)"
 
-#: ../ukui-session/gsm-logout-dialog.c:735
+#: ../ukui-session/gsm-logout-dialog.c:784
 #, fuzzy
-msgid "Restart"
+msgid "_Restart"
 msgstr "다시 시작(_R)"
 
-#: ../ukui-session/gsm-logout-dialog.c:749
+#: ../ukui-session/gsm-logout-dialog.c:803
 #, fuzzy
-msgid "Shut Down"
+msgid "_Shut Down"
 msgstr "끄기(_S)"
 
 #: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136

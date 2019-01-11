@@ -581,10 +581,10 @@ gsm_logout_dialog_set_timeout (GsmLogoutDialog *logout_dialog)
         g_object_unref (settings);
 }
 
-static gboolean
-gsm_logout_button_press (GtkWidget *widget, GdkEvent *event, gpointer logout_dialog)
+static void
+gsm_logout_dialog_emit_signal (GsmLogoutButton *button, gpointer logout_dialog)
 {
-        GsmLogoutButtonType type = gsm_logout_button_get_btype(GSM_LOGOUT_BUTTON(widget));
+        GsmLogoutButtonType type = gsm_logout_button_get_btype(button);
 
         guint signal_id;
         switch (type) {
@@ -612,6 +612,32 @@ gsm_logout_button_press (GtkWidget *widget, GdkEvent *event, gpointer logout_dia
         }
 
         g_signal_emit(logout_dialog, dialog_signals[RESPONSE], 0, signal_id);
+}
+
+static gboolean
+gsm_logout_key_press (GsmLogoutButton *button, GdkEvent *event, gpointer logout_dialog)
+{
+        GdkEventKey *key_event = (GdkEventKey*)event;
+        if (key_event->keyval == GDK_KEY_Return && key_event->type == GDK_KEY_PRESS) {
+                gsm_logout_dialog_emit_signal (button, logout_dialog);
+                return TRUE;
+        }
+
+        return FALSE;
+}
+
+static gboolean
+gsm_logout_button_press (GsmLogoutButton *button, GdkEvent *event, gpointer logout_dialog)
+{
+        gsm_logout_dialog_emit_signal (button, logout_dialog);
+
+        return TRUE;
+}
+
+static gboolean
+gsm_logout_button_clicked (GsmLogoutButton *button, gpointer logout_dialog)
+{
+        gsm_logout_dialog_emit_signal (button, logout_dialog);
 
         return TRUE;
 }
@@ -654,6 +680,9 @@ gsm_get_dialog (GsmDialogLogoutType type,
         gtk_widget_set_valign (logout_dialog->priv->box, GTK_ALIGN_CENTER);
         gtk_widget_set_halign (logout_dialog->priv->box, GTK_ALIGN_CENTER);
 
+        GtkAccelGroup* accel_group = gtk_accel_group_new();
+        gtk_window_add_accel_group(GTK_WINDOW (logout_dialog), accel_group);
+
         buttons_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 20);
         primary_label = gtk_label_new ("");
         const char *format = "<span color=\"white\" alpha=\"65535\">\%s</span>";
@@ -671,27 +700,37 @@ gsm_get_dialog (GsmDialogLogoutType type,
 
                 if (gsm_logout_supports_switch_user (logout_dialog)) {
                         GsmLogoutButton *user_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_USER,
-                                                                              _("Switch User"),
+                                                                              _("_Switch User"),
                                                                               DATA_DIR "/user.png",
                                                                               DATA_DIR "/user_prelight.png");
-                        g_signal_connect (G_OBJECT (user_button),
-                                          "button-press-event",
-                                          G_CALLBACK (gsm_logout_button_press),
-                                          logout_dialog);
 
+                        g_signal_connect (G_OBJECT (user_button), "button-press-event",
+                                          G_CALLBACK (gsm_logout_button_press), logout_dialog);
+                        g_signal_connect (G_OBJECT (user_button), "key-press-event",
+                                          G_CALLBACK (gsm_logout_key_press), logout_dialog);
+                        g_signal_connect (G_OBJECT (user_button), "clicked",
+                                          G_CALLBACK (gsm_logout_button_clicked), logout_dialog);
+
+                        gtk_widget_set_can_focus (GTK_WIDGET(user_button), TRUE);
+                        gtk_widget_add_accelerator (GTK_WIDGET(user_button), "clicked", accel_group, GDK_KEY_s, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
                         gtk_box_pack_start(GTK_BOX(buttons_box), GTK_WIDGET(user_button), FALSE, FALSE, 0);
                 }
 
                 // Logout button
                 GsmLogoutButton *logout_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_LOGOUT,
-                                                                        _("Log Out"),
+                                                                        _("_Log Out"),
                                                                         DATA_DIR "/logout.png",
                                                                         DATA_DIR "/logout_prelight.png");
-                g_signal_connect (G_OBJECT (logout_button),
-                                  "button-press-event",
-                                  G_CALLBACK (gsm_logout_button_press),
-                                  logout_dialog);
 
+                g_signal_connect (G_OBJECT (logout_button), "button-press-event",
+                                  G_CALLBACK (gsm_logout_button_press), logout_dialog);
+                g_signal_connect (G_OBJECT (logout_button), "key-press-event",
+                                  G_CALLBACK (gsm_logout_key_press), logout_dialog);
+                g_signal_connect (G_OBJECT (logout_button), "clicked",
+                                  G_CALLBACK (gsm_logout_button_clicked), logout_dialog);
+
+                gtk_widget_set_can_focus (GTK_WIDGET(logout_button), TRUE);
+                gtk_widget_add_accelerator (GTK_WIDGET(logout_button), "clicked", accel_group, GDK_KEY_l, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
                 gtk_box_pack_start(GTK_BOX(buttons_box), GTK_WIDGET(logout_button), FALSE, FALSE, 0);
 
                 break;
@@ -706,54 +745,74 @@ gsm_get_dialog (GsmDialogLogoutType type,
 
                 if (gsm_logout_supports_system_suspend (logout_dialog)) {
                         GsmLogoutButton *sleep_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_SLEEP,
-                                                                               _("Suspend"),
+                                                                               _("S_uspend"),
                                                                                DATA_DIR "/suspend.png",
                                                                                DATA_DIR "/suspend_prelight.png");
-                        g_signal_connect (G_OBJECT (sleep_button),
-                                          "button-press-event",
-                                          G_CALLBACK (gsm_logout_button_press),
-                                          logout_dialog);
 
+                        g_signal_connect (G_OBJECT (sleep_button), "button-press-event",
+                                          G_CALLBACK (gsm_logout_button_press), logout_dialog);
+                        g_signal_connect (G_OBJECT (sleep_button), "key-press-event",
+                                          G_CALLBACK (gsm_logout_key_press), logout_dialog);
+                        g_signal_connect (G_OBJECT (sleep_button), "clicked",
+                                          G_CALLBACK (gsm_logout_button_clicked), logout_dialog);
+
+                        gtk_widget_set_can_focus (GTK_WIDGET(sleep_button), TRUE);
+                        gtk_widget_add_accelerator (GTK_WIDGET(sleep_button), "clicked", accel_group, GDK_KEY_u, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
                         gtk_box_pack_start(GTK_BOX(buttons_box), GTK_WIDGET(sleep_button), FALSE, FALSE, 0);
                 }
 
                 if (gsm_logout_supports_system_hibernate (logout_dialog)) {
                         GsmLogoutButton *hibernate_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_HIBERNATE,
-                                                                                   _("Hibernate"),
-                                                                                  DATA_DIR "/hibernate.png",
-                                                                                  DATA_DIR "/hibernate_prelight.png");
-                        g_signal_connect (G_OBJECT (hibernate_button),
-                                          "button-press-event",
-                                          G_CALLBACK (gsm_logout_button_press),
-                                          logout_dialog);
+                                                                                   _("_Hibernate"),
+                                                                                   DATA_DIR "/hibernate.png",
+                                                                                   DATA_DIR "/hibernate_prelight.png");
 
+                        g_signal_connect (G_OBJECT (hibernate_button), "button-press-event",
+                                          G_CALLBACK (gsm_logout_button_press), logout_dialog);
+                        g_signal_connect (G_OBJECT (hibernate_button), "key-press-event",
+                                          G_CALLBACK (gsm_logout_key_press), logout_dialog);
+                        g_signal_connect (G_OBJECT (hibernate_button), "clicked",
+                                          G_CALLBACK (gsm_logout_button_clicked), logout_dialog);
+
+                        gtk_widget_set_can_focus (GTK_WIDGET(hibernate_button), TRUE);
+                        gtk_widget_add_accelerator (GTK_WIDGET(hibernate_button), "clicked", accel_group, GDK_KEY_h, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
                         gtk_box_pack_start(GTK_BOX(buttons_box), GTK_WIDGET(hibernate_button), FALSE, FALSE, 0);
                 }
 
                 if (gsm_logout_supports_reboot (logout_dialog)) {
                         GsmLogoutButton *reboot_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_REBOOT,
-                                                                                _("Restart"),
+                                                                                _("_Restart"),
                                                                                 DATA_DIR "/reboot.png",
                                                                                 DATA_DIR "/reboot_prelight.png");
-                        g_signal_connect (G_OBJECT (reboot_button),
-                                          "button-press-event",
-                                          G_CALLBACK (gsm_logout_button_press),
-                                          logout_dialog);
 
+                        g_signal_connect (G_OBJECT (reboot_button), "button-press-event",
+                                          G_CALLBACK (gsm_logout_button_press), logout_dialog);
+                        g_signal_connect (G_OBJECT (reboot_button), "key-press-event",
+                                          G_CALLBACK (gsm_logout_key_press), logout_dialog);
+                        g_signal_connect (G_OBJECT (reboot_button), "clicked",
+                                          G_CALLBACK (gsm_logout_button_clicked), logout_dialog);
+
+                        gtk_widget_set_can_focus (GTK_WIDGET(reboot_button), TRUE);
+                        gtk_widget_add_accelerator (GTK_WIDGET(reboot_button), "clicked", accel_group, GDK_KEY_r, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
                         gtk_box_pack_start(GTK_BOX(buttons_box), GTK_WIDGET(reboot_button), FALSE, FALSE, 0);
                 }
 
                 if (gsm_logout_supports_shutdown (logout_dialog)) {
 
                         GsmLogoutButton *shutdown_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_SHUTDOWN,
-                                                                                  _("Shut Down"),
+                                                                                  _("_Shut Down"),
                                                                                   DATA_DIR "/shutdown.png",
                                                                                   DATA_DIR "/shutdown_prelight.png");
-                        g_signal_connect (G_OBJECT (shutdown_button),
-                                          "button-press-event",
-                                          G_CALLBACK (gsm_logout_button_press),
-                                          logout_dialog);
 
+                        g_signal_connect (G_OBJECT (shutdown_button), "button-press-event",
+                                          G_CALLBACK (gsm_logout_button_press), logout_dialog);
+                        g_signal_connect (G_OBJECT (shutdown_button), "key-press-event",
+                                          G_CALLBACK (gsm_logout_key_press), logout_dialog);
+                        g_signal_connect (G_OBJECT (shutdown_button), "clicked",
+                                          G_CALLBACK (gsm_logout_button_clicked), logout_dialog);
+
+                        gtk_widget_set_can_focus (GTK_WIDGET(shutdown_button), TRUE);
+                        gtk_widget_add_accelerator (GTK_WIDGET(shutdown_button), "clicked", accel_group, GDK_KEY_s, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
                         gtk_box_pack_start(GTK_BOX(buttons_box), GTK_WIDGET(shutdown_button), FALSE, FALSE, 0);
                 }
                 break;
