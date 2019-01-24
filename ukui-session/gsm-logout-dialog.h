@@ -68,6 +68,8 @@ struct _GsmLogoutDialogClass
 
 GType        gsm_logout_dialog_get_type   (void) G_GNUC_CONST;
 
+GtkWidget   *gsm_logout_dialog_get_default_button (GsmLogoutDialog *dialog);
+
 GtkWidget   *gsm_get_logout_dialog        (GdkScreen           *screen,
                                            guint32              activate_time);
 GtkWidget   *gsm_get_shutdown_dialog      (GdkScreen           *screen,

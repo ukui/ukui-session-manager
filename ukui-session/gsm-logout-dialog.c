@@ -77,6 +77,8 @@ struct _GsmLogoutDialogPrivate
 
         GtkWidget           *progressbar;
 
+        GtkWidget           *default_button;
+
         GdkPixbuf           *root;
 
         cairo_pattern_t     *corner_pattern;
@@ -642,6 +644,13 @@ gsm_logout_button_clicked (GsmLogoutButton *button, gpointer logout_dialog)
         return TRUE;
 }
 
+GtkWidget *
+gsm_logout_dialog_get_default_button (GsmLogoutDialog *dialog)
+{
+        return dialog->priv->default_button;
+}
+
+
 static GtkWidget *
 gsm_get_dialog (GsmDialogLogoutType type,
                 GdkScreen          *screen,
@@ -721,6 +730,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
                                                                         _("_Log Out"),
                                                                         DATA_DIR "/logout.png",
                                                                         DATA_DIR "/logout_prelight.png");
+                logout_dialog->priv->default_button = GTK_WIDGET(logout_button);
 
                 g_signal_connect (G_OBJECT (logout_button), "button-press-event",
                                   G_CALLBACK (gsm_logout_button_press), logout_dialog);
@@ -803,6 +813,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
                                                                                   _("_Shut Down"),
                                                                                   DATA_DIR "/shutdown.png",
                                                                                   DATA_DIR "/shutdown_prelight.png");
+                        logout_dialog->priv->default_button = GTK_WIDGET(shutdown_button);
 
                         g_signal_connect (G_OBJECT (shutdown_button), "button-press-event",
                                           G_CALLBACK (gsm_logout_button_press), logout_dialog);

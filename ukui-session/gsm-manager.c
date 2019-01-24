@@ -3173,6 +3173,7 @@ static void
 show_shutdown_dialog (GsmManager *manager)
 {
         GtkWidget *dialog;
+        GtkWidget *default_button;
 
         if (manager->priv->phase >= GSM_MANAGER_PHASE_QUERY_END_SESSION) {
                 /* Already shutting down, nothing more to do */
@@ -3183,19 +3184,21 @@ show_shutdown_dialog (GsmManager *manager)
 
         dialog = gsm_get_shutdown_dialog (gdk_screen_get_default (),
                                           gtk_get_current_event_time ());
+        default_button = gsm_logout_dialog_get_default_button (GSM_LOGOUT_DIALOG(dialog));
 
         g_signal_connect (dialog,
                           "response",
                           G_CALLBACK (logout_dialog_response),
                           manager);
         gtk_widget_show_all (dialog);
-        gtk_widget_grab_focus (dialog);
+        gtk_widget_grab_focus (default_button);
 }
 
 static void
 show_logout_dialog (GsmManager *manager)
 {
         GtkWidget *dialog;
+        GtkWidget *default_button;
 
         if (manager->priv->phase >= GSM_MANAGER_PHASE_QUERY_END_SESSION) {
                 /* Already shutting down, nothing more to do */
@@ -3206,13 +3209,14 @@ show_logout_dialog (GsmManager *manager)
 
         dialog = gsm_get_logout_dialog (gdk_screen_get_default (),
                                         gtk_get_current_event_time ());
+        default_button = gsm_logout_dialog_get_default_button (GSM_LOGOUT_DIALOG(dialog));
 
         g_signal_connect (dialog,
                           "response",
                           G_CALLBACK (logout_dialog_response),
                           manager);
         gtk_widget_show_all (dialog);
-        gtk_widget_grab_focus (dialog);
+        gtk_widget_grab_focus (default_button);
 }
 
 static void
