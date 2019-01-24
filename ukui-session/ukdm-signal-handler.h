@@ -24,45 +24,16 @@
 
 #include <glib-object.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
-#define UKDM_TYPE_SIGNAL_HANDLER \
-	(ukdm_signal_handler_get_type())
-
-#define UKDM_SIGNAL_HANDLER(o) \
-	(G_TYPE_CHECK_INSTANCE_CAST((o), UKDM_TYPE_SIGNAL_HANDLER, UKdmSignalHandler))
-
-#define UKDM_SIGNAL_HANDLER_CLASS(k) \
-	(G_TYPE_CHECK_CLASS_CAST((k), UKDM_TYPE_SIGNAL_HANDLER, UKdmSignalHandlerClass))
-
-#define UKDM_IS_SIGNAL_HANDLER(o) \
-	(G_TYPE_CHECK_INSTANCE_TYPE((o), UKDM_TYPE_SIGNAL_HANDLER))
-
-#define UKDM_IS_SIGNAL_HANDLER_CLASS(k) \
-	(G_TYPE_CHECK_CLASS_TYPE((k), UKDM_TYPE_SIGNAL_HANDLER))
-
-#define UKDM_SIGNAL_HANDLER_GET_CLASS(o) \
-	(G_TYPE_INSTANCE_GET_CLASS((o), UKDM_TYPE_SIGNAL_HANDLER, UKdmSignalHandlerClass))
-
+#define UKDM_TYPE_SIGNAL_HANDLER (ukdm_signal_handler_get_type())
+G_DECLARE_FINAL_TYPE (UKdmSignalHandler, ukdm_signal_handler, UKDM, SIGNAL_HANDLER, GObject)
 
 typedef gboolean (*UKdmSignalHandlerFunc)(int signal, gpointer data);
 
 typedef void (*UKdmShutdownHandlerFunc)(gpointer data);
 
-typedef struct UKdmSignalHandlerPrivate UKdmSignalHandlerPrivate;
-
-typedef struct {
-	GObject parent;
-	UKdmSignalHandlerPrivate* priv;
-} UKdmSignalHandler;
-
-typedef struct {
-	GObjectClass parent_class;
-} UKdmSignalHandlerClass;
-
-GType ukdm_signal_handler_get_type(void);
+typedef struct _UKdmSignalHandler _UKdmSignalHandler;
 
 UKdmSignalHandler* ukdm_signal_handler_new(void);
 void ukdm_signal_handler_set_fatal_func(UKdmSignalHandler* handler, UKdmShutdownHandlerFunc func, gpointer user_data);
@@ -72,8 +43,6 @@ guint ukdm_signal_handler_add(UKdmSignalHandler* handler, int signal_number, UKd
 void ukdm_signal_handler_remove(UKdmSignalHandler* handler, guint id);
 void ukdm_signal_handler_remove_func(UKdmSignalHandler* handler, guint signal_number, UKdmSignalHandlerFunc callback, gpointer data);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __UKDM_SIGNAL_HANDLER_H */

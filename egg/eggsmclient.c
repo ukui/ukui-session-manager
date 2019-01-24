@@ -41,13 +41,11 @@ enum {
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
-struct _EggSMClientPrivate {
+typedef struct {
   GKeyFile *state_file;
-};
+}EggSMClientPrivate;
 
-#define EGG_SM_CLIENT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), EGG_TYPE_SM_CLIENT, EggSMClientPrivate))
-
-G_DEFINE_TYPE (EggSMClient, egg_sm_client, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (EggSMClient, egg_sm_client, G_TYPE_OBJECT)
 
 static EggSMClient *global_client;
 static EggSMClientMode global_client_mode = EGG_SM_CLIENT_MODE_NORMAL;
@@ -63,7 +61,6 @@ egg_sm_client_class_init (EggSMClientClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  g_type_class_add_private (klass, sizeof (EggSMClientPrivate));
 
   /**
    * EggSMClient::save_state:
@@ -117,7 +114,7 @@ egg_sm_client_class_init (EggSMClientClass *klass)
    * handling this signal; if the user has requested that the session
    * be saved when logging out, then ::save_state will be emitted
    * separately.
-   * 
+   *
    * If the application agrees to quit, it should then wait for either
    * the ::quit_cancelled or ::quit signals to be emitted.
    **/
@@ -317,35 +314,35 @@ EggSMClient *
 egg_sm_client_get (void)
 {
   if (!global_client)
-    {
-      if (global_client_mode != EGG_SM_CLIENT_MODE_DISABLED &&
-	  !sm_client_disable)
-	{
+  {
+    if (global_client_mode != EGG_SM_CLIENT_MODE_DISABLED &&
+	      !sm_client_disable)
+	  {
 #if defined (GDK_WINDOWING_WIN32)
-	  global_client = egg_sm_client_win32_new ();
+	    global_client = egg_sm_client_win32_new ();
 #elif defined (GDK_WINDOWING_QUARTZ)
-	  global_client = egg_sm_client_osx_new ();
+	    global_client = egg_sm_client_osx_new ();
 #else
-	  /* If both D-Bus and XSMP are compiled in, try XSMP first
-	   * (since it supports state saving) and fall back to D-Bus
-	   * if XSMP isn't available.
-	   */
+	    /* If both D-Bus and XSMP are compiled in, try XSMP first
+	     * (since it supports state saving) and fall back to D-Bus
+	     * if XSMP isn't available.
+	     */
 # ifdef EGG_SM_CLIENT_BACKEND_XSMP
-	  global_client = egg_sm_client_xsmp_new ();
+	    global_client = egg_sm_client_xsmp_new ();
 # endif
 # ifdef EGG_SM_CLIENT_BACKEND_DBUS
-	  if (!global_client)
-	    global_client = egg_sm_client_dbus_new ();
+	    if (!global_client)
+	      global_client = egg_sm_client_dbus_new ();
 # endif
 #endif
-	}
+	  }
 
-      /* Fallback: create a dummy client, so that callers don't have
-       * to worry about a %NULL return value.
-       */
-      if (!global_client)
-	global_client = g_object_new (EGG_TYPE_SM_CLIENT, NULL);
-    }
+    /* Fallback: create a dummy client, so that callers don't have
+     * to worry about a %NULL return value.
+     */
+    if (!global_client)
+	    global_client = g_object_new (EGG_TYPE_SM_CLIENT, NULL);
+  }
 
   return global_client;
 }
@@ -391,7 +388,7 @@ egg_sm_client_is_resumed (EggSMClient *client)
 GKeyFile *
 egg_sm_client_get_state_file (EggSMClient *client)
 {
-  EggSMClientPrivate *priv = EGG_SM_CLIENT_GET_PRIVATE (client);
+  EggSMClientPrivate *priv = egg_sm_client_get_instance_private (client);
   char *state_file_path;
   GError *err = NULL;
 
