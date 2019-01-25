@@ -52,16 +52,19 @@ GType                  gsm_app_dialog_get_type           (void);
 
 GtkWidget            * gsm_app_dialog_new                (const char   *name,
                                                           const char   *command,
-                                                          const char   *comment);
+                                                          const char   *comment,
+                                                          guint         delay);
 
 gboolean               gsm_app_dialog_run               (GsmAppDialog  *dialog,
                                                          char         **name_p,
                                                          char         **command_p,
-                                                         char         **comment_p);
+                                                         char         **comment_p,
+                                                         guint         *delay);
 
 const char *           gsm_app_dialog_get_name           (GsmAppDialog *dialog);
 const char *           gsm_app_dialog_get_command        (GsmAppDialog *dialog);
 const char *           gsm_app_dialog_get_comment        (GsmAppDialog *dialog);
+guint                  gsm_app_dialog_get_delay          (GsmAppDialog *dialog);
 
 #ifdef __cplusplus
 }
