@@ -26,9 +26,17 @@
 
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
+
+#define GSM_TYPE_LOGOUT_DIALOG         (gsm_logout_dialog_get_type ())
+G_DECLARE_DERIVABLE_TYPE (GsmLogoutDialog, gsm_logout_dialog, GSM, LOGOUT_DIALOG, GtkMessageDialog)
+
+struct _GsmLogoutDialogClass
+{
+        GtkWindowClass parent_class;
+	void        (* response) (GsmLogoutDialog *gsm_logout_dialog,
+		                  gint             response_id);
+};
 
 enum
 {
@@ -40,34 +48,6 @@ enum
         GSM_LOGOUT_RESPONSE_SLEEP
 };
 
-#define GSM_TYPE_LOGOUT_DIALOG         (gsm_logout_dialog_get_type ())
-#define GSM_LOGOUT_DIALOG(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), GSM_TYPE_LOGOUT_DIALOG, GsmLogoutDialog))
-#define GSM_LOGOUT_DIALOG_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST((k), GSM_TYPE_LOGOUT_DIALOG, GsmLogoutDialogClass))
-#define GSM_IS_LOGOUT_DIALOG(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), GSM_TYPE_LOGOUT_DIALOG))
-#define GSM_IS_LOGOUT_DIALOG_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), GSM_TYPE_LOGOUT_DIALOG))
-#define GSM_LOGOUT_DIALOG_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), GSM_TYPE_LOGOUT_DIALOG, GsmLogoutDialogClass))
-
-typedef struct _GsmLogoutDialog         GsmLogoutDialog;
-typedef struct _GsmLogoutDialogClass    GsmLogoutDialogClass;
-typedef struct _GsmLogoutDialogPrivate  GsmLogoutDialogPrivate;
-
-struct _GsmLogoutDialog
-{
-        GtkWindow        parent;
-
-        GsmLogoutDialogPrivate *priv;
-};
-
-struct _GsmLogoutDialogClass
-{
-        GtkWindowClass  parent_class;
-
-        /* signals */
-        void (*response) (GsmLogoutDialog *gsm_logout_dialog, gint response_id);
-};
-
-GType        gsm_logout_dialog_get_type   (void) G_GNUC_CONST;
-
 GtkWidget   *gsm_logout_dialog_get_default_button (GsmLogoutDialog *dialog);
 
 GtkWidget   *gsm_get_logout_dialog        (GdkScreen           *screen,
@@ -75,8 +55,6 @@ GtkWidget   *gsm_get_logout_dialog        (GdkScreen           *screen,
 GtkWidget   *gsm_get_shutdown_dialog      (GdkScreen           *screen,
                                            guint32              activate_time);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __GSM_LOGOUT_DIALOG_H__ */

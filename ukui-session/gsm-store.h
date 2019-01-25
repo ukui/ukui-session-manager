@@ -24,26 +24,12 @@
 
 #include <glib-object.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define GSM_TYPE_STORE         (gsm_store_get_type ())
-#define GSM_STORE(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), GSM_TYPE_STORE, GsmStore))
-#define GSM_STORE_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST((k), GSM_TYPE_STORE, GsmStoreClass))
-#define GSM_IS_STORE(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), GSM_TYPE_STORE))
-#define GSM_IS_STORE_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), GSM_TYPE_STORE))
-#define GSM_STORE_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), GSM_TYPE_STORE, GsmStoreClass))
+G_DECLARE_DERIVABLE_TYPE (GsmStore, gsm_store, GSM, STORE, GObject)
 
-typedef struct GsmStorePrivate GsmStorePrivate;
-
-typedef struct
-{
-        GObject          parent;
-        GsmStorePrivate *priv;
-} GsmStore;
-
-typedef struct
+struct _GsmStoreClass
 {
         GObjectClass   parent_class;
 
@@ -51,7 +37,7 @@ typedef struct
                                     const char *id);
         void          (* removed)  (GsmStore   *store,
                                     const char *id);
-} GsmStoreClass;
+};
 
 typedef enum
 {

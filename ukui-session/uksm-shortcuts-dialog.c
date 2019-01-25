@@ -32,9 +32,6 @@
 #include "gsm-blur.h"
 #include "ukdm.h"
 
-#define UKSM_SHORTCUTS_DIALOG_GET_PRIVATE(o)                                \
-        (G_TYPE_INSTANCE_GET_PRIVATE ((o), UKSM_TYPE_SHORTCUTS_DIALOG, UksmShortcutsDialogPrivate))
-
 #define BORDER_SIZE 30
 #define SHORTCUTS_TIMEOUT 10
 
@@ -52,8 +49,7 @@ enum {
 
 static guint dialog_signals[LAST_SIGNAL] = { 0 };
 
-struct _UksmShortcutsDialogPrivate
-{
+typedef struct {
         GtkWidget           *box;
 
         GtkWidget           *secondary_label;
@@ -71,7 +67,7 @@ struct _UksmShortcutsDialogPrivate
         int                  timeout;
 
         unsigned int         timeout_id;
-};
+} UksmShortcutsDialogPrivate;
 
 static UksmShortcutsDialog *current_dialog = NULL;
 
@@ -90,7 +86,7 @@ static void uksm_shortcuts_dialog_destroy      (UksmShortcutsDialog *shortcuts_d
 static void uksm_shortcuts_dialog_show         (UksmShortcutsDialog *shortcuts_dialog,
                                             gpointer         data);
 
-G_DEFINE_TYPE (UksmShortcutsDialog, uksm_shortcuts_dialog, GTK_TYPE_WINDOW);
+G_DEFINE_TYPE_WITH_PRIVATE (UksmShortcutsDialog, uksm_shortcuts_dialog, GTK_TYPE_WINDOW);
 
 static void
 uksm_shortcuts_dialog_class_init (UksmShortcutsDialogClass *klass)
@@ -107,35 +103,30 @@ uksm_shortcuts_dialog_class_init (UksmShortcutsDialogClass *klass)
                               g_cclosure_marshal_VOID__VOID,
                               G_TYPE_NONE,
                               0);
-
-        g_type_class_add_private (klass, sizeof (UksmShortcutsDialogPrivate));
 }
 
 static void
 uksm_shortcuts_dialog_init (UksmShortcutsDialog *shortcuts_dialog)
 {
-        shortcuts_dialog->priv = UKSM_SHORTCUTS_DIALOG_GET_PRIVATE (shortcuts_dialog);
+        UksmShortcutsDialogPrivate *priv;
 
-        shortcuts_dialog->priv->timeout_id = 0;
-        shortcuts_dialog->priv->timeout = 0;
+        priv = uksm_shortcuts_dialog_get_instance_private (shortcuts_dialog);
+        priv->timeout_id = 0;
+        priv->timeout = 0;
         GdkWindow *root_win = gdk_get_default_root_window ();
         int width = gdk_window_get_width (root_win);
         int height = gdk_window_get_height (root_win);
-        shortcuts_dialog->priv->root = gdk_pixbuf_get_from_window (root_win, 0, 0, width, height);
+        priv->root = gdk_pixbuf_get_from_window (root_win, 0, 0, width, height);
 
         cairo_surface_t *corner = cairo_image_surface_create_from_png (DATA_DIR "/switcher_corner.png");
         cairo_surface_t *left = cairo_image_surface_create_from_png (DATA_DIR "/switcher_left.png");
         cairo_surface_t *top = cairo_image_surface_create_from_png (DATA_DIR "/switcher_top.png");
 
-        // cairo_surface_t *corner = cairo_image_surface_create_from_png ("/usr/share/ukui-session-manager/switcher_corner.png");
-        // cairo_surface_t *left = cairo_image_surface_create_from_png ("/usr/share/ukui-session-manager/switcher_left.png");
-        // cairo_surface_t *top = cairo_image_surface_create_from_png ("/usr/share/ukui-session-manager/switcher_top.png");
-
-        shortcuts_dialog->priv->corner_pattern = cairo_pattern_create_for_surface (corner);
-        shortcuts_dialog->priv->left_pattern = cairo_pattern_create_for_surface (left);
-        cairo_pattern_set_extend (shortcuts_dialog->priv->left_pattern, CAIRO_EXTEND_REPEAT);
-        shortcuts_dialog->priv->top_pattern = cairo_pattern_create_for_surface (top);
-        cairo_pattern_set_extend (shortcuts_dialog->priv->top_pattern, CAIRO_EXTEND_REPEAT);
+        priv->corner_pattern = cairo_pattern_create_for_surface (corner);
+        priv->left_pattern = cairo_pattern_create_for_surface (left);
+        cairo_pattern_set_extend (priv->left_pattern, CAIRO_EXTEND_REPEAT);
+        priv->top_pattern = cairo_pattern_create_for_surface (top);
+        cairo_pattern_set_extend (priv->top_pattern, CAIRO_EXTEND_REPEAT);
 
         cairo_surface_destroy (corner);
         cairo_surface_destroy (left);
@@ -165,11 +156,14 @@ static void
 uksm_shortcuts_dialog_draw (UksmShortcutsDialog *shortcuts_dialog,
                         cairo_t *cr)
 {
+        UksmShortcutsDialogPrivate *priv;
+
         cairo_set_source_rgba (cr, 0, 0, 0, 0.25);
         cairo_paint (cr);
 
-        int box_width = gtk_widget_get_allocated_width (shortcuts_dialog->priv->box);
-        int box_height = gtk_widget_get_allocated_height (shortcuts_dialog->priv->box);
+        priv = uksm_shortcuts_dialog_get_instance_private (shortcuts_dialog);
+        int box_width = gtk_widget_get_allocated_width (priv->box);
+        int box_height = gtk_widget_get_allocated_height (priv->box);
         int win_width = gtk_widget_get_allocated_width (GTK_WIDGET(shortcuts_dialog));
         int win_height = gtk_widget_get_allocated_height (GTK_WIDGET(shortcuts_dialog));
 
@@ -178,7 +172,7 @@ uksm_shortcuts_dialog_draw (UksmShortcutsDialog *shortcuts_dialog,
 
         cairo_surface_t *center_surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, box_width, box_height);
         cairo_t *center_cr = cairo_create (center_surface);
-        gdk_cairo_set_source_pixbuf (center_cr, shortcuts_dialog->priv->root, -x, -y);
+        gdk_cairo_set_source_pixbuf (center_cr, priv->root, -x, -y);
         cairo_rectangle (center_cr, 0, 0, box_width, box_height);
         cairo_fill (center_cr);
         cairo_destroy (center_cr);
@@ -208,8 +202,8 @@ uksm_shortcuts_dialog_draw (UksmShortcutsDialog *shortcuts_dialog,
         /* Top left */
         cairo_matrix_t matrix;
         cairo_matrix_init_identity (&matrix);
-        cairo_pattern_set_matrix (shortcuts_dialog->priv->corner_pattern, &matrix);
-        cairo_set_source (cr, shortcuts_dialog->priv->corner_pattern);
+        cairo_pattern_set_matrix (priv->corner_pattern, &matrix);
+        cairo_set_source (cr, priv->corner_pattern);
         cairo_rectangle (cr, 0, 0, BORDER_SIZE, BORDER_SIZE);
         cairo_fill (cr);
 
@@ -217,8 +211,8 @@ uksm_shortcuts_dialog_draw (UksmShortcutsDialog *shortcuts_dialog,
         cairo_matrix_init_identity (&matrix);
         cairo_matrix_translate (&matrix, box_width, 0);
         cairo_matrix_scale (&matrix, -1, 1);
-        cairo_pattern_set_matrix (shortcuts_dialog->priv->corner_pattern, &matrix);
-        cairo_set_source (cr, shortcuts_dialog->priv->corner_pattern);
+        cairo_pattern_set_matrix (priv->corner_pattern, &matrix);
+        cairo_set_source (cr, priv->corner_pattern);
         cairo_rectangle (cr, box_width - BORDER_SIZE, 0, BORDER_SIZE, BORDER_SIZE);
         cairo_fill (cr);
 
@@ -235,8 +229,8 @@ uksm_shortcuts_dialog_draw (UksmShortcutsDialog *shortcuts_dialog,
         cairo_matrix_init_identity (&matrix);
         cairo_matrix_translate (&matrix, 0, box_height);
         cairo_matrix_scale (&matrix, 1, -1);
-        cairo_pattern_set_matrix (shortcuts_dialog->priv->corner_pattern, &matrix);
-        cairo_set_source (cr, shortcuts_dialog->priv->corner_pattern);
+        cairo_pattern_set_matrix (priv->corner_pattern, &matrix);
+        cairo_set_source (cr, priv->corner_pattern);
         cairo_rectangle (cr, 0, box_height - BORDER_SIZE, BORDER_SIZE, BORDER_SIZE);
         cairo_fill (cr);
 
@@ -244,15 +238,15 @@ uksm_shortcuts_dialog_draw (UksmShortcutsDialog *shortcuts_dialog,
         cairo_matrix_init_identity (&matrix);
         cairo_matrix_translate (&matrix, box_width, box_height);
         cairo_matrix_scale (&matrix, -1, -1);
-        cairo_pattern_set_matrix (shortcuts_dialog->priv->corner_pattern, &matrix);
-        cairo_set_source (cr, shortcuts_dialog->priv->corner_pattern);
+        cairo_pattern_set_matrix (priv->corner_pattern, &matrix);
+        cairo_set_source (cr, priv->corner_pattern);
         cairo_rectangle (cr, box_width - BORDER_SIZE, box_height - BORDER_SIZE, BORDER_SIZE, BORDER_SIZE);
         cairo_fill (cr);
 
         /* Left */
         cairo_matrix_init_identity (&matrix);
-        cairo_pattern_set_matrix (shortcuts_dialog->priv->left_pattern, &matrix);
-        cairo_set_source (cr, shortcuts_dialog->priv->left_pattern);
+        cairo_pattern_set_matrix (priv->left_pattern, &matrix);
+        cairo_set_source (cr, priv->left_pattern);
         cairo_rectangle (cr, 0, BORDER_SIZE, BORDER_SIZE, box_height - BORDER_SIZE * 2);
         cairo_fill (cr);
 
@@ -260,15 +254,15 @@ uksm_shortcuts_dialog_draw (UksmShortcutsDialog *shortcuts_dialog,
         cairo_matrix_init_identity (&matrix);
         cairo_matrix_translate (&matrix, box_width, 0);
         cairo_matrix_scale (&matrix, -1, 1);
-        cairo_pattern_set_matrix (shortcuts_dialog->priv->left_pattern, &matrix);
-        cairo_set_source (cr, shortcuts_dialog->priv->left_pattern);
+        cairo_pattern_set_matrix (priv->left_pattern, &matrix);
+        cairo_set_source (cr, priv->left_pattern);
         cairo_rectangle (cr, box_width - BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, box_height - BORDER_SIZE * 2);
         cairo_fill (cr);
 
         /* Top */
         cairo_matrix_init_identity (&matrix);
-        cairo_pattern_set_matrix (shortcuts_dialog->priv->top_pattern, &matrix);
-        cairo_set_source (cr, shortcuts_dialog->priv->top_pattern);
+        cairo_pattern_set_matrix (priv->top_pattern, &matrix);
+        cairo_set_source (cr, priv->top_pattern);
         cairo_rectangle (cr, BORDER_SIZE, 0, box_width - BORDER_SIZE * 2, BORDER_SIZE);
         cairo_fill (cr);
 
@@ -276,8 +270,8 @@ uksm_shortcuts_dialog_draw (UksmShortcutsDialog *shortcuts_dialog,
         cairo_matrix_init_identity (&matrix);
         cairo_matrix_translate (&matrix, 0, box_height);
         cairo_matrix_scale (&matrix, 1, -1);
-        cairo_pattern_set_matrix (shortcuts_dialog->priv->top_pattern, &matrix);
-        cairo_set_source (cr, shortcuts_dialog->priv->top_pattern);
+        cairo_pattern_set_matrix (priv->top_pattern, &matrix);
+        cairo_set_source (cr, priv->top_pattern);
         cairo_rectangle (cr, BORDER_SIZE, box_height - BORDER_SIZE, box_width - BORDER_SIZE * 2, BORDER_SIZE);
         cairo_fill (cr);
 
@@ -298,29 +292,31 @@ static void
 uksm_shortcuts_dialog_destroy (UksmShortcutsDialog *shortcuts_dialog,
                                gpointer         data)
 {
-        if (shortcuts_dialog->priv->timeout_id != 0) {
-                g_source_remove (shortcuts_dialog->priv->timeout_id);
-                shortcuts_dialog->priv->timeout_id = 0;
+        UksmShortcutsDialogPrivate *priv;
+        priv = uksm_shortcuts_dialog_get_instance_private (shortcuts_dialog);
+        if (priv->timeout_id != 0) {
+                g_source_remove (priv->timeout_id);
+                priv->timeout_id = 0;
         }
 
-        if (shortcuts_dialog->priv->root) {
-                g_object_unref (shortcuts_dialog->priv->root);
-                shortcuts_dialog->priv->root = NULL;
+        if (priv->root) {
+                g_object_unref (priv->root);
+                priv->root = NULL;
         }
 
-        if (shortcuts_dialog->priv->corner_pattern) {
-                cairo_pattern_destroy (shortcuts_dialog->priv->corner_pattern);
-                shortcuts_dialog->priv->corner_pattern = NULL;
+        if (priv->corner_pattern) {
+                cairo_pattern_destroy (priv->corner_pattern);
+                priv->corner_pattern = NULL;
         }
 
-        if (shortcuts_dialog->priv->left_pattern) {
-                cairo_pattern_destroy (shortcuts_dialog->priv->left_pattern);
-                shortcuts_dialog->priv->left_pattern = NULL;
+        if (priv->left_pattern) {
+                cairo_pattern_destroy (priv->left_pattern);
+                priv->left_pattern = NULL;
         }
 
-        if (shortcuts_dialog->priv->top_pattern) {
-                cairo_pattern_destroy (shortcuts_dialog->priv->top_pattern);
-                shortcuts_dialog->priv->top_pattern = NULL;
+        if (priv->top_pattern) {
+                cairo_pattern_destroy (priv->top_pattern);
+                priv->top_pattern = NULL;
         }
 
         current_dialog = NULL;
@@ -338,10 +334,11 @@ uksm_shortcuts_dialog_timeout (gpointer data)
         UksmShortcutsDialog *shortcuts_dialog;
         char                *seconds_warning;
         char                *secondary_text;
+        UksmShortcutsDialogPrivate *priv;
 
         shortcuts_dialog = (UksmShortcutsDialog *) data;
-
-        if (!shortcuts_dialog->priv->timeout) {
+        priv = uksm_shortcuts_dialog_get_instance_private (shortcuts_dialog);
+        if (!priv->timeout) {
                 g_signal_emit(shortcuts_dialog, dialog_signals[RESPONSE], 0);
 
                 return FALSE;
@@ -351,17 +348,17 @@ uksm_shortcuts_dialog_timeout (gpointer data)
                                     "in %d second",
                                     "This window will be automatically closed "
                                     "in %d seconds",
-                                    shortcuts_dialog->priv->timeout);
+                                    priv->timeout);
 
-        seconds_warning = g_strdup_printf (seconds_warning, shortcuts_dialog->priv->timeout);
+        seconds_warning = g_strdup_printf (seconds_warning, priv->timeout);
         secondary_text = g_strdup (seconds_warning);
 
-        gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (shortcuts_dialog->priv->progressbar),
-                                       shortcuts_dialog->priv->timeout / 10.0);
-        gtk_progress_bar_set_text (GTK_PROGRESS_BAR (shortcuts_dialog->priv->progressbar),
+        gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progressbar),
+                                       priv->timeout / 10.0);
+        gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progressbar),
                                    seconds_warning);
 
-        shortcuts_dialog->priv->timeout--;
+        priv->timeout--;
 
         g_free (secondary_text);
         g_free (seconds_warning);
@@ -372,22 +369,24 @@ uksm_shortcuts_dialog_timeout (gpointer data)
 static void
 uksm_shortcuts_dialog_set_timeout (UksmShortcutsDialog *shortcuts_dialog)
 {
-        shortcuts_dialog->priv->timeout = SHORTCUTS_TIMEOUT;
+        UksmShortcutsDialogPrivate *priv;
+        priv = uksm_shortcuts_dialog_get_instance_private (shortcuts_dialog);
+        priv->timeout = SHORTCUTS_TIMEOUT;
 
-        if (shortcuts_dialog->priv->timeout > 0) {
+        if (priv->timeout > 0) {
                 /* Sets the secondary text */
                 uksm_shortcuts_dialog_timeout (shortcuts_dialog);
 
-                if (shortcuts_dialog->priv->timeout_id != 0) {
-                        g_source_remove (shortcuts_dialog->priv->timeout_id);
+                if (priv->timeout_id != 0) {
+                        g_source_remove (priv->timeout_id);
                 }
 
-                shortcuts_dialog->priv->timeout_id = g_timeout_add (1000,
-                                                                    uksm_shortcuts_dialog_timeout,
-                                                                    shortcuts_dialog);
+                priv->timeout_id = g_timeout_add (1000,
+                                                  uksm_shortcuts_dialog_timeout,
+                                                  shortcuts_dialog);
         }
         else {
-                gtk_widget_hide (shortcuts_dialog->priv->progressbar);
+                gtk_widget_hide (priv->progressbar);
         }
 }
 
@@ -432,6 +431,7 @@ uksm_get_shortcuts_dialog (GdkScreen                *screen,
         UksmShortcutsDialog *shortcuts_dialog;
         GtkWidget           *event_box;
         GtkWidget           *label_grid;
+        UksmShortcutsDialogPrivate *priv;
 
         if (current_dialog != NULL) {
                 gtk_widget_destroy (GTK_WIDGET (current_dialog));
@@ -452,9 +452,10 @@ uksm_get_shortcuts_dialog (GdkScreen                *screen,
                           G_CALLBACK (uksm_shortcuts_dialog_cancle),
                           shortcuts_dialog);
 
-        shortcuts_dialog->priv->box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-        gtk_widget_set_valign (shortcuts_dialog->priv->box, GTK_ALIGN_CENTER);
-        gtk_widget_set_halign (shortcuts_dialog->priv->box, GTK_ALIGN_CENTER);
+        priv = uksm_shortcuts_dialog_get_instance_private (shortcuts_dialog);
+        priv->box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+        gtk_widget_set_valign (priv->box, GTK_ALIGN_CENTER);
+        gtk_widget_set_halign (priv->box, GTK_ALIGN_CENTER);
 
         label_grid = gtk_grid_new ();
         gtk_grid_set_column_homogeneous (GTK_GRID(label_grid), TRUE);
@@ -509,22 +510,22 @@ uksm_get_shortcuts_dialog (GdkScreen                *screen,
         uksm_add_shortcut (label_grid, _("Alt+F4"), UKSM_LABEL_TYPE_KEY, 2, 11, 1, 1);
         uksm_add_shortcut (label_grid, _("Close the current window."), UKSM_LABEL_TYPE_FUNCTION, 3, 11, 1, 1);
 
-        gtk_container_add (GTK_CONTAINER (shortcuts_dialog->priv->box), label_grid);
+        gtk_container_add (GTK_CONTAINER (priv->box), label_grid);
 
-        shortcuts_dialog->priv->secondary_label = gtk_label_new ("");
-        gtk_box_pack_start (GTK_BOX (shortcuts_dialog->priv->box),
-                            shortcuts_dialog->priv->secondary_label,
+        priv->secondary_label = gtk_label_new ("");
+        gtk_box_pack_start (GTK_BOX (priv->box),
+                            priv->secondary_label,
                             FALSE, FALSE, 0);
 
-        shortcuts_dialog->priv->progressbar = gtk_progress_bar_new ();
-        gtk_widget_set_halign (shortcuts_dialog->priv->progressbar, GTK_ALIGN_CENTER);
-        gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (shortcuts_dialog->priv->progressbar), TRUE);
-        gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (shortcuts_dialog->priv->progressbar), 1.0);
-        gtk_box_pack_start (GTK_BOX (shortcuts_dialog->priv->box),
-                            shortcuts_dialog->priv->progressbar,
+        priv->progressbar = gtk_progress_bar_new ();
+        gtk_widget_set_halign (priv->progressbar, GTK_ALIGN_CENTER);
+        gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (priv->progressbar), TRUE);
+        gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progressbar), 1.0);
+        gtk_box_pack_start (GTK_BOX (priv->box),
+                            priv->progressbar,
                             FALSE, FALSE, 12);
 
-        GtkStyleContext *context = gtk_widget_get_style_context (shortcuts_dialog->priv->progressbar);
+        GtkStyleContext *context = gtk_widget_get_style_context (priv->progressbar);
         GtkCssProvider *provider = gtk_css_provider_new ();
         gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider),
                                          "text {\n"
@@ -536,8 +537,8 @@ uksm_get_shortcuts_dialog (GdkScreen                *screen,
         g_object_unref (provider);
 
 
-        gtk_widget_show_all (shortcuts_dialog->priv->box);
-        gtk_container_add (GTK_CONTAINER ( event_box), shortcuts_dialog->priv->box);
+        gtk_widget_show_all (priv->box);
+        gtk_container_add (GTK_CONTAINER ( event_box), priv->box);
 
         gtk_window_set_screen (GTK_WINDOW (shortcuts_dialog), screen);
 

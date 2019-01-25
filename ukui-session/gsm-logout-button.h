@@ -26,9 +26,7 @@
 
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 typedef enum {
         GSM_BUTTON_LOGOUT_TYPE_LOGOUT,
@@ -39,23 +37,8 @@ typedef enum {
         GSM_BUTTON_LOGOUT_TYPE_SLEEP,
 } GsmLogoutButtonType;
 
-#define GSM_TYPE_LOGOUT_BUTTON         (gsm_logout_button_get_type ())
-#define GSM_LOGOUT_BUTTON(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), GSM_TYPE_LOGOUT_BUTTON, GsmLogoutButton))
-#define GSM_LOGOUT_BUTTON_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST((k), GSM_TYPE_LOGOUT_BUTTON, GsmLogoutButtonClass))
-#define GSM_IS_LOGOUT_BUTTON(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), GSM_TYPE_LOGOUT_BUTTON))
-#define GSM_IS_LOGOUT_BUTTON_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), GSM_TYPE_LOGOUT_BUTTON))
-#define GSM_LOGOUT_BUTTON_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), GSM_TYPE_LOGOUT_BUTTON, GsmLogoutButtonClass))
-
-typedef struct _GsmLogoutButton         GsmLogoutButton;
-typedef struct _GsmLogoutButtonClass    GsmLogoutButtonClass;
-typedef struct _GsmLogoutButtonPrivate  GsmLogoutButtonPrivate;
-
-struct _GsmLogoutButton
-{
-        GtkEventBox             parent;
-
-        GsmLogoutButtonPrivate *priv;
-};
+#define GSM_TYPE_LOGOUT_BUTTON        (gsm_logout_button_get_type ())
+G_DECLARE_DERIVABLE_TYPE (GsmLogoutButton, gsm_logout_button, GSM, LOGOUT_BUTTON, GtkEventBox)
 
 struct _GsmLogoutButtonClass
 {
@@ -73,8 +56,6 @@ GsmLogoutButton *gsm_logout_button_new (unsigned int   button_type,
 
 GsmLogoutButtonType gsm_logout_button_get_btype (GsmLogoutButton *button);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __GSM_LOGOUT_BUTTON_H__ */

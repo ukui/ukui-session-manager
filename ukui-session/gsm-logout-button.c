@@ -25,23 +25,19 @@
 
 #include "gsm-logout-button.h"
 
-#define GSM_LOGOUT_BUTTON_GET_PRIVATE(o)                                \
-        (G_TYPE_INSTANCE_GET_PRIVATE ((o), GSM_TYPE_LOGOUT_BUTTON, GsmLogoutButtonPrivate))
+typedef struct {
+        GsmLogoutButtonType type;
 
-struct _GsmLogoutButtonPrivate
-{
-        GsmLogoutButtonType  type;
+        GtkWidget *image;
 
-        GtkWidget   *image;
-
-        GtkWidget   *label;
+        GtkWidget *label;
 
         char *label_text;
 
         char *normal_img;
 
         char *prelight_img;
-};
+} GsmLogoutButtonPrivate;
 
 enum {
         CLICKED,
@@ -60,9 +56,8 @@ static guint button_signals[LAST_SIGNAL] = { 0 };
 static void gsm_logout_button_class_init (GsmLogoutButtonClass *klass);
 static void gsm_logout_button_init       (GsmLogoutButton      *button);
 static void gsm_logout_button_dispose    (GObject              *object);
-static void gsm_logout_button_finalize   (GObject              *object);
 
-G_DEFINE_TYPE (GsmLogoutButton, gsm_logout_button, GTK_TYPE_EVENT_BOX);
+G_DEFINE_TYPE_WITH_PRIVATE (GsmLogoutButton, gsm_logout_button, GTK_TYPE_EVENT_BOX);
 
  static gboolean
  gsm_logout_button_enter (GsmLogoutButton *logout_button, gpointer data)
@@ -75,10 +70,13 @@ G_DEFINE_TYPE (GsmLogoutButton, gsm_logout_button, GTK_TYPE_EVENT_BOX);
 static gboolean
 gsm_logout_button_focus_in (GsmLogoutButton *logout_button, gpointer data)
 {
-        gtk_image_set_from_file(GTK_IMAGE(logout_button->priv->image), logout_button->priv->prelight_img);
+        GsmLogoutButtonPrivate *priv;
+
+        priv = gsm_logout_button_get_instance_private (logout_button);
+        gtk_image_set_from_file(GTK_IMAGE(priv->image), priv->prelight_img);
         const char *format = "<span color=\"white\" alpha=\"65535\">\%s</span>";
-        char *markup = g_markup_printf_escaped (format, logout_button->priv->label_text);
-        gtk_label_set_markup (GTK_LABEL (logout_button->priv->label), markup);
+        char *markup = g_markup_printf_escaped (format, priv->label_text);
+        gtk_label_set_markup (GTK_LABEL (priv->label), markup);
         g_free (markup);
 
         return TRUE;
@@ -87,10 +85,13 @@ gsm_logout_button_focus_in (GsmLogoutButton *logout_button, gpointer data)
 static gboolean
 gsm_logout_button_focus_out (GsmLogoutButton *logout_button, gpointer data)
 {
-        gtk_image_set_from_file(GTK_IMAGE(logout_button->priv->image), logout_button->priv->normal_img);
+        GsmLogoutButtonPrivate *priv;
+
+        priv = gsm_logout_button_get_instance_private (logout_button);
+        gtk_image_set_from_file(GTK_IMAGE(priv->image), priv->normal_img);
         const char *format = "<span alpha=\"1\">\%s</span>";
-        char *markup = g_markup_printf_escaped (format, logout_button->priv->label_text);
-        gtk_label_set_markup (GTK_LABEL (logout_button->priv->label), markup);
+        char *markup = g_markup_printf_escaped (format, priv->label_text);
+        gtk_label_set_markup (GTK_LABEL (priv->label), markup);
         g_free (markup);
         return TRUE;
 }
@@ -101,9 +102,13 @@ gsm_logout_button_set_label_text (GsmLogoutButton *button,
 {
         g_return_if_fail (GSM_IS_LOGOUT_BUTTON (button));
 
-        g_free (button->priv->label_text);
+        GsmLogoutButtonPrivate *priv;
 
-        button->priv->label_text = g_strdup (label_text);
+        priv = gsm_logout_button_get_instance_private (button);
+
+        g_free (priv->label_text);
+
+        priv->label_text = g_strdup (label_text);
         g_object_notify (G_OBJECT (button), "label_text");
 }
 
@@ -113,9 +118,13 @@ gsm_logout_button_set_normal_img (GsmLogoutButton *button,
 {
         g_return_if_fail (GSM_IS_LOGOUT_BUTTON (button));
 
-        g_free (button->priv->normal_img);
+        GsmLogoutButtonPrivate *priv;
 
-        button->priv->normal_img = g_strdup (normal_img);
+        priv = gsm_logout_button_get_instance_private (button);
+
+        g_free (priv->normal_img);
+
+        priv->normal_img = g_strdup (normal_img);
         g_object_notify (G_OBJECT (button), "normal_img");
 }
 
@@ -125,9 +134,13 @@ gsm_logout_button_set_prelight_img (GsmLogoutButton *button,
 {
         g_return_if_fail (GSM_IS_LOGOUT_BUTTON (button));
 
-        g_free (button->priv->prelight_img);
+        GsmLogoutButtonPrivate *priv;
 
-        button->priv->prelight_img = g_strdup (prelight_img);
+        priv = gsm_logout_button_get_instance_private (button);
+
+        g_free (priv->prelight_img);
+
+        priv->prelight_img = g_strdup (prelight_img);
         g_object_notify (G_OBJECT (button), "prelight_img");
 }
 
@@ -157,7 +170,11 @@ gsm_logout_button_set_property (GObject      *object,
 
 GsmLogoutButtonType gsm_logout_button_get_btype (GsmLogoutButton *button)
 {
-    return button->priv->type;
+        GsmLogoutButtonPrivate *priv;
+
+        priv = gsm_logout_button_get_instance_private (button);
+
+        return priv->type;
 }
 
 static void
@@ -167,16 +184,18 @@ gsm_logout_button_get_property (GObject     *object,
                                 GParamSpec  *pspec)
 {
         GsmLogoutButton *button = GSM_LOGOUT_BUTTON (object);
+        GsmLogoutButtonPrivate *priv;
 
+        priv = gsm_logout_button_get_instance_private (button);
         switch (prop_id) {
         case PROP_LABEL_TEXT:
-                g_value_set_string (value, button->priv->label_text);
+                g_value_set_string (value, priv->label_text);
                 break;
         case PROP_NORMAL_IMG:
-                g_value_set_string (value, button->priv->normal_img);
+                g_value_set_string (value, priv->normal_img);
                 break;
         case PROP_PRELIGHT_IMG:
-                g_value_set_string (value, button->priv->prelight_img);
+                g_value_set_string (value, priv->prelight_img);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -190,21 +209,23 @@ gsm_logout_button_constructor (GType type,
                                GObjectConstructParam *construct_app)
 {
         GsmLogoutButton *logout_button;
+        GsmLogoutButtonPrivate *priv;
 
         logout_button = GSM_LOGOUT_BUTTON (G_OBJECT_CLASS (gsm_logout_button_parent_class)->constructor (type,
                                                                                                          n_construct_app,
                                                                                                          construct_app));
         GtkWidget *box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 
-        logout_button->priv->image = gtk_image_new_from_file (logout_button->priv->normal_img);
-        gtk_container_add (GTK_CONTAINER (box), logout_button->priv->image);
+        priv = gsm_logout_button_get_instance_private (logout_button);
+        priv->image = gtk_image_new_from_file (priv->normal_img);
+        gtk_container_add (GTK_CONTAINER (box), priv->image);
 
-        logout_button->priv->label = gtk_label_new (logout_button->priv->label_text);
+        priv->label = gtk_label_new (priv->label_text);
         const char *format = "<span alpha=\"1\">\%s</span>";
-        char *markup = g_markup_printf_escaped (format, logout_button->priv->label_text);
-        gtk_label_set_markup (GTK_LABEL (logout_button->priv->label), markup);
+        char *markup = g_markup_printf_escaped (format, priv->label_text);
+        gtk_label_set_markup (GTK_LABEL (priv->label), markup);
         g_free (markup);
-        gtk_container_add (GTK_CONTAINER (box), logout_button->priv->label);
+        gtk_container_add (GTK_CONTAINER (box), priv->label);
 
         gtk_container_add (GTK_CONTAINER (logout_button), box);
 
@@ -230,7 +251,6 @@ gsm_logout_button_class_init (GsmLogoutButtonClass *klass)
         gobject_class->get_property = gsm_logout_button_get_property;
         gobject_class->constructor = gsm_logout_button_constructor;
         gobject_class->dispose = gsm_logout_button_dispose;
-        gobject_class->finalize = gsm_logout_button_finalize;
 
         klass->clicked = NULL;
 
@@ -265,14 +285,15 @@ gsm_logout_button_class_init (GsmLogoutButtonClass *klass)
                 NULL, NULL,
                 NULL,
                 G_TYPE_NONE, 0);
-
-        g_type_class_add_private (klass, sizeof (GsmLogoutButtonPrivate));
 }
 
 static void
 gsm_logout_button_dispose (GObject *object)
 {
         GsmLogoutButton *button;
+        GsmLogoutButtonPrivate *priv;
+
+
 
         g_return_if_fail (object != NULL);
         g_return_if_fail (GSM_IS_LOGOUT_BUTTON (object));
@@ -281,45 +302,28 @@ gsm_logout_button_dispose (GObject *object)
 
         g_debug ("GsmLogoutButton: dispose called");
 
-        if (button->priv->label_text != NULL) {
-                g_free (button->priv->label_text);
-                button->priv->label_text = NULL;
+        priv = gsm_logout_button_get_instance_private (button);
+        if (priv->label_text != NULL) {
+                g_free (priv->label_text);
+                priv->label_text = NULL;
         }
 
-        if (button->priv->normal_img != NULL) {
-                g_free (button->priv->normal_img);
-                button->priv->normal_img = NULL;
+        if (priv->normal_img != NULL) {
+                g_free (priv->normal_img);
+                priv->normal_img = NULL;
         }
 
-        if (button->priv->prelight_img != NULL) {
-                g_free (button->priv->prelight_img);
-                button->priv->prelight_img = NULL;
+        if (priv->prelight_img != NULL) {
+                g_free (priv->prelight_img);
+                priv->prelight_img = NULL;
         }
 
         G_OBJECT_CLASS (gsm_logout_button_parent_class)->dispose (object);
 }
 
 static void
-gsm_logout_button_finalize (GObject *object)
-{
-        GsmLogoutButton *button;
-
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (GSM_IS_LOGOUT_BUTTON (object));
-
-        button = GSM_LOGOUT_BUTTON (object);
-
-        g_return_if_fail (button->priv != NULL);
-
-        g_debug ("GsmLogoutButton: finalizing");
-
-        G_OBJECT_CLASS (gsm_logout_button_parent_class)->finalize (object);
-}
-
-static void
 gsm_logout_button_init (GsmLogoutButton *logout_button)
 {
-        logout_button->priv = GSM_LOGOUT_BUTTON_GET_PRIVATE (logout_button);
 }
 
 GsmLogoutButton *
@@ -329,6 +333,7 @@ gsm_logout_button_new (GsmLogoutButtonType   button_type,
                        const char    *prelight_img)
 {
         GsmLogoutButton *logout_button;
+        GsmLogoutButtonPrivate *priv;
 
         logout_button = g_object_new (GSM_TYPE_LOGOUT_BUTTON,
                                       "label_text", label_text,
@@ -336,7 +341,8 @@ gsm_logout_button_new (GsmLogoutButtonType   button_type,
                                       "prelight_img", prelight_img,
                                       NULL);
 
-        logout_button->priv->type = button_type;
+        priv = gsm_logout_button_get_instance_private (logout_button);
+        priv->type = button_type;
 
         return logout_button;
 }

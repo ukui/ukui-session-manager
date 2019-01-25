@@ -29,34 +29,18 @@
 
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define UKSM_TYPE_SHORTCUTS_DIALOG         (uksm_shortcuts_dialog_get_type ())
-#define UKSM_SHORTCUTS_DIALOG(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), UKSM_TYPE_SHORTCUTS_DIALOG, UksmShortcutsDialog))
-#define UKSM_SHORTCUTS_DIALOG_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST((k), UKSM_TYPE_SHORTCUTS_DIALOG, UksmShortcutsDialogClass))
-#define UKSM_IS_SHORTCUTS_DIALOG(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), UKSM_TYPE_SHORTCUTS_DIALOG))
-#define UKSM_IS_SHORTCUTS_DIALOG_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), UKSM_TYPE_SHORTCUTS_DIALOG))
-#define UKSM_SHORTCUTS_DIALOG_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), UKSM_TYPE_SHORTCUTS_DIALOG, UksmShortcutsDialogClass))
-
-typedef struct _UksmShortcutsDialog         UksmShortcutsDialog;
-typedef struct _UksmShortcutsDialogClass    UksmShortcutsDialogClass;
-typedef struct _UksmShortcutsDialogPrivate  UksmShortcutsDialogPrivate;
-
-struct _UksmShortcutsDialog
-{
-    GtkWindow        parent;
-
-    UksmShortcutsDialogPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (UksmShortcutsDialog, uksm_shortcuts_dialog, UKSM, SHORTCUTS_DIALOG, GtkWindow)
 
 struct _UksmShortcutsDialogClass
 {
     GtkWindowClass  parent_class;
 
     /* signals */
-    void (*response) (UksmShortcutsDialog *uksm_shortcuts_dialog, gint response_id);
+    void (*response) (UksmShortcutsDialog *uksm_shortcuts_dialog,
+                      gint response_id);
 };
 
 GType        uksm_shortcuts_dialog_get_type   (void) G_GNUC_CONST;
@@ -64,9 +48,6 @@ GType        uksm_shortcuts_dialog_get_type   (void) G_GNUC_CONST;
 GtkWidget   *uksm_get_shortcuts_dialog        (GdkScreen           *screen,
                                                guint32              activate_time);
 
-
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __UKSM_SHORTCUTS_DIALOG_H__ */

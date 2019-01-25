@@ -37,16 +37,15 @@
 #define CAPPLET_DELAY_SPIN_WIDGET_NAME    "session_properties_delay_spin"
 #define CAPPLET_BROWSE_WIDGET_NAME        "session_properties_browse_button"
 
-#define GSM_APP_DIALOG_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GSM_TYPE_APP_DIALOG, GsmAppDialogPrivate))
-
 #ifdef __GNUC__
 #define UNUSED_VARIABLE __attribute__ ((unused))
 #else
 #define UNUSED_VARIABLE
 #endif
 
-struct GsmAppDialogPrivate
+struct _GsmAppDialog
 {
+        GtkDialog  parent;
         GtkWidget *name_entry;
         GtkWidget *command_entry;
         GtkWidget *comment_entry;
@@ -60,7 +59,6 @@ struct GsmAppDialogPrivate
 
 static void     gsm_app_dialog_class_init  (GsmAppDialogClass *klass);
 static void     gsm_app_dialog_init        (GsmAppDialog      *app_dialog);
-static void     gsm_app_dialog_finalize    (GObject           *object);
 
 enum {
         PROP_0,
@@ -143,7 +141,7 @@ on_browse_button_clicked (GtkWidget    *widget,
 
                 g_free (text);
 
-                gtk_entry_set_text (GTK_ENTRY (dialog->priv->command_entry), uri);
+                gtk_entry_set_text (GTK_ENTRY (dialog->command_entry), uri);
 
                 g_free (uri);
         }
@@ -167,14 +165,14 @@ on_spin_output (GtkSpinButton *spin, GsmAppDialog *dialog)
 
         adjustment = gtk_spin_button_get_adjustment (spin);
         value = gtk_adjustment_get_value (adjustment);
-        dialog->priv->delay = value;
+        dialog->delay = value;
 
         if (value == 1)
-            text = g_strdup_printf ("%d %s", value, _("second"));
+                text = g_strdup_printf ("%d %s", value, _("second"));
         else if (value > 1)
-            text = g_strdup_printf ("%d %s", value, _("seconds"));
+                text = g_strdup_printf ("%d %s", value, _("seconds"));
         else
-            text = g_strdup_printf ("%d", value);
+                text = g_strdup_printf ("%d", value);
 
         gtk_entry_set_text (GTK_ENTRY (spin), text);
         g_free (text);
@@ -220,9 +218,9 @@ setup_dialog (GsmAppDialog *dialog)
         gtk_dialog_add_button (GTK_DIALOG (dialog),
                                "gtk-cancel", GTK_RESPONSE_CANCEL);
 
-        if (dialog->priv->name == NULL
-            && dialog->priv->command == NULL
-            && dialog->priv->comment == NULL) {
+        if (dialog->name == NULL
+            && dialog->command == NULL
+            && dialog->comment == NULL) {
                 gtk_window_set_title (GTK_WINDOW (dialog), _("Add Startup Program"));
                 gtk_dialog_add_button (GTK_DIALOG (dialog),
                                        "gtk-add", GTK_RESPONSE_OK);
@@ -232,48 +230,48 @@ setup_dialog (GsmAppDialog *dialog)
                                        "gtk-save", GTK_RESPONSE_OK);
         }
 
-        dialog->priv->name_entry = GTK_WIDGET (gtk_builder_get_object (xml, CAPPLET_NAME_ENTRY_WIDGET_NAME));
-        g_signal_connect (dialog->priv->name_entry,
+        dialog->name_entry = GTK_WIDGET (gtk_builder_get_object (xml, CAPPLET_NAME_ENTRY_WIDGET_NAME));
+        g_signal_connect (dialog->name_entry,
                           "activate",
                           G_CALLBACK (on_entry_activate),
                           dialog);
-        if (dialog->priv->name != NULL) {
-                gtk_entry_set_text (GTK_ENTRY (dialog->priv->name_entry), dialog->priv->name);
+        if (dialog->name != NULL) {
+                gtk_entry_set_text (GTK_ENTRY (dialog->name_entry), dialog->name);
         }
 
-        dialog->priv->browse_button = GTK_WIDGET (gtk_builder_get_object (xml, CAPPLET_BROWSE_WIDGET_NAME));
-        g_signal_connect (dialog->priv->browse_button,
+        dialog->browse_button = GTK_WIDGET (gtk_builder_get_object (xml, CAPPLET_BROWSE_WIDGET_NAME));
+        g_signal_connect (dialog->browse_button,
                           "clicked",
                           G_CALLBACK (on_browse_button_clicked),
                           dialog);
 
-        dialog->priv->command_entry = GTK_WIDGET (gtk_builder_get_object (xml, CAPPLET_COMMAND_ENTRY_WIDGET_NAME));
-        g_signal_connect (dialog->priv->command_entry,
+        dialog->command_entry = GTK_WIDGET (gtk_builder_get_object (xml, CAPPLET_COMMAND_ENTRY_WIDGET_NAME));
+        g_signal_connect (dialog->command_entry,
                           "activate",
                           G_CALLBACK (on_entry_activate),
                           dialog);
-        if (dialog->priv->command != NULL) {
-                gtk_entry_set_text (GTK_ENTRY (dialog->priv->command_entry), dialog->priv->command);
+        if (dialog->command != NULL) {
+                gtk_entry_set_text (GTK_ENTRY (dialog->command_entry), dialog->command);
         }
 
-        dialog->priv->comment_entry = GTK_WIDGET (gtk_builder_get_object (xml, CAPPLET_COMMENT_ENTRY_WIDGET_NAME));
-        g_signal_connect (dialog->priv->comment_entry,
+        dialog->comment_entry = GTK_WIDGET (gtk_builder_get_object (xml, CAPPLET_COMMENT_ENTRY_WIDGET_NAME));
+        g_signal_connect (dialog->comment_entry,
                           "activate",
                           G_CALLBACK (on_entry_activate),
                           dialog);
-        if (dialog->priv->comment != NULL) {
-                gtk_entry_set_text (GTK_ENTRY (dialog->priv->comment_entry), dialog->priv->comment);
+        if (dialog->comment != NULL) {
+                gtk_entry_set_text (GTK_ENTRY (dialog->comment_entry), dialog->comment);
         }
 
-        dialog->priv->delay_spin = GTK_WIDGET(gtk_builder_get_object (xml, CAPPLET_DELAY_SPIN_WIDGET_NAME));
-        g_signal_connect (dialog->priv->delay_spin,
+        dialog->delay_spin = GTK_WIDGET(gtk_builder_get_object (xml, CAPPLET_DELAY_SPIN_WIDGET_NAME));
+        g_signal_connect (dialog->delay_spin,
                           "output",
                           G_CALLBACK (on_spin_output),
                           dialog);
-        if (dialog->priv->delay > 0) {
+        if (dialog->delay > 0) {
                 GtkAdjustment *adjustment;
-                adjustment = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON(dialog->priv->delay_spin));
-                gtk_adjustment_set_value (adjustment, (gdouble) dialog->priv->delay);
+                adjustment = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON(dialog->delay_spin));
+                gtk_adjustment_set_value (adjustment, (gdouble) dialog->delay);
         }
 
         if (xml != NULL) {
@@ -289,8 +287,8 @@ gsm_app_dialog_constructor (GType                  type,
         GsmAppDialog *dialog;
 
         dialog = GSM_APP_DIALOG (G_OBJECT_CLASS (gsm_app_dialog_parent_class)->constructor (type,
-                                                                                                                  n_construct_app,
-                                                                                                                  construct_app));
+                                                                                            n_construct_app,
+                                                                                            construct_app));
 
         setup_dialog (dialog);
 
@@ -307,12 +305,12 @@ gsm_app_dialog_dispose (GObject *object)
 
         dialog = GSM_APP_DIALOG (object);
 
-        g_free (dialog->priv->name);
-        dialog->priv->name = NULL;
-        g_free (dialog->priv->command);
-        dialog->priv->command = NULL;
-        g_free (dialog->priv->comment);
-        dialog->priv->comment = NULL;
+        g_free (dialog->name);
+        dialog->name = NULL;
+        g_free (dialog->command);
+        dialog->command = NULL;
+        g_free (dialog->comment);
+        dialog->comment = NULL;
 
         G_OBJECT_CLASS (gsm_app_dialog_parent_class)->dispose (object);
 }
@@ -323,9 +321,9 @@ gsm_app_dialog_set_name (GsmAppDialog *dialog,
 {
         g_return_if_fail (GSM_IS_APP_DIALOG (dialog));
 
-        g_free (dialog->priv->name);
+        g_free (dialog->name);
 
-        dialog->priv->name = g_strdup (name);
+        dialog->name = g_strdup (name);
         g_object_notify (G_OBJECT (dialog), "name");
 }
 
@@ -335,9 +333,9 @@ gsm_app_dialog_set_command (GsmAppDialog *dialog,
 {
         g_return_if_fail (GSM_IS_APP_DIALOG (dialog));
 
-        g_free (dialog->priv->command);
+        g_free (dialog->command);
 
-        dialog->priv->command = g_strdup (name);
+        dialog->command = g_strdup (name);
         g_object_notify (G_OBJECT (dialog), "command");
 }
 
@@ -347,9 +345,9 @@ gsm_app_dialog_set_comment (GsmAppDialog *dialog,
 {
         g_return_if_fail (GSM_IS_APP_DIALOG (dialog));
 
-        g_free (dialog->priv->comment);
+        g_free (dialog->comment);
 
-        dialog->priv->comment = g_strdup (name);
+        dialog->comment = g_strdup (name);
         g_object_notify (G_OBJECT (dialog), "comment");
 }
 
@@ -359,7 +357,7 @@ gsm_app_dialog_set_delay (GsmAppDialog *dialog,
 {
         g_return_if_fail (GSM_IS_APP_DIALOG (dialog));
 
-        dialog->priv->delay = delay;
+        dialog->delay = delay;
         g_object_notify (G_OBJECT (dialog), "delay");
 }
 
@@ -367,28 +365,28 @@ const char *
 gsm_app_dialog_get_name (GsmAppDialog *dialog)
 {
         g_return_val_if_fail (GSM_IS_APP_DIALOG (dialog), NULL);
-        return gtk_entry_get_text (GTK_ENTRY (dialog->priv->name_entry));
+        return gtk_entry_get_text (GTK_ENTRY (dialog->name_entry));
 }
 
 const char *
 gsm_app_dialog_get_command (GsmAppDialog *dialog)
 {
         g_return_val_if_fail (GSM_IS_APP_DIALOG (dialog), NULL);
-        return gtk_entry_get_text (GTK_ENTRY (dialog->priv->command_entry));
+        return gtk_entry_get_text (GTK_ENTRY (dialog->command_entry));
 }
 
 const char *
 gsm_app_dialog_get_comment (GsmAppDialog *dialog)
 {
         g_return_val_if_fail (GSM_IS_APP_DIALOG (dialog), NULL);
-        return gtk_entry_get_text (GTK_ENTRY (dialog->priv->comment_entry));
+        return gtk_entry_get_text (GTK_ENTRY (dialog->comment_entry));
 }
 
 guint
 gsm_app_dialog_get_delay (GsmAppDialog *dialog)
 {
         g_return_val_if_fail (GSM_IS_APP_DIALOG (dialog), 0);
-        return dialog->priv->delay;
+        return dialog->delay;
 }
 
 static void
@@ -410,7 +408,7 @@ gsm_app_dialog_set_property (GObject        *object,
                 gsm_app_dialog_set_comment (dialog, g_value_get_string (value));
                 break;
         case PROP_DELAY:
-                g_value_set_uint (value, dialog->priv->delay);
+                gsm_app_dialog_set_delay (dialog, g_value_get_uint (value));
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -428,13 +426,16 @@ gsm_app_dialog_get_property (GObject        *object,
 
         switch (prop_id) {
         case PROP_NAME:
-                g_value_set_string (value, dialog->priv->name);
+                g_value_set_string (value, dialog->name);
                 break;
         case PROP_COMMAND:
-                g_value_set_string (value, dialog->priv->command);
+                g_value_set_string (value, dialog->command);
                 break;
         case PROP_COMMENT:
-                g_value_set_string (value, dialog->priv->comment);
+                g_value_set_string (value, dialog->comment);
+                break;
+        case PROP_DELAY:
+                g_value_set_uint (value, dialog->delay);
                 break;
         default:
                 G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -451,7 +452,6 @@ gsm_app_dialog_class_init (GsmAppDialogClass *klass)
         object_class->set_property = gsm_app_dialog_set_property;
         object_class->constructor = gsm_app_dialog_constructor;
         object_class->dispose = gsm_app_dialog_dispose;
-        object_class->finalize = gsm_app_dialog_finalize;
 
         g_object_class_install_property (object_class,
                                          PROP_NAME,
@@ -479,34 +479,16 @@ gsm_app_dialog_class_init (GsmAppDialogClass *klass)
                                          g_param_spec_uint ("delay",
                                                             "delay",
                                                             "delay",
-                                                            0,
-                                                            100,
-                                                            0,
-                                                            G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
-
-        g_type_class_add_private (klass, sizeof (GsmAppDialogPrivate));
+                                                             0,
+                                                             100,
+                                                             0,
+                                                             G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
 }
 
 static void
 gsm_app_dialog_init (GsmAppDialog *dialog)
 {
 
-        dialog->priv = GSM_APP_DIALOG_GET_PRIVATE (dialog);
-}
-
-static void
-gsm_app_dialog_finalize (GObject *object)
-{
-        GsmAppDialog *dialog;
-
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (GSM_IS_APP_DIALOG (object));
-
-        dialog = GSM_APP_DIALOG (object);
-
-        g_return_if_fail (dialog->priv != NULL);
-
-        G_OBJECT_CLASS (gsm_app_dialog_parent_class)->finalize (object);
 }
 
 GtkWidget *

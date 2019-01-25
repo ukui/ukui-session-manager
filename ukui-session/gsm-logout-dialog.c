@@ -37,9 +37,6 @@
 #include "gsm-logout-button.h"
 #include "ukdm.h"
 
-#define GSM_LOGOUT_DIALOG_GET_PRIVATE(o)                                \
-        (G_TYPE_INSTANCE_GET_PRIVATE ((o), GSM_TYPE_LOGOUT_DIALOG, GsmLogoutDialogPrivate))
-
 #define GSM_ICON_LOGOUT   "system-log-out"
 #define GSM_ICON_SHUTDOWN "system-shutdown"
 
@@ -63,8 +60,7 @@ enum {
 
 static guint dialog_signals[LAST_SIGNAL] = { 0 };
 
-struct _GsmLogoutDialogPrivate
-{
+typedef struct {
         GsmDialogLogoutType  type;
 #ifdef HAVE_SYSTEMD
         GsmSystemd          *systemd;
@@ -92,7 +88,7 @@ struct _GsmLogoutDialogPrivate
         unsigned int         timeout_id;
 
         unsigned int         default_response;
-};
+} GsmLogoutDialogPrivate;
 
 static GsmLogoutDialog *current_dialog = NULL;
 
@@ -111,7 +107,7 @@ static void gsm_logout_dialog_destroy      (GsmLogoutDialog *logout_dialog,
 static void gsm_logout_dialog_show         (GsmLogoutDialog *logout_dialog,
                                             gpointer         data);
 
-G_DEFINE_TYPE (GsmLogoutDialog, gsm_logout_dialog, GTK_TYPE_WINDOW);
+G_DEFINE_TYPE_WITH_PRIVATE (GsmLogoutDialog, gsm_logout_dialog, GTK_TYPE_WINDOW);
 
 static void
 gsm_logout_dialog_class_init (GsmLogoutDialogClass *klass)
@@ -128,32 +124,31 @@ gsm_logout_dialog_class_init (GsmLogoutDialogClass *klass)
                               g_cclosure_marshal_VOID__INT,
                               G_TYPE_NONE, 1,
                               G_TYPE_INT);
-
-        g_type_class_add_private (klass, sizeof (GsmLogoutDialogPrivate));
 }
 
 static void
 gsm_logout_dialog_init (GsmLogoutDialog *logout_dialog)
 {
-        logout_dialog->priv = GSM_LOGOUT_DIALOG_GET_PRIVATE (logout_dialog);
+        GsmLogoutDialogPrivate *priv;
 
-        logout_dialog->priv->timeout_id = 0;
-        logout_dialog->priv->timeout = 0;
-        logout_dialog->priv->default_response = GTK_RESPONSE_CANCEL;
+        priv = gsm_logout_dialog_get_instance_private (logout_dialog);
+        priv->timeout_id = 0;
+        priv->timeout = 0;
+        priv->default_response = GTK_RESPONSE_CANCEL;
         GdkWindow *root_win = gdk_get_default_root_window ();
         int width = gdk_window_get_width (root_win);
         int height = gdk_window_get_height (root_win);
-        logout_dialog->priv->root = gdk_pixbuf_get_from_window (root_win, 0, 0, width, height);
+        priv->root = gdk_pixbuf_get_from_window (root_win, 0, 0, width, height);
 
         cairo_surface_t *corner = cairo_image_surface_create_from_png (DATA_DIR "/switcher_corner.png");
         cairo_surface_t *left = cairo_image_surface_create_from_png (DATA_DIR "/switcher_left.png");
         cairo_surface_t *top = cairo_image_surface_create_from_png (DATA_DIR "/switcher_top.png");
 
-        logout_dialog->priv->corner_pattern = cairo_pattern_create_for_surface (corner);
-        logout_dialog->priv->left_pattern = cairo_pattern_create_for_surface (left);
-        cairo_pattern_set_extend (logout_dialog->priv->left_pattern, CAIRO_EXTEND_REPEAT);
-        logout_dialog->priv->top_pattern = cairo_pattern_create_for_surface (top);
-        cairo_pattern_set_extend (logout_dialog->priv->top_pattern, CAIRO_EXTEND_REPEAT);
+        priv->corner_pattern = cairo_pattern_create_for_surface (corner);
+        priv->left_pattern = cairo_pattern_create_for_surface (left);
+        cairo_pattern_set_extend (priv->left_pattern, CAIRO_EXTEND_REPEAT);
+        priv->top_pattern = cairo_pattern_create_for_surface (top);
+        cairo_pattern_set_extend (priv->top_pattern, CAIRO_EXTEND_REPEAT);
 
         cairo_surface_destroy (corner);
         cairo_surface_destroy (left);
@@ -164,10 +159,10 @@ gsm_logout_dialog_init (GsmLogoutDialog *logout_dialog)
         gtk_window_stick (GTK_WINDOW (logout_dialog));
 #ifdef HAVE_SYSTEMD
         if (LOGIND_RUNNING())
-            logout_dialog->priv->systemd = gsm_get_systemd ();
+            priv->systemd = gsm_get_systemd ();
         else
 #endif
-        logout_dialog->priv->consolekit = gsm_get_consolekit ();
+        priv->consolekit = gsm_get_consolekit ();
 
         g_signal_connect (logout_dialog,
                           "draw",
@@ -189,11 +184,14 @@ static void
 gsm_logout_dialog_draw (GsmLogoutDialog *logout_dialog,
                         cairo_t *cr)
 {
+        GsmLogoutDialogPrivate *priv;
+
         cairo_set_source_rgba (cr, 0, 0, 0, 0.25);
         cairo_paint (cr);
 
-        int box_width = gtk_widget_get_allocated_width (logout_dialog->priv->box);
-        int box_height = gtk_widget_get_allocated_height (logout_dialog->priv->box);
+        priv = gsm_logout_dialog_get_instance_private (logout_dialog);
+        int box_width = gtk_widget_get_allocated_width (priv->box);
+        int box_height = gtk_widget_get_allocated_height (priv->box);
         int win_width = gtk_widget_get_allocated_width (GTK_WIDGET(logout_dialog));
         int win_height = gtk_widget_get_allocated_height (GTK_WIDGET(logout_dialog));
 
@@ -202,7 +200,7 @@ gsm_logout_dialog_draw (GsmLogoutDialog *logout_dialog,
 
         cairo_surface_t *center_surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, box_width, box_height);
         cairo_t *center_cr = cairo_create (center_surface);
-        gdk_cairo_set_source_pixbuf (center_cr, logout_dialog->priv->root, -x, -y);
+        gdk_cairo_set_source_pixbuf (center_cr, priv->root, -x, -y);
         cairo_rectangle (center_cr, 0, 0, box_width, box_height);
         cairo_fill (center_cr);
         cairo_destroy (center_cr);
@@ -232,8 +230,8 @@ gsm_logout_dialog_draw (GsmLogoutDialog *logout_dialog,
         /* Top left */
         cairo_matrix_t matrix;
         cairo_matrix_init_identity (&matrix);
-        cairo_pattern_set_matrix (logout_dialog->priv->corner_pattern, &matrix);
-        cairo_set_source (cr, logout_dialog->priv->corner_pattern);
+        cairo_pattern_set_matrix (priv->corner_pattern, &matrix);
+        cairo_set_source (cr, priv->corner_pattern);
         cairo_rectangle (cr, 0, 0, BORDER_SIZE, BORDER_SIZE);
         cairo_fill (cr);
 
@@ -241,8 +239,8 @@ gsm_logout_dialog_draw (GsmLogoutDialog *logout_dialog,
         cairo_matrix_init_identity (&matrix);
         cairo_matrix_translate (&matrix, box_width, 0);
         cairo_matrix_scale (&matrix, -1, 1);
-        cairo_pattern_set_matrix (logout_dialog->priv->corner_pattern, &matrix);
-        cairo_set_source (cr, logout_dialog->priv->corner_pattern);
+        cairo_pattern_set_matrix (priv->corner_pattern, &matrix);
+        cairo_set_source (cr, priv->corner_pattern);
         cairo_rectangle (cr, box_width - BORDER_SIZE, 0, BORDER_SIZE, BORDER_SIZE);
         cairo_fill (cr);
 
@@ -259,8 +257,8 @@ gsm_logout_dialog_draw (GsmLogoutDialog *logout_dialog,
         cairo_matrix_init_identity (&matrix);
         cairo_matrix_translate (&matrix, 0, box_height);
         cairo_matrix_scale (&matrix, 1, -1);
-        cairo_pattern_set_matrix (logout_dialog->priv->corner_pattern, &matrix);
-        cairo_set_source (cr, logout_dialog->priv->corner_pattern);
+        cairo_pattern_set_matrix (priv->corner_pattern, &matrix);
+        cairo_set_source (cr, priv->corner_pattern);
         cairo_rectangle (cr, 0, box_height - BORDER_SIZE, BORDER_SIZE, BORDER_SIZE);
         cairo_fill (cr);
 
@@ -268,15 +266,15 @@ gsm_logout_dialog_draw (GsmLogoutDialog *logout_dialog,
         cairo_matrix_init_identity (&matrix);
         cairo_matrix_translate (&matrix, box_width, box_height);
         cairo_matrix_scale (&matrix, -1, -1);
-        cairo_pattern_set_matrix (logout_dialog->priv->corner_pattern, &matrix);
-        cairo_set_source (cr, logout_dialog->priv->corner_pattern);
+        cairo_pattern_set_matrix (priv->corner_pattern, &matrix);
+        cairo_set_source (cr, priv->corner_pattern);
         cairo_rectangle (cr, box_width - BORDER_SIZE, box_height - BORDER_SIZE, BORDER_SIZE, BORDER_SIZE);
         cairo_fill (cr);
 
         /* Left */
         cairo_matrix_init_identity (&matrix);
-        cairo_pattern_set_matrix (logout_dialog->priv->left_pattern, &matrix);
-        cairo_set_source (cr, logout_dialog->priv->left_pattern);
+        cairo_pattern_set_matrix (priv->left_pattern, &matrix);
+        cairo_set_source (cr, priv->left_pattern);
         cairo_rectangle (cr, 0, BORDER_SIZE, BORDER_SIZE, box_height - BORDER_SIZE * 2);
         cairo_fill (cr);
 
@@ -284,15 +282,15 @@ gsm_logout_dialog_draw (GsmLogoutDialog *logout_dialog,
         cairo_matrix_init_identity (&matrix);
         cairo_matrix_translate (&matrix, box_width, 0);
         cairo_matrix_scale (&matrix, -1, 1);
-        cairo_pattern_set_matrix (logout_dialog->priv->left_pattern, &matrix);
-        cairo_set_source (cr, logout_dialog->priv->left_pattern);
+        cairo_pattern_set_matrix (priv->left_pattern, &matrix);
+        cairo_set_source (cr, priv->left_pattern);
         cairo_rectangle (cr, box_width - BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, box_height - BORDER_SIZE * 2);
         cairo_fill (cr);
 
         /* Top */
         cairo_matrix_init_identity (&matrix);
-        cairo_pattern_set_matrix (logout_dialog->priv->top_pattern, &matrix);
-        cairo_set_source (cr, logout_dialog->priv->top_pattern);
+        cairo_pattern_set_matrix (priv->top_pattern, &matrix);
+        cairo_set_source (cr, priv->top_pattern);
         cairo_rectangle (cr, BORDER_SIZE, 0, box_width - BORDER_SIZE * 2, BORDER_SIZE);
         cairo_fill (cr);
 
@@ -300,8 +298,8 @@ gsm_logout_dialog_draw (GsmLogoutDialog *logout_dialog,
         cairo_matrix_init_identity (&matrix);
         cairo_matrix_translate (&matrix, 0, box_height);
         cairo_matrix_scale (&matrix, 1, -1);
-        cairo_pattern_set_matrix (logout_dialog->priv->top_pattern, &matrix);
-        cairo_set_source (cr, logout_dialog->priv->top_pattern);
+        cairo_pattern_set_matrix (priv->top_pattern, &matrix);
+        cairo_set_source (cr, priv->top_pattern);
         cairo_rectangle (cr, BORDER_SIZE, box_height - BORDER_SIZE, box_width - BORDER_SIZE * 2, BORDER_SIZE);
         cairo_fill (cr);
 
@@ -322,40 +320,42 @@ static void
 gsm_logout_dialog_destroy (GsmLogoutDialog *logout_dialog,
                            gpointer         data)
 {
-        if (logout_dialog->priv->timeout_id != 0) {
-                g_source_remove (logout_dialog->priv->timeout_id);
-                logout_dialog->priv->timeout_id = 0;
+        GsmLogoutDialogPrivate *priv;
+        priv = gsm_logout_dialog_get_instance_private (logout_dialog);
+        if (priv->timeout_id != 0) {
+                g_source_remove (priv->timeout_id);
+                priv->timeout_id = 0;
         }
 #ifdef HAVE_SYSTEMD
-        if (logout_dialog->priv->systemd) {
-                g_object_unref (logout_dialog->priv->systemd);
-                logout_dialog->priv->systemd = NULL;
+        if (priv->systemd) {
+                g_object_unref (priv->systemd);
+                priv->systemd = NULL;
         }
 #endif
 
-        if (logout_dialog->priv->consolekit) {
-                g_object_unref (logout_dialog->priv->consolekit);
-                logout_dialog->priv->consolekit = NULL;
+        if (priv->consolekit) {
+                g_object_unref (priv->consolekit);
+                priv->consolekit = NULL;
         }
 
-        if (logout_dialog->priv->root) {
-                g_object_unref (logout_dialog->priv->root);
-                logout_dialog->priv->root = NULL;
+        if (priv->root) {
+                g_object_unref (priv->root);
+                priv->root = NULL;
         }
 
-        if (logout_dialog->priv->corner_pattern) {
-                cairo_pattern_destroy (logout_dialog->priv->corner_pattern);
-                logout_dialog->priv->corner_pattern = NULL;
+        if (priv->corner_pattern) {
+                cairo_pattern_destroy (priv->corner_pattern);
+                priv->corner_pattern = NULL;
         }
 
-        if (logout_dialog->priv->left_pattern) {
-                cairo_pattern_destroy (logout_dialog->priv->left_pattern);
-                logout_dialog->priv->left_pattern = NULL;
+        if (priv->left_pattern) {
+                cairo_pattern_destroy (priv->left_pattern);
+                priv->left_pattern = NULL;
         }
 
-        if (logout_dialog->priv->top_pattern) {
-                cairo_pattern_destroy (logout_dialog->priv->top_pattern);
-                logout_dialog->priv->top_pattern = NULL;
+        if (priv->top_pattern) {
+                cairo_pattern_destroy (priv->top_pattern);
+                priv->top_pattern = NULL;
         }
 
         current_dialog = NULL;
@@ -365,13 +365,16 @@ static gboolean
 gsm_logout_supports_system_suspend (GsmLogoutDialog *logout_dialog)
 {
         gboolean ret;
+        GsmLogoutDialogPrivate *priv;
+
+        priv = gsm_logout_dialog_get_instance_private (logout_dialog);
         ret = FALSE;
 #ifdef HAVE_SYSTEMD
         if (LOGIND_RUNNING())
-            ret = gsm_systemd_can_suspend (logout_dialog->priv->systemd);
+            ret = gsm_systemd_can_suspend (priv->systemd);
         else
 #endif
-        ret = gsm_consolekit_can_suspend (logout_dialog->priv->consolekit);
+        ret = gsm_consolekit_can_suspend (priv->consolekit);
         return ret;
 }
 
@@ -379,13 +382,16 @@ static gboolean
 gsm_logout_supports_system_hibernate (GsmLogoutDialog *logout_dialog)
 {
         gboolean ret;
+        GsmLogoutDialogPrivate *priv;
+
+        priv = gsm_logout_dialog_get_instance_private (logout_dialog);
         ret = FALSE;
 #ifdef HAVE_SYSTEMD
         if (LOGIND_RUNNING())
-            ret = gsm_systemd_can_hibernate (logout_dialog->priv->systemd);
+            ret = gsm_systemd_can_hibernate (priv->systemd);
         else
 #endif
-        ret = gsm_consolekit_can_hibernate (logout_dialog->priv->consolekit);
+        ret = gsm_consolekit_can_hibernate (priv->consolekit);
         return ret;
 }
 
@@ -395,19 +401,20 @@ gsm_logout_supports_switch_user (GsmLogoutDialog *logout_dialog)
         GSettings *settings;
         gboolean   ret = FALSE;
         gboolean   locked;
+        GsmLogoutDialogPrivate *priv;
 
         settings = g_settings_new (LOCKDOWN_SCHEMA);
-
         locked = g_settings_get_boolean (settings, KEY_USER_SWITCHING_DISABLE);
         g_object_unref (settings);
 
+        priv = gsm_logout_dialog_get_instance_private (logout_dialog);
         if (!locked) {
 #ifdef HAVE_SYSTEMD
             if (LOGIND_RUNNING())
-                ret = gsm_systemd_can_switch_user (logout_dialog->priv->systemd);
+                ret = gsm_systemd_can_switch_user (priv->systemd);
             else
 #endif
-            ret = gsm_consolekit_can_switch_user (logout_dialog->priv->consolekit);
+            ret = gsm_consolekit_can_switch_user (priv->consolekit);
         }
 
         return ret;
@@ -417,13 +424,16 @@ static gboolean
 gsm_logout_supports_reboot (GsmLogoutDialog *logout_dialog)
 {
         gboolean ret;
+        GsmLogoutDialogPrivate *priv;
+
+        priv = gsm_logout_dialog_get_instance_private (logout_dialog);
 
 #ifdef HAVE_SYSTEMD
         if (LOGIND_RUNNING())
-            ret = gsm_systemd_can_restart (logout_dialog->priv->systemd);
+            ret = gsm_systemd_can_restart (priv->systemd);
         else
 #endif
-        ret = gsm_consolekit_can_restart (logout_dialog->priv->consolekit);
+        ret = gsm_consolekit_can_restart (priv->consolekit);
         if (!ret) {
                 ret = ukdm_supports_logout_action (UKDM_LOGOUT_ACTION_REBOOT);
         }
@@ -435,13 +445,16 @@ static gboolean
 gsm_logout_supports_shutdown (GsmLogoutDialog *logout_dialog)
 {
         gboolean ret;
+        GsmLogoutDialogPrivate *priv;
+
+        priv = gsm_logout_dialog_get_instance_private (logout_dialog);
 
 #ifdef HAVE_SYSTEMD
         if (LOGIND_RUNNING())
-            ret = gsm_systemd_can_stop (logout_dialog->priv->systemd);
+            ret = gsm_systemd_can_stop (priv->systemd);
         else
 #endif
-        ret = gsm_consolekit_can_stop (logout_dialog->priv->consolekit);
+        ret = gsm_consolekit_can_stop (priv->consolekit);
 
         if (!ret) {
                 ret = ukdm_supports_logout_action (UKDM_LOGOUT_ACTION_SHUTDOWN);
@@ -464,23 +477,25 @@ gsm_logout_dialog_timeout (gpointer data)
         char            *secondary_text;
         static char     *session_type = NULL;
         static gboolean  is_not_login;
+        GsmLogoutDialogPrivate *priv;
 
         logout_dialog = (GsmLogoutDialog *) data;
+        priv = gsm_logout_dialog_get_instance_private (logout_dialog);
 
-        if (!logout_dialog->priv->timeout) {
+        if (!priv->timeout) {
                 g_signal_emit(logout_dialog, dialog_signals[RESPONSE], 0,
-                              logout_dialog->priv->default_response);
+                              priv->default_response);
 
                 return FALSE;
         }
 
-        switch (logout_dialog->priv->type) {
+        switch (priv->type) {
         case GSM_DIALOG_LOGOUT_TYPE_LOGOUT:
                 seconds_warning = ngettext ("You will be automatically logged "
                                             "out in %d second",
                                             "You will be automatically logged "
                                             "out in %d seconds",
-                                            logout_dialog->priv->timeout);
+                                            priv->timeout);
                 break;
 
         case GSM_DIALOG_LOGOUT_TYPE_SHUTDOWN:
@@ -488,13 +503,13 @@ gsm_logout_dialog_timeout (gpointer data)
                                             "shut down in %d second",
                                             "This system will be automatically "
                                             "shut down in %d seconds",
-                                            logout_dialog->priv->timeout);
+                                            priv->timeout);
                 break;
 
         default:
                 g_assert_not_reached ();
         }
-        seconds_warning = g_strdup_printf (seconds_warning, logout_dialog->priv->timeout);
+        seconds_warning = g_strdup_printf (seconds_warning, priv->timeout);
 
         if (session_type == NULL) {
 #ifdef HAVE_SYSTEMD
@@ -537,17 +552,17 @@ gsm_logout_dialog_timeout (gpointer data)
                 secondary_text = g_strdup (seconds_warning);
         }
 
-        gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (logout_dialog->priv->progressbar),
-                                       logout_dialog->priv->timeout / 60.0);
-        gtk_progress_bar_set_text (GTK_PROGRESS_BAR (logout_dialog->priv->progressbar),
+        gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progressbar),
+                                       priv->timeout / 60.0);
+        gtk_progress_bar_set_text (GTK_PROGRESS_BAR (priv->progressbar),
                                    seconds_warning);
 
         const char *format = "<span color=\"white\" alpha=\"65535\">\%s</span>";
         char *markup = g_markup_printf_escaped (format, secondary_text);
-        gtk_label_set_markup (GTK_LABEL (logout_dialog->priv->secondary_label), markup);
+        gtk_label_set_markup (GTK_LABEL (priv->secondary_label), markup);
         g_free (markup);
 
-        logout_dialog->priv->timeout--;
+        priv->timeout--;
 
         g_free (secondary_text);
         g_free (seconds_warning);
@@ -559,25 +574,27 @@ static void
 gsm_logout_dialog_set_timeout (GsmLogoutDialog *logout_dialog)
 {
         GSettings *settings;
+        GsmLogoutDialogPrivate *priv;
 
         settings = g_settings_new (SESSION_SCHEMA);
+        priv = gsm_logout_dialog_get_instance_private (logout_dialog);
 
-        logout_dialog->priv->timeout = g_settings_get_int (settings, KEY_LOGOUT_TIMEOUT);
+        priv->timeout = g_settings_get_int (settings, KEY_LOGOUT_TIMEOUT);
 
-        if (logout_dialog->priv->timeout > 0) {
+        if (priv->timeout > 0) {
                 /* Sets the secondary text */
                 gsm_logout_dialog_timeout (logout_dialog);
 
-                if (logout_dialog->priv->timeout_id != 0) {
-                        g_source_remove (logout_dialog->priv->timeout_id);
+                if (priv->timeout_id != 0) {
+                        g_source_remove (priv->timeout_id);
                 }
 
-                logout_dialog->priv->timeout_id = g_timeout_add (1000,
-                                                                 gsm_logout_dialog_timeout,
-                                                                 logout_dialog);
+                priv->timeout_id = g_timeout_add (1000,
+                                                  gsm_logout_dialog_timeout,
+                                                  logout_dialog);
         }
         else {
-                gtk_widget_hide (logout_dialog->priv->progressbar);
+                gtk_widget_hide (priv->progressbar);
         }
 
         g_object_unref (settings);
@@ -647,7 +664,9 @@ gsm_logout_button_clicked (GsmLogoutButton *button, gpointer logout_dialog)
 GtkWidget *
 gsm_logout_dialog_get_default_button (GsmLogoutDialog *dialog)
 {
-        return dialog->priv->default_button;
+        GsmLogoutDialogPrivate *priv;
+        priv = gsm_logout_dialog_get_instance_private (dialog);
+        return priv->default_button;
 }
 
 
@@ -661,6 +680,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
         GtkWidget       *buttons_box;
         GtkWidget       *primary_label;
         const char      *primary_text;
+        GsmLogoutDialogPrivate *priv;
 
         if (current_dialog != NULL) {
                 gtk_widget_destroy (GTK_WIDGET (current_dialog));
@@ -674,7 +694,8 @@ gsm_get_dialog (GsmDialogLogoutType type,
         gtk_widget_set_visual (GTK_WIDGET (logout_dialog), gdk_screen_get_rgba_visual(screen));
         gtk_widget_set_app_paintable(GTK_WIDGET(logout_dialog), TRUE);
 
-        logout_dialog->priv->type = type;
+        priv = gsm_logout_dialog_get_instance_private (logout_dialog);
+        priv->type = type;
 
         primary_text = NULL;
 
@@ -685,9 +706,9 @@ gsm_get_dialog (GsmDialogLogoutType type,
                           G_CALLBACK (gsm_logout_dialog_cancle),
                           logout_dialog);
 
-        logout_dialog->priv->box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-        gtk_widget_set_valign (logout_dialog->priv->box, GTK_ALIGN_CENTER);
-        gtk_widget_set_halign (logout_dialog->priv->box, GTK_ALIGN_CENTER);
+        priv->box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+        gtk_widget_set_valign (priv->box, GTK_ALIGN_CENTER);
+        gtk_widget_set_halign (priv->box, GTK_ALIGN_CENTER);
 
         GtkAccelGroup* accel_group = gtk_accel_group_new();
         gtk_window_add_accel_group(GTK_WINDOW (logout_dialog), accel_group);
@@ -703,9 +724,9 @@ gsm_get_dialog (GsmDialogLogoutType type,
                 markup = g_markup_printf_escaped (format, primary_text);
                 gtk_label_set_markup (GTK_LABEL (primary_label), markup);
 
-                gtk_box_pack_start (GTK_BOX (logout_dialog->priv->box), primary_label, FALSE, FALSE, 0);
+                gtk_box_pack_start (GTK_BOX (priv->box), primary_label, FALSE, FALSE, 0);
 
-                logout_dialog->priv->default_response = GSM_LOGOUT_RESPONSE_LOGOUT;
+                priv->default_response = GSM_LOGOUT_RESPONSE_LOGOUT;
 
                 if (gsm_logout_supports_switch_user (logout_dialog)) {
                         GsmLogoutButton *user_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_USER,
@@ -730,7 +751,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
                                                                         _("_Log Out"),
                                                                         DATA_DIR "/logout.png",
                                                                         DATA_DIR "/logout_prelight.png");
-                logout_dialog->priv->default_button = GTK_WIDGET(logout_button);
+                priv->default_button = GTK_WIDGET(logout_button);
 
                 g_signal_connect (G_OBJECT (logout_button), "button-press-event",
                                   G_CALLBACK (gsm_logout_button_press), logout_dialog);
@@ -749,9 +770,9 @@ gsm_get_dialog (GsmDialogLogoutType type,
                 markup = g_markup_printf_escaped (format, primary_text);
                 gtk_label_set_markup (GTK_LABEL (primary_label), markup);
 
-                gtk_box_pack_start (GTK_BOX (logout_dialog->priv->box), primary_label, FALSE, FALSE, 0);
+                gtk_box_pack_start (GTK_BOX (priv->box), primary_label, FALSE, FALSE, 0);
 
-                logout_dialog->priv->default_response = GSM_LOGOUT_RESPONSE_SHUTDOWN;
+                priv->default_response = GSM_LOGOUT_RESPONSE_SHUTDOWN;
 
                 if (gsm_logout_supports_system_suspend (logout_dialog)) {
                         GsmLogoutButton *sleep_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_SLEEP,
@@ -813,7 +834,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
                                                                                   _("_Shut Down"),
                                                                                   DATA_DIR "/shutdown.png",
                                                                                   DATA_DIR "/shutdown_prelight.png");
-                        logout_dialog->priv->default_button = GTK_WIDGET(shutdown_button);
+                        priv->default_button = GTK_WIDGET(shutdown_button);
 
                         g_signal_connect (G_OBJECT (shutdown_button), "button-press-event",
                                           G_CALLBACK (gsm_logout_button_press), logout_dialog);
@@ -833,22 +854,22 @@ gsm_get_dialog (GsmDialogLogoutType type,
 
         g_free (markup);
 
-        gtk_container_add (GTK_CONTAINER (logout_dialog->priv->box), buttons_box);
+        gtk_container_add (GTK_CONTAINER (priv->box), buttons_box);
 
-        logout_dialog->priv->secondary_label = gtk_label_new ("");
-        gtk_box_pack_start (GTK_BOX (logout_dialog->priv->box),
-                            logout_dialog->priv->secondary_label,
+        priv->secondary_label = gtk_label_new ("");
+        gtk_box_pack_start (GTK_BOX (priv->box),
+                            priv->secondary_label,
                             FALSE, FALSE, 0);
 
-        logout_dialog->priv->progressbar = gtk_progress_bar_new ();
-        gtk_widget_set_halign (logout_dialog->priv->progressbar, GTK_ALIGN_CENTER);
-        gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (logout_dialog->priv->progressbar), TRUE);
-        gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (logout_dialog->priv->progressbar), 1.0);
-        gtk_box_pack_start (GTK_BOX (logout_dialog->priv->box),
-                            logout_dialog->priv->progressbar,
+        priv->progressbar = gtk_progress_bar_new ();
+        gtk_widget_set_halign (priv->progressbar, GTK_ALIGN_CENTER);
+        gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (priv->progressbar), TRUE);
+        gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (priv->progressbar), 1.0);
+        gtk_box_pack_start (GTK_BOX (priv->box),
+                            priv->progressbar,
                             FALSE, FALSE, 12);
 
-        GtkStyleContext *context = gtk_widget_get_style_context (logout_dialog->priv->progressbar);
+        GtkStyleContext *context = gtk_widget_get_style_context (priv->progressbar);
         GtkCssProvider *provider = gtk_css_provider_new ();
         gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider),
                                          "text {\n"
@@ -860,8 +881,8 @@ gsm_get_dialog (GsmDialogLogoutType type,
         g_object_unref (provider);
 
 
-        gtk_widget_show_all (logout_dialog->priv->box);
-        gtk_container_add (GTK_CONTAINER ( event_box), logout_dialog->priv->box);
+        gtk_widget_show_all (priv->box);
+        gtk_container_add (GTK_CONTAINER ( event_box), priv->box);
 
         gtk_window_set_screen (GTK_WINDOW (logout_dialog), screen);
 
