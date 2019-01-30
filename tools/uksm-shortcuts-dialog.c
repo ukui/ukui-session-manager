@@ -30,7 +30,6 @@
 
 #include "uksm-shortcuts-dialog.h"
 #include "gsm-blur.h"
-#include "ukdm.h"
 
 #define BORDER_SIZE 30
 #define SHORTCUTS_TIMEOUT 10
@@ -76,15 +75,15 @@ static void uksm_shortcuts_dialog_set_timeout  (UksmShortcutsDialog *shortcuts_d
 static void uksm_shortcuts_dialog_draw         (UksmShortcutsDialog *shortcuts_dialog,
                                                 cairo_t *cr);
 
-static gboolean uksm_shortcuts_dialog_cancle   (UksmShortcutsDialog *shortcuts_dialog,
+static void uksm_shortcuts_dialog_cancle   (UksmShortcutsDialog *shortcuts_dialog,
                                             GdkEvent        *event,
                                             gpointer        data);
 
 static void uksm_shortcuts_dialog_destroy      (UksmShortcutsDialog *shortcuts_dialog,
-                                            gpointer         data);
+                                                gpointer         data);
 
 static void uksm_shortcuts_dialog_show         (UksmShortcutsDialog *shortcuts_dialog,
-                                            gpointer         data);
+                                                gpointer         data);
 
 G_DEFINE_TYPE_WITH_PRIVATE (UksmShortcutsDialog, uksm_shortcuts_dialog, GTK_TYPE_WINDOW);
 
@@ -154,7 +153,7 @@ uksm_shortcuts_dialog_init (UksmShortcutsDialog *shortcuts_dialog)
 
 static void
 uksm_shortcuts_dialog_draw (UksmShortcutsDialog *shortcuts_dialog,
-                        cairo_t *cr)
+                            cairo_t *cr)
 {
         UksmShortcutsDialogPrivate *priv;
 
@@ -278,14 +277,14 @@ uksm_shortcuts_dialog_draw (UksmShortcutsDialog *shortcuts_dialog,
         cairo_restore (cr);
 }
 
-static gboolean
-uksm_shortcuts_dialog_cancle(UksmShortcutsDialog *shortcuts_dialog,
+static void
+uksm_shortcuts_dialog_cancle (UksmShortcutsDialog *shortcuts_dialog,
                          GdkEvent        *event,
                          gpointer        data)
 {
         gtk_widget_destroy (GTK_WIDGET(data));
 
-        return TRUE;
+        gtk_main_quit ();
 }
 
 static void
@@ -491,7 +490,7 @@ uksm_get_shortcuts_dialog (GdkScreen                *screen,
         uksm_add_shortcut (label_grid, _("Alt+Tab"), UKSM_LABEL_TYPE_KEY, 2, 2, 1, 1);
         uksm_add_shortcut (label_grid, _("Switches between applications."), UKSM_LABEL_TYPE_FUNCTION, 3, 2, 1, 1);
         uksm_add_shortcut (label_grid, _("Alt+Shift+Tab"), UKSM_LABEL_TYPE_KEY, 2, 3, 1, 1);
-        uksm_add_shortcut (label_grid, _("Switches between applications in reverse order."), UKSM_LABEL_TYPE_FUNCTION, 3, 3, 1, 1);
+        uksm_add_shortcut (label_grid, _("Switches between applications in \nreverse order."), UKSM_LABEL_TYPE_FUNCTION, 3, 3, 1, 1);
         uksm_add_shortcut (label_grid, _("Super_L+P/F3/F7"), UKSM_LABEL_TYPE_KEY, 2, 4, 1, 1);
         uksm_add_shortcut (label_grid, _("Switches between display."), UKSM_LABEL_TYPE_FUNCTION, 3, 4, 1, 1);
         uksm_add_shortcut (label_grid, _("Ctrl+Alt+ArrowKeys"), UKSM_LABEL_TYPE_KEY, 2, 5, 1, 1);

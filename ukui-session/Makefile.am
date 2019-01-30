@@ -1,5 +1,7 @@
 bin_PROGRAMS = ukui-session
-noinst_LTLIBRARIES = libgsmutil.la
+noinst_LTLIBRARIES =	\
+	libgsmutil.la		\
+	libgsmblur.la
 noinst_PROGRAMS = 		\
 	test-client-dbus	\
 	test-inhibit
@@ -16,8 +18,6 @@ ukui_session_SOURCES =			\
 	gsm-app.c					\
 	gsm-autostart-app.h			\
 	gsm-autostart-app.c			\
-	gsm-blur.h					\
-	gsm-blur.c					\
 	gsm-client.c				\
 	gsm-client.h				\
 	gsm-xsmp-client.h			\
@@ -58,9 +58,7 @@ ukui_session_SOURCES =			\
 	gsm-session-save.c			\
 	gsm-session-save.h			\
 	gsm-xsmp-server.c			\
-	gsm-xsmp-server.h			\
-	uksm-shortcuts-dialog.c		\
-	uksm-shortcuts-dialog.h
+	gsm-xsmp-server.h
 
 ukui_session_CPPFLAGS =			\
 	$(AM_CPPFLAGS)				\
@@ -75,19 +73,19 @@ ukui_session_CPPFLAGS =			\
 	-DGTKBUILDER_DIR=\""$(pkgdatadir)"\"	\
 	-DI_KNOW_THE_DEVICEKIT_POWER_API_IS_SUBJECT_TO_CHANGE
 
-ukui_session_LDADD =				\
+ukui_session_LDADD =			\
 	libgsmutil.la 				\
-	$(X11_LIBS)                             \
+	libgsmblur.la				\
+	$(X11_LIBS)					\
 	$(top_builddir)/egg/libeggdesktopfile.la \
-	$(SM_LIBS)				\
-	$(ICE_LIBS)				\
+	$(SM_LIBS)					\
+	$(ICE_LIBS)					\
 	$(XRENDER_LIBS)				\
 	$(XTEST_LIBS)				\
 	$(XEXT_LIBS)				\
-	$(UKUI_SESSION_LIBS)			\
+	$(UKUI_SESSION_LIBS)		\
 	$(SYSTEMD_LIBS)				\
-	$(EXECINFO_LIBS)			\
-	-lm
+	$(EXECINFO_LIBS)
 
 libgsmutil_la_SOURCES =				\
 	gsm-util.c				\
@@ -95,6 +93,14 @@ libgsmutil_la_SOURCES =				\
 
 libgsmutil_la_LIBADD = 				\
 	$(UKUI_SESSION_LIBS)
+
+libgsmblur_la_SOURCES =				\
+	gsm-blur.c						\
+	gsm-blur.h
+
+libgsmblur_la_LIBADD = 				\
+	$(UKUI_SESSION_LIBS)			\
+	-lm
 
 test_inhibit_SOURCES = test-inhibit.c
 test_inhibit_LDADD = $(UKUI_SESSION_LIBS)

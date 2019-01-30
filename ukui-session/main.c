@@ -51,7 +51,6 @@
 #include "gsm-manager.h"
 #include "gsm-xsmp-server.h"
 #include "gsm-store.h"
-#include "uksm-shortcuts-dialog.h"
 
 #include "uksm-gnome.h"
 
@@ -84,7 +83,6 @@
 static gboolean failsafe = FALSE;
 static gboolean show_version = FALSE;
 static gboolean debug = FALSE;
-static gboolean show_shortcut = FALSE;
 
 static gboolean
 initialize_gsettings (void)
@@ -572,56 +570,6 @@ static void set_overlay_scroll (void)
     g_object_unref (settings);
 }
 
-static void
-shortcuts_dialog_response (GtkWidget *dialog,
-                           gpointer data)
-{
-    g_debug ("GsmManager: Shortcuts dialog destroy");
-
-    gtk_widget_destroy (GTK_WIDGET (dialog));
-}
-
-static gboolean
-show_shortcuts_dialog ()
-{
-    GtkWidget *dialog = uksm_get_shortcuts_dialog (gdk_screen_get_default (),
-                                                   gtk_get_current_event_time ());
-
-    g_signal_connect (dialog,
-                      "response",
-                      G_CALLBACK (shortcuts_dialog_response),
-                      NULL);
-    gtk_widget_show_all (dialog);
-
-    return FALSE;
-}
-
-static void
-show_firstrun_hints()
-{
-    gchar *dir = g_build_filename (g_get_user_config_dir(), "ukui-session", NULL);
-    gchar *first_run_stamp = g_build_filename (dir, "first_run.stamp", NULL);
-    if (!g_file_test(first_run_stamp, G_FILE_TEST_EXISTS))
-    {
-        g_timeout_add_seconds (3, show_shortcuts_dialog, NULL);
-
-        if (g_mkdir_with_parents (dir, 0755) != 0)
-        {
-            g_warning ("Could not create directory '%s'", dir);
-        } else {
-            GError *error = NULL;
-            g_file_set_contents(first_run_stamp, "", 0, &error);
-            if (error != NULL)
-			{
-                g_warning ("Impossible to saver the ukui-session stamp file: %s", error->message);
-			    g_error_free (error);
-			}
-        }
-    }
-    g_free (dir);
-    g_free (first_run_stamp);
-}
-
 int main(int argc, char** argv)
 {
     struct sigaction sa;
@@ -640,7 +588,6 @@ int main(int argc, char** argv)
         {"debug", 0, 0, G_OPTION_ARG_NONE, &debug, N_("Enable debugging code"), NULL},
         {"failsafe", 'f', 0, G_OPTION_ARG_NONE, &failsafe, N_("Do not load user-specified applications"), NULL},
         {"version", 0, 0, G_OPTION_ARG_NONE, &show_version, N_("Version of this application"), NULL},
-        {"shortcut", 0, 0, G_OPTION_ARG_NONE, &show_shortcut, N_("Show the keyboard shortcuts"), NULL},
         {NULL, 0, 0, 0, NULL, NULL, NULL }
     };
 
@@ -671,13 +618,6 @@ int main(int argc, char** argv)
     if (show_version)
     {
         g_print("%s %s\n", argv [0], VERSION);
-        exit(1);
-    }
-
-    if (show_shortcut)
-    {
-        show_shortcuts_dialog ();
-        gtk_main();
         exit(1);
     }
 
@@ -765,8 +705,6 @@ int main(int argc, char** argv)
 
     gsm_xsmp_server_start(xsmp_server);
     gsm_manager_start(manager);
-
-    show_firstrun_hints ();
 
     gtk_main();
 
