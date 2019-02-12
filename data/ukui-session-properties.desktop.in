@@ -9,7 +9,3 @@ StartupNotify=true
 Categories=GTK;Settings;X-UKUI-PersonalSettings;
 Keywords=UKUI;session;properties;applications;login;start;
 OnlyShowIn=UKUI;
-X-UKUI-Bugzilla-Bugzilla=UKUI
-X-UKUI-Bugzilla-Product=ukui-session
-X-UKUI-Bugzilla-Component=ukui-session-properties
-X-UKUI-Bugzilla-Version=@VERSION@

@@ -7,7 +7,3 @@ NoDisplay=true
 X-UKUI-Autostart-Phase=WindowManager
 X-UKUI-Provides=windowmanager
 X-UKUI-Autostart-Notify=true
-X-UKUI-Bugzilla-Bugzilla=UKUI
-X-UKUI-Bugzilla-Product=ukui-session
-X-UKUI-Bugzilla-Component=general
-X-UKUI-Bugzilla-Version=@VERSION@

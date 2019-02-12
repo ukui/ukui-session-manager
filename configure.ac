@@ -294,8 +294,6 @@ doc/dbus/Makefile
 doc/dbus/ukui-session.xml
 doc/man/Makefile
 data/Makefile
-data/ukui-wm.desktop.in
-data/ukui-session-properties.desktop.in
 data/org.ukui.session.gschema.xml
 data/icons/Makefile
 data/icons/16x16/Makefile
