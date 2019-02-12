@@ -19,6 +19,7 @@ ukui-session/gsm-xsmp-client.c
 ukui-session/gsm-xsmp-server.c
 ukui-session/gsm-util.c
 ukui-session/main.c
-ukui-session/uksm-shortcuts-dialog.c
+tools/uksm-shortcuts-dialog.c
 tools/ukui-session-save.c
+tools/ukui-session-shortcuts.c
 tools/ukui-session-inhibit.c

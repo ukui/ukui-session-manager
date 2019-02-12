@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-10 16:08+0800\n"
+"POT-Creation-Date: 2019-02-12 16:50+0800\n"
 "PO-Revision-Date: 2016-01-18 16:16+0000\n"
 "Last-Translator: Siranush <ss.m.95@mail.ru>\n"
 "Language-Team: Armenian (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -20,51 +20,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../capplet/gsm-app-dialog.c:126
+#: ../capplet/gsm-app-dialog.c:128
 msgid "Select Command"
 msgstr "Ընտրել Հրաման"
 
-#: ../capplet/gsm-app-dialog.c:198
+#: ../capplet/gsm-app-dialog.c:171
+msgid "second"
+msgstr ""
+
+#: ../capplet/gsm-app-dialog.c:173
+msgid "seconds"
+msgstr ""
+
+#: ../capplet/gsm-app-dialog.c:224
 msgid "Add Startup Program"
 msgstr "Ավելացնել գործարկման ծրագիր"
 
-#: ../capplet/gsm-app-dialog.c:202
+#: ../capplet/gsm-app-dialog.c:228
 msgid "Edit Startup Program"
 msgstr "Խմբագրել գործարկման ծրագիրը"
 
-#: ../capplet/gsm-app-dialog.c:487
+#: ../capplet/gsm-app-dialog.c:542
 msgid "The startup command cannot be empty"
 msgstr "Գործարկման հրահանգը չի կարող դատարկ լինել"
 
-#: ../capplet/gsm-app-dialog.c:493
+#: ../capplet/gsm-app-dialog.c:548
 msgid "The startup command is not valid"
 msgstr "Գործարկման հրամանը վավերական չէ"
 
-#: ../capplet/gsm-properties-dialog.c:519
+#: ../capplet/gsm-properties-dialog.c:521
 msgid "Enabled"
 msgstr "Միացված"
 
-#: ../capplet/gsm-properties-dialog.c:531
+#: ../capplet/gsm-properties-dialog.c:533
 msgid "Icon"
 msgstr "Պատկեր"
 
-#: ../capplet/gsm-properties-dialog.c:543
+#: ../capplet/gsm-properties-dialog.c:545
 msgid "Program"
 msgstr "Ծրագիր"
 
-#: ../capplet/gsm-properties-dialog.c:742
+#: ../capplet/gsm-properties-dialog.c:740
 msgid "Startup Applications Preferences"
 msgstr "Մեկնարկի դիմումների արտոնությունները"
 
-#: ../capplet/gsp-app.c:274
+#: ../capplet/gsp-app.c:284
 msgid "No name"
 msgstr "Անանուն"
 
-#: ../capplet/gsp-app.c:280
+#: ../capplet/gsp-app.c:290
 msgid "No description"
 msgstr "Ոչ մի Նկարագրություն"
 
-#: ../capplet/main.c:36 ../ukui-session/main.c:642
+#: ../capplet/main.c:36 ../ukui-session/main.c:590
+#: ../tools/ukui-session-shortcuts.c:75
 msgid "Version of this application"
 msgstr "Այս դիմումի տարբերակը"
 
@@ -159,8 +168,7 @@ msgstr "gnome վերահսկիչ համատեղելիության բաղկացո
 msgid "Control which compatibility components to start."
 msgstr "Վերահսկիչ որը սկսում է բաղադրիչների համատեղելիությունը:"
 
-#: ../data/org.ukui.session.gschema.xml.in.h:17
-#: ../data/ukui-wm.desktop.in.in.h:1
+#: ../data/org.ukui.session.gschema.xml.in.h:17 ../data/ukui-wm.desktop.in.h:1
 msgid "Window Manager"
 msgstr "Պատուհանի մենեջեր"
 
@@ -223,7 +231,7 @@ msgstr "Այս նիստը գրանցում է քեզ MATE֊ի մեջ"
 msgid "<b>Some programs are still running:</b>"
 msgstr "<b>Որոշ ծրագրեր դեռ աշխատում են:</b>"
 
-#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:634
+#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:633
 msgid ""
 "Waiting for the program to finish.  Interrupting the program may cause you "
 "to lose work."
@@ -231,11 +239,11 @@ msgstr ""
 "Սպասում ծրագրի ավարտի համար։ Ծրագրի ընդհատումը կարող է առաջացնել աշխատանքի "
 "կորուստ։"
 
-#: ../data/ukui-session-properties.desktop.in.in.h:1
+#: ../data/ukui-session-properties.desktop.in.h:1
 msgid "Startup Applications"
 msgstr "Գործարկման Դիմումներ"
 
-#: ../data/ukui-session-properties.desktop.in.in.h:2
+#: ../data/ukui-session-properties.desktop.in.h:2
 msgid "Choose what applications to start when you log in"
 msgstr "Ընտրեք, թե ինչ ծրագրեր են սկսվելու, երբ դուք մուտք գործեք"
 
@@ -275,6 +283,10 @@ msgstr "Հր_ահանգ։"
 msgid "_Name:"
 msgstr "_Անուն։"
 
+#: ../data/session-properties.ui.h:10
+msgid "_Delay:"
+msgstr ""
+
 #: ../egg/eggdesktopfile.c:152
 #, c-format
 msgid "File is not a valid .desktop file"
@@ -312,52 +324,52 @@ msgstr ""
 msgid "Not a launchable item"
 msgstr "Չգործարկվող տարր"
 
-#: ../egg/eggsmclient.c:226
+#: ../egg/eggsmclient.c:223
 msgid "Disable connection to session manager"
 msgstr "Անջատել ենթահամակարգի կառավարչի հետ կապը"
 
-#: ../egg/eggsmclient.c:229
+#: ../egg/eggsmclient.c:226
 msgid "Specify file containing saved configuration"
 msgstr "Պահպանված կոնֆիգուրացիա պարունակող ֆայլը նշել"
 
-#: ../egg/eggsmclient.c:229
+#: ../egg/eggsmclient.c:226
 msgid "FILE"
 msgstr "ՖԱՅԼ"
 
-#: ../egg/eggsmclient.c:232
+#: ../egg/eggsmclient.c:229
 msgid "Specify session management ID"
 msgstr "Հ ատկորոշել ենթահամակարգի կառավարչի ID"
 
-#: ../egg/eggsmclient.c:232
+#: ../egg/eggsmclient.c:229
 msgid "ID"
 msgstr "ID"
 
-#: ../egg/eggsmclient.c:253
+#: ../egg/eggsmclient.c:250
 msgid "Session management options:"
 msgstr "Սեսիայի կառավարման տարբերակներ․"
 
-#: ../egg/eggsmclient.c:254
+#: ../egg/eggsmclient.c:251
 msgid "Show session management options"
 msgstr "Ցույց տալ սեսիայի կառավարման ընտրացանկը"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:252
+#: ../ukui-session/gsm-inhibit-dialog.c:251
 #, c-format
 msgid "Icon '%s' not found"
 msgstr "Պատկերակը '%s' չի գտնվել"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:582
+#: ../ukui-session/gsm-inhibit-dialog.c:581
 msgid "Unknown"
 msgstr "Անհայտ"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:633
+#: ../ukui-session/gsm-inhibit-dialog.c:632
 msgid "A program is still running:"
 msgstr "Ծրագիրը դեռ աշխատում է:"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:637
+#: ../ukui-session/gsm-inhibit-dialog.c:636
 msgid "Some programs are still running:"
 msgstr "Որոշ ծրագրեր դեռ աշխատում են:"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:638
+#: ../ukui-session/gsm-inhibit-dialog.c:637
 msgid ""
 "Waiting for programs to finish.  Interrupting these programs may cause you "
 "to lose work."
@@ -365,96 +377,96 @@ msgstr ""
 "Սպասում ծրագրի ավարտի համար։ Այդ ծրագրերը ընդհատելը կարող են առաջացնել "
 "աշխատանքի կորուստ։"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:868
+#: ../ukui-session/gsm-inhibit-dialog.c:867
 msgid "Switch User Anyway"
 msgstr "Ամեն դեպքում Փոխանջատել Օգտատիրոջը"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:871
+#: ../ukui-session/gsm-inhibit-dialog.c:870
 msgid "Log Out Anyway"
 msgstr "Դուրս գալ Ամեն դեպքում"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:874
+#: ../ukui-session/gsm-inhibit-dialog.c:873
 msgid "Suspend Anyway"
 msgstr "Կասեցնել Ամեն դեպքում"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:877
+#: ../ukui-session/gsm-inhibit-dialog.c:876
 msgid "Hibernate Anyway"
 msgstr "Ձմեռել Ամեն դեպքում"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:880
+#: ../ukui-session/gsm-inhibit-dialog.c:879
 msgid "Shut Down Anyway"
 msgstr "Անջատել Ամեն դեպքում"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:883
+#: ../ukui-session/gsm-inhibit-dialog.c:882
 msgid "Reboot Anyway"
 msgstr "Վերագործարկել Ամեն դեպքում"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:891
+#: ../ukui-session/gsm-inhibit-dialog.c:890
 msgid "Lock Screen"
 msgstr "Արգելափակել էկրանը"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:894
+#: ../ukui-session/gsm-inhibit-dialog.c:893
 msgid "Cancel"
 msgstr "Չեղարկել"
 
-#: ../ukui-session/gsm-logout-dialog.c:477
+#: ../ukui-session/gsm-logout-dialog.c:494
 #, c-format
 msgid "You will be automatically logged out in %d second"
 msgid_plural "You will be automatically logged out in %d seconds"
 msgstr[0] "Դուք պետք է ավտոմատ կերպով դուրս գաք %d վայրկյանում"
 msgstr[1] "Դուք պետք է ավտոմատ կերպով դուրս գաք %d վայրկյաններում"
 
-#: ../ukui-session/gsm-logout-dialog.c:485
+#: ../ukui-session/gsm-logout-dialog.c:502
 #, c-format
 msgid "This system will be automatically shut down in %d second"
 msgid_plural "This system will be automatically shut down in %d seconds"
 msgstr[0] "Այս համակարգը կարող է ավտոմատ կերպով անջատվել %d վայրկյանում"
 msgstr[1] "Այս համակարգը կարող է ավտոմատ կերպով անջատվել %d վայրկյաններում"
 
-#: ../ukui-session/gsm-logout-dialog.c:531
+#: ../ukui-session/gsm-logout-dialog.c:548
 #, c-format
 msgid "You are currently logged in as \"%s\"."
 msgstr "Դուք այժմ մուտք եք գործել, որպես \"%s\"."
 
-#: ../ukui-session/gsm-logout-dialog.c:693
+#: ../ukui-session/gsm-logout-dialog.c:723
 msgid "Log out of this system now?"
 msgstr "Հիմա Դուրս գա՞լ այս համակարգից"
 
-#: ../ukui-session/gsm-logout-dialog.c:703
+#: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
 msgid "_Switch User"
 msgstr "_Փոխել Օգտագործողին"
 
-#: ../ukui-session/gsm-logout-dialog.c:721
+#: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
 msgid "_Log Out"
 msgstr "_Դուրս գալ"
 
-#: ../ukui-session/gsm-logout-dialog.c:738
+#: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
 msgstr "Հիմա անջատե՞լ այս համակարգը"
 
-#: ../ukui-session/gsm-logout-dialog.c:748
+#: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
 msgid "S_uspend"
 msgstr "Հետաձգել"
 
-#: ../ukui-session/gsm-logout-dialog.c:766
+#: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
 msgid "_Hibernate"
 msgstr "_Ձմեռել"
 
-#: ../ukui-session/gsm-logout-dialog.c:784
+#: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
 msgid "_Restart"
 msgstr "_Վերսկսել"
 
-#: ../ukui-session/gsm-logout-dialog.c:803
+#: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
 msgid "_Shut Down"
 msgstr "_Անջատել"
 
-#: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136
+#: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
 msgid "Not responding"
 msgstr "Չի արձագանքում"
 
@@ -462,21 +474,21 @@ msgstr "Չի արձագանքում"
 #. * then the XSMP client already has set several XSMP
 #. * properties. But it could still be that SmProgram is not set.
 #.
-#: ../ukui-session/gsm-xsmp-client.c:566
+#: ../ukui-session/gsm-xsmp-client.c:596
 msgid "Remembered Application"
 msgstr "Հիշված Դիմում"
 
-#: ../ukui-session/gsm-xsmp-client.c:1204
+#: ../ukui-session/gsm-xsmp-client.c:1263
 msgid "This program is blocking logout."
 msgstr "Այս ծրագիրն արգելափակում է ավարտը։"
 
-#: ../ukui-session/gsm-xsmp-server.c:325
+#: ../ukui-session/gsm-xsmp-server.c:324
 msgid ""
 "Refusing new client connection because the session is currently being shut "
 "down\n"
 msgstr "Նոր կլիենտի կապի մերժում, որովհետև նիստը ներկայումս փակվում է\n"
 
-#: ../ukui-session/gsm-xsmp-server.c:587
+#: ../ukui-session/gsm-xsmp-server.c:586
 #, c-format
 msgid "Could not create ICE listening socket: %s"
 msgstr "Չհաջողվեց ստեղծել ICE լսելու սոկետ: %s"
@@ -487,229 +499,231 @@ msgstr "Չհաջողվեց ստեղծել ICE լսելու սոկետ: %s"
 msgid "Unable to start login session (and unable to connect to the X server)"
 msgstr "Անհմար է սկսվել մուտքը դեպի համակարգ (և անհնար է միանալ X սերվերին)"
 
-#: ../ukui-session/main.c:639
+#: ../ukui-session/main.c:587
 msgid "Override standard autostart directories"
 msgstr "Չեղյալ հայտարարել ստանդարտ ինքնաթողք տեղեկագրքերը"
 
-#: ../ukui-session/main.c:640
+#: ../ukui-session/main.c:588
 msgid "Enable debugging code"
 msgstr "Ակտրվացնել ծածկագրի վրիպակազերծումը"
 
-#: ../ukui-session/main.c:641
+#: ../ukui-session/main.c:589
 msgid "Do not load user-specified applications"
 msgstr "Չբեռնել օգտվողի նշված դիմումները"
 
-#: ../ukui-session/main.c:643
-msgid "Show the keyboard shortcuts"
-msgstr ""
-
-#: ../ukui-session/main.c:663
+#: ../ukui-session/main.c:610
 #, fuzzy
 msgid " - the UKUI session manager"
 msgstr "- MATE աշխատաշրջանի կառավարիչը"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:350
+#: ../tools/uksm-shortcuts-dialog.c:346
 #, fuzzy, c-format
 msgid "This window will be automatically closed in %d second"
 msgid_plural "This window will be automatically closed in %d seconds"
 msgstr[0] "Դուք պետք է ավտոմատ կերպով դուրս գաք %d վայրկյանում"
 msgstr[1] "Դուք պետք է ավտոմատ կերպով դուրս գաք %d վայրկյաններում"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:466
+#: ../tools/uksm-shortcuts-dialog.c:466
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:468
+#: ../tools/uksm-shortcuts-dialog.c:468
 #, fuzzy
 msgid "Application"
 msgstr "Գործարկման Դիմումներ"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:469
+#: ../tools/uksm-shortcuts-dialog.c:469
 msgid "Super"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:470
+#: ../tools/uksm-shortcuts-dialog.c:470
 msgid "Open start menu."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:471
+#: ../tools/uksm-shortcuts-dialog.c:471
 msgid "Ctrl+Alt+T"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:472
+#: ../tools/uksm-shortcuts-dialog.c:472
 msgid "Open termianl."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:473
+#: ../tools/uksm-shortcuts-dialog.c:473
 msgid "Ctrl+Alt+D"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:474
+#: ../tools/uksm-shortcuts-dialog.c:474
 msgid "Show desktop."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:475
+#: ../tools/uksm-shortcuts-dialog.c:475
 msgid "Ctrl+Alt+L"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:476
+#: ../tools/uksm-shortcuts-dialog.c:476
 #, fuzzy
 msgid "Lock screen."
 msgstr "Արգելափակել էկրանը"
 
 #. Separator
-#: ../ukui-session/uksm-shortcuts-dialog.c:479
-#: ../ukui-session/uksm-shortcuts-dialog.c:500
+#: ../tools/uksm-shortcuts-dialog.c:479 ../tools/uksm-shortcuts-dialog.c:500
 msgid "  "
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:481
+#: ../tools/uksm-shortcuts-dialog.c:481
 msgid "Screenshot"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:482
+#: ../tools/uksm-shortcuts-dialog.c:482
 msgid "Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:483
+#: ../tools/uksm-shortcuts-dialog.c:483
 msgid "Take a full-screen screenshot."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:484
+#: ../tools/uksm-shortcuts-dialog.c:484
 msgid "Ctrl+Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:485
+#: ../tools/uksm-shortcuts-dialog.c:485
 msgid "Take a screenshot of the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:486
+#: ../tools/uksm-shortcuts-dialog.c:486
 msgid "Shift+Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:487
+#: ../tools/uksm-shortcuts-dialog.c:487
 msgid "Select area to grab."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:489
+#: ../tools/uksm-shortcuts-dialog.c:489
 msgid "Switching"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:490
+#: ../tools/uksm-shortcuts-dialog.c:490
 msgid "Alt+Tab"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:491
+#: ../tools/uksm-shortcuts-dialog.c:491
 #, fuzzy
 msgid "Switches between applications."
 msgstr "Գործարկման Դիմումներ"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:492
+#: ../tools/uksm-shortcuts-dialog.c:492
 msgid "Alt+Shift+Tab"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:493
-msgid "Switches between applications in reverse order."
-msgstr ""
+#: ../tools/uksm-shortcuts-dialog.c:493
+#, fuzzy
+msgid ""
+"Switches between applications in \n"
+"reverse order."
+msgstr "Գործարկման Դիմումներ"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:494
+#: ../tools/uksm-shortcuts-dialog.c:494
 msgid "Super_L+P/F3/F7"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:495
+#: ../tools/uksm-shortcuts-dialog.c:495
 msgid "Switches between display."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:496
+#: ../tools/uksm-shortcuts-dialog.c:496
 msgid "Ctrl+Alt+ArrowKeys"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:497
+#: ../tools/uksm-shortcuts-dialog.c:497
 msgid "Switches between workspaces."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:502
+#: ../tools/uksm-shortcuts-dialog.c:502
 msgid "Windows"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:503
+#: ../tools/uksm-shortcuts-dialog.c:503
 msgid "Alt+F10"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:504
+#: ../tools/uksm-shortcuts-dialog.c:504
 msgid "Maximize the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:505
+#: ../tools/uksm-shortcuts-dialog.c:505
 msgid "Alt+F9"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:506
+#: ../tools/uksm-shortcuts-dialog.c:506
 msgid "Minimize the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:507
+#: ../tools/uksm-shortcuts-dialog.c:507
 msgid "Alt+F5"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:508
+#: ../tools/uksm-shortcuts-dialog.c:508
 msgid "Cancel maximize the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:509
+#: ../tools/uksm-shortcuts-dialog.c:509
 msgid "Alt+F4"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:510
+#: ../tools/uksm-shortcuts-dialog.c:510
 #, fuzzy
 msgid "Close the current window."
 msgstr "Սահմանել ըթացիկ աշխատաշրջանի անունը"
 
-#: ../tools/ukui-session-save.c:70
+#: ../tools/ukui-session-save.c:67
 msgid "Log out"
 msgstr "Դուրս գալ"
 
-#: ../tools/ukui-session-save.c:71
+#: ../tools/ukui-session-save.c:68
 msgid "Log out, ignoring any existing inhibitors"
 msgstr "Դուրս գալ, անտեսելով առկա արգելակիչները"
 
-#: ../tools/ukui-session-save.c:72
+#: ../tools/ukui-session-save.c:69
 msgid "Show logout dialog"
 msgstr "Ցույց տալ դուրս գալ երկխոսությունը"
 
-#: ../tools/ukui-session-save.c:73
+#: ../tools/ukui-session-save.c:70
 msgid "Show shutdown dialog"
 msgstr "Ցույց տալ անջատել երկխոսությունը"
 
-#: ../tools/ukui-session-save.c:74
+#: ../tools/ukui-session-save.c:71
 msgid "Use dialog boxes for errors"
 msgstr "Սխալների համար օգտագործել երկխոսության արկղեր"
 
 #. deprecated options
-#: ../tools/ukui-session-save.c:76
+#: ../tools/ukui-session-save.c:73
 msgid "Set the current session name"
 msgstr "Սահմանել ըթացիկ աշխատաշրջանի անունը"
 
-#: ../tools/ukui-session-save.c:76
+#: ../tools/ukui-session-save.c:73
 msgid "NAME"
 msgstr "ԱՆՈՒՆ"
 
-#: ../tools/ukui-session-save.c:77
+#: ../tools/ukui-session-save.c:74
 msgid "Kill session"
 msgstr "Սեանսը ոչնչացնել"
 
-#: ../tools/ukui-session-save.c:78
+#: ../tools/ukui-session-save.c:75
 msgid "Do not require confirmation"
 msgstr "Չի պահանջում հաստատում"
 
 #. Okay, it wasn't the upgrade case, so now we can give up.
-#: ../tools/ukui-session-save.c:136 ../tools/ukui-session-save.c:151
+#: ../tools/ukui-session-save.c:129
 msgid "Could not connect to the session manager"
 msgstr "Անկարող է միանալ սեանսի մենեջերին"
 
-#: ../tools/ukui-session-save.c:277
+#: ../tools/ukui-session-save.c:254
 msgid "Program called with conflicting options"
 msgstr "Ծրագիրը կանչվել է կոնֆլիտային տարբերակների հետ"
+
+#: ../tools/ukui-session-shortcuts.c:76
+msgid "Show the keyboard shortcuts"
+msgstr ""
 
 #: ../tools/ukui-session-inhibit.c:116
 #, c-format

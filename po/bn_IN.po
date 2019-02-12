@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-10 16:08+0800\n"
+"POT-Creation-Date: 2019-02-12 16:50+0800\n"
 "PO-Revision-Date: 2015-12-14 10:18+0000\n"
 "Last-Translator: monsta <monsta@inbox.ru>\n"
 "Language-Team: Bengali (India) (http://www.wiki.ukui.org/trans/ukui/UKUI/"
@@ -21,51 +21,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../capplet/gsm-app-dialog.c:126
+#: ../capplet/gsm-app-dialog.c:128
 msgid "Select Command"
 msgstr "কমান্ড নির্বাচন করুন"
 
-#: ../capplet/gsm-app-dialog.c:198
+#: ../capplet/gsm-app-dialog.c:171
+msgid "second"
+msgstr ""
+
+#: ../capplet/gsm-app-dialog.c:173
+msgid "seconds"
+msgstr ""
+
+#: ../capplet/gsm-app-dialog.c:224
 msgid "Add Startup Program"
 msgstr "প্রারম্ভিক প্রোগ্রাম যোগ করুন"
 
-#: ../capplet/gsm-app-dialog.c:202
+#: ../capplet/gsm-app-dialog.c:228
 msgid "Edit Startup Program"
 msgstr "প্রারম্ভিক কমান্ড সম্পাদন করুন"
 
-#: ../capplet/gsm-app-dialog.c:487
+#: ../capplet/gsm-app-dialog.c:542
 msgid "The startup command cannot be empty"
 msgstr "প্রারম্ভিক কমান্ড ফাঁকা রাখা যাবে না"
 
-#: ../capplet/gsm-app-dialog.c:493
+#: ../capplet/gsm-app-dialog.c:548
 msgid "The startup command is not valid"
 msgstr "প্রারম্ভিক কমান্ডের নাম উল্লেখ করা আবশ্যক"
 
-#: ../capplet/gsm-properties-dialog.c:519
+#: ../capplet/gsm-properties-dialog.c:521
 msgid "Enabled"
 msgstr "সক্রিয়"
 
-#: ../capplet/gsm-properties-dialog.c:531
+#: ../capplet/gsm-properties-dialog.c:533
 msgid "Icon"
 msgstr "আইকন"
 
-#: ../capplet/gsm-properties-dialog.c:543
+#: ../capplet/gsm-properties-dialog.c:545
 msgid "Program"
 msgstr "প্রোগ্রাম"
 
-#: ../capplet/gsm-properties-dialog.c:742
+#: ../capplet/gsm-properties-dialog.c:740
 msgid "Startup Applications Preferences"
 msgstr "প্রারম্ভিক অ্যাপ্লিকেশন সংক্রান্ত পছন্দ"
 
-#: ../capplet/gsp-app.c:274
+#: ../capplet/gsp-app.c:284
 msgid "No name"
 msgstr "নামবিহীন"
 
-#: ../capplet/gsp-app.c:280
+#: ../capplet/gsp-app.c:290
 msgid "No description"
 msgstr "বিবরণ অনুপস্থিত"
 
-#: ../capplet/main.c:36 ../ukui-session/main.c:642
+#: ../capplet/main.c:36 ../ukui-session/main.c:590
+#: ../tools/ukui-session-shortcuts.c:75
 msgid "Version of this application"
 msgstr "অ্যাপ্লিকেশনের সংস্করণ"
 
@@ -150,8 +159,7 @@ msgstr ""
 msgid "Control which compatibility components to start."
 msgstr ""
 
-#: ../data/org.ukui.session.gschema.xml.in.h:17
-#: ../data/ukui-wm.desktop.in.in.h:1
+#: ../data/org.ukui.session.gschema.xml.in.h:17 ../data/ukui-wm.desktop.in.h:1
 msgid "Window Manager"
 msgstr "উইন্ডো পরিচালন ব্যবস্থা"
 
@@ -210,17 +218,17 @@ msgstr "এই সেশানের মাধ্যমে MATE-এ লগ-ই�
 msgid "<b>Some programs are still running:</b>"
 msgstr "<b>কয়েকটি প্রোগ্রাম এখনো চলছে:</b>"
 
-#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:634
+#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:633
 msgid ""
 "Waiting for the program to finish.  Interrupting the program may cause you "
 "to lose work."
 msgstr ""
 
-#: ../data/ukui-session-properties.desktop.in.in.h:1
+#: ../data/ukui-session-properties.desktop.in.h:1
 msgid "Startup Applications"
 msgstr "প্রারম্ভিক অ্যাপ্লিকেশন"
 
-#: ../data/ukui-session-properties.desktop.in.in.h:2
+#: ../data/ukui-session-properties.desktop.in.h:2
 msgid "Choose what applications to start when you log in"
 msgstr "লগ-ইন করার সময় আরম্ভ করার উদ্দেশ্যে চিহ্নিত অ্যাপ্লিকেশন"
 
@@ -261,6 +269,10 @@ msgstr "কমান্ড: (_m)"
 msgid "_Name:"
 msgstr "নাম: (_N)"
 
+#: ../data/session-properties.ui.h:10
+msgid "_Delay:"
+msgstr ""
+
 #: ../egg/eggdesktopfile.c:152
 #, c-format
 msgid "File is not a valid .desktop file"
@@ -296,52 +308,52 @@ msgstr "'Type=Link' ডেস্কটপ এনট্রির জন্য ন
 msgid "Not a launchable item"
 msgstr "চিহ্নিত বস্তু আরম্ভ করা সম্ভব নয়"
 
-#: ../egg/eggsmclient.c:226
+#: ../egg/eggsmclient.c:223
 msgid "Disable connection to session manager"
 msgstr "সেশান পরিচালনব্যবস্থার সাথে সংযোগ বিচ্ছিন্ন করা হবে"
 
-#: ../egg/eggsmclient.c:229
+#: ../egg/eggsmclient.c:226
 msgid "Specify file containing saved configuration"
 msgstr "সংরক্ষিত কনফিগারেশন সহ ফাইল চিহ্নিত করুন"
 
-#: ../egg/eggsmclient.c:229
+#: ../egg/eggsmclient.c:226
 msgid "FILE"
 msgstr "FILE"
 
-#: ../egg/eggsmclient.c:232
+#: ../egg/eggsmclient.c:229
 msgid "Specify session management ID"
 msgstr "সেশান পরিচালনার ID উল্লেখ করুন"
 
-#: ../egg/eggsmclient.c:232
+#: ../egg/eggsmclient.c:229
 msgid "ID"
 msgstr "ID"
 
-#: ../egg/eggsmclient.c:253
+#: ../egg/eggsmclient.c:250
 msgid "Session management options:"
 msgstr "সেশন পরিচালনা সংক্রান্ত বিকল্প:"
 
-#: ../egg/eggsmclient.c:254
+#: ../egg/eggsmclient.c:251
 msgid "Show session management options"
 msgstr "সেশন পরিচালনা সংক্রান্ত বিকল্প প্রদর্শন করা হবে"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:252
+#: ../ukui-session/gsm-inhibit-dialog.c:251
 #, c-format
 msgid "Icon '%s' not found"
 msgstr "'%s' আইকন পাওয়া যায়নি"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:582
+#: ../ukui-session/gsm-inhibit-dialog.c:581
 msgid "Unknown"
 msgstr "অজানা"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:633
+#: ../ukui-session/gsm-inhibit-dialog.c:632
 msgid "A program is still running:"
 msgstr "একটি প্রোগ্রাম বর্তমানে চলছে:"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:637
+#: ../ukui-session/gsm-inhibit-dialog.c:636
 msgid "Some programs are still running:"
 msgstr "কয়েকটি প্রোগ্রাম চলছে:"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:638
+#: ../ukui-session/gsm-inhibit-dialog.c:637
 msgid ""
 "Waiting for programs to finish.  Interrupting these programs may cause you "
 "to lose work."
@@ -349,96 +361,96 @@ msgstr ""
 "প্রোগ্রাম সমাপ্তির অপেক্ষা করা হচ্ছে। প্রোগ্রাম বিঘ্নিত হলে সঞ্চালিত কর্মের ফলে মুছে "
 "যাওয়ার সম্ভাবনা রয়েছে।"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:868
+#: ../ukui-session/gsm-inhibit-dialog.c:867
 msgid "Switch User Anyway"
 msgstr "তথাপি ব্যবহারকারী অ্যাকাউন্ট পরিবর্তন করা হবে"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:871
+#: ../ukui-session/gsm-inhibit-dialog.c:870
 msgid "Log Out Anyway"
 msgstr ""
 
-#: ../ukui-session/gsm-inhibit-dialog.c:874
+#: ../ukui-session/gsm-inhibit-dialog.c:873
 msgid "Suspend Anyway"
 msgstr "তথাপি স্থগিত করা হবে"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:877
+#: ../ukui-session/gsm-inhibit-dialog.c:876
 msgid "Hibernate Anyway"
 msgstr "তথাপি নিদ্রিত করা হবে"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:880
+#: ../ukui-session/gsm-inhibit-dialog.c:879
 msgid "Shut Down Anyway"
 msgstr ""
 
-#: ../ukui-session/gsm-inhibit-dialog.c:883
+#: ../ukui-session/gsm-inhibit-dialog.c:882
 msgid "Reboot Anyway"
 msgstr "তথাপি পুনরারম্ভ করা হবে"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:891
+#: ../ukui-session/gsm-inhibit-dialog.c:890
 msgid "Lock Screen"
 msgstr "পর্দা লক করুন"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:894
+#: ../ukui-session/gsm-inhibit-dialog.c:893
 msgid "Cancel"
 msgstr "বাতিল"
 
-#: ../ukui-session/gsm-logout-dialog.c:477
+#: ../ukui-session/gsm-logout-dialog.c:494
 #, c-format
 msgid "You will be automatically logged out in %d second"
 msgid_plural "You will be automatically logged out in %d seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../ukui-session/gsm-logout-dialog.c:485
+#: ../ukui-session/gsm-logout-dialog.c:502
 #, c-format
 msgid "This system will be automatically shut down in %d second"
 msgid_plural "This system will be automatically shut down in %d seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../ukui-session/gsm-logout-dialog.c:531
+#: ../ukui-session/gsm-logout-dialog.c:548
 #, c-format
 msgid "You are currently logged in as \"%s\"."
 msgstr "বর্তমানে \"%s\" পরিচয়ে লগ-ইন করা হয়েছে।"
 
-#: ../ukui-session/gsm-logout-dialog.c:693
+#: ../ukui-session/gsm-logout-dialog.c:723
 msgid "Log out of this system now?"
 msgstr "এই মুহূর্তে সিস্টেম থেকে লগ-আউট করা হবে কি?"
 
-#: ../ukui-session/gsm-logout-dialog.c:703
+#: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
 msgid "_Switch User"
 msgstr "ব্যবহারকারী পরিবর্তন করুন (_S)"
 
-#: ../ukui-session/gsm-logout-dialog.c:721
+#: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
 msgid "_Log Out"
 msgstr "লগ-আউট করুন (_L)"
 
-#: ../ukui-session/gsm-logout-dialog.c:738
+#: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
 msgstr "এই মুহূর্তে সিস্টেম বন্ধ করা হবে কি?"
 
-#: ../ukui-session/gsm-logout-dialog.c:748
+#: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
 msgid "S_uspend"
 msgstr "স্থগিত করা হবে (_u)"
 
-#: ../ukui-session/gsm-logout-dialog.c:766
+#: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
 msgid "_Hibernate"
 msgstr "নিদ্রিত অবস্থা (_H)"
 
-#: ../ukui-session/gsm-logout-dialog.c:784
+#: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
 msgid "_Restart"
 msgstr "পুনরারম্ভ (_R)"
 
-#: ../ukui-session/gsm-logout-dialog.c:803
+#: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
 msgid "_Shut Down"
 msgstr "বন্ধ করুন (_S)"
 
-#: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136
+#: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
 msgid "Not responding"
 msgstr "কোনো প্রতিক্রিয়া হয়নি"
 
@@ -446,15 +458,15 @@ msgstr "কোনো প্রতিক্রিয়া হয়নি"
 #. * then the XSMP client already has set several XSMP
 #. * properties. But it could still be that SmProgram is not set.
 #.
-#: ../ukui-session/gsm-xsmp-client.c:566
+#: ../ukui-session/gsm-xsmp-client.c:596
 msgid "Remembered Application"
 msgstr ""
 
-#: ../ukui-session/gsm-xsmp-client.c:1204
+#: ../ukui-session/gsm-xsmp-client.c:1263
 msgid "This program is blocking logout."
 msgstr ""
 
-#: ../ukui-session/gsm-xsmp-server.c:325
+#: ../ukui-session/gsm-xsmp-server.c:324
 msgid ""
 "Refusing new client connection because the session is currently being shut "
 "down\n"
@@ -462,7 +474,7 @@ msgstr ""
 "সিস্টেম বর্তমানে বন্ধ করার প্রচেষ্টা করা হচ্ছে ও এই কারণে নতুন ক্লায়েন্টের সাথে সংযোগ "
 "স্থাপনের অনুরোধ প্রত্যাখ্যান করা হচ্ছে।\n"
 
-#: ../ukui-session/gsm-xsmp-server.c:587
+#: ../ukui-session/gsm-xsmp-server.c:586
 #, c-format
 msgid "Could not create ICE listening socket: %s"
 msgstr "ICE অপেক্ষার সকেট নির্মাণ করতে ব্যর্থ: %s"
@@ -473,229 +485,231 @@ msgstr "ICE অপেক্ষার সকেট নির্মাণ কর�
 msgid "Unable to start login session (and unable to connect to the X server)"
 msgstr "লগ-ইন সেশান আরম্ভ করতে ব্যর্থ (X সার্ভারের সাথে সংযোগ স্থাপন করতে ব্যর্থ)"
 
-#: ../ukui-session/main.c:639
+#: ../ukui-session/main.c:587
 msgid "Override standard autostart directories"
 msgstr "প্রমিত autostart ডিরেক্টরির মান উপেক্ষা করা হবে"
 
-#: ../ukui-session/main.c:640
+#: ../ukui-session/main.c:588
 msgid "Enable debugging code"
 msgstr "কোড ডিবাগ ব্যবস্থা সক্রিয় করুন"
 
-#: ../ukui-session/main.c:641
+#: ../ukui-session/main.c:589
 msgid "Do not load user-specified applications"
 msgstr "ব্যবহারকারী দ্বারা নির্ধারিত অ্যাপ্লিকেশন লোড করা হবে না"
 
-#: ../ukui-session/main.c:643
-msgid "Show the keyboard shortcuts"
-msgstr ""
-
-#: ../ukui-session/main.c:663
+#: ../ukui-session/main.c:610
 #, fuzzy
 msgid " - the UKUI session manager"
 msgstr "- MATE সেশান পরিচালনা ব্যবস্থা"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:350
+#: ../tools/uksm-shortcuts-dialog.c:346
 #, c-format
 msgid "This window will be automatically closed in %d second"
 msgid_plural "This window will be automatically closed in %d seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:466
+#: ../tools/uksm-shortcuts-dialog.c:466
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:468
+#: ../tools/uksm-shortcuts-dialog.c:468
 #, fuzzy
 msgid "Application"
 msgstr "প্রারম্ভিক অ্যাপ্লিকেশন"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:469
+#: ../tools/uksm-shortcuts-dialog.c:469
 msgid "Super"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:470
+#: ../tools/uksm-shortcuts-dialog.c:470
 msgid "Open start menu."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:471
+#: ../tools/uksm-shortcuts-dialog.c:471
 msgid "Ctrl+Alt+T"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:472
+#: ../tools/uksm-shortcuts-dialog.c:472
 msgid "Open termianl."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:473
+#: ../tools/uksm-shortcuts-dialog.c:473
 msgid "Ctrl+Alt+D"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:474
+#: ../tools/uksm-shortcuts-dialog.c:474
 msgid "Show desktop."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:475
+#: ../tools/uksm-shortcuts-dialog.c:475
 msgid "Ctrl+Alt+L"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:476
+#: ../tools/uksm-shortcuts-dialog.c:476
 #, fuzzy
 msgid "Lock screen."
 msgstr "পর্দা লক করুন"
 
 #. Separator
-#: ../ukui-session/uksm-shortcuts-dialog.c:479
-#: ../ukui-session/uksm-shortcuts-dialog.c:500
+#: ../tools/uksm-shortcuts-dialog.c:479 ../tools/uksm-shortcuts-dialog.c:500
 msgid "  "
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:481
+#: ../tools/uksm-shortcuts-dialog.c:481
 msgid "Screenshot"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:482
+#: ../tools/uksm-shortcuts-dialog.c:482
 msgid "Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:483
+#: ../tools/uksm-shortcuts-dialog.c:483
 msgid "Take a full-screen screenshot."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:484
+#: ../tools/uksm-shortcuts-dialog.c:484
 msgid "Ctrl+Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:485
+#: ../tools/uksm-shortcuts-dialog.c:485
 msgid "Take a screenshot of the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:486
+#: ../tools/uksm-shortcuts-dialog.c:486
 msgid "Shift+Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:487
+#: ../tools/uksm-shortcuts-dialog.c:487
 msgid "Select area to grab."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:489
+#: ../tools/uksm-shortcuts-dialog.c:489
 msgid "Switching"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:490
+#: ../tools/uksm-shortcuts-dialog.c:490
 msgid "Alt+Tab"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:491
+#: ../tools/uksm-shortcuts-dialog.c:491
 #, fuzzy
 msgid "Switches between applications."
 msgstr "প্রারম্ভিক অ্যাপ্লিকেশন"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:492
+#: ../tools/uksm-shortcuts-dialog.c:492
 msgid "Alt+Shift+Tab"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:493
-msgid "Switches between applications in reverse order."
-msgstr ""
+#: ../tools/uksm-shortcuts-dialog.c:493
+#, fuzzy
+msgid ""
+"Switches between applications in \n"
+"reverse order."
+msgstr "প্রারম্ভিক অ্যাপ্লিকেশন"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:494
+#: ../tools/uksm-shortcuts-dialog.c:494
 msgid "Super_L+P/F3/F7"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:495
+#: ../tools/uksm-shortcuts-dialog.c:495
 msgid "Switches between display."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:496
+#: ../tools/uksm-shortcuts-dialog.c:496
 msgid "Ctrl+Alt+ArrowKeys"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:497
+#: ../tools/uksm-shortcuts-dialog.c:497
 msgid "Switches between workspaces."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:502
+#: ../tools/uksm-shortcuts-dialog.c:502
 msgid "Windows"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:503
+#: ../tools/uksm-shortcuts-dialog.c:503
 msgid "Alt+F10"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:504
+#: ../tools/uksm-shortcuts-dialog.c:504
 msgid "Maximize the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:505
+#: ../tools/uksm-shortcuts-dialog.c:505
 msgid "Alt+F9"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:506
+#: ../tools/uksm-shortcuts-dialog.c:506
 msgid "Minimize the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:507
+#: ../tools/uksm-shortcuts-dialog.c:507
 msgid "Alt+F5"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:508
+#: ../tools/uksm-shortcuts-dialog.c:508
 msgid "Cancel maximize the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:509
+#: ../tools/uksm-shortcuts-dialog.c:509
 msgid "Alt+F4"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:510
+#: ../tools/uksm-shortcuts-dialog.c:510
 #, fuzzy
 msgid "Close the current window."
 msgstr "বর্তমান সেশনের নাম নির্ধারণ করুন"
 
-#: ../tools/ukui-session-save.c:70
+#: ../tools/ukui-session-save.c:67
 msgid "Log out"
 msgstr "লগ-আউট"
 
-#: ../tools/ukui-session-save.c:71
+#: ../tools/ukui-session-save.c:68
 msgid "Log out, ignoring any existing inhibitors"
 msgstr "কোনো উপস্থিত প্রতিরোধ অগ্রাহ্য করে লগ-আউট করা হবে"
 
-#: ../tools/ukui-session-save.c:72
+#: ../tools/ukui-session-save.c:69
 msgid "Show logout dialog"
 msgstr "লগ-আউটের ডায়লগ বক্স প্রদর্শন করা হবে"
 
-#: ../tools/ukui-session-save.c:73
+#: ../tools/ukui-session-save.c:70
 msgid "Show shutdown dialog"
 msgstr "বন্ধ করার ডায়লগ বক্স প্রদর্শন করা হবে"
 
-#: ../tools/ukui-session-save.c:74
+#: ../tools/ukui-session-save.c:71
 msgid "Use dialog boxes for errors"
 msgstr "ত্রুটির ক্ষেত্রে ডায়লগ বক্স ব্যবহার করুন"
 
 #. deprecated options
-#: ../tools/ukui-session-save.c:76
+#: ../tools/ukui-session-save.c:73
 msgid "Set the current session name"
 msgstr "বর্তমান সেশনের নাম নির্ধারণ করুন"
 
-#: ../tools/ukui-session-save.c:76
+#: ../tools/ukui-session-save.c:73
 msgid "NAME"
 msgstr "NAME"
 
-#: ../tools/ukui-session-save.c:77
+#: ../tools/ukui-session-save.c:74
 msgid "Kill session"
 msgstr "সেশান kill করুন"
 
-#: ../tools/ukui-session-save.c:78
+#: ../tools/ukui-session-save.c:75
 msgid "Do not require confirmation"
 msgstr "নিশ্চিত করা হবে না"
 
 #. Okay, it wasn't the upgrade case, so now we can give up.
-#: ../tools/ukui-session-save.c:136 ../tools/ukui-session-save.c:151
+#: ../tools/ukui-session-save.c:129
 msgid "Could not connect to the session manager"
 msgstr "সেশান পরিচালনব্যবস্থার সাথে সংযোগ স্থাপন করতে ব্যর্থ"
 
-#: ../tools/ukui-session-save.c:277
+#: ../tools/ukui-session-save.c:254
 msgid "Program called with conflicting options"
 msgstr "দ্বন্দ্বযুক্ত বিকল্প সহ প্রোগ্রাম আরম্ভের প্রচেষ্টা করা হয়েছে"
+
+#: ../tools/ukui-session-shortcuts.c:76
+msgid "Show the keyboard shortcuts"
+msgstr ""
 
 #: ../tools/ukui-session-inhibit.c:116
 #, c-format

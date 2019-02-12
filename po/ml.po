@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-10 16:08+0800\n"
+"POT-Creation-Date: 2019-02-12 16:50+0800\n"
 "PO-Revision-Date: 2015-12-14 10:18+0000\n"
 "Last-Translator: monsta <monsta@inbox.ru>\n"
 "Language-Team: Malayalam (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -22,51 +22,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../capplet/gsm-app-dialog.c:126
+#: ../capplet/gsm-app-dialog.c:128
 msgid "Select Command"
 msgstr "കമാന്‍ഡ് തെരഞ്ഞെടുക്കുക"
 
-#: ../capplet/gsm-app-dialog.c:198
+#: ../capplet/gsm-app-dialog.c:171
+msgid "second"
+msgstr ""
+
+#: ../capplet/gsm-app-dialog.c:173
+msgid "seconds"
+msgstr ""
+
+#: ../capplet/gsm-app-dialog.c:224
 msgid "Add Startup Program"
 msgstr "ആരംഭ നിര്‍ദ്ദേശം ചേര്‍ക്കുക"
 
-#: ../capplet/gsm-app-dialog.c:202
+#: ../capplet/gsm-app-dialog.c:228
 msgid "Edit Startup Program"
 msgstr "ആരംഭ നിര്‍ദ്ദേശം ചിട്ടപ്പെടുത്തുക"
 
-#: ../capplet/gsm-app-dialog.c:487
+#: ../capplet/gsm-app-dialog.c:542
 msgid "The startup command cannot be empty"
 msgstr "ആരംഭ നിര്‍ദ്ദേശം ശൂന്യമായിരിക്കുവാന്‍ പാടില്ല"
 
-#: ../capplet/gsm-app-dialog.c:493
+#: ../capplet/gsm-app-dialog.c:548
 msgid "The startup command is not valid"
 msgstr "ആരംഭ ആജ്ഞ ശരിയല്ല"
 
-#: ../capplet/gsm-properties-dialog.c:519
+#: ../capplet/gsm-properties-dialog.c:521
 msgid "Enabled"
 msgstr "പ്രവര്‍ത്തന സജ്ജമാക്കുക"
 
-#: ../capplet/gsm-properties-dialog.c:531
+#: ../capplet/gsm-properties-dialog.c:533
 msgid "Icon"
 msgstr "ചിഹ്നം "
 
-#: ../capplet/gsm-properties-dialog.c:543
+#: ../capplet/gsm-properties-dialog.c:545
 msgid "Program"
 msgstr "പ്രോഗ്രാം"
 
-#: ../capplet/gsm-properties-dialog.c:742
+#: ../capplet/gsm-properties-dialog.c:740
 msgid "Startup Applications Preferences"
 msgstr "പ്രാരംഭ പ്രയോഗങ്ങള്‍ക്കുള്ള മുന്‍ഗണനകള്‍"
 
-#: ../capplet/gsp-app.c:274
+#: ../capplet/gsp-app.c:284
 msgid "No name"
 msgstr "പേരില്ല"
 
-#: ../capplet/gsp-app.c:280
+#: ../capplet/gsp-app.c:290
 msgid "No description"
 msgstr "വിവരണം ഒന്നുമില്ല"
 
-#: ../capplet/main.c:36 ../ukui-session/main.c:642
+#: ../capplet/main.c:36 ../ukui-session/main.c:590
+#: ../tools/ukui-session-shortcuts.c:75
 msgid "Version of this application"
 msgstr "ഈ പ്രയോഗത്തിന്റെ പതിപ്പു്"
 
@@ -150,8 +159,7 @@ msgstr ""
 msgid "Control which compatibility components to start."
 msgstr ""
 
-#: ../data/org.ukui.session.gschema.xml.in.h:17
-#: ../data/ukui-wm.desktop.in.in.h:1
+#: ../data/org.ukui.session.gschema.xml.in.h:17 ../data/ukui-wm.desktop.in.h:1
 msgid "Window Manager"
 msgstr "ജാലക പാലകന്‍"
 
@@ -210,17 +218,17 @@ msgstr "ഈ പ്രവര്‍ത്തനവേള നിങ്ങളെ ഗ
 msgid "<b>Some programs are still running:</b>"
 msgstr "<b>ചില പ്രയോഗങ്ങള്‍ ഇപ്പോഴും പ്രവര്‍ത്തിച്ചു് കൊണ്ടിരിയ്ക്കുന്നു:</b>"
 
-#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:634
+#: ../data/gsm-inhibit-dialog.ui.h:2 ../ukui-session/gsm-inhibit-dialog.c:633
 msgid ""
 "Waiting for the program to finish.  Interrupting the program may cause you "
 "to lose work."
 msgstr ""
 
-#: ../data/ukui-session-properties.desktop.in.in.h:1
+#: ../data/ukui-session-properties.desktop.in.h:1
 msgid "Startup Applications"
 msgstr "പ്രാരംഭ പ്രയോഗങ്ങള്‍"
 
-#: ../data/ukui-session-properties.desktop.in.in.h:2
+#: ../data/ukui-session-properties.desktop.in.h:2
 msgid "Choose what applications to start when you log in"
 msgstr "നിങ്ങള്‍ ലോഗിന്‍ ചെയ്യുമ്പോള്‍ ആരംഭിക്കേണ്ട പ്രയോഗങ്ങള്‍ തെരഞ്ഞെടുക്കുക"
 
@@ -260,6 +268,10 @@ msgstr "_ആജ്ഞ:"
 msgid "_Name:"
 msgstr "_പേരു്:"
 
+#: ../data/session-properties.ui.h:10
+msgid "_Delay:"
+msgstr ""
+
 #: ../egg/eggdesktopfile.c:152
 #, c-format
 msgid "File is not a valid .desktop file"
@@ -296,52 +308,52 @@ msgstr ""
 msgid "Not a launchable item"
 msgstr "തുടങ്ങാവുന്ന വസ്തുവല്ല"
 
-#: ../egg/eggsmclient.c:226
+#: ../egg/eggsmclient.c:223
 msgid "Disable connection to session manager"
 msgstr "പ്രവര്‍ത്തനവേള നടത്തിപ്പുകാരനുമായി ബന്ധം അപ്രാവര്‍ത്തികമാക്കുക"
 
-#: ../egg/eggsmclient.c:229
+#: ../egg/eggsmclient.c:226
 msgid "Specify file containing saved configuration"
 msgstr "സൂക്ഷിച്ചിരിക്കുന്ന ക്രമീകരണങ്ങള്‍ ഉള്ള ഫയല്‍ വ്യക്തമാക്കുക"
 
-#: ../egg/eggsmclient.c:229
+#: ../egg/eggsmclient.c:226
 msgid "FILE"
 msgstr "FILE(ഫയല്‍ )"
 
-#: ../egg/eggsmclient.c:232
+#: ../egg/eggsmclient.c:229
 msgid "Specify session management ID"
 msgstr "പ്രവര്‍ത്തനവേള കൈകാര്യം ചെയ്യാനുള്ള തിരിച്ചറിയല്‍ വ്യക്തമാക്കുക"
 
-#: ../egg/eggsmclient.c:232
+#: ../egg/eggsmclient.c:229
 msgid "ID"
 msgstr "ID (തിരിച്ചറിയല്‍)"
 
-#: ../egg/eggsmclient.c:253
+#: ../egg/eggsmclient.c:250
 msgid "Session management options:"
 msgstr "സെഷന്‍ മാനേജ്മെന്റ ഉപാധികള്‍:"
 
-#: ../egg/eggsmclient.c:254
+#: ../egg/eggsmclient.c:251
 msgid "Show session management options"
 msgstr "സെഷന്‍ മാനേജ്മെന്റ ഉപാധികള്‍ കാണിക്കുക"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:252
+#: ../ukui-session/gsm-inhibit-dialog.c:251
 #, c-format
 msgid "Icon '%s' not found"
 msgstr "'%s' ചിഹ്നം കണ്ടില്ല"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:582
+#: ../ukui-session/gsm-inhibit-dialog.c:581
 msgid "Unknown"
 msgstr "അപരിചിതമായ"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:633
+#: ../ukui-session/gsm-inhibit-dialog.c:632
 msgid "A program is still running:"
 msgstr "ഒരു പ്രയോഗം ഇപ്പോഴും പ്രവര്‍ത്തിച്ചു് കൊണ്ടിരിയ്ക്കുന്നു:"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:637
+#: ../ukui-session/gsm-inhibit-dialog.c:636
 msgid "Some programs are still running:"
 msgstr "ചില പ്രയോഗങ്ങള്‍ ഇപ്പോഴും പ്രവര്‍ത്തിച്ചു് കൊണ്ടിരിയ്ക്കുന്നു:"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:638
+#: ../ukui-session/gsm-inhibit-dialog.c:637
 msgid ""
 "Waiting for programs to finish.  Interrupting these programs may cause you "
 "to lose work."
@@ -349,96 +361,96 @@ msgstr ""
 "പ്രയോഗങ്ങള്‍ തീരുന്നതു് വരെ കാത്തിരിയ്ക്കുന്നു. ഈ പ്രയോഗങ്ങളെ തടസ്സപ്പെടുത്തുന്നതു് നിങ്ങള്‍ "
 "ചെയ്തുകൊണ്ടിരിയ്ക്കുന്ന പണി നഷ്ടപ്പെടുവാന്‍ കാരണമായേയ്ക്കാം."
 
-#: ../ukui-session/gsm-inhibit-dialog.c:868
+#: ../ukui-session/gsm-inhibit-dialog.c:867
 msgid "Switch User Anyway"
 msgstr "എന്തായാലും ഉപയോക്താവിനെ മാറ്റുക"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:871
+#: ../ukui-session/gsm-inhibit-dialog.c:870
 msgid "Log Out Anyway"
 msgstr ""
 
-#: ../ukui-session/gsm-inhibit-dialog.c:874
+#: ../ukui-session/gsm-inhibit-dialog.c:873
 msgid "Suspend Anyway"
 msgstr "എന്തായാലും മയങ്ങുക"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:877
+#: ../ukui-session/gsm-inhibit-dialog.c:876
 msgid "Hibernate Anyway"
 msgstr "എന്തായാലും ശിശിരനിദ്രയിലാഴുക"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:880
+#: ../ukui-session/gsm-inhibit-dialog.c:879
 msgid "Shut Down Anyway"
 msgstr ""
 
-#: ../ukui-session/gsm-inhibit-dialog.c:883
+#: ../ukui-session/gsm-inhibit-dialog.c:882
 msgid "Reboot Anyway"
 msgstr "എന്തായാലും വീണ്ടും തുടങ്ങുക"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:891
+#: ../ukui-session/gsm-inhibit-dialog.c:890
 msgid "Lock Screen"
 msgstr "സ്ക്രീന്‍ പൂട്ടുക"
 
-#: ../ukui-session/gsm-inhibit-dialog.c:894
+#: ../ukui-session/gsm-inhibit-dialog.c:893
 msgid "Cancel"
 msgstr "റദ്ദാക്കുക"
 
-#: ../ukui-session/gsm-logout-dialog.c:477
+#: ../ukui-session/gsm-logout-dialog.c:494
 #, c-format
 msgid "You will be automatically logged out in %d second"
 msgid_plural "You will be automatically logged out in %d seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../ukui-session/gsm-logout-dialog.c:485
+#: ../ukui-session/gsm-logout-dialog.c:502
 #, c-format
 msgid "This system will be automatically shut down in %d second"
 msgid_plural "This system will be automatically shut down in %d seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../ukui-session/gsm-logout-dialog.c:531
+#: ../ukui-session/gsm-logout-dialog.c:548
 #, c-format
 msgid "You are currently logged in as \"%s\"."
 msgstr "നിങ്ങള്‍ നിലവില്‍ \"%s\" ആയി ലോഗിന്‍ ചെയ്തിരിക്കുന്നു."
 
-#: ../ukui-session/gsm-logout-dialog.c:693
+#: ../ukui-session/gsm-logout-dialog.c:723
 msgid "Log out of this system now?"
 msgstr "ഈ സിസ്റ്റത്തില്‍ നിന്ന് ഇപ്പോള്‍ പുറത്തിറങ്ങണോ?"
 
-#: ../ukui-session/gsm-logout-dialog.c:703
+#: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
 msgid "_Switch User"
 msgstr "ഉപയോക്താവിനെ മാറ്റുക"
 
-#: ../ukui-session/gsm-logout-dialog.c:721
+#: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
 msgid "_Log Out"
 msgstr "പുറത്തിറങ്ങുക"
 
-#: ../ukui-session/gsm-logout-dialog.c:738
+#: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
 msgstr "ഈ സിസ്റ്റം ഇപ്പോള്‍ അടച്ചുപൂട്ടണോ ?"
 
-#: ../ukui-session/gsm-logout-dialog.c:748
+#: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
 msgid "S_uspend"
 msgstr "_മയങ്ങിക്കോട്ടെ"
 
-#: ../ukui-session/gsm-logout-dialog.c:766
+#: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
 msgid "_Hibernate"
 msgstr "_ശിശിരനിദ്ര"
 
-#: ../ukui-session/gsm-logout-dialog.c:784
+#: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
 msgid "_Restart"
 msgstr "വീണ്ടും തുടങ്ങുക"
 
-#: ../ukui-session/gsm-logout-dialog.c:803
+#: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
 msgid "_Shut Down"
 msgstr "കമ്പ്യൂട്ടര്‍ അടച്ചുപൂട്ടുക"
 
-#: ../ukui-session/gsm-manager.c:1417 ../ukui-session/gsm-manager.c:2136
+#: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
 msgid "Not responding"
 msgstr "പ്രതികരിയ്ക്കുന്നില്ല"
 
@@ -446,21 +458,21 @@ msgstr "പ്രതികരിയ്ക്കുന്നില്ല"
 #. * then the XSMP client already has set several XSMP
 #. * properties. But it could still be that SmProgram is not set.
 #.
-#: ../ukui-session/gsm-xsmp-client.c:566
+#: ../ukui-session/gsm-xsmp-client.c:596
 msgid "Remembered Application"
 msgstr ""
 
-#: ../ukui-session/gsm-xsmp-client.c:1204
+#: ../ukui-session/gsm-xsmp-client.c:1263
 msgid "This program is blocking logout."
 msgstr ""
 
-#: ../ukui-session/gsm-xsmp-server.c:325
+#: ../ukui-session/gsm-xsmp-server.c:324
 msgid ""
 "Refusing new client connection because the session is currently being shut "
 "down\n"
 msgstr "പുതിയ ക്ലയന്റ് ബന്ധം നിരസിക്കുന്നു കാരണം പ്രവര്‍ത്തനവേള ഇപ്പോള്‍ അടച്ചു പൂട്ടൂകയാണു്\n"
 
-#: ../ukui-session/gsm-xsmp-server.c:587
+#: ../ukui-session/gsm-xsmp-server.c:586
 #, c-format
 msgid "Could not create ICE listening socket: %s"
 msgstr "'ഐസ് '(ICE) കേള്‍ക്കാനുള്ള സോക്കറ്റ് ഉണ്ടാക്കാന്‍ കഴിഞ്ഞില്ല: %s"
@@ -473,229 +485,231 @@ msgstr ""
 "അകത്തുകയറുമ്പോഴുള്ള പ്രവര്‍ത്തനവേള തുടങ്ങാന്‍ കഴിഞ്ഞില്ല (എക്സ്-സെര്‍വറിലേക്ക് ബന്ധപ്പെടാനും "
 "സാധിച്ചില്ല)"
 
-#: ../ukui-session/main.c:639
+#: ../ukui-session/main.c:587
 msgid "Override standard autostart directories"
 msgstr "സാധാരണയുള്ള സ്വയം തുടങ്ങാനുള്ള തട്ടുകള്‍ മറികടക്കുക"
 
-#: ../ukui-session/main.c:640
+#: ../ukui-session/main.c:588
 msgid "Enable debugging code"
 msgstr "പിഴവു് തിരുത്താന്‍ സഹായിയ്ക്കുന്ന കോഡ് പ്രാവര്‍ത്തികമാക്കുക"
 
-#: ../ukui-session/main.c:641
+#: ../ukui-session/main.c:589
 msgid "Do not load user-specified applications"
 msgstr "ഉപയോക്താവ് വ്യക്തമാക്കിയ പ്രയോഗങ്ങള്‍ ലോഡ് ചെയ്യേണ്ട"
 
-#: ../ukui-session/main.c:643
-msgid "Show the keyboard shortcuts"
-msgstr ""
-
-#: ../ukui-session/main.c:663
+#: ../ukui-session/main.c:610
 #, fuzzy
 msgid " - the UKUI session manager"
 msgstr "- MATE പ്രവര്‍ത്തനവേള നടത്തിപ്പുകാരന്‍"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:350
+#: ../tools/uksm-shortcuts-dialog.c:346
 #, c-format
 msgid "This window will be automatically closed in %d second"
 msgid_plural "This window will be automatically closed in %d seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:466
+#: ../tools/uksm-shortcuts-dialog.c:466
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:468
+#: ../tools/uksm-shortcuts-dialog.c:468
 #, fuzzy
 msgid "Application"
 msgstr "പ്രാരംഭ പ്രയോഗങ്ങള്‍"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:469
+#: ../tools/uksm-shortcuts-dialog.c:469
 msgid "Super"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:470
+#: ../tools/uksm-shortcuts-dialog.c:470
 msgid "Open start menu."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:471
+#: ../tools/uksm-shortcuts-dialog.c:471
 msgid "Ctrl+Alt+T"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:472
+#: ../tools/uksm-shortcuts-dialog.c:472
 msgid "Open termianl."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:473
+#: ../tools/uksm-shortcuts-dialog.c:473
 msgid "Ctrl+Alt+D"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:474
+#: ../tools/uksm-shortcuts-dialog.c:474
 msgid "Show desktop."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:475
+#: ../tools/uksm-shortcuts-dialog.c:475
 msgid "Ctrl+Alt+L"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:476
+#: ../tools/uksm-shortcuts-dialog.c:476
 #, fuzzy
 msgid "Lock screen."
 msgstr "സ്ക്രീന്‍ പൂട്ടുക"
 
 #. Separator
-#: ../ukui-session/uksm-shortcuts-dialog.c:479
-#: ../ukui-session/uksm-shortcuts-dialog.c:500
+#: ../tools/uksm-shortcuts-dialog.c:479 ../tools/uksm-shortcuts-dialog.c:500
 msgid "  "
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:481
+#: ../tools/uksm-shortcuts-dialog.c:481
 msgid "Screenshot"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:482
+#: ../tools/uksm-shortcuts-dialog.c:482
 msgid "Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:483
+#: ../tools/uksm-shortcuts-dialog.c:483
 msgid "Take a full-screen screenshot."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:484
+#: ../tools/uksm-shortcuts-dialog.c:484
 msgid "Ctrl+Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:485
+#: ../tools/uksm-shortcuts-dialog.c:485
 msgid "Take a screenshot of the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:486
+#: ../tools/uksm-shortcuts-dialog.c:486
 msgid "Shift+Print"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:487
+#: ../tools/uksm-shortcuts-dialog.c:487
 msgid "Select area to grab."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:489
+#: ../tools/uksm-shortcuts-dialog.c:489
 msgid "Switching"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:490
+#: ../tools/uksm-shortcuts-dialog.c:490
 msgid "Alt+Tab"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:491
+#: ../tools/uksm-shortcuts-dialog.c:491
 #, fuzzy
 msgid "Switches between applications."
 msgstr "പ്രാരംഭ പ്രയോഗങ്ങള്‍"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:492
+#: ../tools/uksm-shortcuts-dialog.c:492
 msgid "Alt+Shift+Tab"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:493
-msgid "Switches between applications in reverse order."
-msgstr ""
+#: ../tools/uksm-shortcuts-dialog.c:493
+#, fuzzy
+msgid ""
+"Switches between applications in \n"
+"reverse order."
+msgstr "പ്രാരംഭ പ്രയോഗങ്ങള്‍"
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:494
+#: ../tools/uksm-shortcuts-dialog.c:494
 msgid "Super_L+P/F3/F7"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:495
+#: ../tools/uksm-shortcuts-dialog.c:495
 msgid "Switches between display."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:496
+#: ../tools/uksm-shortcuts-dialog.c:496
 msgid "Ctrl+Alt+ArrowKeys"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:497
+#: ../tools/uksm-shortcuts-dialog.c:497
 msgid "Switches between workspaces."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:502
+#: ../tools/uksm-shortcuts-dialog.c:502
 msgid "Windows"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:503
+#: ../tools/uksm-shortcuts-dialog.c:503
 msgid "Alt+F10"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:504
+#: ../tools/uksm-shortcuts-dialog.c:504
 msgid "Maximize the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:505
+#: ../tools/uksm-shortcuts-dialog.c:505
 msgid "Alt+F9"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:506
+#: ../tools/uksm-shortcuts-dialog.c:506
 msgid "Minimize the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:507
+#: ../tools/uksm-shortcuts-dialog.c:507
 msgid "Alt+F5"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:508
+#: ../tools/uksm-shortcuts-dialog.c:508
 msgid "Cancel maximize the current window."
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:509
+#: ../tools/uksm-shortcuts-dialog.c:509
 msgid "Alt+F4"
 msgstr ""
 
-#: ../ukui-session/uksm-shortcuts-dialog.c:510
+#: ../tools/uksm-shortcuts-dialog.c:510
 #, fuzzy
 msgid "Close the current window."
 msgstr "ഇപ്പോഴുള്ള പ്രവര്‍ത്തനവേളയ്ക്കു് പേരു് കൊടുക്കുക"
 
-#: ../tools/ukui-session-save.c:70
+#: ../tools/ukui-session-save.c:67
 msgid "Log out"
 msgstr "പുറത്തിറങ്ങുക"
 
-#: ../tools/ukui-session-save.c:71
+#: ../tools/ukui-session-save.c:68
 msgid "Log out, ignoring any existing inhibitors"
 msgstr "തടസ്സമുണ്ടാക്കുന്നവരെ വക വയ്ക്കാതെ പുറത്തിറങ്ങുക"
 
-#: ../tools/ukui-session-save.c:72
+#: ../tools/ukui-session-save.c:69
 msgid "Show logout dialog"
 msgstr "പുറത്തിറങ്ങുന്നതിനുള്ള സംഭാഷണം കാണിയ്ക്കുക"
 
-#: ../tools/ukui-session-save.c:73
+#: ../tools/ukui-session-save.c:70
 msgid "Show shutdown dialog"
 msgstr "നിര്‍ത്തി വയ്ക്കുന്നതിനുള്ള സംഭാഷണം കാണിയ്ക്കുക"
 
-#: ../tools/ukui-session-save.c:74
+#: ../tools/ukui-session-save.c:71
 msgid "Use dialog boxes for errors"
 msgstr "തെറ്റുകള്‍ വരുമ്പോള്‍ സംഭാഷണ കളങ്ങള്‍ ഉപയോഗിയ്ക്കുക"
 
 #. deprecated options
-#: ../tools/ukui-session-save.c:76
+#: ../tools/ukui-session-save.c:73
 msgid "Set the current session name"
 msgstr "ഇപ്പോഴുള്ള പ്രവര്‍ത്തനവേളയ്ക്കു് പേരു് കൊടുക്കുക"
 
-#: ../tools/ukui-session-save.c:76
+#: ../tools/ukui-session-save.c:73
 msgid "NAME"
 msgstr "NAME(പേര്)"
 
-#: ../tools/ukui-session-save.c:77
+#: ../tools/ukui-session-save.c:74
 msgid "Kill session"
 msgstr "പ്രവര്‍ത്തനവേള ഇല്ലാതാക്കുക"
 
-#: ../tools/ukui-session-save.c:78
+#: ../tools/ukui-session-save.c:75
 msgid "Do not require confirmation"
 msgstr "ഉറപ്പു വരുത്തേണ്ട ആവശ്യമില്ല"
 
 #. Okay, it wasn't the upgrade case, so now we can give up.
-#: ../tools/ukui-session-save.c:136 ../tools/ukui-session-save.c:151
+#: ../tools/ukui-session-save.c:129
 msgid "Could not connect to the session manager"
 msgstr "പ്രവര്‍ത്തനവേള നടത്തിപ്പുകാരനുമായി ബന്ധപ്പെടാന്‍ കഴിയുന്നില്ല"
 
-#: ../tools/ukui-session-save.c:277
+#: ../tools/ukui-session-save.c:254
 msgid "Program called with conflicting options"
 msgstr "പരസ്പരവിരുദ്ധമായ ഐച്ഛികങ്ങളോടെയാണു് പ്രോഗ്രാമിനെ വിളിച്ചിരിയ്ക്കുന്നതു്"
+
+#: ../tools/ukui-session-shortcuts.c:76
+msgid "Show the keyboard shortcuts"
+msgstr ""
 
 #: ../tools/ukui-session-inhibit.c:116
 #, c-format
