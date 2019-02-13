@@ -10,11 +10,12 @@ XSLTPROC_FLAGS = \
 	$(AM_V_GEN) $(XSLTPROC) $(XSLTPROC_FLAGS) http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
 
 man_MANS =				\
-	ukui-session.1			\
+	ukui-session.1		\
 	ukui-session-properties.1	\
-	ukui-session-save.1		\
+	ukui-session-save.1	\
 	ukui-wm.1			\
-	ukui-session-inhibit.1
+	ukui-session-inhibit.1		\
+	ukui-session-shortcuts.1
 
 EXTRA_DIST =				\
 	ukui-session-inhibit.xml	\
