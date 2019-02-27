@@ -111,6 +111,8 @@ gsm_autostart_app_init (GsmAutostartApp *app)
 static gboolean
 is_disabled (GsmApp *app)
 {
+        GError *local_error;
+        gchar  *command;
         GsmAutostartAppPrivate *priv;
 
         priv = gsm_autostart_app_get_instance_private (GSM_AUTOSTART_APP(app));
@@ -137,6 +139,22 @@ is_disabled (GsmApp *app)
         if (!egg_desktop_file_can_launch (priv->desktop_file, "UKUI")) {
                 g_debug ("app %s not installed or not for UKUI",
                          gsm_app_peek_id (app));
+                return TRUE;
+        }
+
+        local_error = NULL;
+        command = egg_desktop_file_parse_exec (priv->desktop_file,
+                                               NULL,
+                                               &local_error);
+        if (command == NULL) {
+                g_warning ("Unable to parse command from  '%s': %s",
+                           egg_desktop_file_get_source (priv->desktop_file),
+                           local_error->message);
+                g_error_free (local_error);
+        }
+        /* Don't launch nm-applet when there is a kylin-nm */
+        if (!g_strcmp0(command, "nm-applet") && g_file_test ("/usr/bin/kylin-nm", G_FILE_TEST_EXISTS)) {
+                g_debug ("app nm-applet is disabled since there is a kylin-nm");
                 return TRUE;
         }
 

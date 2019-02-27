@@ -411,11 +411,11 @@ msgstr "现在注销系统吗？"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 msgid "_Switch User"
-msgstr "切换用户(_S)"
+msgstr "切换用户(S)"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
 msgid "_Log Out"
-msgstr "注销(_L)"
+msgstr "注销(L)"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
@@ -423,19 +423,19 @@ msgstr "现在关闭此系统吗？"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
 msgid "S_uspend"
-msgstr "挂起(_U)"
+msgstr "挂起(U)"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
 msgid "_Hibernate"
-msgstr "休眠(_H)"
+msgstr "休眠(H)"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
 msgid "_Restart"
-msgstr "重启(_R)"
+msgstr "重启(R)"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 msgid "_Shut Down"
-msgstr "关机(_S)"
+msgstr "关机(S)"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
 msgid "Not responding"
