@@ -730,7 +730,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
 
                 if (gsm_logout_supports_switch_user (logout_dialog)) {
                         GsmLogoutButton *user_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_USER,
-                                                                              _("_Switch User"),
+                                                                              _("Switch User"),
                                                                               DATA_DIR "/user.png",
                                                                               DATA_DIR "/user_prelight.png");
 
@@ -748,7 +748,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
 
                 // Logout button
                 GsmLogoutButton *logout_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_LOGOUT,
-                                                                        _("_Log Out"),
+                                                                        _("Logout"),
                                                                         DATA_DIR "/logout.png",
                                                                         DATA_DIR "/logout_prelight.png");
                 priv->default_button = GTK_WIDGET(logout_button);
@@ -776,7 +776,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
 
                 if (gsm_logout_supports_system_suspend (logout_dialog)) {
                         GsmLogoutButton *sleep_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_SLEEP,
-                                                                               _("S_uspend"),
+                                                                               _("Suspend"),
                                                                                DATA_DIR "/suspend.png",
                                                                                DATA_DIR "/suspend_prelight.png");
 
@@ -794,7 +794,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
 
                 if (gsm_logout_supports_system_hibernate (logout_dialog)) {
                         GsmLogoutButton *hibernate_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_HIBERNATE,
-                                                                                   _("_Hibernate"),
+                                                                                   _("Hibernate"),
                                                                                    DATA_DIR "/hibernate.png",
                                                                                    DATA_DIR "/hibernate_prelight.png");
 
@@ -812,7 +812,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
 
                 if (gsm_logout_supports_reboot (logout_dialog)) {
                         GsmLogoutButton *reboot_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_REBOOT,
-                                                                                _("_Restart"),
+                                                                                _("Restart"),
                                                                                 DATA_DIR "/reboot.png",
                                                                                 DATA_DIR "/reboot_prelight.png");
 
@@ -831,7 +831,7 @@ gsm_get_dialog (GsmDialogLogoutType type,
                 if (gsm_logout_supports_shutdown (logout_dialog)) {
 
                         GsmLogoutButton *shutdown_button = gsm_logout_button_new (GSM_BUTTON_LOGOUT_TYPE_SHUTDOWN,
-                                                                                  _("_Shut Down"),
+                                                                                  _("Shutdown"),
                                                                                   DATA_DIR "/shutdown.png",
                                                                                   DATA_DIR "/shutdown_prelight.png");
                         priv->default_button = GTK_WIDGET(shutdown_button);

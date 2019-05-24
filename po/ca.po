@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2016-08-17 02:27+0000\n"
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -443,13 +443,13 @@ msgstr "Voleu tancar la sessió ara d'aquest sistema?"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
-msgid "_Switch User"
+msgid "Switch User"
 msgstr "Canvia d'_usuari"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
-msgid "_Log Out"
-msgstr "Tanca _la sessió"
+msgid "Logout"
+msgstr "Indicador de sortida"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
@@ -457,22 +457,22 @@ msgstr "Voleu apagar aquest sistema?"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
-msgid "S_uspend"
+msgid "Suspend"
 msgstr "A_tura temporalment"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
-msgid "_Hibernate"
+msgid "Hibernate"
 msgstr "_Hiberna"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
-msgid "_Restart"
+msgid "Restart"
 msgstr "_Reinicia"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
-msgid "_Shut Down"
+msgid "Shutdown"
 msgstr "_Apaga"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
@@ -778,6 +778,10 @@ msgstr "%s requereix un argument\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "No s'ha pogut executar %s\n"
+
+#, fuzzy
+#~ msgid "_Log Out"
+#~ msgstr "Tanca _la sessió"
 
 #~ msgid "MATE"
 #~ msgstr "MATE"

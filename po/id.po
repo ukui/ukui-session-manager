@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2016-03-14 17:03+0000\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -436,13 +436,13 @@ msgstr "Keluar dari sistem ini sekarang?"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
-msgid "_Switch User"
+msgid "Switch User"
 msgstr "_Ganti Pengguna"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
-msgid "_Log Out"
-msgstr "Ke_luar"
+msgid "Logout"
+msgstr "Konfirmasi log keluar"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
@@ -450,22 +450,22 @@ msgstr "Matikan sistem ini sekarang?"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
-msgid "S_uspend"
+msgid "Suspend"
 msgstr "S_uspensi"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
-msgid "_Hibernate"
+msgid "Hibernate"
 msgstr "_Hibernasi"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
-msgid "_Restart"
+msgid "Restart"
 msgstr "H_idupkan Ulang"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
-msgid "_Shut Down"
+msgid "Shutdown"
 msgstr "_Matikan"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
@@ -769,6 +769,10 @@ msgstr "%s membutuhkan sebuah argumen\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "Gagal untuk mengeksekusi %s\n"
+
+#, fuzzy
+#~ msgid "_Log Out"
+#~ msgstr "Ke_luar"
 
 #~ msgid "MATE"
 #~ msgstr "MATE"

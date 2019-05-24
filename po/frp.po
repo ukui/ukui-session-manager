@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2016-05-09 15:34+0000\n"
 "Last-Translator: Alexandre Raymond\n"
 "Language-Team: Franco-Provençal (Arpitan) (http://www.wiki.ukui.org/trans/"
@@ -402,11 +402,11 @@ msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
-msgid "_Switch User"
+msgid "Switch User"
 msgstr "Changér d’usancér"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
-msgid "_Log Out"
+msgid "Logout"
 msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:769
@@ -414,19 +414,19 @@ msgid "Shut down this system now?"
 msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:779
-msgid "S_uspend"
+msgid "Suspend"
 msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:797
-msgid "_Hibernate"
+msgid "Hibernate"
 msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:815
-msgid "_Restart"
+msgid "Restart"
 msgstr ""
 
 #: ../ukui-session/gsm-logout-dialog.c:834
-msgid "_Shut Down"
+msgid "Shutdown"
 msgstr ""
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324

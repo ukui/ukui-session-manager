@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2015-12-14 10:18+0000\n"
 "Last-Translator: monsta <monsta@inbox.ru>\n"
 "Language-Team: Estonian (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -427,13 +427,13 @@ msgstr "Kas logida sellest süsteemist välja?"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
-msgid "_Switch User"
+msgid "Switch User"
 msgstr "_Vaheta kasutajat"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
-msgid "_Log Out"
-msgstr "Logi _välja"
+msgid "Logout"
+msgstr "Väljalogimisviip"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
@@ -441,22 +441,22 @@ msgstr "Kas jätta süsteem seisma?"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
-msgid "S_uspend"
+msgid "Suspend"
 msgstr "_Alusta uinakut"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
-msgid "_Hibernate"
+msgid "Hibernate"
 msgstr "_Alusta talveund"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
-msgid "_Restart"
+msgid "Restart"
 msgstr "_Taaskäivita"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
-msgid "_Shut Down"
+msgid "Shutdown"
 msgstr "_Seiska"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
@@ -751,6 +751,10 @@ msgstr "%s nõuab argumenti\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "Tõrge %s käivitamisel\n"
+
+#, fuzzy
+#~ msgid "_Log Out"
+#~ msgstr "Logi _välja"
 
 #~ msgid "MATE"
 #~ msgstr "MATE"

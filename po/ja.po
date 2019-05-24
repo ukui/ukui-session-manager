@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2015-12-14 10:18+0000\n"
 "Last-Translator: monsta <monsta@inbox.ru>\n"
 "Language-Team: Japanese (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -433,13 +433,13 @@ msgstr "このシステムから今すぐログアウトしますか?"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
-msgid "_Switch User"
+msgid "Switch User"
 msgstr "ユーザーを切り替える(_S)"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
-msgid "_Log Out"
-msgstr "ログアウト(_L)"
+msgid "Logout"
+msgstr "ログアウト時に確認するかどうか"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
@@ -447,22 +447,22 @@ msgstr "このシステムを今すぐシャットダウンしますか?"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
-msgid "S_uspend"
+msgid "Suspend"
 msgstr "サスペンド(_U)"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
-msgid "_Hibernate"
+msgid "Hibernate"
 msgstr "ハイバーネート(_H)"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
-msgid "_Restart"
+msgid "Restart"
 msgstr "再起動(_R)"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
-msgid "_Shut Down"
+msgid "Shutdown"
 msgstr "シャットダウン(_S)"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
@@ -765,6 +765,10 @@ msgstr "%s は引数が必要です\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "%s を実行できませんでした\n"
+
+#, fuzzy
+#~ msgid "_Log Out"
+#~ msgstr "ログアウト(_L)"
 
 #~ msgid "MATE"
 #~ msgstr "MATE"

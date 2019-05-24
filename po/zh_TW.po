@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2015-12-14 12:55+0000\n"
 "Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.wiki.ukui.org/trans/ukui/UKUI/"
@@ -99,18 +99,16 @@ msgid "Save sessions"
 msgstr "儲存作業階段"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:4
-#, fuzzy
 msgid "If enabled, ukui-session will save the session automatically."
-msgstr "如啟用本選項，mate-session 會自動儲存作業階段。"
+msgstr "如啟用本選項，ukui-session 會自動儲存作業階段。"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:5
 msgid "Logout prompt"
 msgstr "登出提示"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:6
-#, fuzzy
 msgid "If enabled, ukui-session will prompt the user before ending a session."
-msgstr "如啟用本選項，mate-session 會在作業階段終止前先提示使用者。"
+msgstr "如啟用本選項，ukui-session 會在作業階段終止前先提示使用者。"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:7
 msgid "Logout timeout"
@@ -146,7 +144,6 @@ msgid "Required session components"
 msgstr "要求的作業階段元件"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:14
-#, fuzzy
 msgid ""
 "List of components that are required as part of the session. (Each element "
 "names a key under \"/org/ukui/desktop/session/required_components\"). The "
@@ -155,7 +152,7 @@ msgid ""
 "automatically add the required components back to the session at login time "
 "if they do get removed."
 msgstr ""
-"做為此作業階段一部分的必要元件清單。（每個元件都會在「/org/mate/desktop/"
+"做為此作業階段一部分的必要元件清單。（每個元件都會在「/org/ukui/desktop/"
 "session/required_components」有一個設定鍵。）啟動應用程式偏好設定工具一般不會"
 "允許使用者自作業階段中移除必要的元件，而作業階段管理員會在這些必要元件被移除"
 "時自動將它們加回作業階段中。"
@@ -217,9 +214,8 @@ msgid "UKUI"
 msgstr ""
 
 #: ../data/ukui.desktop.in.h:2
-#, fuzzy
 msgid "This session logs you into UKUI"
-msgstr "這個作業階段讓您登入 MATE"
+msgstr "這個作業階段讓您登入 UKUI"
 
 #: ../data/gsm-inhibit-dialog.ui.h:1
 msgid "<b>Some programs are still running:</b>"
@@ -419,38 +415,33 @@ msgid "Log out of this system now?"
 msgstr "是否立刻登出系統？"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
-#, fuzzy
-msgid "_Switch User"
-msgstr "切換使用者(_S)"
+msgid "Switch User"
+msgstr "切換使用者(S)"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
-#, fuzzy
-msgid "_Log Out"
-msgstr "登出(_L)"
+msgid "Logout"
+msgstr "登出提示"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
 msgstr "是否立刻關閉這個系統？"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
-#, fuzzy
-msgid "S_uspend"
-msgstr "暫停(_U)"
+msgid "Suspend"
+msgstr "暫停(U)"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
-#, fuzzy
-msgid "_Hibernate"
-msgstr "休眠(_H)"
+msgid "Hibernate"
+msgstr "休眠(H)"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
-#, fuzzy
-msgid "_Restart"
-msgstr "重新啟動(_R)"
+msgid "Restart"
+msgstr "重新啟動(R)"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
-msgid "_Shut Down"
-msgstr "關閉電腦(_S)"
+msgid "Shutdown"
+msgstr "關閉電腦(S)"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
 msgid "Not responding"
@@ -498,12 +489,10 @@ msgid "Do not load user-specified applications"
 msgstr "不要載入使用者指定的應用程式"
 
 #: ../ukui-session/main.c:610
-#, fuzzy
 msgid " - the UKUI session manager"
-msgstr " - MATE 作業階段管理員"
+msgstr " - UKUI 作業階段管理員"
 
 #: ../tools/uksm-shortcuts-dialog.c:346
-#, fuzzy, c-format
 msgid "This window will be automatically closed in %d second"
 msgid_plural "This window will be automatically closed in %d seconds"
 msgstr[0] "您將會在 %d 秒後自動登出"
@@ -513,7 +502,6 @@ msgid "Keyboard Shortcuts"
 msgstr ""
 
 #: ../tools/uksm-shortcuts-dialog.c:468
-#, fuzzy
 msgid "Application"
 msgstr "啟動應用程式"
 
@@ -546,7 +534,6 @@ msgid "Ctrl+Alt+L"
 msgstr ""
 
 #: ../tools/uksm-shortcuts-dialog.c:476
-#, fuzzy
 msgid "Lock screen."
 msgstr "鎖定螢幕"
 
@@ -751,6 +738,9 @@ msgstr "%s 需要一個參數\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "執行 %s 失敗\n"
+
+#~ msgid "_Log Out"
+#~ msgstr "登出(_L)"
 
 #~ msgid "MATE"
 #~ msgstr "MATE"

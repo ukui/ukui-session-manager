@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2016-02-15 10:10+0000\n"
 "Last-Translator: Martin Kříž <liberte.czech@gmail.com>\n"
 "Language-Team: Czech (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -442,13 +442,13 @@ msgstr "Odhlásit se nyní z tohoto systému?"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
-msgid "_Switch User"
+msgid "Switch User"
 msgstr "_Přepnout uživatele"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
-msgid "_Log Out"
-msgstr "_Odhlásit se"
+msgid "Logout"
+msgstr "Dotaz na odhlášení"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
@@ -456,22 +456,22 @@ msgstr "Vypnout nyní tento systém?"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
-msgid "S_uspend"
+msgid "Suspend"
 msgstr "_Uspat do paměti"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
-msgid "_Hibernate"
+msgid "Hibernate"
 msgstr "Uspat na _disk"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
-msgid "_Restart"
+msgid "Restart"
 msgstr "_Restartovat"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
-msgid "_Shut Down"
+msgid "Shutdown"
 msgstr "_Vypnout"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
@@ -777,6 +777,10 @@ msgstr "%s vyžaduje argument\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "Nepodařilo se provést %s\n"
+
+#, fuzzy
+#~ msgid "_Log Out"
+#~ msgstr "_Odhlásit se"
 
 #~ msgid "MATE"
 #~ msgstr "MATE"

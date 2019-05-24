@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2016-05-20 00:43+0000\n"
 "Last-Translator: Kristoffer Grundström <kristoffer.grundstrom1983@gmail."
 "com>\n"
@@ -434,13 +434,13 @@ msgstr "Logga ut ur detta system nu?"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
-msgid "_Switch User"
+msgid "Switch User"
 msgstr "_Växla användare"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
-msgid "_Log Out"
-msgstr "_Logga ut"
+msgid "Logout"
+msgstr "Utloggningsfråga"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
@@ -448,22 +448,22 @@ msgstr "Stäng av detta system nu?"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
-msgid "S_uspend"
+msgid "Suspend"
 msgstr "Vä_nteläge"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
-msgid "_Hibernate"
+msgid "Hibernate"
 msgstr "Vilolä_ge"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
-msgid "_Restart"
+msgid "Restart"
 msgstr "Starta _om"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
-msgid "_Shut Down"
+msgid "Shutdown"
 msgstr "St_äng av"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
@@ -756,6 +756,10 @@ msgstr "%s kräver ett argument\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "Misslyckades med att köra %s\n"
+
+#, fuzzy
+#~ msgid "_Log Out"
+#~ msgstr "_Logga ut"
 
 #~ msgid "MATE"
 #~ msgstr "MATE"

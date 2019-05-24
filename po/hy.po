@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2016-01-18 16:16+0000\n"
 "Last-Translator: Siranush <ss.m.95@mail.ru>\n"
 "Language-Team: Armenian (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -434,13 +434,13 @@ msgstr "Հիմա Դուրս գա՞լ այս համակարգից"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
-msgid "_Switch User"
+msgid "Switch User"
 msgstr "_Փոխել Օգտագործողին"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
-msgid "_Log Out"
-msgstr "_Դուրս գալ"
+msgid "Logout"
+msgstr "Համակարգից դուրս գալու հուշում"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
@@ -448,22 +448,22 @@ msgstr "Հիմա անջատե՞լ այս համակարգը"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
-msgid "S_uspend"
+msgid "Suspend"
 msgstr "Հետաձգել"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
-msgid "_Hibernate"
+msgid "Hibernate"
 msgstr "_Ձմեռել"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
-msgid "_Restart"
+msgid "Restart"
 msgstr "_Վերսկսել"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
-msgid "_Shut Down"
+msgid "Shutdown"
 msgstr "_Անջատել"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
@@ -765,6 +765,10 @@ msgstr "%s պահանջում է արգումենտ\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "Չհաջողվեց կատարել %s\n"
+
+#, fuzzy
+#~ msgid "_Log Out"
+#~ msgstr "_Դուրս գալ"
 
 #~ msgid "MATE"
 #~ msgstr "MATE"

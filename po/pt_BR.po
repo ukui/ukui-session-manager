@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2015-12-24 18:30+0000\n"
 "Last-Translator: Victor Maximiliano <VicBrd09@mail2tor.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.wiki.ukui.org/trans/ukui/UKUI/"
@@ -439,13 +439,13 @@ msgstr "Desligar este sistema agora?"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
-msgid "_Switch User"
+msgid "Switch User"
 msgstr "_Trocar usuário"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
-msgid "_Log Out"
-msgstr "_Encerrar sessão"
+msgid "Logout"
+msgstr "Tela de encerramento de sessão"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
@@ -453,22 +453,22 @@ msgstr "Desligar este sistema agora?"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
-msgid "S_uspend"
+msgid "Suspend"
 msgstr "S_uspender"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
-msgid "_Hibernate"
+msgid "Hibernate"
 msgstr "_Hibernar"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
-msgid "_Restart"
+msgid "Restart"
 msgstr "_Reiniciar"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
-msgid "_Shut Down"
+msgid "Shutdown"
 msgstr "_Desligar"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
@@ -775,6 +775,10 @@ msgstr "%s requer um argumento\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "Falha ao executar %s\n"
+
+#, fuzzy
+#~ msgid "_Log Out"
+#~ msgstr "_Encerrar sessão"
 
 #~ msgid "MATE"
 #~ msgstr "MATE"

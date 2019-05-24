@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2016-01-23 21:40+0000\n"
 "Last-Translator: kami911 <kami911@gmail.com>\n"
 "Language-Team: Hungarian (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -439,13 +439,13 @@ msgstr "Kijelentkezik most?"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
-msgid "_Switch User"
+msgid "Switch User"
 msgstr "Felhasználó_váltás"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
-msgid "_Log Out"
-msgstr "_Kijelentkezés"
+msgid "Logout"
+msgstr "Kijelentkezés megerősítése"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
@@ -453,22 +453,22 @@ msgstr "Leállítja a rendszert?"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
-msgid "S_uspend"
+msgid "Suspend"
 msgstr "_Felfüggesztés"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
-msgid "_Hibernate"
+msgid "Hibernate"
 msgstr "_Hibernálás"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
-msgid "_Restart"
+msgid "Restart"
 msgstr "Újr_aindítás"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
-msgid "_Shut Down"
+msgid "Shutdown"
 msgstr "_Leállítás"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
@@ -773,6 +773,10 @@ msgstr "%s egy argumentumot igényel\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "%s végrehajtása nem sikerült\n"
+
+#, fuzzy
+#~ msgid "_Log Out"
+#~ msgstr "_Kijelentkezés"
 
 #~ msgid "MATE"
 #~ msgstr "MATE"

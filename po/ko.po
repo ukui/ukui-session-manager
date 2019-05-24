@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 16:50+0800\n"
+"POT-Creation-Date: 2019-05-24 17:33+0800\n"
 "PO-Revision-Date: 2016-03-31 10:40+0000\n"
 "Last-Translator: 박정규(Jung-Kyu Park) <bagjunggyu@gmail.com>\n"
 "Language-Team: Korean (http://www.wiki.ukui.org/trans/ukui/UKUI/language/"
@@ -428,13 +428,13 @@ msgstr "지금 시스템에서 로그아웃하시겠습니까?"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
 #, fuzzy
-msgid "_Switch User"
+msgid "Switch User"
 msgstr "사용자 바꾸기(_S)"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
 #, fuzzy
-msgid "_Log Out"
-msgstr "로그아웃(_L)"
+msgid "Logout"
+msgstr "로그아웃 물어보기"
 
 #: ../ukui-session/gsm-logout-dialog.c:769
 msgid "Shut down this system now?"
@@ -442,22 +442,22 @@ msgstr "지금 시스템을 끄시겠습니까?"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
 #, fuzzy
-msgid "S_uspend"
+msgid "Suspend"
 msgstr "절전(_U)"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
 #, fuzzy
-msgid "_Hibernate"
+msgid "Hibernate"
 msgstr "최대 절전(_H)"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
 #, fuzzy
-msgid "_Restart"
+msgid "Restart"
 msgstr "다시 시작(_R)"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
 #, fuzzy
-msgid "_Shut Down"
+msgid "Shutdown"
 msgstr "끄기(_S)"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
@@ -759,6 +759,10 @@ msgstr "%s에게 매개변수가 필요합니다\n"
 #, c-format
 msgid "Failed to execute %s\n"
 msgstr "%s 실행 실패\n"
+
+#, fuzzy
+#~ msgid "_Log Out"
+#~ msgstr "로그아웃(_L)"
 
 #~ msgid "MATE"
 #~ msgstr "마테"
