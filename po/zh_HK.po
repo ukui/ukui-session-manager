@@ -96,18 +96,16 @@ msgid "Save sessions"
 msgstr "儲存作業階段"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:4
-#, fuzzy
 msgid "If enabled, ukui-session will save the session automatically."
-msgstr "如啟用本選項，mate-session 會自動儲存作業階段。"
+msgstr "如啟用本選項，ukui-session 會自動儲存作業階段。"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:5
 msgid "Logout prompt"
 msgstr "登出提示"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:6
-#, fuzzy
 msgid "If enabled, ukui-session will prompt the user before ending a session."
-msgstr "如啟用本選項，mate-session 會在作業階段終止前先提示使用者。"
+msgstr "如啟用本選項，ukui-session 會在作業階段終止前先提示使用者。"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:7
 msgid "Logout timeout"
@@ -207,9 +205,8 @@ msgid "UKUI"
 msgstr ""
 
 #: ../data/ukui.desktop.in.h:2
-#, fuzzy
 msgid "This session logs you into UKUI"
-msgstr "這個作業階段讓你登入 MATE"
+msgstr "這個作業階段讓你登入 UKUI"
 
 #: ../data/gsm-inhibit-dialog.ui.h:1
 msgid "<b>Some programs are still running:</b>"
@@ -409,12 +406,10 @@ msgid "Log out of this system now?"
 msgstr "是否立刻登出系統？"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
-#, fuzzy
 msgid "Switch User"
-msgstr "切換使用者(_S)"
+msgstr "切換使用者(S)"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
-#, fuzzy
 msgid "Logout"
 msgstr "登出提示"
 
@@ -423,24 +418,20 @@ msgid "Shut down this system now?"
 msgstr "是否立刻關閉這個系統？"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
-#, fuzzy
 msgid "Suspend"
-msgstr "暫停(_U)"
+msgstr "暫停(U)"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
-#, fuzzy
 msgid "Hibernate"
-msgstr "休眠(_H)"
+msgstr "休眠(H)"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
-#, fuzzy
 msgid "Restart"
-msgstr "重新啟動(_R)"
+msgstr "重新啟動(R)"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
-#, fuzzy
 msgid "Shutdown"
-msgstr "關閉電腦(_S)"
+msgstr "關閉電腦(S)"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
 msgid "Not responding"
@@ -488,9 +479,8 @@ msgid "Do not load user-specified applications"
 msgstr "不要載入使用者指定的應用程式"
 
 #: ../ukui-session/main.c:610
-#, fuzzy
 msgid " - the UKUI session manager"
-msgstr " - MATE 作業階段管理員"
+msgstr " - UKUI 作業階段管理員"
 
 #: ../tools/uksm-shortcuts-dialog.c:346
 #, c-format
@@ -536,7 +526,6 @@ msgid "Ctrl+Alt+L"
 msgstr ""
 
 #: ../tools/uksm-shortcuts-dialog.c:476
-#, fuzzy
 msgid "Lock screen."
 msgstr "鎖定螢幕"
 

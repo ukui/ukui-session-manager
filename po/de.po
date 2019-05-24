@@ -107,19 +107,17 @@ msgid "Save sessions"
 msgstr "Sitzungen speichern"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:4
-#, fuzzy
 msgid "If enabled, ukui-session will save the session automatically."
-msgstr "Falls aktiviert, speichert mate-session die Sitzung automatisch."
+msgstr "Falls aktiviert, speichert ukui-session die Sitzung automatisch."
 
 #: ../data/org.ukui.session.gschema.xml.in.h:5
 msgid "Logout prompt"
 msgstr "Abmeldedialog"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:6
-#, fuzzy
 msgid "If enabled, ukui-session will prompt the user before ending a session."
 msgstr ""
-"Wenn aktiviert, wird mate-session den Benutzer vor dem Beenden einer Sitzung "
+"Wenn aktiviert, wird ukui-session den Benutzer vor dem Beenden einer Sitzung "
 "fragen."
 
 #: ../data/org.ukui.session.gschema.xml.in.h:7
@@ -157,7 +155,6 @@ msgid "Required session components"
 msgstr "Benötigte Sitzungskomponenten"
 
 #: ../data/org.ukui.session.gschema.xml.in.h:14
-#, fuzzy
 msgid ""
 "List of components that are required as part of the session. (Each element "
 "names a key under \"/org/ukui/desktop/session/required_components\"). The "
@@ -167,7 +164,7 @@ msgid ""
 "if they do get removed."
 msgstr ""
 "Liste der Komponenten, die als Teil der Sitzung erforderlich sind. (Jedes "
-"Element bezeichnet einen Schlüssel unter »/org/mate/desktop/session/"
+"Element bezeichnet einen Schlüssel unter »/org/ukui/desktop/session/"
 "required_components«). Das Programm zur Verwaltung der "
 "Startprogrammeinstellungen erlaubt Benutzern normalerweise nicht, benötigte "
 "Komponenten aus der Sitzung zu entfernen. Diese werden bei Anmeldung wieder "
@@ -235,9 +232,8 @@ msgid "UKUI"
 msgstr ""
 
 #: ../data/ukui.desktop.in.h:2
-#, fuzzy
 msgid "This session logs you into UKUI"
-msgstr "Diese Sitzung meldet Sie bei MATE an"
+msgstr "Diese Sitzung meldet Sie bei UKUI an"
 
 #: ../data/gsm-inhibit-dialog.ui.h:1
 msgid "<b>Some programs are still running:</b>"
@@ -444,12 +440,10 @@ msgid "Log out of this system now?"
 msgstr "Jetzt vom System abmelden?"
 
 #: ../ukui-session/gsm-logout-dialog.c:733
-#, fuzzy
 msgid "Switch User"
-msgstr "Benutzer _wechseln"
+msgstr "Benutzer wechseln"
 
 #: ../ukui-session/gsm-logout-dialog.c:751
-#, fuzzy
 msgid "Logout"
 msgstr "Abmeldedialog"
 
@@ -458,24 +452,20 @@ msgid "Shut down this system now?"
 msgstr "Möchten Sie den Rechner jetzt herunterfahren?"
 
 #: ../ukui-session/gsm-logout-dialog.c:779
-#, fuzzy
 msgid "Suspend"
-msgstr "_Bereitschaft"
+msgstr "Bereitschaft"
 
 #: ../ukui-session/gsm-logout-dialog.c:797
-#, fuzzy
 msgid "Hibernate"
-msgstr "_Ruhezustand"
+msgstr "Ruhezustand"
 
 #: ../ukui-session/gsm-logout-dialog.c:815
-#, fuzzy
 msgid "Restart"
-msgstr "_Neustarten"
+msgstr "Neustarten"
 
 #: ../ukui-session/gsm-logout-dialog.c:834
-#, fuzzy
 msgid "Shutdown"
-msgstr "_Herunterfahren"
+msgstr "Herunterfahren"
 
 #: ../ukui-session/gsm-manager.c:1511 ../ukui-session/gsm-manager.c:2324
 msgid "Not responding"
@@ -526,9 +516,8 @@ msgid "Do not load user-specified applications"
 msgstr "Keine benutzerspezifischen Anwendungen laden"
 
 #: ../ukui-session/main.c:610
-#, fuzzy
 msgid " - the UKUI session manager"
-msgstr " - Die MATE-Sitzungsverwaltung"
+msgstr " - Die UKUI-Sitzungsverwaltung"
 
 #: ../tools/uksm-shortcuts-dialog.c:346
 #, fuzzy, c-format
