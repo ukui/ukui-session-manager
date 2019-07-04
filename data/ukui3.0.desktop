@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=startlxqt
+TryExec=ukui-session
+Name=UKUI 3.0 Desktop
+Comment=Lightweight Qt Desktop
+
+#TRANSLATIONS_DIR=translations
