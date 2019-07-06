@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
-Exec=startlxqt
+Exec=ukui-session
 TryExec=ukui-session
-Name=UKUI 3.0 Desktop
-Comment=Lightweight Qt Desktop
+Name=UKUI 3.0
+Comment=This session logs you into UKUI 3.0
 
 #TRANSLATIONS_DIR=translations
