@@ -11,6 +11,7 @@
 # mauron, 2012
 # Ömer Fadıl USTA <omer_fad@hotmail.com>, 2002
 # Umut Barış GÖKMEN <umtbrsgkmn@gmail.com>, 2015
+# Cihan Alkan <cihanalk@gmail.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
@@ -32,11 +33,11 @@ msgstr "Komut Seç"
 
 #: ../capplet/gsm-app-dialog.c:171
 msgid "second"
-msgstr ""
+msgstr "saniye"
 
 #: ../capplet/gsm-app-dialog.c:173
 msgid "seconds"
-msgstr ""
+msgstr "saniye"
 
 #: ../capplet/gsm-app-dialog.c:224
 msgid "Add Startup Program"
@@ -225,12 +226,12 @@ msgstr ""
 
 #: ../data/ukui.desktop.in.h:1
 msgid "UKUI"
-msgstr ""
+msgstr "UKUI"
 
 #: ../data/ukui.desktop.in.h:2
 #, fuzzy
 msgid "This session logs you into UKUI"
-msgstr "Bu oturum MATE girişi yapmanızı sağlar"
+msgstr "Bu oturum UKUI girişi yapmanızı sağlar"
 
 #: ../data/gsm-inhibit-dialog.ui.h:1
 msgid "<b>Some programs are still running:</b>"
@@ -274,7 +275,7 @@ msgstr "Seçenekler"
 
 #: ../data/session-properties.ui.h:6
 msgid "Browse…"
-msgstr "Tara..."
+msgstr "Araştır..."
 
 #: ../data/session-properties.ui.h:7
 msgid "Comm_ent:"
@@ -290,7 +291,7 @@ msgstr "İ_sim:"
 
 #: ../data/session-properties.ui.h:10
 msgid "_Delay:"
-msgstr ""
+msgstr "Gecikme"
 
 #: ../egg/eggdesktopfile.c:152
 #, c-format
@@ -517,7 +518,7 @@ msgstr "Kullanıcıya özel programları yükleme"
 #: ../ukui-session/main.c:610
 #, fuzzy
 msgid " - the UKUI session manager"
-msgstr "- MATE oturum yönetimi"
+msgstr "- UKUI oturum yönetimi"
 
 #: ../tools/uksm-shortcuts-dialog.c:346
 #, fuzzy, c-format
@@ -528,40 +529,40 @@ msgstr[1] "%d saniye içerisinde otomatik olarak çıkış yaptırılacaksınız
 
 #: ../tools/uksm-shortcuts-dialog.c:466
 msgid "Keyboard Shortcuts"
-msgstr ""
+msgstr "Klavye Kısayolları"
 
 #: ../tools/uksm-shortcuts-dialog.c:468
 #, fuzzy
 msgid "Application"
-msgstr "Başlangıç Uygulamaları"
+msgstr "Uygulamalar"
 
 #: ../tools/uksm-shortcuts-dialog.c:469
 msgid "Super"
-msgstr ""
+msgstr "Süper"
 
 #: ../tools/uksm-shortcuts-dialog.c:470
 msgid "Open start menu."
-msgstr ""
+msgstr "Başlat menüsünü aç"
 
 #: ../tools/uksm-shortcuts-dialog.c:471
 msgid "Ctrl+Alt+T"
-msgstr ""
+msgstr "Ctrl+Alt+T"
 
 #: ../tools/uksm-shortcuts-dialog.c:472
 msgid "Open termianl."
-msgstr ""
+msgstr "Uçbirim aç"
 
 #: ../tools/uksm-shortcuts-dialog.c:473
 msgid "Ctrl+Alt+D"
-msgstr ""
+msgstr "Ctrl+Alt+D"
 
 #: ../tools/uksm-shortcuts-dialog.c:474
 msgid "Show desktop."
-msgstr ""
+msgstr "Masaüstünü göster"
 
 #: ../tools/uksm-shortcuts-dialog.c:475
 msgid "Ctrl+Alt+L"
-msgstr ""
+msgstr "Ctrl+Alt+L"
 
 #: ../tools/uksm-shortcuts-dialog.c:476
 #, fuzzy
@@ -575,15 +576,15 @@ msgstr ""
 
 #: ../tools/uksm-shortcuts-dialog.c:481
 msgid "Screenshot"
-msgstr ""
+msgstr "Ekran resmi"
 
 #: ../tools/uksm-shortcuts-dialog.c:482
 msgid "Print"
-msgstr ""
+msgstr "Yazdır"
 
 #: ../tools/uksm-shortcuts-dialog.c:483
 msgid "Take a full-screen screenshot."
-msgstr ""
+msgstr "Tam ekran ekran resmi al"
 
 #: ../tools/uksm-shortcuts-dialog.c:484
 msgid "Ctrl+Print"
@@ -591,7 +592,7 @@ msgstr ""
 
 #: ../tools/uksm-shortcuts-dialog.c:485
 msgid "Take a screenshot of the current window."
-msgstr ""
+msgstr "Etkin pencerenin ekran resmini al"
 
 #: ../tools/uksm-shortcuts-dialog.c:486
 msgid "Shift+Print"
@@ -599,11 +600,11 @@ msgstr ""
 
 #: ../tools/uksm-shortcuts-dialog.c:487
 msgid "Select area to grab."
-msgstr ""
+msgstr "Seçili alanı yakala"
 
 #: ../tools/uksm-shortcuts-dialog.c:489
 msgid "Switching"
-msgstr ""
+msgstr "Değiştiriliyor"
 
 #: ../tools/uksm-shortcuts-dialog.c:490
 msgid "Alt+Tab"
@@ -612,7 +613,7 @@ msgstr ""
 #: ../tools/uksm-shortcuts-dialog.c:491
 #, fuzzy
 msgid "Switches between applications."
-msgstr "Başlangıç Uygulamaları"
+msgstr "Uygulamalar arasında geçiş yap."
 
 #: ../tools/uksm-shortcuts-dialog.c:492
 msgid "Alt+Shift+Tab"
@@ -623,7 +624,7 @@ msgstr ""
 msgid ""
 "Switches between applications in \n"
 "reverse order."
-msgstr "Başlangıç Uygulamaları"
+msgstr "Uygulamalar arasında ters sırada geçiş yap."
 
 #: ../tools/uksm-shortcuts-dialog.c:494
 msgid "Super_L+P/F3/F7"
@@ -631,7 +632,7 @@ msgstr ""
 
 #: ../tools/uksm-shortcuts-dialog.c:495
 msgid "Switches between display."
-msgstr ""
+msgstr "Ekran arasında geçiş yap."
 
 #: ../tools/uksm-shortcuts-dialog.c:496
 msgid "Ctrl+Alt+ArrowKeys"
@@ -639,11 +640,11 @@ msgstr ""
 
 #: ../tools/uksm-shortcuts-dialog.c:497
 msgid "Switches between workspaces."
-msgstr ""
+msgstr "Çalışma alanları arasında geçiş yap."
 
 #: ../tools/uksm-shortcuts-dialog.c:502
 msgid "Windows"
-msgstr ""
+msgstr "Pencere"
 
 #: ../tools/uksm-shortcuts-dialog.c:503
 msgid "Alt+F10"
@@ -651,7 +652,7 @@ msgstr ""
 
 #: ../tools/uksm-shortcuts-dialog.c:504
 msgid "Maximize the current window."
-msgstr ""
+msgstr "Geçerli pencereyi büyüt"
 
 #: ../tools/uksm-shortcuts-dialog.c:505
 msgid "Alt+F9"
@@ -659,7 +660,7 @@ msgstr ""
 
 #: ../tools/uksm-shortcuts-dialog.c:506
 msgid "Minimize the current window."
-msgstr ""
+msgstr "Geçerli pencereyi küçült"
 
 #: ../tools/uksm-shortcuts-dialog.c:507
 msgid "Alt+F5"
@@ -667,7 +668,7 @@ msgstr ""
 
 #: ../tools/uksm-shortcuts-dialog.c:508
 msgid "Cancel maximize the current window."
-msgstr ""
+msgstr "Aktif pencereyi büyültmeyi iptal et."
 
 #: ../tools/uksm-shortcuts-dialog.c:509
 msgid "Alt+F4"
@@ -726,7 +727,7 @@ msgstr "Program çakışan seçeneklerle çağrıldı"
 
 #: ../tools/ukui-session-shortcuts.c:76
 msgid "Show the keyboard shortcuts"
-msgstr ""
+msgstr "Klavye kısayollarını göster"
 
 #: ../tools/ukui-session-inhibit.c:116
 #, c-format
