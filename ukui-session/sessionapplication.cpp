@@ -8,6 +8,7 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
 {
     modman = new ModuleManager;
 
+    // Wait until the event loop starts
     QTimer::singleShot(0, this, SLOT(startup()));
 }
 

@@ -32,10 +32,15 @@ public:
     // Qt5 users native event filter
     bool nativeEventFilter(const QByteArray &eventType, void* message, long* result) override;
 
+signals:
+    void moduleStateChanged(QString moduleName, bool state);
+
 private:
     void startWm();
 
     void startAutostartApps();
+
+    void startRequiredApps();
 
     void startProcess(const XdgDesktopFile &file);
 
@@ -45,9 +50,15 @@ private:
 
     ModulesMap mNameMap;
 
+    QSettings* mSettings;
+
     bool mWmStarted;
     bool mTrayStarted;
     QEventLoop* mWaitLoop;
+
+private slots:
+    void restartModules(int exitCode, QProcess::ExitStatus exitStatus);
+
 };
 
 #endif // MODULEMANAGER_H

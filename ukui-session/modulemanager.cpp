@@ -4,13 +4,19 @@
 #include <XdgAutoStart>
 #include <XdgDirs>
 #include <QFileInfo>
+#include <QStringList>
+#include <QSettings>
+#include <QStandardPaths>
 #include <QDebug>
 
 ModuleManager::ModuleManager(QObject* parent)
     : QObject(parent),
       mWmProcess(new QProcess(this))
 {
-
+    QStringList config_dirs = QStandardPaths::standardLocations(QStandardPaths::ConfigLocation);
+    QString config_file = config_dirs[0] + "/ukui-session.ini";
+    mSettings = new QSettings(config_file, QSettings::IniFormat);
+    qDebug() << config_file;
 }
 
 ModuleManager::~ModuleManager()
@@ -32,9 +38,11 @@ ModuleManager::~ModuleManager()
 
 void ModuleManager::startup()
 {
-    startWm();
+//    startWm();
 
-    startAutostartApps();
+//    startAutostartApps();
+
+//    startRequiredApps();
 }
 
 void ModuleManager::startAutostartApps()
@@ -50,14 +58,27 @@ void ModuleManager::startAutostartApps()
 
 void ModuleManager::startWm()
 {
+    qDebug() << "Start ukwm!";
     mWindowManager = "ukwm";
     mWmProcess->start(mWindowManager);
 }
 
+void ModuleManager::startRequiredApps()
+{
+    QStringList appList = mSettings->value("requiredApps").toStringList();
+    qDebug() << "Required apps: ";
+    for (QStringList::iterator it = appList.begin(); it != appList.end(); ++it) {
+        qDebug() << *it << " ";
+        QProcess* proc = new QProcess(this);
+        proc->start(*it);
+    }
+
+}
 void ModuleManager::startProcess(const XdgDesktopFile& file)
 {
-    if (!file.value(QL1S("X-LXQt-Module"), false).toBool())
+    if (!file.value(QL1S("X-UKUI-Module"), false).toBool())
     {
+//        qDebug() << "startDetached: " << file.fileName();
         file.startDetached();
         return;
     }
@@ -107,4 +128,32 @@ bool ModuleManager::nativeEventFilter(const QByteArray &eventType, void *message
         return false;
 
     return false;
+}
+
+void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitStatus)
+{
+    UkuiModule* proc = qobject_cast<UkuiModule*>(sender());
+    if (nullptr == proc) {
+        qWarning() << "Got an invalid (null) module to restart, Ignoring it";
+        return;
+    }
+
+    if (!proc->isTerminating())
+    {
+        QString procName = proc->file.name();
+        switch (exitStatus)
+        {
+            case QProcess::NormalExit:
+                qDebug() << "Process" << procName << "(" << proc << ") exited correctly.";
+                break;
+            case QProcess::CrashExit:
+            {
+                qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
+//                time_t now = time(NULL);
+
+            }
+        }
+    }
+    mNameMap.remove(proc->fileName);
+    proc->deleteLater();
 }

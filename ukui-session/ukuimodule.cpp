@@ -1,6 +1,7 @@
 #include "ukuimodule.h"
 
 #include <QFileInfo>
+#include <QDebug>
 
 UkuiModule::UkuiModule(const XdgDesktopFile& file, QObject* parent) :
     QProcess(parent),
@@ -17,6 +18,7 @@ void UkuiModule::start()
     mIsTerminating = false;
     QStringList args = file.expandExecString();
     QString command = args.takeFirst();
+//    qDebug() << "Command: " << command << "args: " << args;
     QProcess::start(command, args);
 }
 
