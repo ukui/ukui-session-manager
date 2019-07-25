@@ -13,8 +13,7 @@ ModuleManager::ModuleManager(QObject* parent)
     : QObject(parent),
       mWmProcess(new QProcess(this))
 {
-    QStringList config_dirs = QStandardPaths::standardLocations(QStandardPaths::ConfigLocation);
-    QString config_file = config_dirs[0] + "/ukui-session.ini";
+    QString config_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session.ini";
     mSettings = new QSettings(config_file, QSettings::IniFormat);
     qDebug() << config_file;
 }
@@ -34,6 +33,7 @@ ModuleManager::~ModuleManager()
     }
 
     delete mWmProcess;
+    delete mSettings;
 }
 
 void ModuleManager::startup()
