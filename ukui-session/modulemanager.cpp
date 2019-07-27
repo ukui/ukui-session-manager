@@ -1,6 +1,7 @@
 #include "modulemanager.h"
 #include "ukuimodule.h"
 
+#include <QCoreApplication>
 #include <XdgAutoStart>
 #include <XdgDirs>
 #include <QFileInfo>
@@ -156,4 +157,27 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
     }
     mNameMap.remove(proc->fileName);
     proc->deleteLater();
+}
+
+void ModuleManager::logout(bool doExit)
+{
+    ModulesMapIterator i(mNameMap);
+    while (i.hasNext()) {
+        i.next();
+        qDebug() << "Module logout" << i.key();
+        UkuiModule *p = i.value();
+        p->terminate();
+    }
+    i.toFront();
+    while (i.hasNext()) {
+        i.next();
+        UkuiModule *p = i.value();
+        if (p->state() != QProcess::NotRunning && !p->waitForFinished(2000)) {
+            qWarning() << "Module " << qPrintable(i.key()) << " won't termiante .. killing.";
+            p->kill();
+        }
+    }
+
+    if (doExit)
+        QCoreApplication::exit(0);
 }

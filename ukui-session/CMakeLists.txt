@@ -4,6 +4,7 @@ set(ukui-session_SRCS
     sessionapplication.cpp
     modulemanager.cpp
     ukuimodule.cpp
+    sessiondbusadaptor.h
 )
 
 find_package(QT5XDG)

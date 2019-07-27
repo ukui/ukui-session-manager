@@ -32,6 +32,9 @@ public:
     // Qt5 users native event filter
     bool nativeEventFilter(const QByteArray &eventType, void* message, long* result) override;
 
+public slots:
+    void logout(bool doExit);
+
 signals:
     void moduleStateChanged(QString moduleName, bool state);
 
