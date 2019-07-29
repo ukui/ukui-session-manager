@@ -5,6 +5,8 @@ set(ukui-session_SRCS
     modulemanager.cpp
     ukuimodule.cpp
     sessiondbusadaptor.h
+    ../session-tools/ukuipower.cpp
+    ../session-tools/powerprovider.cpp
 )
 
 find_package(QT5XDG)
