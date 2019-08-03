@@ -8,7 +8,7 @@
 class SessionDBusAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.ukui.session")
+    Q_CLASSINFO("D-Bus Interface", "org.ukui.Session")
 
 public:
     SessionDBusAdaptor(ModuleManager *manager)

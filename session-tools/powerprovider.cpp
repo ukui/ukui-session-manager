@@ -15,9 +15,9 @@
 #define SYSTEMD_PATH            "/org/freedesktop/login1"
 #define SYSTEMD_INTERFACE       "org.freedesktop.login1.Manager"
 
-#define UKUI_SERVICE      "org.ukui.session"
-#define UKUI_PATH         "/UkuiSession"
-#define UKUI_INTERFACE    "org.ukui.session"
+#define UKUI_SERVICE      "org.ukui.Session"
+#define UKUI_PATH         "/org/ukui/Session"
+#define UKUI_INTERFACE    "org.ukui.Session"
 
 #define PROPERTIES_INTERFACE    "org.freedesktop.DBus.Properties"
 
@@ -329,8 +329,57 @@ bool SystemdProvider::doAction(UkuiPower::Action action)
 }
 
 
+UKUIProvider::UKUIProvider(QObject *parent): PowerProvider (parent)
+{
+}
 
+UKUIProvider::~UKUIProvider()
+{}
 
+bool UKUIProvider::canAction(UkuiPower::Action action) const
+{
+    QString command;
+    switch (action) {
+    case UkuiPower::PowerLogout:
+        command = QLatin1String("canLogout");
+        break;
+    case UkuiPower::PowerReboot:
+        command = QLatin1String("canReboot");
+        break;
+    case UkuiPower::PowerShutdown:
+        command = QLatin1String("canPowerOff");
+        break;
+    default:
+        return false;
+    }
 
+    return dbusCall(QLatin1String(UKUI_SERVICE), QLatin1String(UKUI_PATH), QLatin1String(UKUI_INTERFACE),
+            QDBusConnection::sessionBus(), command);
+}
+
+bool UKUIProvider::doAction(UkuiPower::Action action)
+{
+    QString command;
+    switch (action) {
+    case UkuiPower::PowerLogout:
+        command = QLatin1String("logout");
+        break;
+    case UkuiPower::PowerReboot:
+        command = QLatin1String("reboot");
+        break;
+    case UkuiPower::PowerShutdown:
+        command = QLatin1String("powerOff");
+        break;
+    default:
+        return false;
+    }
+
+    return dbusCall(QLatin1String(UKUI_SERVICE),
+             QLatin1String(UKUI_PATH),
+             QLatin1String(UKUI_INTERFACE),
+             QDBusConnection::sessionBus(),
+             command
+            );
+}
 
 

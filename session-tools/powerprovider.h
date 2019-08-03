@@ -55,4 +55,16 @@ public slots:
     bool doAction(UkuiPower::Action action);
 };
 
+class UKUIProvider: public PowerProvider
+{
+    Q_OBJECT
+public:
+    UKUIProvider(QObject *parent = nullptr);
+    ~UKUIProvider();
+    bool canAction(UkuiPower::Action action) const;
+
+public slots:
+    bool doAction(UkuiPower::Action action);
+};
+
 #endif // POWERPROVIDER_H

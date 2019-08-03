@@ -11,8 +11,8 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
 
     new SessionDBusAdaptor(modman);
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerService(QStringLiteral("org.ukui.session"));
-    dbus.registerObject(("/UkuiSession"), modman);
+    dbus.registerService(QStringLiteral("org.ukui.Session"));
+    dbus.registerObject(("/org/ukui/Session"), modman);
 
     // Wait until the event loop starts
     QTimer::singleShot(0, this, SLOT(startup()));
