@@ -39,11 +39,11 @@ ModuleManager::~ModuleManager()
 
 void ModuleManager::startup()
 {
-//    startWm();
+    startWm();
 
-//    startAutostartApps();
+    startAutostartApps();
 
-//    startRequiredApps();
+    startRequiredApps();
 }
 
 void ModuleManager::startAutostartApps()

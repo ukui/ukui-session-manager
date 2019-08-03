@@ -5,13 +5,13 @@ Section: x11
 Priority: optional
 Build-Depends: debhelper (>= 12),
                libkf5windowsystem-dev,
-               liblxqt0-dev (>= 0.14.0),
                libqt5svg5-dev,
                libqt5x11extras5-dev,
                libudev-dev [linux-any],
                libx11-dev,
                libqt5xdg-dev,
-               xdg-user-dirs
+               xdg-user-dirs,
+               qtbase5-dev,
 Standards-Version: 4.3.0
 Vcs-Browser: https://github.com/ukui/ukui-session-manager
 Vcs-Git: https://github.com/ukui/ukui-session-manager.git

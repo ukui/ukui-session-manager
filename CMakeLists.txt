@@ -11,6 +11,10 @@ set(CMAKE_AUTOUIC ON)
 # Find the QtWidgets library
 find_package(Qt5 COMPONENTS Widgets Core DBus REQUIRED)
 
+# For debug: cmake -DCMAKE_BUILD_TYPE=debug
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+set(CMAKE_C_FLAGS_DEBUG "-g -O0")
+
 add_subdirectory(ukui-session)
 add_subdirectory(session-tools)
 add_subdirectory(data)
