@@ -4,8 +4,8 @@ Priority: optional
 Maintainer: Kylin Team <team+kylin@tracker.debian.org>
 Uploaders: Aron Xu <aron@debian.org>,
            handsome_feng <jianfengli@ubuntukylin.com>,
-Standards-Version: 4.3.0
-Build-Depends: debhelper (>= 11.1.3),
+Standards-Version: 4.4.0
+Build-Depends: debhelper (>= 12),
                dpkg-dev (>= 1.16.1.1),
                intltool,
                libdbus-glib-1-dev,
