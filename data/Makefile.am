@@ -14,11 +14,11 @@ xsession_in_files = ukui.desktop.in
 xsession_DATA = $(xsession_in_files:.desktop.in=.desktop)
 
 desktopdir = $(datadir)/applications
-desktop_in_files = ukui-session-properties.desktop.in
-desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
+desktop_in_files = ukui-session-properties.desktop.in ukui-wm.desktop.in
+desktop_DATA = ukui-session-properties.desktop
 
 if USE_UKUI_WM
-desktop_in_files += ukui-wm.desktop.in
+desktop_DATA += ukui-wm.desktop
 endif
 
 @INTLTOOL_DESKTOP_RULE@
@@ -39,7 +39,6 @@ EXTRA_DIST =					\
 CLEANFILES =					\
 	$(xsession_DATA)			\
 	$(desktop_DATA)				\
-	$(gsettings_SCHEMAS)			\
-	ukui-wm.desktop
+	$(gsettings_SCHEMAS)
 
 -include $(top_srcdir)/git.mk
