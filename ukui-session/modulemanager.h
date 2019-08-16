@@ -23,7 +23,7 @@ public:
     ModuleManager(QObject* parent = nullptr);
     ~ModuleManager() override;
 
-    void startProcess(const QString& name);
+    void startProcess(const QString& name, bool detach);
 
     void stopProcess(const QString& name);
 
@@ -45,7 +45,7 @@ private:
 
     void startRequiredApps();
 
-    void startProcess(const XdgDesktopFile &file);
+    void startProcess(const XdgDesktopFile &file, bool detach);
 
     QString mWindowManager;
 

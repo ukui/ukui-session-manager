@@ -64,7 +64,7 @@ public slots:
 
     Q_NOREPLY void startModule(const QString& name)
     {
-        mManager->startProcess(name);
+        mManager->startProcess(name, true);
     }
 
     Q_NOREPLY void stopModule(const QString& name)

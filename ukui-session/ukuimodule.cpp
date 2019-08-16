@@ -18,7 +18,7 @@ void UkuiModule::start()
     mIsTerminating = false;
     QStringList args = file.expandExecString();
     QString command = args.takeFirst();
-//    qDebug() << "Command: " << command << "args: " << args;
+    qDebug() << "Command: " << command << "args: " << args;
     QProcess::start(command, args);
 }
 

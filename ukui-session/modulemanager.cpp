@@ -41,26 +41,25 @@ void ModuleManager::startup()
 {
     startWm();
 
-    startAutostartApps();
-
     startRequiredApps();
+
+    startAutostartApps();
 }
 
 void ModuleManager::startAutostartApps()
 {
     const XdgDesktopFileList fileList = XdgAutoStart::desktopFileList();
-    QList<const XdgDesktopFile*> trayApps;
     for (XdgDesktopFileList::const_iterator i = fileList.constBegin(); i != fileList.constEnd(); ++i)
     {
-        startProcess(*i);
+        startProcess(*i, true);
         qDebug() << "start" << i->fileName();
     }
 }
 
 void ModuleManager::startWm()
 {
-    qDebug() << "Start ukwm!";
-    mWindowManager = "ukwm";
+    mWindowManager = mSettings->value(QLatin1String("windowManager")).toString();
+    qDebug() << "Start window manager: " << mWindowManager;
     mWmProcess->start(mWindowManager);
 }
 
@@ -69,17 +68,17 @@ void ModuleManager::startRequiredApps()
     QStringList appList = mSettings->value("requiredApps").toStringList();
     qDebug() << "Required apps: ";
     for (QStringList::iterator it = appList.begin(); it != appList.end(); ++it) {
-        qDebug() << *it << " ";
-        QProcess* proc = new QProcess(this);
-        proc->start(*it);
+        qDebug() << *it;
+        startProcess(*it, false);
     }
-
 }
-void ModuleManager::startProcess(const XdgDesktopFile& file)
+
+void ModuleManager::startProcess(const XdgDesktopFile& file, bool detach)
 {
-    if (!file.value(QL1S("X-UKUI-Module"), false).toBool())
+    qDebug() << file.value(QL1S("OnlyShowIn")).toString();
+    if (!file.value(QL1S("OnlyShowIn")).toString().contains("UKUI") && detach)
     {
-//        qDebug() << "startDetached: " << file.fileName();
+        qDebug() << "startDetachedd: " << file.fileName();
         file.startDetached();
         return;
     }
@@ -101,16 +100,19 @@ void ModuleManager::startProcess(const XdgDesktopFile& file)
             this, SLOT(restartModules(int, QProcess::ExitStatus)));
 }
 
-void ModuleManager::startProcess(const QString& name)
+void ModuleManager::startProcess(const QString& name, bool detach)
 {
-    if (!mNameMap.contains(name))
+    QString desktop_name = name + ".desktop";
+    QStringList desktop_paths;
+    desktop_paths << "/usr/share/applications";
+    if (!mNameMap.contains(desktop_name))
     {
-        const auto files = XdgAutoStart::desktopFileList(false);
+        const auto files = XdgAutoStart::desktopFileList(desktop_paths, false);
         for (const XdgDesktopFile& file : files)
         {
-            if (QFileInfo(file.fileName()).fileName() == name)
+            if (QFileInfo(file.fileName()).fileName() == desktop_name)
             {
-                startProcess(file);
+                startProcess(file, detach);
                 return;
             }
         }
@@ -150,6 +152,8 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
             case QProcess::CrashExit:
             {
                 qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
+                proc->start();
+                return;
 //                time_t now = time(NULL);
 
             }
