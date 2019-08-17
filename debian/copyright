@@ -1,55 +1,22 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: lxqt-session
-Source: https://github.com/lxqt/lxqt-session
+Upstream-Name: ukui-session-manager
+Source: https://github.com/ukui/ukui-session-manager
 
 Files: *
 Copyright: 2012-2018 LXQt team
            2010-2012 Razor team
+           2019 Kylin team
 License: LGPL-2.1+
 
-Files: lxqt-config-session/autostartedit.*
-       lxqt-config-session/autostartitem.*
-       lxqt-config-session/autostartpage.*
-       lxqt-config-session/modulemodel.*
-Copyright: 2011-2012 Alec Moskvin <alecm@gmx.com>
-License: LGPL-2.1+
 
-Files: lxqt-config-session/basicsettings.*
-       lxqt-config-session/defaultappspage.*
-       lxqt-config-session/environmentpage.*
-       lxqt-config-session/main.cpp
-       lxqt-config-session/sessionconfigwindow.*
+Files: ukui-session/src/modulemanager.*
+       ukui-session/src/sessiondbusadaptor.h
 Copyright: 2010-2016 LXQt team
+           2019 Kylin team
 License: LGPL-2.1+
 
-Files: lxqt-leave/leavedialog.*
-Copyright: 2010-2016 LXQt team
-License: LGPL-2.1+
-
-Files: lxqt-session/src/UdevNotifier.*
-       lxqt-session/src/lxqtmodman.*
-       lxqt-session/src/sessiondbusadaptor.h
-       lxqt-session/src/windowmanager.*
-       lxqt-session/src/wmselectdialog.*
-Copyright: 2010-2016 LXQt team
-License: LGPL-2.1+
-
-Files: lxqt-session/src/sessionapplication.*
+Files: ukui-session/src/sessionapplication.*
 Copyright: 2014  Hong Jen Yee (PCMan) <pcman.tw@gmail.com>
-License: LGPL-2.1+
-
-Files: lxqt-session/src/lockscreenmanager.*
-Copyright: 2016 Paulo Lieuthier <paulolieuthier@gmail.com>
-License: LGPL-2.1+
-
-Files: lxqt-session/src/log.*
-Copyright: 2016 Palo Kisa <palo.kisa@gmail.com>
-License: LGPL-2.1+
-
-Files: debian/*
-Copyright: 2014-2018 Alf Gaida <agaida@siduction.org>
-           2015      Andrew Lee (李健秋) <ajqlee@debian.org>
-           2015      ChangZhuo Chen (陳昌倬) <czchen@debian.org>
 License: LGPL-2.1+
 
 License: LGPL-2.1+
