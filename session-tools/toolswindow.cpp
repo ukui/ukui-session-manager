@@ -34,7 +34,6 @@ ToolsWindow::~ToolsWindow()
 void ToolsWindow::on_reboot_button_clicked()
 {
     if (mPower->canAction(UkuiPower::PowerReboot)) {
-        qDebug() << "Can reboot";
         mPower->doAction(UkuiPower::PowerReboot);
     } else {
         qDebug() << "can't reboot";
@@ -45,10 +44,9 @@ void ToolsWindow::on_reboot_button_clicked()
 void ToolsWindow::on_logout_button_clicked()
 {
     if (mPower->canAction(UkuiPower::PowerLogout)) {
-        qDebug() << "Can logouttttttttttttt";
         mPower->doAction(UkuiPower::PowerLogout);
     } else {
-        qDebug() << "can't logoutttttttttt";
+        qDebug() << "can't logout";
     }
     close();
 }
@@ -56,7 +54,6 @@ void ToolsWindow::on_logout_button_clicked()
 void ToolsWindow::on_shutdown_button_clicked()
 {
     if (mPower->canAction(UkuiPower::PowerShutdown)) {
-        qDebug() << "Can shutdown";
         mPower->doAction(UkuiPower::PowerShutdown);
     } else {
         qDebug() << "can't shutdown";

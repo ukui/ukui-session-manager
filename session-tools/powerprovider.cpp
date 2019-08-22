@@ -3,14 +3,6 @@
 #include <QDBusInterface>
 #include <QDebug>
 
-#define UPOWER_SERVICE        "org.freedesktop.UPOWER"
-#define UPOWER_PATH           "/org/freedesktop/UPower"
-#define UPOWER_INTERFACE      UPOWER_SERVICE
-
-#define CONSOLEKIT_SERVICE      "org.freedesktop.ConsoleKit"
-#define CONSOLEKIT_PATH         "/org/freedesktop/ConsoleKit/Manager"
-#define CONSOLEKIT_INTERFACE    "org.freedesktop.ConsoleKit.Manager"
-
 #define SYSTEMD_SERVICE         "org.freedesktop.login1"
 #define SYSTEMD_PATH            "/org/freedesktop/login1"
 #define SYSTEMD_INTERFACE       "org.freedesktop.login1.Manager"
@@ -99,146 +91,6 @@ PowerProvider::PowerProvider(QObject *parent) : QObject(parent)
 
 PowerProvider::~PowerProvider()
 {
-
-}
-
-UPowerProvider::UPowerProvider(QObject *parent) : PowerProvider(parent)
-{
-}
-
-UPowerProvider::~UPowerProvider()
-{
-}
-
-bool UPowerProvider::canAction(UkuiPower::Action action) const
-{
-    QString command;
-    QString property;
-    switch (action) {
-      case UkuiPower::PowerHibernate:
-        property = QLatin1String("CanHihernate");
-        command = QLatin1String("HibernateAllowed");
-        break;
-      case UkuiPower::PowerSuspend:
-        property = QLatin1String("CanSuspend");
-        command = QLatin1String("SuspendAllowed");
-        break;
-      default:
-        return false;
-    }
-
-    return dbusGetProperty(QLatin1String(UPOWER_SERVICE),
-                           QLatin1String(UPOWER_PATH),
-                           QLatin1String(PROPERTIES_INTERFACE),
-                           QDBusConnection::systemBus(),
-                           property)
-            &&
-            dbusCall(QLatin1String(UPOWER_SERVICE),
-                     QLatin1String(UPOWER_PATH),
-                     QLatin1String(UPOWER_INTERFACE),
-                     QDBusConnection::systemBus(),
-                     command);
-}
-
-bool UPowerProvider::doAction(UkuiPower::Action action)
-{
-    QString command;
-
-    switch (action) {
-      case UkuiPower::PowerHibernate:
-        command = QLatin1String("Hibernate");
-        break;
-      case UkuiPower::PowerSuspend:
-        command = QLatin1String("Suspend");
-        break;
-
-      default:
-        return false;
-    }
-
-    return dbusCall(QLatin1String(UPOWER_SERVICE),
-                    QLatin1String(UPOWER_PATH),
-                    QLatin1String(UPOWER_INTERFACE),
-                    QDBusConnection::systemBus(),
-                    command);
-}
-
-ConsoleKitProvider::ConsoleKitProvider(QObject *parent): PowerProvider(parent)
-{
-}
-
-
-ConsoleKitProvider::~ConsoleKitProvider()
-{
-}
-
-
-bool ConsoleKitProvider::canAction(UkuiPower::Action action) const
-{
-    QString command;
-    switch (action) {
-      case UkuiPower::PowerReboot:
-        command = QLatin1String("CanReboot");
-        break;
-
-      case UkuiPower::PowerShutdown:
-        command = QLatin1String("CanPowerOff");
-        break;
-
-      case UkuiPower::PowerHibernate:
-        command  = QLatin1String("CanHibernate");
-        break;
-
-      case UkuiPower::PowerSuspend:
-        command  = QLatin1String("CanSuspend");
-        break;
-
-      default:
-        return false;
-    }
-
-    // canAction should be always silent because it can freeze
-    // g_main_context_iteration Qt event loop in QMessageBox
-    // on panel startup if there is no DBUS running.
-    return dbusCallSystemd(QLatin1String(CONSOLEKIT_SERVICE),
-                           QLatin1String(CONSOLEKIT_PATH),
-                           QLatin1String(CONSOLEKIT_INTERFACE),
-                           QDBusConnection::systemBus(),
-                           command,
-                           false);
-}
-
-
-bool ConsoleKitProvider::doAction(UkuiPower::Action action)
-{
-    QString command;
-    switch (action) {
-      case UkuiPower::PowerReboot:
-        command = QLatin1String("Reboot");
-        break;
-
-      case UkuiPower::PowerShutdown:
-        command = QLatin1String("PowerOff");
-        break;
-
-      case UkuiPower::PowerHibernate:
-        command = QLatin1String("Hibernate");
-        break;
-
-      case UkuiPower::PowerSuspend:
-        command = QLatin1String("Suspend");
-        break;
-
-      default:
-        return false;
-    }
-
-    return dbusCallSystemd(QLatin1String(CONSOLEKIT_SERVICE),
-                           QLatin1String(CONSOLEKIT_PATH),
-                           QLatin1String(CONSOLEKIT_INTERFACE),
-                           QDBusConnection::systemBus(),
-                           command,
-                           true);
 }
 
 /************************************************
@@ -353,8 +205,11 @@ bool UKUIProvider::canAction(UkuiPower::Action action) const
         return false;
     }
 
-    return dbusCall(QLatin1String(UKUI_SERVICE), QLatin1String(UKUI_PATH), QLatin1String(UKUI_INTERFACE),
-            QDBusConnection::sessionBus(), command);
+    return dbusCall(QLatin1String(UKUI_SERVICE),
+                    QLatin1String(UKUI_PATH),
+                    QLatin1String(UKUI_INTERFACE),
+                    QDBusConnection::sessionBus(),
+                    command);
 }
 
 bool UKUIProvider::doAction(UkuiPower::Action action)
@@ -378,8 +233,7 @@ bool UKUIProvider::doAction(UkuiPower::Action action)
              QLatin1String(UKUI_PATH),
              QLatin1String(UKUI_INTERFACE),
              QDBusConnection::sessionBus(),
-             command
-            );
+             command);
 }
 
 

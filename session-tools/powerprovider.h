@@ -18,31 +18,6 @@ public slots:
     virtual bool doAction(UkuiPower::Action action) = 0;
 };
 
-class UPowerProvider: public PowerProvider
-{
-    Q_OBJECT
-public:
-    UPowerProvider(QObject *parent = nullptr);
-    ~UPowerProvider();
-    bool canAction(UkuiPower::Action action) const;
-
-public slots:
-    bool doAction(UkuiPower::Action action);
-};
-
-class ConsoleKitProvider: public PowerProvider
-{
-    Q_OBJECT
-public:
-
-    ConsoleKitProvider(QObject *parent = nullptr);
-    ~ConsoleKitProvider();
-    bool canAction(UkuiPower::Action action) const;
-
-public slots:
-    bool doAction(UkuiPower::Action action);
-};
-
 class SystemdProvider: public PowerProvider
 {
     Q_OBJECT
