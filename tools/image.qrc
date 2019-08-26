@@ -1,0 +1,13 @@
+resource/background-ubuntu.jpg
+resource/dialog_close.png
+resource/dialog_close_highlight.png
+resource/suspend.png
+resource/suspend_highlight.png
+resource/hibernate.png
+resource/hibernate_highlight.png
+resource/restert.png
+resource/restart_highlight.png
+resource/shutdown.png
+resource/shutdown_highlight.png
+resource/logout.png
+resource/logout_highlight.png
