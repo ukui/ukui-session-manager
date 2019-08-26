@@ -2,7 +2,7 @@
 Type=Application
 Exec=ukui-session
 TryExec=ukui-session
-Name=UKUI 3.0
-Comment=This session logs you into UKUI 3.0
+Name=UKUI
+Comment=This session logs you into UKUI
 
 #TRANSLATIONS_DIR=translations

@@ -2,7 +2,7 @@
 #define SESSIONDBUSADAPTOR_H
 
 #include <QtDBus>
-#include "../session-tools/ukuipower.h"
+#include "../tools/ukuipower.h"
 #include "modulemanager.h"
 
 class SessionDBusAdaptor : public QDBusAbstractAdaptor

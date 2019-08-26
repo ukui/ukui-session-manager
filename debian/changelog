@@ -1,4 +1,4 @@
-ukui-session-manager (2.0.0-1) unstable; urgency=medium
+ukui-session-manager (2.0.0) unstable; urgency=medium
 
   * Migrate to Qt. 
 

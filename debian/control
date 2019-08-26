@@ -4,10 +4,6 @@ Uploaders: handsome_feng <jianfengli@ubuntukylin.com>,
 Section: x11
 Priority: optional
 Build-Depends: debhelper (>= 12),
-               libkf5windowsystem-dev,
-               libqt5svg5-dev,
-               libqt5x11extras5-dev,
-               libudev-dev [linux-any],
                libx11-dev,
                libqt5xdg-dev,
                xdg-user-dirs,
@@ -20,7 +16,6 @@ Homepage: https://github.com/ukui/ukui-session-manager
 Package: ukui-session-manager
 Architecture: any
 Depends: ukui-themes | ubuntukylin-theme,
-         x11-xkb-utils,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: ukui-polkit,

@@ -1,5 +1,4 @@
 #!/usr/bin/make -f
-# export DH_VERBOSE=1
 
 DEB_HOST_ARCH_OS ?= $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
 export LC_ALL=C.UTF-8

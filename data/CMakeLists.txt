@@ -1,4 +1,4 @@
-file(GLOB SESSION_FILES_IN ukui3.0.desktop)
+file(GLOB SESSION_FILES_IN ukui.desktop)
 file(GLOB UKUI_SESSION_CONFIG ukui-session.ini)
 
 install(FILES ${SESSIOIN_FILES_IN} DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}xsessions")

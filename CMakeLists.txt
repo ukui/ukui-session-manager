@@ -16,5 +16,5 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 set(CMAKE_C_FLAGS_DEBUG "-g -O0")
 
 add_subdirectory(ukui-session)
-add_subdirectory(session-tools)
+add_subdirectory(tools)
 add_subdirectory(data)
