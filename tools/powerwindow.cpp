@@ -71,7 +71,7 @@ void PowerWindow::initUI()
         m_suspend = new QLabel(centerWidget());
         m_suspend->setFixedSize(168, 168);
         m_suspend->setObjectName(QStringLiteral("suspend"));
-        m_suspend->setPixmap(QPixmap("resource/suspend.png"));
+        m_suspend->setPixmap(QPixmap(":/images/suspend.png"));
         m_suspend->setStyleSheet("border-width: 1px;border-style: solid;border-color: #FFFFFF");
         m_suspend->installEventFilter(this);
 
@@ -90,7 +90,7 @@ void PowerWindow::initUI()
         m_hibernate = new QLabel(centerWidget());
         m_hibernate->setFixedSize(168, 168);
         m_hibernate->setObjectName(QStringLiteral("hibernate"));
-        m_hibernate->setPixmap(QPixmap("resource/hibernate.png"));
+        m_hibernate->setPixmap(QPixmap(":/images/hibernate.png"));
         m_hibernate->setStyleSheet("border-width: 1px;border-style: solid;border-color: #FFFFFF;");
         m_hibernate->installEventFilter(this);
 
@@ -109,7 +109,7 @@ void PowerWindow::initUI()
     m_reboot = new QLabel(centerWidget());
     m_reboot->setFixedSize(168, 168);
     m_reboot->setObjectName(QStringLiteral("restart"));
-    m_reboot->setPixmap(QPixmap("resource/restart.png"));
+    m_reboot->setPixmap(QPixmap(":/images/restart.png"));
     m_reboot->setStyleSheet("border-width: 1px;border-style: solid;border-color: #FFFFFF;");
     m_reboot->installEventFilter(this);
     m_rebootLabel = new QLabel(centerWidget());
@@ -124,7 +124,7 @@ void PowerWindow::initUI()
     m_shutdown = new QLabel(centerWidget());
     m_shutdown->setFixedSize(168, 168);
     m_shutdown->setObjectName(QStringLiteral("shutdown"));
-    m_shutdown->setPixmap(QPixmap("resource/shutdown.png"));
+    m_shutdown->setPixmap(QPixmap(":/images/shutdown.png"));
     m_shutdown->setStyleSheet("border-width: 1px;border-style: solid;border-color: #FFFFFF;");
     m_shutdown->installEventFilter(this);
 
@@ -143,7 +143,7 @@ void PowerWindow::initUI()
     m_logout = new QLabel(centerWidget());
     m_logout->setFixedSize(168, 168);
     m_logout->setObjectName(QStringLiteral("logout"));
-    m_logout->setPixmap(QPixmap("resource/logout.png"));
+    m_logout->setPixmap(QPixmap(":/images/logout.png"));
     m_logout->setStyleSheet("border-width: 1px;border-style: solid;border-color: #FFFFFF;");
     m_logout->installEventFilter(this);
 
@@ -221,10 +221,10 @@ bool PowerWindow::eventFilter(QObject *obj, QEvent *event)
         if(event->type() == QEvent::Enter) {
             m_suspendLabel->setText(tr("挂起(S)"));
             m_suspendLabel->setStyleSheet("color:white");
-            m_suspend->setPixmap(QPixmap("resource/suspend_highlight.png"));
+            m_suspend->setPixmap(QPixmap(":/images/suspend_highlight.png"));
         } else if(event->type() == QEvent::Leave) {
             m_suspendLabel->setText("");
-            m_suspend->setPixmap(QPixmap("resource/suspend.png"));
+            m_suspend->setPixmap(QPixmap(":/images/suspend.png"));
         } else if(event->type() == QEvent::MouseButtonRelease){
             qDebug() << "suspend";
             try{
@@ -238,10 +238,10 @@ bool PowerWindow::eventFilter(QObject *obj, QEvent *event)
         if(event->type() == QEvent::Enter) {
             m_hibernateLabel->setText(tr("休眠(H)"));
             m_hibernateLabel->setStyleSheet("color:white");
-            m_hibernate->setPixmap(QPixmap("resource/hibernate_highlight.png"));
+            m_hibernate->setPixmap(QPixmap(":/images/hibernate_highlight.png"));
         } else if(event->type() == QEvent::Leave) {
             m_hibernateLabel->setText("");
-            m_hibernate->setPixmap(QPixmap("resource/hibernate.png"));
+            m_hibernate->setPixmap(QPixmap(":/images/hibernate.png"));
         } else if(event->type() == QEvent::MouseButtonRelease){
             qDebug() << "hibernate";
             try{
@@ -255,10 +255,10 @@ bool PowerWindow::eventFilter(QObject *obj, QEvent *event)
         if(event->type() == QEvent::Enter) {
             m_rebootLabel->setText(tr("重启(R)"));
             m_rebootLabel->setStyleSheet("color:white");
-            m_reboot->setPixmap(QPixmap("resource/restart_highlight.png"));
+            m_reboot->setPixmap(QPixmap(":/images/restart_highlight.png"));
         }else if(event->type() == QEvent::Leave) {
             m_rebootLabel->setText("");
-            m_reboot->setPixmap(QPixmap("resource/restart.png"));
+            m_reboot->setPixmap(QPixmap(":/images/restart.png"));
         }else if(event->type() == QEvent::MouseButtonRelease){
             qDebug() << "reboot";
             try{
@@ -272,10 +272,10 @@ bool PowerWindow::eventFilter(QObject *obj, QEvent *event)
         if(event->type() == QEvent::Enter) {
             m_shutdownLabel->setText(tr("关机(P)"));
             m_shutdownLabel->setStyleSheet("color:white");
-            m_shutdown->setPixmap(QPixmap("resource/shutdown_highlight.png"));
+            m_shutdown->setPixmap(QPixmap(":/images/shutdown_highlight.png"));
         }else if(event->type() == QEvent::Leave) {
             m_shutdownLabel->setText("");
-            m_shutdown->setPixmap(QPixmap("resource/shutdown.png"));
+            m_shutdown->setPixmap(QPixmap(":/images/shutdown.png"));
         }else if(event->type() == QEvent::MouseButtonRelease){
             try{
                 qDebug() << "shutdown";
@@ -289,10 +289,10 @@ bool PowerWindow::eventFilter(QObject *obj, QEvent *event)
         if(event->type() == QEvent::Enter) {
             m_logoutLabel->setText(tr("注销(L)"));
             m_logoutLabel->setStyleSheet("color:white");
-            m_logout->setPixmap(QPixmap("resource/logout_highlight.png"));
+            m_logout->setPixmap(QPixmap(":/images/logout_highlight.png"));
         }else if(event->type() == QEvent::Leave) {
             m_logoutLabel->setText("");
-            m_logout->setPixmap(QPixmap("resource/logout.png"));
+            m_logout->setPixmap(QPixmap(":/images/logout.png"));
         }else if(event->type() == QEvent::MouseButtonRelease){
             try{
                 qDebug() << "logout";

@@ -14,9 +14,16 @@ ModuleManager::ModuleManager(QObject* parent)
     : QObject(parent),
       mWmProcess(new QProcess(this))
 {
-    QString config_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session.ini";
+    QString config_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session.ini";
     mSettings = new QSettings(config_file, QSettings::IniFormat);
-    qDebug() << config_file;
+    mSettings->beginGroup("RequiredApps");
+    QStringList apps;
+    apps.append("peony");
+    apps.append("ukui-panel");
+    mSettings->setValue("required_apps:", apps);
+    mSettings->setValue("windows_manager", "ukwm");
+    mSettings->endGroup();
+    mSettings->sync();
 }
 
 ModuleManager::~ModuleManager()
