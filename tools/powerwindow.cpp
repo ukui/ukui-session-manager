@@ -29,10 +29,10 @@ void PowerWindow::initUI()
 
     //重启和关机一定存在，根据是否能挂起和休眠确定窗口宽度
     int cnt = 0;
-//    if(m_power->canAction(UkuiPower::PowerHibernate))
-//        cnt++;
-//    if(m_power->canAction(UkuiPower::PowerSuspend))
-//        cnt++;
+    if(m_power->canAction(UkuiPower::PowerHibernate))
+        cnt++;
+    if(m_power->canAction(UkuiPower::PowerSuspend))
+        cnt++;
 
     //根据提示内容的长度确定窗口的高度
     QFont font("ubuntu", 12);
@@ -66,7 +66,7 @@ void PowerWindow::initUI()
     hbox->setSpacing(20);//表示各个控件之间的上下间距
 
     /* 挂起 */
-    if(false){//m_power->canAction(UkuiPower::PowerSuspend)
+    if (m_power->canAction(UkuiPower::PowerSuspend)) {
         QVBoxLayout *vboxSuspend = new QVBoxLayout();
         m_suspend = new QLabel(centerWidget());
         m_suspend->setFixedSize(168, 168);
@@ -85,7 +85,7 @@ void PowerWindow::initUI()
         hbox->addLayout(vboxSuspend);
     }
     /* 休眠 */
-    if(false) {//m_power->canAction(UkuiPower::PowerHibernate)
+    if(m_power->canAction(UkuiPower::PowerHibernate)) {
         QVBoxLayout *vboxHibernate = new QVBoxLayout();
         m_hibernate = new QLabel(centerWidget());
         m_hibernate->setFixedSize(168, 168);
