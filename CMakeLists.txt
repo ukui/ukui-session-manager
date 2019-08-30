@@ -10,6 +10,9 @@ set(CMAKE_AUTORCC ON)
 # Create code from a list of Qt designer ui files
 set(CMAKE_AUTOUIC ON)
 
+# Enable funcion names and line numbers even for release builds
+add_definitions("-DQT_MESSAGELOGCONTEXT")
+
 # Find the QtWidgets library
 find_package(Qt5 COMPONENTS Widgets Core DBus REQUIRED)
 

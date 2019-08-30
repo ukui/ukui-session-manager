@@ -169,7 +169,7 @@ void PowerWindow::initUI()
     connect(qtimer, SIGNAL(timeout()), this, SLOT(update()));
 
     //提示
-    QProcess p(0);
+    QProcess p(nullptr);
     QString command = "";
     QStringList args;
     QString strTemp = "";
