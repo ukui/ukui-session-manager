@@ -1,9 +1,9 @@
-#include "toolswindow.h"
 #include <QApplication>
-#include "powerwindow.h"
 #include <QWidget>
 #include <QDebug>
 #include <QDesktopWidget>
+
+#include "powerwindow.h"
 
 int main(int argc, char* argv[])
 {
