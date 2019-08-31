@@ -28,6 +28,10 @@ public:
 
 public slots:
     bool doAction(UkuiPower::Action action);
+
+private:
+    bool canSwitchUser() const;
+    bool doSwitchUser();
 };
 
 class UKUIProvider: public PowerProvider
