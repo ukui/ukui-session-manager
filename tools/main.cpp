@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     pw = new PowerWin(false);
 
     //加载qss文件
-    QFile qss("../data/powerwin.qss");
+    QFile qss(":/powerwin.qss");
     qss.open(QFile::ReadOnly);
     a.setStyleSheet(qss.readAll());
     qss.close();
