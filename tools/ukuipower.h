@@ -12,6 +12,7 @@ class UkuiPower : public QObject
 public:
     enum Action {
         PowerLogout,
+        PowerSwitchUser,
         PowerHibernate,
         PowerReboot,
         PowerShutdown,

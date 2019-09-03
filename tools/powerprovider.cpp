@@ -3,6 +3,13 @@
 #include <QDBusInterface>
 #include <QDebug>
 
+#include <systemd/sd-login.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#define LIGHTDM_SERVICE     "org.freedesktop.DisplayManager"
+#define LIGTHDM_INTERFACE   "org.freedesktop.DisplayManager.Seat"
+
 #define SYSTEMD_SERVICE         "org.freedesktop.login1"
 #define SYSTEMD_PATH            "/org/freedesktop/login1"
 #define SYSTEMD_INTERFACE       "org.freedesktop.login1.Manager"
@@ -109,11 +116,35 @@ SystemdProvider::~SystemdProvider()
 }
 
 
+bool SystemdProvider::canSwitchUser() const
+{
+    /*
+    char *seat_id = nullptr;
+    char *session_id = nullptr;
+    int ret = 0;
+
+    sd_pid_get_session(getpid(), &session_id);
+    sd_session_get_seat(session_id, &seat_id);
+    ret = sd_seat_can_multi_session(seat_id);
+
+    return ret>0;
+    */
+    QString property = "CanSwitch";
+    QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
+    return dbusGetProperty(QLatin1String(LIGHTDM_SERVICE),
+                           xdg_seat_path,
+                           QLatin1String(LIGTHDM_INTERFACE),
+                           QDBusConnection::systemBus(),
+                           property);
+}
+
 bool SystemdProvider::canAction(UkuiPower::Action action) const
 {
     QString command;
 
     switch (action) {
+      case UkuiPower::PowerSwitchUser:
+        return canSwitchUser();
       case UkuiPower::PowerReboot:
         command = QLatin1String("CanReboot");
         break;
@@ -146,12 +177,25 @@ bool SystemdProvider::canAction(UkuiPower::Action action) const
 }
 
 
+bool SystemdProvider::doSwitchUser()
+{
+    QString command = "SwitchToGreeter";
+    QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
+    return dbusCall(QLatin1String(LIGHTDM_SERVICE),
+                    xdg_seat_path,
+                    QLatin1String(LIGTHDM_INTERFACE),
+                    QDBusConnection::systemBus(),
+                    command);
+}
+
 bool SystemdProvider::doAction(UkuiPower::Action action)
 {
     QString command;
 
     switch (action)
     {
+    case UkuiPower::PowerSwitchUser:
+        return doSwitchUser();
     case UkuiPower::PowerReboot:
         command = QLatin1String("Reboot");
         break;

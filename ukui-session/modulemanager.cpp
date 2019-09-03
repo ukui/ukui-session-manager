@@ -14,9 +14,16 @@ ModuleManager::ModuleManager(QObject* parent)
     : QObject(parent),
       mWmProcess(new QProcess(this))
 {
-    QString config_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session.ini";
+    QString config_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session.ini";
     mSettings = new QSettings(config_file, QSettings::IniFormat);
-    qDebug() << config_file;
+//    mSettings->beginGroup("RequiredApps");
+    QStringList apps;
+    apps.append("peony");
+    apps.append("ukui-panel");
+    mSettings->setValue("required_apps", apps);
+    mSettings->setValue("windows_manager", "ukwm");
+//    mSettings->endGroup();
+    mSettings->sync();
 }
 
 ModuleManager::~ModuleManager()
@@ -51,34 +58,38 @@ void ModuleManager::startAutostartApps()
     const XdgDesktopFileList fileList = XdgAutoStart::desktopFileList();
     for (XdgDesktopFileList::const_iterator i = fileList.constBegin(); i != fileList.constEnd(); ++i)
     {
-        startProcess(*i, true);
-        qDebug() << "start" << i->fileName();
+        qDebug() << "Start autostart app: " << i->fileName();
+        startProcess(*i, false);
     }
 }
 
 void ModuleManager::startWm()
 {
-    mWindowManager = mSettings->value(QLatin1String("windowManager")).toString();
+    mWindowManager = mSettings->value(QLatin1String("windows_manager")).toString();
     qDebug() << "Start window manager: " << mWindowManager;
     mWmProcess->start(mWindowManager);
 }
 
 void ModuleManager::startRequiredApps()
 {
-    QStringList appList = mSettings->value("requiredApps").toStringList();
-    qDebug() << "Required apps: ";
+    QStringList appList = mSettings->value(QLatin1String("required_apps")).toStringList();
     for (QStringList::iterator it = appList.begin(); it != appList.end(); ++it) {
-        qDebug() << *it;
-        startProcess(*it, false);
+        qDebug() << "Start required app: " << *it;
+        startProcess(*it, true);
     }
 }
 
-void ModuleManager::startProcess(const XdgDesktopFile& file, bool detach)
+void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
 {
-    qDebug() << file.value(QL1S("OnlyShowIn")).toString();
-    if (!file.value(QL1S("OnlyShowIn")).toString().contains("UKUI") && detach)
+    if (!required && !file.value(QL1S("OnlyShowIn")).toString().contains("UKUI"))
     {
-        qDebug() << "startDetachedd: " << file.fileName();
+        if (file.value((QL1S("NotShowIn"))).toString().contains("UKUI") || file.contains("OnlyShowIn"))
+        {
+            qDebug() << "Do not launch " << file.fileName();
+            return;
+        }
+
+        qDebug() << "Start detached: " << file.fileName();
         file.startDetached();
         return;
     }
@@ -86,7 +97,7 @@ void ModuleManager::startProcess(const XdgDesktopFile& file, bool detach)
     QStringList args = file.expandExecString();
     if (args.isEmpty())
     {
-        qDebug() << "Wrong desktop file" << file.fileName();
+        qWarning() << "Wrong desktop file: " << file.fileName();
         return;
     }
     UkuiModule* proc = new UkuiModule(file, this);
@@ -100,7 +111,7 @@ void ModuleManager::startProcess(const XdgDesktopFile& file, bool detach)
             this, SLOT(restartModules(int, QProcess::ExitStatus)));
 }
 
-void ModuleManager::startProcess(const QString& name, bool detach)
+void ModuleManager::startProcess(const QString& name, bool required)
 {
     QString desktop_name = name + ".desktop";
     QStringList desktop_paths;
@@ -112,7 +123,7 @@ void ModuleManager::startProcess(const QString& name, bool detach)
         {
             if (QFileInfo(file.fileName()).fileName() == desktop_name)
             {
-                startProcess(file, detach);
+                startProcess(file, required);
                 return;
             }
         }

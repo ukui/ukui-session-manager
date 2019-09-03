@@ -1,9 +1,9 @@
-#include "toolswindow.h"
 #include <QApplication>
-#include "powerwindow.h"
 #include <QWidget>
 #include <QDebug>
 #include <QDesktopWidget>
+
+#include "powerwindow.h"
 
 int main(int argc, char* argv[])
 {
@@ -20,10 +20,10 @@ int main(int argc, char* argv[])
                     "QPushButton::pressed {"
                         "background-color: rgba(0, 0, 0, 30%);}"
                     "QPushButton#closeButton{"
-                        "background:url(resource/dialog_close.png);"
+                        "background:url(:/images/dialog_close.png);"
                         "background-repeat:no-repeat}"
                     "QPushButton::hover#closeButton{"
-                        "background:url(resource/dialog_close_highlight.png);"
+                        "background:url(:/images/dialog_close_highlight.png);"
                         "background-repeat:no-repeat}"
                     "QWidget#pwCenterWidget{"
                         "background: rgb(0, 0, 0, 0)}"

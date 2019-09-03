@@ -5,8 +5,13 @@ project(ukui-session-manager)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed
 set(CMAKE_AUTOMOC ON)
+# Handle the Qt rcc code generator automatically.
+set(CMAKE_AUTORCC ON)
 # Create code from a list of Qt designer ui files
 set(CMAKE_AUTOUIC ON)
+
+# Enable funcion names and line numbers even for release builds
+add_definitions("-DQT_MESSAGELOGCONTEXT")
 
 # Find the QtWidgets library
 find_package(Qt5 COMPONENTS Widgets Core DBus REQUIRED)

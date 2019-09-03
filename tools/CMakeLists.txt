@@ -8,9 +8,8 @@ set(session-tools_SRCS
     pw.h
 )
 
-add_executable(ukui-session-tools ${session-tools_SRCS})
+add_executable(ukui-session-tools ${session-tools_SRCS} ${PROJECT_SOURCE_DIR}/data/images.qrc)
 target_link_libraries(ukui-session-tools Qt5::Widgets Qt5::Core Qt5::Gui Qt5::DBus)
-qt5_add_resources(qrc_FILES image.qrc)
 
 install(TARGETS
         ukui-session-tools
