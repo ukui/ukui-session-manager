@@ -36,5 +36,7 @@
         <file>images/suspend.png</file>
         <file>images/suspend_highlight.png</file>
         <file>images/waiting.png</file>
+		<file>images/switchuser.png</file>
+		<file>images/switchuser_highlight.png</file>
     </qresource>
 </RCC>
