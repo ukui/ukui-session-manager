@@ -19,14 +19,11 @@ public:
 
 protected:
     bool eventFilter(QObject *, QEvent *);
-    void mousePressEvent(QMouseEvent *event);
 
 private:
     int dialogWidth;
     int dialogHeight;
     QWidget         *m_dialog;
-    QWidget         *m_centerWidget;
-    QPushButton     *m_closeButton;
 
 protected:
     void paintEvent(QPaintEvent *e);
@@ -35,13 +32,11 @@ protected:
 public:
     void setDialogSize(int w, int h);
     QPixmap pixmap;
+    void ResizeEvent(QRect screen , QWidget *widget);
 
 private:
     void addButton(QString name, QLabel *button, QLabel *label);
-    void doevent(QEvent *, QLabel *label, QString test1, QString test2, int i);
-
-private slots:
-    void update();
+    void doevent(QEvent *, QString test2, int i);
 
 private:
     bool    m_hasOpenSessions;
@@ -62,10 +57,7 @@ private:
     QLabel *m_logoutLabel;
     QLabel *m_switchuser;
     QLabel *m_switchuserLabel;
-
-    QTimer *qtimer;
-    QProgressBar *progressBar;
-    QLabel *tip;
+    QLabel *cancel;
 };
 
 #endif // POWERWIN_H
