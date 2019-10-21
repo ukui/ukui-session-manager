@@ -49,121 +49,46 @@
 
 
 static gboolean gnome_compat_started = FALSE;
-static int keyring_lifetime_pipe[2];
-static pid_t gnome_keyring_daemon_pid = 0;
 static Window gnome_smproxy_window = None;
 
 static void
-child_setup (gpointer user_data)
+gnome_keyring_daemon_finished(GPid pid,
+                              gint status,
+                              gpointer user_data)
 {
-  gint open_max;
-  gint fd;
-  char *fd_str;
-
-  open_max = sysconf (_SC_OPEN_MAX);
-  for (fd = 3; fd < open_max; fd++)
-    {
-      if (fd != keyring_lifetime_pipe[0])
-        fcntl (fd, F_SETFD, FD_CLOEXEC);
-    }
-
-  fd_str = g_strdup_printf ("%d", keyring_lifetime_pipe[0]);
-  g_setenv ("GNOME_KEYRING_LIFETIME_FD", fd_str, TRUE);
-  g_free (fd_str);
+  if (WEXITSTATUS (status) !=0)
+  {
+    g_printerr("gnome-keyring-daemon failed to start correctly,"
+                          "exit code: %d\n", WEXITSTATUS (status));
+  }
 }
-
 
 static void
 gnome_keyring_daemon_startup (void)
 {
   GError      *error = NULL;
-  gchar       *sout;
-  gchar      **lines;
-  gsize        lineno;
-  gint         status;
-  glong        pid;
-  gchar       *end;
+  GPid         pid;
   gchar       *argv[3];
-  gchar       *p;
-  gchar       *name;
-  const gchar *value;
-
-  /* Pipe to slave keyring lifetime to */
-  if (pipe (keyring_lifetime_pipe))
-    {
-      g_warning ("Failed to set up pipe for gnome-keyring: %s", strerror (errno));
-      return;
-    }
 
   error = NULL;
   argv[0] = GNOME_KEYRING_DAEMON;
   argv[1] = "--start";
   argv[2] = NULL;
-  g_spawn_sync (NULL, argv, NULL,
-                G_SPAWN_SEARCH_PATH | G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
-                child_setup, NULL,
-                &sout, NULL, &status, &error);
-
-  close (keyring_lifetime_pipe[0]);
-  /* We leave keyring_lifetime_pipe[1] open for the lifetime of the session,
-     in order to slave the keyring daemon lifecycle to the session. */
+  g_spawn_async (NULL, argv, NULL,
+                G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD,
+                NULL, NULL, &pid,
+                &error);
 
   if (error != NULL)
-    {
-      g_printerr ("Failed to run gnome-keyring-daemon: %s\n",
-                  error->message);
-      g_error_free (error);
-    }
-  else
-    {
-      if (WIFEXITED (status) && WEXITSTATUS (status) == 0 && sout != NULL)
-        {
-          lines = g_strsplit (sout, "\n", 0);
+  {
+    g_printerr ("Failed to spawn gnome-keyring-daemon: %s\n",
+                error->message);
+    g_error_free (error);
+    return;
+  }
 
-          for (lineno = 0; lines[lineno] != NULL; lineno++)
-            {
-              p = strchr (lines[lineno], '=');
-              if (p == NULL)
-               continue;
-
-              name = g_strndup (lines[lineno], p - lines[lineno]);
-              value = p + 1;
-
-              g_setenv (name, value, TRUE);
-
-              if (g_strcmp0 (name, "GNOME_KEYRING_PID") == 0)
-                {
-                  pid = strtol (value, &end, 10);
-                  if (end != value)
-                    gnome_keyring_daemon_pid = pid;
-                }
-
-              g_free (name);
-            }
-
-          g_strfreev (lines);
-        }
-      else
-        {
-          /* daemon failed for some reason */
-          g_printerr ("gnome-keyring-daemon failed to start correctly, "
-                      "exit code: %d\n", WEXITSTATUS (status));
-        }
-
-      g_free (sout);
-    }
+  g_child_watch_add (pid, gnome_keyring_daemon_finished, NULL);
 }
-
-static void
-gnome_keyring_daemon_shutdown (void)
-{
-  if (gnome_keyring_daemon_pid != 0)
-    {
-      kill (gnome_keyring_daemon_pid, SIGTERM);
-      gnome_keyring_daemon_pid = 0;
-    }
-}
-
 
 
 static void
@@ -263,9 +188,6 @@ uksm_gnome_stop (void)
     return;
 
   g_debug ("UKsmGnome: stopping");
-
-  /* shutdown the keyring daemon */
-  gnome_keyring_daemon_shutdown ();
 
   uksm_compat_gnome_smproxy_shutdown ();
 
