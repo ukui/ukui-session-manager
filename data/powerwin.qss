@@ -19,16 +19,6 @@ QLabel{
     font-family: "Ubuntu";
 }
 
-/* 电源对话框关闭按钮 */
-QPushButton#closeButton{
-    background:url(:images/dialog_close.png);
-    background-repeat:no-repeat;
-}
-QPushButton::hover#closeButton{
-    background:url(:images/dialog_close_highlight.png);
-    background-repeat:no-repeat
-}
-
 /* 挂起按钮 */
 QLabel#suspend{
     background:url(:/images/suspend.png);
@@ -107,11 +97,26 @@ QLabel::hover#switchuser{
     background-repeat:no-repeat
 }
 
+/*取消按钮*/
+QLabel#cancel{
+	border-color: #FFFFFF;
+	border-width: 1px;
+	border-style: solid;
+	background-color: rgb(255,255,255,20%)
+}
+QLabel::hover#cancel{
+	border-color: #FFFFFF;
+	border-width: 1px;
+	border-style: solid;
+	background: rgb(255,255,255,40%)
+}
+
+
 /* 电源对话框中间区域 */
-QWidget#PoerWinCenterWidget{
+/*QWidget#PoerWinCenterWidget{
     background: rgb(0, 0, 0, 0)
 }
 QWidget#PowerWin{
     background: rgb(0, 0, 0, 150);
-}
+}*/
 

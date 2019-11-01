@@ -82,7 +82,7 @@ bool dbusGetProperty(const QString &service,
         return false;
     }
 
-    QDBusMessage msg = dbus.call(QLatin1String("Get"), dbus.interface(), property);
+    QDBusMessage msg = dbus.call("SwitchToGreeter");//QLatin1String("Get"), dbus.interface(),property
 
     if (!msg.errorName().isEmpty()) {
         qWarning() << "Dbus error: " << msg;
