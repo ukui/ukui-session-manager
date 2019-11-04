@@ -46,6 +46,8 @@ ModuleManager::~ModuleManager()
 
 void ModuleManager::startup()
 {
+    qputenv("XDG_CURRENT_DESKTOP","ukui");
+
     startWm();
 
     startRequiredApps();
