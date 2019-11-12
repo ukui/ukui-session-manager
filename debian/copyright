@@ -283,7 +283,6 @@ Files: data/*.ui
        doc/dbus/Makefile.am
        egg/Makefile.am
        AUTHORS
-       COPYING
        ChangeLog
        HACKING
        Makefile.am

@@ -1,8 +1,14 @@
-ukui-session-manager (1.1.7-1~20191021) unstable; urgency=medium
+ukui-session-manager (1.1.7-1) unstable; urgency=medium
 
   * New upstream release.
+  * debian/control:
+    - Bump standards-verstion to 4.4.1.
+    - Use debhelper-compat replace debhelper, and remove debian/compat.
+    - Add Rules-Requires-Root: no.
+  * debian/copyright:
+    - Remove COPYING from the copyright entry.
 
- -- handsome_feng <jianfengli@ubuntukylin.com>  Mon, 21 Oct 2019 11:08:27 +0800
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Tue, 12 Nov 2019 14:31:38 +0800
 
 ukui-session-manager (1.1.6-1) unstable; urgency=medium
 

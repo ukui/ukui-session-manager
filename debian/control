@@ -4,8 +4,8 @@ Priority: optional
 Maintainer: Kylin Team <team+kylin@tracker.debian.org>
 Uploaders: Aron Xu <aron@debian.org>,
            handsome_feng <jianfengli@ubuntukylin.com>,
-Standards-Version: 4.4.0
-Build-Depends: debhelper (>= 12),
+Standards-Version: 4.4.1
+Build-Depends: debhelper-compat (= 12),
                dpkg-dev (>= 1.16.1.1),
                intltool,
                libdbus-glib-1-dev,
@@ -24,6 +24,7 @@ Build-Depends: debhelper (>= 12),
                mate-common,
                xmlto,
                xsltproc,
+Rules-Requires-Root: no
 Homepage: http://www.ukui.org/
 Vcs-Git: https://github.com/ukui/ukui-session-manager.git
 Vcs-Browser: https://github.com/ukui/ukui-session-manager
