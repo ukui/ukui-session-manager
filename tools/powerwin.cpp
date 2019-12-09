@@ -51,19 +51,19 @@ void PowerWin::initUI()
     if (m_power->canAction(UkuiPower::PowerSuspend)) {
         m_suspend = new QLabel(center_widget);
         m_suspendLabel = new QLabel(center_widget);
-        addButton("suspend", m_suspend, m_suspendLabel);
+        addButton("suspend",tr("suspend"), m_suspend, m_suspendLabel);
     }
     /* 休眠 */
     if(m_power->canAction(UkuiPower::PowerHibernate)) {
         m_hibernate = new QLabel(center_widget);
         m_hibernateLabel = new QLabel(center_widget);
-        addButton("hibernate", m_hibernate, m_hibernateLabel);
+        addButton("hibernate",tr("hibernate"), m_hibernate, m_hibernateLabel);
     }
     /*切换账户*/
     if(true){//m_power->canAction(UkuiPower::PowerSwitchUser)
         m_switchuser = new QLabel(center_widget);
         m_switchuserLabel = new QLabel(center_widget);
-        addButton("switchuser",m_switchuser,m_switchuserLabel);
+        addButton("switchuser",tr("switchuser"),m_switchuser,m_switchuserLabel);
     }
 
     m_reboot = new QLabel(center_widget);
@@ -73,9 +73,9 @@ void PowerWin::initUI()
     m_logout = new QLabel(center_widget);
     m_logoutLabel = new QLabel(center_widget);
 
-    addButton("restart", m_reboot, m_rebootLabel);
-    addButton("shutdown", m_shutdown, m_shutdownLabel);
-    addButton("logout", m_logout, m_logoutLabel);
+    addButton("restart",tr("reboot"), m_reboot, m_rebootLabel);
+    addButton("shutdown",tr("shutdown"), m_shutdown, m_shutdownLabel);
+    addButton("logout",tr("logout"), m_logout, m_logoutLabel);
 
     vbox->addLayout(m_hbox);
     vbox->addStretch();
@@ -83,23 +83,22 @@ void PowerWin::initUI()
     //取消按钮
     cancel = new QLabel(center_widget);
     cancel->setObjectName("cancel");
-    QString text = tr("取消");
-    cancel->setText(text);
+    cancel->setText(tr("cancel"));
     cancel->setFont(QFont("ubuntu", 18));
     cancel->setGeometry((dialogWidth-142)/2,(dialogHeight-58),142,38);
     cancel->setAlignment(Qt::AlignCenter);
     cancel->installEventFilter(this);
 }
 
-void PowerWin::addButton(QString name, QLabel *button, QLabel *label)
+void PowerWin::addButton(QString name1, QString name2, QLabel *button, QLabel *label)
 {
     QVBoxLayout *vboxSuspend = new QVBoxLayout();
     button->setFixedSize(168, 168);
-    button->setObjectName(name);
+    button->setObjectName(name1);
     button->installEventFilter(this);
 
     label->setAlignment(Qt::AlignCenter);//居中
-    label->setText(name);
+    label->setText(name2);
     label->setFont(QFont("ubuntu", 16));
     label->setFixedSize(168, 30);
 

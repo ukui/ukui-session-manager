@@ -35,7 +35,7 @@ public:
     void ResizeEvent(QRect screen , QWidget *widget);
 
 private:
-    void addButton(QString name, QLabel *button, QLabel *label);
+    void addButton(QString name1, QString name2, QLabel *button, QLabel *label);
     void doevent(QEvent *, QString test2, int i);
 
 private:

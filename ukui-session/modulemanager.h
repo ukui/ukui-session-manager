@@ -35,6 +35,8 @@ public:
 public slots:
     void logout(bool doExit);
 
+    void startApps();
+
 signals:
     void moduleStateChanged(QString moduleName, bool state);
 
