@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>powerwin.qss</file>
+        <file>zh.qm</file>
     </qresource>
 </RCC>

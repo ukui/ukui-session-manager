@@ -17,6 +17,7 @@ private Q_SLOTS:
 
 private:
     ModuleManager* modman;
+    QWidget *widget;
 };
 
 #endif // SESSIONAPPLICATION_H

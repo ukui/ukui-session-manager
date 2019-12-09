@@ -2,8 +2,6 @@
 #include "modulemanager.h"
 #include "sessiondbusadaptor.h"
 
-#include <QTimer>
-
 SessionApplication::SessionApplication(int& argc, char** argv) :
     QApplication(argc, argv)
 {

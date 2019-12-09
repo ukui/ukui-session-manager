@@ -9,6 +9,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QDebug>
+#include <QTimer>
 
 ModuleManager::ModuleManager(QObject* parent)
     : QObject(parent),
@@ -22,6 +23,7 @@ ModuleManager::ModuleManager(QObject* parent)
     apps.append("ukui-panel");
     mSettings->setValue("required_apps", apps);
     mSettings->setValue("windows_manager", "ukwm");
+    mSettings->setValue("apps","ukui-settings-daemon");
 //    mSettings->endGroup();
     mSettings->sync();
 }
@@ -44,10 +46,8 @@ ModuleManager::~ModuleManager()
     delete mSettings;
 }
 
-void ModuleManager::startup()
+void ModuleManager::startApps()
 {
-    qputenv("XDG_CURRENT_DESKTOP","ukui");
-
     startWm();
 
     startRequiredApps();
@@ -55,11 +55,34 @@ void ModuleManager::startup()
     startAutostartApps();
 }
 
+void ModuleManager::startup(){
+    qputenv("XDG_CURRENT_DESKTOP","ukui");
+    QString ukui_settings_daemon = mSettings->value(QLatin1String("apps")).toString();
+    qDebug() << "Start apps: " << ukui_settings_daemon;
+    QString desktop_name = ukui_settings_daemon + ".desktop";
+    QStringList desktop_paths;
+    desktop_paths << "/etc/xdg/autostart";
+    const auto files = XdgAutoStart::desktopFileList(desktop_paths, false);
+    for (const XdgDesktopFile& file : files)
+    {
+        if (QFileInfo(file.fileName()).fileName() == desktop_name)
+        {
+            startProcess(file, true);
+        }
+    }
+    QTimer::singleShot(3000, this, SLOT(startApps()));
+}
+
 void ModuleManager::startAutostartApps()
 {
     const XdgDesktopFileList fileList = XdgAutoStart::desktopFileList();
+    QFile file("/etc/xdg/autostart/kylin-nm.desktop");
     for (XdgDesktopFileList::const_iterator i = fileList.constBegin(); i != fileList.constEnd(); ++i)
     {
+        if(i->fileName()=="/etc/xdg/autostart/nm-applet.desktop" && file.exists()){
+            qDebug() << "the kylin-nm exist so the nm-applet will not start";
+            continue;
+        }
         qDebug() << "Start autostart app: " << i->fileName();
         startProcess(*i, false);
     }
@@ -83,9 +106,9 @@ void ModuleManager::startRequiredApps()
 
 void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
 {
-    if (!required && !file.value(QL1S("OnlyShowIn")).toString().contains("UKUI"))
+    if (!required && !file.value(QL1S("OnlyShowIn")).toString().toUpper().contains("UKUI"))
     {
-        if (file.value((QL1S("NotShowIn"))).toString().contains("UKUI") || file.contains("OnlyShowIn"))
+        if (file.value((QL1S("NotShowIn"))).toString().toUpper().contains("UKUI") || file.contains("OnlyShowIn"))
         {
             qDebug() << "Do not launch " << file.fileName();
             return;
@@ -102,15 +125,19 @@ void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
         qWarning() << "Wrong desktop file: " << file.fileName();
         return;
     }
-    UkuiModule* proc = new UkuiModule(file, this);
-    connect(proc, SIGNAL(moduleStateChanged(QString, bool)), this, SIGNAL(moduleStateChanged(QString, bool)));
-    proc->start();
 
     QString name = QFileInfo(file.fileName()).fileName();
-    mNameMap[name] = proc;
+    if (!mNameMap.contains(name))
+    {
+        UkuiModule* proc = new UkuiModule(file, this);
+        connect(proc, SIGNAL(moduleStateChanged(QString, bool)), this, SIGNAL(moduleStateChanged(QString, bool)));
+        proc->start();
 
-    connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
-            this, SLOT(restartModules(int, QProcess::ExitStatus)));
+        mNameMap[name] = proc;
+
+        connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
+                this, SLOT(restartModules(int, QProcess::ExitStatus)));
+    }
 }
 
 void ModuleManager::startProcess(const QString& name, bool required)
@@ -118,16 +145,14 @@ void ModuleManager::startProcess(const QString& name, bool required)
     QString desktop_name = name + ".desktop";
     QStringList desktop_paths;
     desktop_paths << "/usr/share/applications";
-    if (!mNameMap.contains(desktop_name))
+
+    const auto files = XdgAutoStart::desktopFileList(desktop_paths, false);
+    for (const XdgDesktopFile& file : files)
     {
-        const auto files = XdgAutoStart::desktopFileList(desktop_paths, false);
-        for (const XdgDesktopFile& file : files)
+        if (QFileInfo(file.fileName()).fileName() == desktop_name)
         {
-            if (QFileInfo(file.fileName()).fileName() == desktop_name)
-            {
-                startProcess(file, required);
-                return;
-            }
+            startProcess(file, required);
+            return;
         }
     }
 }
@@ -168,7 +193,6 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
                 proc->start();
                 return;
 //                time_t now = time(NULL);
-
             }
         }
     }
