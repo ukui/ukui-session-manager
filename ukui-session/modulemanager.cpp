@@ -80,7 +80,7 @@ void ModuleManager::startAutostartApps()
     for (XdgDesktopFileList::const_iterator i = fileList.constBegin(); i != fileList.constEnd(); ++i)
     {
         if(i->fileName()=="/etc/xdg/autostart/nm-applet.desktop" && file.exists()){
-            qDebug() << "88888888888888888888888888888888";
+            qDebug() << "the kylin-nm exist so the nm-applet will not start";
             continue;
         }
         qDebug() << "Start autostart app: " << i->fileName();

@@ -22,13 +22,13 @@ int main(int argc, char* argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    QCommandLineOption logoutOption(QStringLiteral("logout"));
+    QCommandLineOption logoutOption(QStringLiteral("logout"),QCoreApplication::translate("main", "Logout this computer."));
     parser.addOption(logoutOption);
-    QCommandLineOption shutdownOption(QStringLiteral("shutdown"));
+    QCommandLineOption shutdownOption(QStringLiteral("shutdown"),QCoreApplication::translate("main", "Shutdown this computer."));
     parser.addOption(shutdownOption);
-    QCommandLineOption switchuserOption(QStringLiteral("switchuser"));
+    QCommandLineOption switchuserOption(QStringLiteral("switchuser"),QCoreApplication::translate("main", "Switch the user of this computer."));
     parser.addOption(switchuserOption);
-    QCommandLineOption rebootOption(QStringLiteral("reboot"));
+    QCommandLineOption rebootOption(QStringLiteral("reboot"),QCoreApplication::translate("main", "Restart this computer."));
     parser.addOption(rebootOption);
 
     parser.process(a);
