@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UKUI Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-24 17:33+0800\n"
+"POT-Creation-Date: 2019-12-14 13:58+0800\n"
 "PO-Revision-Date: 2015-12-14 12:55+0000\n"
 "Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.wiki.ukui.org/trans/ukui/UKUI/"
@@ -493,6 +493,7 @@ msgid " - the UKUI session manager"
 msgstr " - UKUI 作業階段管理員"
 
 #: ../tools/uksm-shortcuts-dialog.c:346
+#, c-format
 msgid "This window will be automatically closed in %d second"
 msgid_plural "This window will be automatically closed in %d seconds"
 msgstr[0] "您將會在 %d 秒後自動登出"
