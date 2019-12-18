@@ -1,16 +1,4 @@
-ukui-session-manager (2.0.1~201912091113) eoan; urgency=medium
-
-  * Daily build.
-
- -- liuliang <liuliang@kylinos.cn>  Mon, 27 May 2019 15:48:18 +0800
-
-ukui-session-manager (2.0.1) eoan; urgency=medium
-
-  * Daily build.
-
- -- liuliang <liuliang@kylinos.cn>  Mon, 27 May 2019 15:48:18 +0800
-
-ukui-session-manager (2.0.1) unstable; urgency=medium
+ukui-session-manager (2.0.0) unstable; urgency=medium
 
   * Migrate to Qt. 
 

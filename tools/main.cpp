@@ -4,8 +4,9 @@
 #include <QDesktopWidget>
 #include <QTranslator>
 #include <QCommandLineParser>
-#include "ukuipower.h"
+#include <QString>
 
+#include "ukuipower.h"
 #include "powerwin.h"
 
 int main(int argc, char* argv[])
@@ -15,20 +16,20 @@ int main(int argc, char* argv[])
     UkuiPower powermanager(&a);
 
     QCommandLineParser parser;
-    parser.setApplicationDescription(QStringLiteral("Session-Manager Leave"));
-    const QString VERINFO = QStringLiteral("ukui3.0");
+    parser.setApplicationDescription(QApplication::tr("UKUI session tools, show the shutdown dialog without any arguments."));
+    const QString VERINFO = QStringLiteral("2.0");
     a.setApplicationVersion(VERINFO);
 
     parser.addHelpOption();
     parser.addVersionOption();
 
-    QCommandLineOption logoutOption(QStringLiteral("logout"),QCoreApplication::translate("main", "Logout this computer."));
+    QCommandLineOption logoutOption(QStringLiteral("logout"), QApplication::tr("Logout this computer."));
     parser.addOption(logoutOption);
-    QCommandLineOption shutdownOption(QStringLiteral("shutdown"),QCoreApplication::translate("main", "Shutdown this computer."));
+    QCommandLineOption shutdownOption(QStringLiteral("shutdown"), QApplication::tr("Shutdown this computer."));
     parser.addOption(shutdownOption);
-    QCommandLineOption switchuserOption(QStringLiteral("switchuser"),QCoreApplication::translate("main", "Switch the user of this computer."));
+    QCommandLineOption switchuserOption(QStringLiteral("switchuser"), QApplication::tr("Switch the user of this computer."));
     parser.addOption(switchuserOption);
-    QCommandLineOption rebootOption(QStringLiteral("reboot"),QCoreApplication::translate("main", "Restart this computer."));
+    QCommandLineOption rebootOption(QStringLiteral("reboot"), QApplication::tr("Restart this computer."));
     parser.addOption(rebootOption);
 
     parser.process(a);
@@ -51,14 +52,14 @@ int main(int argc, char* argv[])
     }
 
     //加载翻译文件
-    QString locale = QLocale::system().name();
+    const QString locale = QLocale::system().name();
     QTranslator translator;
-    if (locale == "zh_CN"){
-       if (translator.load("zh.qm",":/")){
-           a.installTranslator(&translator);
-       }
-       else
-           qDebug() << "Load translations file zh.qm failed!";
+    qDebug() << "local: " << locale;
+    qDebug() << "path: " << QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager");
+    if (translator.load(locale, QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
+       a.installTranslator(&translator);
+    } else {
+       qDebug() << "Load translations file failed!";
     }
 
     PowerWin *pw;
