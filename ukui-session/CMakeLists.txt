@@ -5,6 +5,12 @@ set(ukui-session_SRCS
     modulemanager.cpp
     ukuimodule.cpp
     sessiondbusadaptor.h
+    xdgautostart.cpp
+    xdgautostart.h
+    xdgdesktopfile.cpp
+    xdgdesktopfile.h
+    xdgdirs.cpp
+    xdgdirs.h
     ../tools/ukuipower.cpp
     ../tools/powerprovider.cpp
 )

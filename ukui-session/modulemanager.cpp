@@ -2,8 +2,9 @@
 #include "ukuimodule.h"
 
 #include <QCoreApplication>
-#include <XdgAutoStart>
-#include <XdgDirs>
+#include "xdgautostart.h"
+#include "xdgdesktopfile.h"
+#include "xdgdirs.h"
 #include <QFileInfo>
 #include <QStringList>
 #include <QSettings>
@@ -15,6 +16,44 @@ ModuleManager::ModuleManager(QObject* parent)
     : QObject(parent),
       mWmProcess(new QProcess(this))
 {
+    XdgDesktopFileList Initialization;
+    XdgDesktopFileList Windowmanager;
+    XdgDesktopFileList Panel;
+    XdgDesktopFileList Desktop;
+    XdgDesktopFileList Applications;
+    QString keyInit = "X-UKUI-Autostart-Phase";
+    QString keyType = "Type";
+
+
+
+    const XdgDesktopFileList AllfileList = XdgAutoStart::desktopFileList();
+    for (XdgDesktopFileList::const_iterator i = AllfileList.constBegin(); i != AllfileList.constEnd(); ++i){
+        XdgDesktopFile desktop = *i;
+        if(i->contains(keyInit)){
+            QStringList s1 =desktop.value(keyInit).toString().split(QLatin1Char(';'));
+            if(s1.contains("Initialization")){
+                Initialization << desktop;
+            }
+            else if(s1.contains("Application")){
+                Applications << desktop;
+            }
+        }else if(i->contains(keyType)){
+            QStringList s2 = desktop.value(keyType).toString().split(QLatin1Char(';'));
+            if(s2.contains("Application")){
+                Applications << desktop;
+            }
+        }
+    }
+    qDebug()<<"Initialization数"<<Initialization.count();
+    for (XdgDesktopFileList::const_iterator i = Initialization.constBegin(); i != Initialization.constEnd(); ++i){
+        qDebug() << "Start autostart app: " << i->fileName();
+    }
+    qDebug()<<"Application数"<<Applications.count();
+    for (XdgDesktopFileList::const_iterator i = Applications.constBegin(); i != Applications.constEnd(); ++i){
+        qDebug() << "Start autostart app: " << i->fileName();
+    }
+
+
     QString config_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session.ini";
     bool config_exists;
     if (QFile::exists(config_file))
