@@ -53,6 +53,8 @@ private:
 
     ModulesMap mNameMap;
 
+    QSettings* mSettings;
+
     bool mWmStarted;
     bool mTrayStarted;
     QEventLoop* mWaitLoop;

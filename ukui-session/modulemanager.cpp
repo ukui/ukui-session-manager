@@ -16,15 +16,39 @@
 ModuleManager::ModuleManager(QObject* parent)
     : QObject(parent)
 {
-    qDebug()<<"11111111111";
     qputenv("XDG_CURRENT_DESKTOP","UKUI");
+
+    QString config_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session.ini";
+    bool config_exists;
+    if (QFile::exists(config_file))
+        config_exists = true;
+    else
+        config_exists = false;
+
+    mSettings = new QSettings(config_file, QSettings::IniFormat);
+
+    if (!config_exists)
+    {
+//        mSettings->beginGroup("PHASE");
+        mSettings->setValue("Windows_manager", "ukwm");
+        mSettings->setValue("Panel", "ukui-panel");
+        mSettings->setValue("Desktop", "peony");
+//        mSettings->endGroup();
+
+//        mSettings->beginGroup("IDLE");
+        mSettings->setValue("idle_time_secs", 30);
+//        mSettings->endGroup();
+
+        mSettings->sync();
+    }
+
     QString keyInit = "X-UKUI-Autostart-Phase";
     QString keyType = "Type";
     QStringList desktop_paths;
     desktop_paths << "/usr/share/applications";
-    QString Win_desktop_name = "ukwm.desktop";
-    QString Panel_desktop_name = "ukui-panel.desktop";
-    QString Desktop_desktop_name = "peony.desktop";
+    QString Win_desktop_name = mSettings->value(QLatin1String("Windows_manager")).toString() + ".desktop";
+    QString Panel_desktop_name = mSettings->value(QLatin1String("Panel")).toString() + ".desktop";
+    QString Desktop_desktop_name = mSettings->value(QLatin1String("Desktop")).toString() + ".desktop";
 
     const auto files = XdgAutoStart::desktopFileList(desktop_paths, false);
     bool findpanel = false;
@@ -85,6 +109,7 @@ ModuleManager::~ModuleManager()
         delete p;
         mNameMap[i.key()] = nullptr;
     }
+    delete mSettings;
 }
 
 void ModuleManager::startApps()
