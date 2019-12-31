@@ -11,6 +11,7 @@
 #include <QMap>
 
 class XdgDesktopFile;
+class IdleWatcher;
 
 typedef QMap<QString, UkuiModule*> ModulesMap;
 typedef QMapIterator<QString, UkuiModule*> ModulesMapIterator;

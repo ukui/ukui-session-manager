@@ -4,6 +4,7 @@ set(ukui-session_SRCS
     sessionapplication.cpp
     modulemanager.cpp
     ukuimodule.cpp
+    idlewatcher.cpp
     sessiondbusadaptor.h
     idlewatcher.cpp
     idlewatcher.h

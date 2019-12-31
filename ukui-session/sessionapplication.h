@@ -4,6 +4,7 @@
 #include <QApplication>
 
 class ModuleManager;
+class IdleWatcher;
 
 class SessionApplication : public QApplication
 {
@@ -17,6 +18,7 @@ private Q_SLOTS:
 
 private:
     ModuleManager* modman;
+    IdleWatcher* mIdleWatcher;
     QWidget *widget;
 };
 
