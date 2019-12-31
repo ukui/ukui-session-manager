@@ -1,8 +1,8 @@
-ukui-session-manager (2.0.0) unstable; urgency=medium
+ukui-session-manager (2.0.1) focal; urgency=medium
 
   * Migrate to Qt. 
 
- -- handsome_feng <jianfengli@ubuntukylin.com>  Fri, 05 Jul 2019 16:15:56 +0800
+ -- liuliang <liuliang@kylinos.cn>  Fri, 05 Jul 2019 16:15:56 +0800
 
 ukui-session-manager (1.1.5-1) experimental; urgency=medium
 

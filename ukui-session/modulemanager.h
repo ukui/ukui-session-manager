@@ -23,6 +23,12 @@ public:
     ModuleManager(QObject* parent = nullptr);
     ~ModuleManager() override;
 
+    XdgDesktopFileList Initialization;
+    XdgDesktopFileList Windowmanager;
+    XdgDesktopFileList Panel;
+    XdgDesktopFileList Desktop;
+    XdgDesktopFileList Applications;
+
     void startProcess(const QString& name, bool detach);
 
     void stopProcess(const QString& name);
@@ -41,21 +47,10 @@ signals:
     void moduleStateChanged(QString moduleName, bool state);
 
 private:
-    void startWm();
-
-    void startAutostartApps();
-
-    void startRequiredApps();
 
     void startProcess(const XdgDesktopFile &file, bool detach);
 
-    QString mWindowManager;
-
-    QProcess* mWmProcess;
-
     ModulesMap mNameMap;
-
-    QSettings* mSettings;
 
     bool mWmStarted;
     bool mTrayStarted;

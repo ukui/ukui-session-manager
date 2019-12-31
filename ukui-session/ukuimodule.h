@@ -2,7 +2,9 @@
 #define UKUIMODULE_H
 
 #include <QProcess>
-#include <XdgDesktopFile>
+#include "xdgautostart.h"
+#include "xdgdesktopfile.h"
+#include "xdgdirs.h"
 
 class UkuiModule : public QProcess
 {
@@ -12,6 +14,8 @@ public:
     void start();
     void terminate();
     bool isTerminating();
+
+    int restartNum;
 
     const XdgDesktopFile file;
     const QString fileName;
