@@ -18,6 +18,7 @@ add_definitions("-DQT_MESSAGELOGCONTEXT")
 # Find the QtWidgets library
 find_package(Qt5 COMPONENTS Widgets Core DBus REQUIRED)
 find_package(Qt5LinguistTools)
+find_package(KF5IdleTime)
 
 # For debug: cmake -DCMAKE_BUILD_TYPE=debug
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")

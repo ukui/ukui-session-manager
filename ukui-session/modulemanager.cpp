@@ -1,5 +1,6 @@
 #include "modulemanager.h"
 #include "ukuimodule.h"
+#include "idlewatcher.h"
 
 #include <QCoreApplication>
 #include <XdgAutoStart>
@@ -26,7 +27,7 @@ ModuleManager::ModuleManager(QObject* parent)
 
     if (!config_exists)
     {
-//        mSettings->beginGroup("RequiredApps");
+//        mSettings->beginGroup("PHASE");
         QStringList apps;
         apps.append("peony");
         apps.append("ukui-panel");
@@ -34,6 +35,11 @@ ModuleManager::ModuleManager(QObject* parent)
         mSettings->setValue("windows_manager", "ukwm");
         mSettings->setValue("apps","ukui-settings-daemon");
 //        mSettings->endGroup();
+
+//        mSettings->beginGroup("IDLE");
+        mSettings->setValue("idle_time_secs", 30);
+//        mSettings->endGroup();
+
         mSettings->sync();
     }
 }

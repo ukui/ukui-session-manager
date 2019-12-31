@@ -4,7 +4,9 @@ set(ukui-session_SRCS
     sessionapplication.cpp
     modulemanager.cpp
     ukuimodule.cpp
+    idlewatcher.cpp
     sessiondbusadaptor.h
+    idleadbusdaptor.h
     ../tools/ukuipower.cpp
     ../tools/powerprovider.cpp
 )
@@ -15,7 +17,7 @@ find_package(QT5XDG )
 #include_directories(${GSETTINGS_QT_INCLUDES})
 
 add_executable(ukui-session ${ukui-session_SRCS})
-target_link_libraries(ukui-session Qt5::Widgets Qt5::Core Qt5Xdg)
+target_link_libraries(ukui-session Qt5::Widgets Qt5::Core Qt5Xdg KF5::IdleTime)
 #${GSETTINGS_QT_LIBRARIES}
 
 install(TARGETS ukui-session DESTINATION bin)

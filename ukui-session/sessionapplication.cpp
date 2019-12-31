@@ -1,6 +1,8 @@
 #include "sessionapplication.h"
 #include "modulemanager.h"
 #include "sessiondbusadaptor.h"
+#include "idleadbusdaptor.h"
+#include "idlewatcher.h"
 
 #include <QDebug>
 
@@ -11,14 +13,22 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
 
     new SessionDBusAdaptor(modman);
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    if (!dbus.registerService(QStringLiteral("org.ukui.Session")))
+    if (!dbus.registerService(QStringLiteral("org.gnome.SessionManager")))
     {
-        qCritical() << "Can't register org.ukui.Session, there is already a session manager!";
+        qCritical() << "Can't register org.gnome.SessionManager, there is already a session manager!";
     }
-    if (!dbus.registerObject(("/org/ukui/Session"), modman))
+    if (!dbus.registerObject(("/org/gnome/SessionManager"), modman))
     {
         qCritical() << "Can't register object, there is already an object registered at "
-                    << "/org/ukui/Session";
+                    << "/org/gnome/SessionManager";
+    }
+
+    mIdleWatcher = new IdleWatcher;
+    new IdleDBusAdaptor(mIdleWatcher);
+    if (!dbus.registerObject("/org/gnome/SessionManager/Presence", mIdleWatcher))
+    {
+        qCritical() << "Cant' register object, there is already an object registered at "
+                    << "org/gnome/SessionManager/Presence";
     }
 
     // Wait until the event loop starts
