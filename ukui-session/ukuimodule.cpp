@@ -9,6 +9,7 @@ UkuiModule::UkuiModule(const XdgDesktopFile& file, QObject* parent) :
     fileName(QFileInfo(file.fileName()).fileName()),
     mIsTerminating(false)
 {
+    restartNum = 0;
     QProcess::setProcessChannelMode(QProcess::ForwardedChannels);
     connect(this, SIGNAL(stateChanged(QProcess::ProcessState)), SLOT(updateState(QProcess::ProcessState)));
 }

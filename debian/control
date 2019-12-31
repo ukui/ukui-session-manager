@@ -6,7 +6,6 @@ Priority: optional
 Build-Depends: debhelper-compat (= 12),
                cmake,
                libx11-dev,
-               libqt5xdg-dev,
                xdg-user-dirs,
                qtbase5-dev,
                libsystemd-dev,

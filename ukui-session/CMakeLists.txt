@@ -6,7 +6,15 @@ set(ukui-session_SRCS
     ukuimodule.cpp
     idlewatcher.cpp
     sessiondbusadaptor.h
+    idlewatcher.cpp
+    idlewatcher.h
     idleadbusdaptor.h
+    xdgautostart.cpp
+    xdgautostart.h
+    xdgdesktopfile.cpp
+    xdgdesktopfile.h
+    xdgdirs.cpp
+    xdgdirs.h
     ../tools/ukuipower.cpp
     ../tools/powerprovider.cpp
 )
