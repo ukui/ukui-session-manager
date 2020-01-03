@@ -3,11 +3,10 @@
 #include <KIdleTime>
 #include <QDebug>
 
-IdleWatcher::IdleWatcher(QObject *parent) :
-    QObject(parent)
+IdleWatcher::IdleWatcher(int secs, QObject *parent) :
+    QObject(parent),
+    mSecs(secs)
 {
-    qDebug() << "Starting idlewatcher";
-
     connect(KIdleTime::instance(),
             static_cast<void (KIdleTime::*)(int)>(&KIdleTime::timeoutReached),
             this,
@@ -18,16 +17,24 @@ IdleWatcher::IdleWatcher(QObject *parent) :
 
 IdleWatcher::~IdleWatcher()
 {
+    KIdleTime::instance()->removeAllIdleTimeouts();
 }
 
 void IdleWatcher::setup()
 {
-    int timeout = 1000 * 600;
-    KIdleTime::instance()->addIdleTimeout(timeout);
+    KIdleTime::instance()->addIdleTimeout(1000 * mSecs);
 }
 
 void IdleWatcher::timeoutReached(int identifier)
 {
     qDebug() << "Timeout Reached, emit StatusChanged signal!";
     emit StatusChanged(3);
+}
+
+void IdleWatcher::reset(int timeout)
+{
+    qDebug() << "Idle timeout reset to " << timeout;
+    KIdleTime::instance()->removeAllIdleTimeouts();
+    mSecs = timeout;
+    setup();
 }

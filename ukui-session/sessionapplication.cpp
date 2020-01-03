@@ -6,10 +6,56 @@
 
 #include <QDebug>
 
+void InitialEnvironment()
+{
+    qputenv("XDG_CURRENT_DESKTOP","UKUI");
+}
+
+void SessionApplication::InitSettings()
+{
+    QString config_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session.ini";
+    bool config_exists;
+    if (QFile::exists(config_file))
+        config_exists = true;
+    else
+        config_exists = false;
+
+    mSettings = new QSettings(config_file, QSettings::IniFormat);
+
+    if (!config_exists)
+    {
+        mSettings->setValue("WindowManager", "ukwm");
+        mSettings->setValue("Panel", "ukui-panel");
+        mSettings->setValue("FileManager", "peony");
+        mSettings->setValue("Desktop", "");
+        mSettings->setValue("ForceApplication", "");
+        mSettings->setValue("InhibitApplication", "nm-applet");
+        mSettings->setValue("IdleTimeSecs", 600);
+        mSettings->sync();
+    }
+
+    QStringList config_list;
+    config_list << config_file;
+    mSettingsWatcher = new QFileSystemWatcher(config_list);
+    connect(mSettingsWatcher, SIGNAL(fileChanged(QString)), this, SLOT(settingsChanged(QString)));
+}
+
+void SessionApplication::settingsChanged(QString path)
+{
+    qDebug() << "session manager settings changed!";
+    mSettings->sync();
+    int timeout = mSettings->value(QLatin1String("IdleTimeSecs")).toInt();
+    mIdleWatcher->reset(timeout);
+}
+
 SessionApplication::SessionApplication(int& argc, char** argv) :
     QApplication(argc, argv)
 {
-    modman = new ModuleManager;
+    InitialEnvironment();
+
+    InitSettings();
+
+    modman = new ModuleManager(mSettings);
 
     new SessionDBusAdaptor(modman);
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -23,7 +69,8 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
                     << "/org/gnome/SessionManager";
     }
 
-    mIdleWatcher = new IdleWatcher;
+    int timeout = mSettings->value(QLatin1String("IdleTimeSecs")).toInt();
+    mIdleWatcher = new IdleWatcher(timeout);
     new IdleDBusAdaptor(mIdleWatcher);
     if (!dbus.registerObject("/org/gnome/SessionManager/Presence", mIdleWatcher))
     {
@@ -38,6 +85,9 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
 SessionApplication::~SessionApplication()
 {
     delete modman;
+    delete mIdleWatcher;
+    delete mSettings;
+    delete mSettingsWatcher;
 }
 
 bool SessionApplication::startup()

@@ -38,6 +38,8 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     logFile.open(QIODevice::WriteOnly | QIODevice::Append);
     QTextStream ts(&logFile);
     ts << logMsg << endl;
+    logFile.flush();
+    logFile.close();
 }
 
 int main(int argc, char **argv)

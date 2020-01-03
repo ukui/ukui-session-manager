@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QEventLoop>
 #include <QProcess>
+#include <QVector>
 #include <QMap>
 
 class XdgDesktopFile;
@@ -21,14 +22,8 @@ class ModuleManager : public QObject, public QAbstractNativeEventFilter
     Q_OBJECT
 
 public:
-    ModuleManager(QObject* parent = nullptr);
+    ModuleManager(QSettings* settings, QObject* parent = nullptr);
     ~ModuleManager() override;
-
-    XdgDesktopFileList Initialization;
-    XdgDesktopFileList Windowmanager;
-    XdgDesktopFileList Panel;
-    XdgDesktopFileList Desktop;
-    XdgDesktopFileList Applications;
 
     void startProcess(const QString& name, bool detach);
 
@@ -42,22 +37,34 @@ public:
 public slots:
     void logout(bool doExit);
 
-    void startApps();
-
 signals:
     void moduleStateChanged(QString moduleName, bool state);
 
 private:
 
-    void startProcess(const XdgDesktopFile &file, bool detach);
+    void startProcess(const XdgDesktopFile &file, bool required);
+
+    void constructStartupList();
+
+    bool autoRestart(const XdgDesktopFile &file);
 
     ModulesMap mNameMap;
+
+    QList<QString> mAllAppList;
 
     QSettings* mSettings;
 
     bool mWmStarted;
     bool mTrayStarted;
     QEventLoop* mWaitLoop;
+
+    XdgDesktopFileList mInitialization;
+    XdgDesktopFile mWindowManager;
+    XdgDesktopFile mPanel;
+    XdgDesktopFile mFileManager;
+    XdgDesktopFileList mDesktop;
+    XdgDesktopFileList mApplication;
+    XdgDesktopFileList mForceApplication;
 
 private slots:
     void restartModules(int exitCode, QProcess::ExitStatus exitStatus);

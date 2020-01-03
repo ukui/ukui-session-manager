@@ -9,8 +9,10 @@ class IdleWatcher : public QObject
 {
     Q_OBJECT
 public:
-    explicit IdleWatcher(QObject *parent = nullptr);
+    explicit IdleWatcher(int secs, QObject *parent = nullptr);
     virtual ~IdleWatcher();
+
+    void reset(int timeout);
 
 private slots:
     void timeoutReached(int identifier);
@@ -18,8 +20,9 @@ private slots:
 
 signals:
     void StatusChanged(uint status);
+
 private:
-//    ScreenSaver mScreensaver;
+    int mSecs;
 
 };
 

@@ -2,6 +2,8 @@
 #define SESSIONAPPLICATION_H
 
 #include <QApplication>
+#include <QFileSystemWatcher>
+#include <QSettings>
 
 class ModuleManager;
 class IdleWatcher;
@@ -15,10 +17,15 @@ public:
 
 private Q_SLOTS:
     bool startup();
+    void settingsChanged(QString path);
 
 private:
+    void InitSettings();
+
     ModuleManager* modman;
     IdleWatcher* mIdleWatcher;
+    QFileSystemWatcher *mSettingsWatcher;
+    QSettings *mSettings;
     QWidget *widget;
 };
 
