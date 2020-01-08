@@ -18,6 +18,7 @@ public:
 private Q_SLOTS:
     bool startup();
     void settingsChanged(QString path);
+    void registerDBus();
 
 private:
     void InitSettings();

@@ -14,9 +14,9 @@
 #define SYSTEMD_PATH            "/org/freedesktop/login1"
 #define SYSTEMD_INTERFACE       "org.freedesktop.login1.Manager"
 
-#define UKUI_SERVICE      "org.ukui.Session"
-#define UKUI_PATH         "/org/ukui/Session"
-#define UKUI_INTERFACE    "org.ukui.Session"
+#define UKUI_SERVICE      "org.gnome.SessionManager"
+#define UKUI_PATH         "/org/gnome/SessionManager"
+#define UKUI_INTERFACE    "org.gnome.SessionManager"
 
 #define PROPERTIES_INTERFACE    "org.freedesktop.DBus.Properties"
 

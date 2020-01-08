@@ -48,15 +48,8 @@ void SessionApplication::settingsChanged(QString path)
     mIdleWatcher->reset(timeout);
 }
 
-SessionApplication::SessionApplication(int& argc, char** argv) :
-    QApplication(argc, argv)
+void SessionApplication::registerDBus()
 {
-    InitialEnvironment();
-
-    InitSettings();
-
-    modman = new ModuleManager(mSettings);
-
     new SessionDBusAdaptor(modman);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     if (!dbus.registerService(QStringLiteral("org.gnome.SessionManager")))
@@ -77,6 +70,16 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
         qCritical() << "Cant' register object, there is already an object registered at "
                     << "org/gnome/SessionManager/Presence";
     }
+}
+
+SessionApplication::SessionApplication(int& argc, char** argv) :
+    QApplication(argc, argv)
+{
+    InitialEnvironment();
+
+    InitSettings();
+
+    modman = new ModuleManager(mSettings);
 
     // Wait until the event loop starts
     QTimer::singleShot(0, this, SLOT(startup()));
@@ -93,6 +96,8 @@ SessionApplication::~SessionApplication()
 bool SessionApplication::startup()
 {
     modman->startup();
+
+    QTimer::singleShot(20 * 1000, this, SLOT(registerDBus()));
 
     return true;
 }
