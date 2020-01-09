@@ -45,6 +45,7 @@ void SessionApplication::settingsChanged(QString path)
     qDebug() << "session manager settings changed!";
     mSettings->sync();
     int timeout = mSettings->value(QLatin1String("IdleTimeSecs")).toInt();
+    //TODO
     mIdleWatcher->reset(timeout);
 }
 

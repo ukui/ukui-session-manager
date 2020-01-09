@@ -33,7 +33,6 @@ ModuleManager::~ModuleManager()
         delete p;
         mNameMap[i.key()] = nullptr;
     }
-    delete mSettings;
 }
 
 void ModuleManager::constructStartupList()
