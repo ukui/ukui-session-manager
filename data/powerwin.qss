@@ -1,0 +1,122 @@
+/*按钮*/
+QPushButton{
+    text-align:center;
+    color: rgb(255, 255, 255, 200);
+    border: none;
+    outline: none;
+    font-family: 'Ubuntu';
+}
+QPushButton::hover{
+    background-color: rgb(255, 255, 255, 20%);
+}
+QPushButton::pressed {
+    background-color: rgba(0, 0, 0, 30%);
+}
+
+/*文本label*/
+QLabel{
+    color: white;
+    font-family: "Ubuntu";
+}
+
+/* 挂起按钮 */
+QLabel#suspend{
+    background:url(:/images/suspend.png);
+    background-repeat:no-repeat;
+    border-width: 1px;
+	border-style: solid;
+    border-color: #FFFFFF
+}
+QLabel::hover#suspend{
+    background:url(:/images/suspend_highlight.png);
+    background-repeat:no-repeat
+}
+
+/* 休眠按钮 */
+QLabel#hibernate{
+    background:url(:/images/hibernate.png);
+    background-repeat:no-repeat;
+    border-width: 1px;
+	border-style: solid;
+    border-color: #FFFFFF
+}
+QLabel::hover#hibernate{
+    background:url(:/images/hibernate_highlight.png);
+    background-repeat:no-repeat
+}
+
+/* 重启按钮 */
+QLabel#restart{
+    background:url(:/images/restart.png);
+    background-repeat:no-repeat;
+    border-width: 1px;
+	border-style: solid;
+    border-color: #FFFFFF
+}
+QLabel::hover#restart{
+    background:url(:/images/restart_highlight.png);
+    background-repeat:no-repeat
+}
+
+/* 关机按钮 */
+QLabel#shutdown{
+    background:url(:/images/shutdown.png);
+    background-repeat:no-repeat;
+    border-width: 1px;
+	border-style: solid;
+    border-color: #FFFFFF
+}
+QLabel::hover#shutdown{
+    background:url(:/images/shutdown_highlight.png);
+    background-repeat:no-repeat
+}
+
+/* 注销按钮 */
+QLabel#logout{
+    background:url(:/images/logout.png);
+    background-repeat:no-repeat;
+    border-width: 1px;
+	border-style: solid;
+    border-color: #FFFFFF
+}
+QLabel::hover#logout{
+    background:url(:/images/logout_highlight.png);
+    background-repeat:no-repeat
+}
+
+/*切换账户按钮*/
+QLabel#switchuser{
+    background:url(:/images/switchuser.png);
+    background-repeat:no-repeat;
+    border-width: 1px;
+	border-style: solid;
+    border-color: #FFFFFF
+}
+QLabel::hover#switchuser{
+    background:url(:/images/switchuser_highlight.png);
+    background-repeat:no-repeat
+}
+
+/*取消按钮*/
+QLabel#cancel{
+	border-color: #FFFFFF;
+	border-width: 1px;
+	border-style: solid;
+	background-color: rgb(255,255,255,20%)
+}
+QLabel::hover#cancel{
+	border-color: #FFFFFF;
+	border-width: 1px;
+	border-style: solid;
+	background: rgb(255,255,255,40%)
+}
+
+
+/* 电源对话框中间区域 */
+/*QWidget#PoerWinCenterWidget{
+    background: rgb(0, 0, 0, 0)
+}
+QWidget#PowerWin{
+    background: rgb(0, 0, 0, 150);
+}*/
+

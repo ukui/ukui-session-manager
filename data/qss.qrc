@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>powerwin.qss</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,31 @@
+Source: ukui-session-manager
+Maintainer: Kylin Developers <ukui@kylinos.cn>
+Uploaders: handsome_feng <jianfengli@ubuntukylin.com>,
+Section: x11
+Priority: optional
+Build-Depends: debhelper-compat (= 12),
+               cmake,
+               libx11-dev,
+               xdg-user-dirs,
+               qtbase5-dev,
+               libsystemd-dev,
+Standards-Version: 4.4.1
+Vcs-Browser: https://github.com/ukui/ukui-session-manager
+Vcs-Git: https://github.com/ukui/ukui-session-manager.git
+Homepage: https://github.com/ukui/ukui-session-manager
+
+Package: ukui-session-manager
+Architecture: any
+Depends: ukui-themes | ubuntukylin-theme,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Recommends: ukui-polkit,
+            ukui-screensaver
+Provides: x-session-manager
+Description: session manager component for UKUI
+ UKUI is an advanced, easy-to-use, and fast desktop environment based on
+ Qt technologies.  It has been tailored for users who value simplicity,
+ speed, and an intuitive interface.  Unlike most desktop environments,
+ LXQt also works fine with less powerful machines.
+ .
+ This package contain the session manager component.

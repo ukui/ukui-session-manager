@@ -1,0 +1,85 @@
+ukui-session-manager (2.0.1) focal; urgency=medium
+
+  * Migrate to Qt. 
+
+ -- liuliang <liuliang@kylinos.cn>  Fri, 05 Jul 2019 16:15:56 +0800
+
+ukui-session-manager (1.1.5-1) experimental; urgency=medium
+
+  * Disable nm-applet when kylin-nm exists.
+  * Update the translation.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Wed, 20 Mar 2019 17:30:43 +0800
+
+ukui-session-manager (1.1.4-0ubuntu1) disco; urgency=medium
+
+  * Add keyboard accelerators to logout button.
+  * Update the translations.
+  * Move shortcuts from ukui-session to single tools.
+  * Merge from mate-session-manager:
+    - Avoid compile warning for g_type_class_add_private.
+    - Disable deprecation warnings for discheck.
+    - Add a delay setting to startup manager.
+    - Migrate from dbus-glib to gdbus.
+    - Avoid deprecated 'g_settings_list_schemas'.
+    - Don't wait for all clients to exit before exiting.
+    - Add api for detecting if this is the last session for a user.
+    - Restart user bus if last graphical session.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Tue, 12 Feb 2019 16:25:45 +0800
+
+ukui-session-manager (1.1.3.1-1) unstable; urgency=medium
+
+  * Remove useless gsettings.
+  * Fix build warning.
+  * Show shortcuts dialog when first login.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Sat, 22 Sep 2018 16:12:33 +0800
+
+ukui-session-manager (1.1.2-1) unstable; urgency=medium
+
+  * Use $(DEB_HOST_MULTIARCH) to replace the hard code in desktop
+    file.
+  * Fix the wrong logout button type.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Tue, 10 Apr 2018 15:58:33 +0800
+
+ukui-session-manager (1.1.1-1) unstable; urgency=medium
+
+  * Use ukui-settings-daemon to replace mate-settings-daemon.
+  * Use ukwm to replace marco.
+  * Don't launch 'OnlyShowIn=MATE' apps, since we have forked most of
+    them.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Sun, 01 Apr 2018 15:38:01 +0800
+
+ukui-session-manager (1.1.0-1) unstable; urgency=medium
+
+  * Redesign the logout dialog and shutdown dialog.
+  * Update dbus and systemd user-session to get all user-defined environment
+    when the session starts.
+  * Avoid deprecated gdk_screen_get_number, gdk_screen_make_display_name
+    gtk_show_uri.
+  * Use ukui-panel to replace mate-panel.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Tue, 27 Feb 2018 09:14:37 +0800
+
+ukui-session-manager (1.0.2-2) unstable; urgency=medium
+
+  * Add d/settings from previous default settings package.
+
+ -- Aron Xu <aron@debian.org>  Mon, 06 Nov 2017 10:32:42 +0800
+
+ukui-session-manager (1.0.2-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream release
+  * Also launch 'OnlyShowIn=MATE' apps.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Wed, 13 Sep 2017 10:27:19 +0800
+
+ukui-session-manager (1.0.1-1) unstable; urgency=medium
+
+  * Initial release (Closes: #872969)
+
+ -- Aron Xu <aron@debian.org>  Sat, 26 Aug 2017 17:17:02 +0800

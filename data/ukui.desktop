@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=ukui-session
+TryExec=ukui-session
+Name=UKUI
+Comment=This session logs you into UKUI
+
+#TRANSLATIONS_DIR=translations
