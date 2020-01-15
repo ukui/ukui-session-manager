@@ -1,5 +1,0 @@
-# List of source files containing translatable strings that should not be
-# translated.
-# Please keep this file sorted alphabetically.
-data/org.ukui.session.gschema.xml.in
-data/ukui-session.schemas.in
