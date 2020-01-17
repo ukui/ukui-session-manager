@@ -7,8 +7,13 @@ Build-Depends: debhelper-compat (= 12),
                cmake,
                libx11-dev,
                xdg-user-dirs,
+               libkf5idletime-dev,
                qtbase5-dev,
                libsystemd-dev,
+	       qttools5-dev,
+	       qtmultimedia5-dev,
+               libqt5xdg-dev,
+Rules-requires-root: no
 Standards-Version: 4.4.1
 Vcs-Browser: https://github.com/ukui/ukui-session-manager
 Vcs-Git: https://github.com/ukui/ukui-session-manager.git

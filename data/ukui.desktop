@@ -3,6 +3,8 @@ Type=Application
 Exec=ukui-session
 TryExec=ukui-session
 Name=UKUI
+Icon=
+Keywords=session;ukui-session
 Comment=This session logs you into UKUI
 
 #TRANSLATIONS_DIR=translations

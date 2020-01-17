@@ -1,3 +1,22 @@
+/*
+* Copyright (C) 2019 Tianjin KYLIN Information Technology Co., Ltd.
+*               2010-2016 LXQt team
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2, or (at your option)
+* any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+* 02110-1301, USA.
+**/
 #include "modulemanager.h"
 #include "ukuimodule.h"
 #include "idlewatcher.h"
@@ -127,9 +146,17 @@ void ModuleManager::startup()
     for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i){
         startProcess(*i, true);
     }
-
     qDebug() << "Start window manager: " << mWindowManager.name();
     startProcess(mWindowManager, true);
+
+    qDebug() << "wait for ukui-settings-daemon start-up";
+    timer = new QTimer();
+    connect(timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
+    timer->start(1000);
+}
+
+void ModuleManager::timerUpdate(){
+    timer->stop();
 
     qDebug() << "Start panel: " << mPanel.name();
     startProcess(mPanel, true);
@@ -288,7 +315,6 @@ void ModuleManager::logout(bool doExit)
             p->kill();
         }
     }
-
     if (doExit)
         QCoreApplication::exit(0);
 }

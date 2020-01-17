@@ -16,7 +16,7 @@ include(GNUInstallDirs)
 add_definitions("-DQT_MESSAGELOGCONTEXT")
 
 # Find the QtWidgets library
-find_package(Qt5 COMPONENTS Widgets Core DBus REQUIRED)
+find_package(Qt5 COMPONENTS Widgets Core DBus Multimedia REQUIRED)
 find_package(Qt5LinguistTools)
 find_package(KF5IdleTime)
 

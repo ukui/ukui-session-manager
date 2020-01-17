@@ -3,20 +3,51 @@ Upstream-Name: ukui-session-manager
 Source: https://github.com/ukui/ukui-session-manager
 
 Files: *
-Copyright: 2012-2018 LXQt team
+Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd.
+           2012-2018 LXQt team
            2010-2012 Razor team
-           2019 Kylin team
 License: LGPL-2.1+
 
-
-Files: ukui-session/src/modulemanager.*
-       ukui-session/src/sessiondbusadaptor.h
-Copyright: 2010-2016 LXQt team
-           2019 Kylin team
+Files: ukui-session/modulemanager.*
+       ukui-session/sessiondbusadaptor.h
+       tools/main.cpp
+Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd.
+           2010-2016 LXQt team
 License: LGPL-2.1+
 
-Files: ukui-session/src/sessionapplication.*
-Copyright: 2014  Hong Jen Yee (PCMan) <pcman.tw@gmail.com>
+Files: ukui-session/sessionapplication.*
+Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd.
+           2014  Hong Jen Yee (PCMan) <pcman.tw@gmail.com>
+License: LGPL-2.1+
+
+Files: ukui-session/xdgdirs.*
+       ukui-session/xdgautostart.*
+       ukui-session/xdgdesktopfile.*
+Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd
+           2010-2012, Razor team
+License: LGPL-2.1+
+
+Files: ukui-session/xdgmacros.h
+Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd
+           2014-2018, Luís Pereira <luis.artur.pereira@gmail.com>
+License: LGPL-2.1+
+
+Files: tools/powerprovider.*
+       tools/ukuipower.*
+       ukui-session/idlewatcher.*
+       ukui-session/idleadbusdaptor.h
+Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd.
+           2013-2018 LXQt team
+License: LGPL-2.1+
+
+Files: tools/mainwindow*
+       ukui-session/ukuimodule.*
+       ukui-session/main.cpp
+Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd
+License: LGPL-2.1+
+
+Files: debian/*
+Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd
 License: LGPL-2.1+
 
 License: LGPL-2.1+

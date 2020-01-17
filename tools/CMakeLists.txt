@@ -2,8 +2,9 @@ set(tools_SRCS
     main.cpp
     ukuipower.cpp
     powerprovider.cpp
-    powerwin.h
-    powerwin.cpp
+    mainwindow.h
+    mainwindow.cpp
+    mainwindow.ui
 )
 
 add_executable(ukui-session-tools
@@ -17,6 +18,7 @@ target_link_libraries(ukui-session-tools
     Qt5::Core
     Qt5::Gui
     Qt5::DBus
+    Qt5::Multimedia
 )
 
 install(TARGETS

@@ -1,3 +1,22 @@
+/*
+* Copyright (C) 2019 Tianjin KYLIN Information Technology Co., Ltd.
+*               2010-2016 LXQt team
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2, or (at your option)
+* any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+* 02110-1301, USA.
+**/
 #include <QApplication>
 #include <QWidget>
 #include <QDebug>
@@ -5,13 +24,19 @@
 #include <QTranslator>
 #include <QCommandLineParser>
 #include <QString>
+#include <QSoundEffect>
 
 #include "ukuipower.h"
-#include "powerwin.h"
+#include "mainwindow.h"
 
 int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
+
+//    //加载关机音乐
+//    QSoundEffect *soundplayer = new QSoundEffect();
+//    soundplayer->setSource(QUrl("qrc:/start.wav"));
+//    //soundplayer->play();
 
     UkuiPower powermanager(&a);
 
@@ -35,10 +60,12 @@ int main(int argc, char* argv[])
     parser.process(a);
 
     if (parser.isSet(logoutOption)) {
+        //soundplayer->play();
         powermanager.doAction(UkuiPower::Action(0));
         return 0;
     }
     if (parser.isSet(shutdownOption)) {
+        //soundplayer->play();
         powermanager.doAction(UkuiPower::Action(4));
         return 0;
     }
@@ -47,6 +74,7 @@ int main(int argc, char* argv[])
         return 0;
     }
     if (parser.isSet(rebootOption)) {
+        //soundplayer->play();
         powermanager.doAction(UkuiPower::Action(3));
         return 0;
     }
@@ -62,8 +90,7 @@ int main(int argc, char* argv[])
        qDebug() << "Load translations file failed!";
     }
 
-    PowerWin *pw;
-    pw = new PowerWin(false);
+    MainWindow w ;
 
     //加载qss文件
     QFile qss(":/powerwin.qss");
@@ -71,13 +98,7 @@ int main(int argc, char* argv[])
     a.setStyleSheet(qss.readAll());
     qss.close();
 
-    QRect screen = QApplication::desktop()->screenGeometry(QCursor::pos());
-    int xx = screen.x();
-    int yy = screen.y();//取得当前鼠标所在屏幕的最左，上坐标。
-
-    pw->setWindowFlag(Qt::WindowStaysOnTopHint);//设置为顶层窗口，无法被切屏
-    pw->showFullScreen();
-    pw->move(xx+(screen.width() - pw->width())/2,yy+(screen.height()- pw->height())/2);
+    w.showFullScreen();
 
     return a.exec();
 }
