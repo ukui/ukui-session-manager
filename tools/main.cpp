@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
 //    //加载关机音乐
 //    QSoundEffect *soundplayer = new QSoundEffect();
-//    soundplayer->setSource(QUrl("qrc:/start.wav"));
+//    soundplayer->setSource(QUrl("qrc:/startup.wav"));
 //    //soundplayer->play();
 
     UkuiPower powermanager(&a);

@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>start.wav</file>
-        <file>chineseStyle-shutdown.wav</file>
-        <file>chineseStyle-startup.wav</file>
+        <file>startup.wav</file>
+        <file>shutdown.wav</file>
     </qresource>
 </RCC>

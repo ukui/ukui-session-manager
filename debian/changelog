@@ -1,8 +1,32 @@
-ukui-session-manager (2.0.1) focal; urgency=medium
+ukui-session-manager (2.0.0-1) unstable; urgency=medium
 
-  * Migrate to Qt. 
+  * New upstream release.
+    - Migrate from gtk to qt.
 
- -- liuliang <liuliang@kylinos.cn>  Fri, 05 Jul 2019 16:15:56 +0800
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Mon, 03 Feb 2020 19:52:56 +0800
+
+ukui-session-manager (1.1.7-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/control:
+    - Bump standards-verstion to 4.4.1.
+    - Use debhelper-compat replace debhelper, and remove debian/compat.
+    - Add Rules-Requires-Root: no.
+  * debian/copyright:
+    - Remove COPYING from the copyright entry.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Tue, 12 Nov 2019 14:31:38 +0800
+
+ukui-session-manager (1.1.6-1) unstable; urgency=medium
+
+  * Upload to unstable.
+  * Update tr.po, de.po and zh_HK.po.
+  * Fix some typo.
+  * debian/control:
+    - Bump standards-version to 4.4.0.
+    - Bump compat level to 12.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Sat, 10 Aug 2019 15:17:08 +0800
 
 ukui-session-manager (1.1.5-1) experimental; urgency=medium
 

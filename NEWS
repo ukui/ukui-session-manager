@@ -1,0 +1,5 @@
+### ukui-session-manager 2.0.0
+Migrate from gtk to Qt.
+
+### ukui-session-manager 1.0.0
+Fork from mate-session-manager
