@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_power(new UkuiPower(this))
+    ,timer(new QTimer())
 {
     ui->setupUi(this);
     ui->suspend->installEventFilter(this);
@@ -122,8 +123,12 @@ void MainWindow::doevent(QEvent *event, QString test2,int i){
     if (event->type() == QEvent::MouseButtonRelease){
         qDebug() << test2;
         try{
-            close();
-            m_power->doAction(UkuiPower::Action(i));
+//            close();
+//            m_power->doAction(UkuiPower::Action(i));
+            m_power->playmusic();
+            defaultnum = i;
+            qDebug()<<defaultnum;
+            timer->start(500);
         }catch(QException &e) {
             qWarning() << e.what();
         }

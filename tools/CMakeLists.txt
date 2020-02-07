@@ -11,6 +11,7 @@ add_executable(ukui-session-tools
                ${tools_SRCS}
                ${PROJECT_SOURCE_DIR}/data/images.qrc
                ${PROJECT_SOURCE_DIR}/data/qss.qrc
+               ${PROJECT_SOURCE_DIR}/data/music.qrc
                )
 
 target_link_libraries(ukui-session-tools

@@ -25,6 +25,7 @@
 #include <QCommandLineParser>
 #include <QString>
 #include <QSoundEffect>
+#include <QTimer>
 
 #include "ukuipower.h"
 #include "mainwindow.h"
@@ -33,12 +34,9 @@ int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
 
-//    //加载关机音乐
-//    QSoundEffect *soundplayer = new QSoundEffect();
-//    soundplayer->setSource(QUrl("qrc:/startup.wav"));
-//    //soundplayer->play();
-
     UkuiPower powermanager(&a);
+    QTimer *timer = new QTimer();
+    bool flag = true;
 
     QCommandLineParser parser;
     parser.setApplicationDescription(QApplication::tr("UKUI session tools, show the shutdown dialog without any arguments."));
@@ -60,45 +58,89 @@ int main(int argc, char* argv[])
     parser.process(a);
 
     if (parser.isSet(logoutOption)) {
-        //soundplayer->play();
-        powermanager.doAction(UkuiPower::Action(0));
-        return 0;
+        powermanager.playmusic();
+        QObject::connect(timer,&QTimer::timeout,
+                         [&]()
+        {
+                timer->stop();
+                delete timer;
+                powermanager.doAction(UkuiPower::Action(0));
+                a.exit();
+        });
+        timer->start(500);
+        flag = false;
     }
     if (parser.isSet(shutdownOption)) {
-        //soundplayer->play();
-        powermanager.doAction(UkuiPower::Action(4));
-        return 0;
+        powermanager.playmusic();
+        QObject::connect(timer,&QTimer::timeout,
+                         [&]()
+        {
+                timer->stop();
+                delete timer;
+                powermanager.doAction(UkuiPower::Action(4));
+                a.exit();
+        });
+        timer->start(500);
+        flag = false;
     }
     if (parser.isSet(switchuserOption)) {
-        powermanager.doAction(UkuiPower::Action(1));
-        return 0;
+        powermanager.playmusic();
+        QObject::connect(timer,&QTimer::timeout,
+                         [&]()
+        {
+                timer->stop();
+                delete timer;
+                powermanager.doAction(UkuiPower::Action(1));
+                a.exit();
+        });
+        timer->start(500);
+        flag = false;
     }
     if (parser.isSet(rebootOption)) {
-        //soundplayer->play();
-        powermanager.doAction(UkuiPower::Action(3));
-        return 0;
+        powermanager.playmusic();
+        QObject::connect(timer,&QTimer::timeout,
+                         [&]()
+        {
+                timer->stop();
+                delete timer;
+                powermanager.doAction(UkuiPower::Action(3));
+                a.exit();
+        });
+        timer->start(500);
+        flag = false;
     }
+    if (flag) {
+        //加载翻译文件
+        const QString locale = QLocale::system().name();
+        QTranslator translator;
+        qDebug() << "local: " << locale;
+        qDebug() << "path: " << QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager");
+        if (translator.load(locale, QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
+           a.installTranslator(&translator);
+        } else {
+           qDebug() << "Load translations file failed!";
+        }
 
-    //加载翻译文件
-    const QString locale = QLocale::system().name();
-    QTranslator translator;
-    qDebug() << "local: " << locale;
-    qDebug() << "path: " << QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager");
-    if (translator.load(locale, QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
-       a.installTranslator(&translator);
-    } else {
-       qDebug() << "Load translations file failed!";
+        MainWindow w ;
+
+        //加载qss文件
+        QFile qss(":/powerwin.qss");
+        qss.open(QFile::ReadOnly);
+        a.setStyleSheet(qss.readAll());
+        qss.close();
+
+        w.showFullScreen();
+
+        QObject::connect(w.timer,&QTimer::timeout,
+                         [&]()
+        {
+            w.timer->stop();
+            delete w.timer;
+            powermanager.doAction(UkuiPower::Action(w.defaultnum));
+            a.exit();
+        });
+
+        return a.exec();
     }
-
-    MainWindow w ;
-
-    //加载qss文件
-    QFile qss(":/powerwin.qss");
-    qss.open(QFile::ReadOnly);
-    a.setStyleSheet(qss.readAll());
-    qss.close();
-
-    w.showFullScreen();
-
     return a.exec();
 }

@@ -25,6 +25,7 @@
 #include <QTextStream>
 #include <QDateTime>
 #include <QDebug>
+#include <QTimer>
 #include <QSoundEffect>
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -63,16 +64,22 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     logFile.close();
 }
 
+void playmusic(){
+    //加载开机音乐
+    QSoundEffect *soundplayer = new QSoundEffect();
+    soundplayer->setSource(QUrl("qrc:/startup.wav"));
+    soundplayer->play();
+    //Qtimer timer = new QTimer();
+
+}
+
 int main(int argc, char **argv)
 {
     qInstallMessageHandler(myMessageOutput);
     qDebug() << "UKUI session manager start.";
     SessionApplication app(argc, argv);
 
-    //加载开机音乐
-    QSoundEffect *soundplayer = new QSoundEffect();
-    soundplayer->setSource(QUrl("qrc:/chineseStyle-startup.wav"));
-    soundplayer->play();
+    playmusic();
 
     app.setQuitOnLastWindowClosed(false);
     return app.exec();

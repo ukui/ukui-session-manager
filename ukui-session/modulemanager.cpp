@@ -157,6 +157,7 @@ void ModuleManager::startup()
 
 void ModuleManager::timerUpdate(){
     timer->stop();
+    delete timer;
 
     qDebug() << "Start panel: " << mPanel.name();
     startProcess(mPanel, true);

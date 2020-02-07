@@ -20,6 +20,7 @@
 
 #include <QMainWindow>
 #include "powerprovider.h"
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -34,6 +35,9 @@ public:
     QRect m_screen;
     ~MainWindow();
     void doevent(QEvent *event, QString test2,int i);
+
+    QTimer *timer;
+    int defaultnum = 0;
 
 private:
     Ui::MainWindow *ui;
