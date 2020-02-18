@@ -45,7 +45,7 @@ void SessionApplication::InitSettings()
     {
         mSettings->setValue("WindowManager", "ukwm");
         mSettings->setValue("Panel", "ukui-panel");
-        mSettings->setValue("FileManager", "peony");
+        mSettings->setValue("FileManager", "peony-desktop");
         mSettings->setValue("Desktop", "");
         mSettings->setValue("ForceApplication", "");
         mSettings->setValue("InhibitApplication", "nm-applet");
