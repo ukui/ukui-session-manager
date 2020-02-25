@@ -25,8 +25,12 @@ Architecture: any
 Depends: ukui-themes | ubuntukylin-theme,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: ukui-polkit,
-            ukui-screensaver
+Recommends: peony,
+            ukwm,
+            ukui-panel,
+            ukui-polkit,
+            ukui-screensaver,
+            ukui-settings-daemon,
 Provides: x-session-manager
 Description: Session manager of the UKUI desktop environment
  This package contains a session that can be started from a display

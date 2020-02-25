@@ -2,8 +2,9 @@ ukui-session-manager (2.0.0-1) unstable; urgency=medium
 
   * New upstream release.
     - Migrate from gtk to qt.
-  * debian:
+  * debian/control:
     - Bump standards-version to 4.5.0.
+    - Add peony, ukui-screensaver to Recommends.
 
  -- handsome_feng <jianfengli@ubuntukylin.com>  Mon, 24 Feb 2020 16:32:42 +0800
 
