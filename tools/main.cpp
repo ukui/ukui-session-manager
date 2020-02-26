@@ -21,6 +21,7 @@
 #include <QWidget>
 #include <QDebug>
 #include <QDesktopWidget>
+#include <QFile>
 #include <QTranslator>
 #include <QCommandLineParser>
 #include <QString>
