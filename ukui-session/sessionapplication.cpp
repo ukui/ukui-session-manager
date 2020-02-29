@@ -24,6 +24,7 @@
 #include "idlewatcher.h"
 
 #include <QDebug>
+#include <QMediaPlayer>
 
 void InitialEnvironment()
 {
@@ -103,6 +104,8 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
 
     // Wait until the event loop starts
     QTimer::singleShot(0, this, SLOT(startup()));
+
+    playmusic();
 }
 
 SessionApplication::~SessionApplication()
@@ -120,4 +123,25 @@ bool SessionApplication::startup()
     QTimer::singleShot(5 * 1000, this, SLOT(registerDBus()));
 
     return true;
+}
+
+void SessionApplication::playmusic(){
+//    //加载开机音乐
+//    QSoundEffect *soundplayer = new QSoundEffect();
+//    soundplayer->setSource(QUrl("qrc:/startup.wav"));
+//    soundplayer->play();
+//    //Qtimer timer = new QTimer();
+    QMediaPlayer *player = new QMediaPlayer;
+        //QString path("qrc:/startup.wav");
+        player->setMedia(QUrl("qrc:/startup.wav"));
+        //qDebug() << path1 << player->state() << player->mediaStatus();
+        player->play();
+        QObject::connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state){
+            qDebug() <<"sssssssssssssssssssssssss";
+            player->stop();
+            player->deleteLater();
+           //delete player;
+           qDebug() << "play state is " << state;
+        });
+
 }

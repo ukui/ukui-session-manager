@@ -47,6 +47,7 @@ private:
     QFileSystemWatcher *mSettingsWatcher;
     QSettings *mSettings;
     QWidget *widget;
+    void playmusic();
 };
 
 #endif // SESSIONAPPLICATION_H

@@ -71,6 +71,7 @@ void ModuleManager::constructStartupList()
 
     QStringList desktop_paths;
     desktop_paths << "/usr/share/applications";
+    desktop_paths << "/etc/xdg/autostart";
     bool panel_found = false;
     bool fm_found = false;
     bool wm_found = false;
@@ -182,24 +183,24 @@ void ModuleManager::timerUpdate(){
 
     qDebug() << "Start force application: ";
     for (XdgDesktopFileList::const_iterator i = mForceApplication.constBegin(); i != mForceApplication.constEnd(); ++i){
-        startProcess(*i, false);
+        startProcess(*i, true);
     }
 }
 
 void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
 {
-//    if (!required && !file.value(QL1S("OnlyShowIn")).toString().toUpper().contains("UKUI"))
-//    {
-//        if (file.value((QL1S("NotShowIn"))).toString().toUpper().contains("UKUI") || file.contains("OnlyShowIn"))
-//        {
-//            qDebug() << "Do not launch " << file.fileName();
-//            return;
-//        }
+    if (!required && !file.value(QL1S("OnlyShowIn")).toString().toUpper().contains("UKUI"))
+    {
+        if (file.value((QL1S("NotShowIn"))).toString().toUpper().contains("UKUI") || file.contains("OnlyShowIn"))
+        {
+            qDebug() << "Do not launch " << file.fileName();
+            return;
+        }
 
-//        qDebug() << "Start detached: " << file.fileName();
-//        file.startDetached();
-//        return;
-//    }
+        qDebug() << "Start detached: " << file.fileName();
+        file.startDetached();
+        return;
+    }
 
     QStringList args = file.expandExecString();
     if (args.isEmpty())
@@ -259,6 +260,7 @@ bool ModuleManager::nativeEventFilter(const QByteArray &eventType, void *message
 bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 {
     QString auto_restart = "X-UKUI-AutoRestart";
+    qDebug()<<"123456789"<<file.value(auto_restart).toString();
     return file.value(auto_restart).toBool();
 }
 
