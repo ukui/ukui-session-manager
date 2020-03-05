@@ -260,7 +260,6 @@ bool ModuleManager::nativeEventFilter(const QByteArray &eventType, void *message
 bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 {
     QString auto_restart = "X-UKUI-AutoRestart";
-    qDebug()<<"123456789"<<file.value(auto_restart).toString();
     return file.value(auto_restart).toBool();
 }
 

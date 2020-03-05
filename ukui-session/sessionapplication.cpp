@@ -126,22 +126,14 @@ bool SessionApplication::startup()
 }
 
 void SessionApplication::playmusic(){
-//    //加载开机音乐
-//    QSoundEffect *soundplayer = new QSoundEffect();
-//    soundplayer->setSource(QUrl("qrc:/startup.wav"));
-//    soundplayer->play();
-//    //Qtimer timer = new QTimer();
     QMediaPlayer *player = new QMediaPlayer;
-        //QString path("qrc:/startup.wav");
-        player->setMedia(QUrl("qrc:/startup.wav"));
-        //qDebug() << path1 << player->state() << player->mediaStatus();
-        player->play();
-        QObject::connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state){
-            qDebug() <<"sssssssssssssssssssssssss";
-            player->stop();
-            player->deleteLater();
-           //delete player;
-           qDebug() << "play state is " << state;
-        });
+    player->setMedia(QUrl("qrc:/startup.wav"));
+    player->play();
+    QObject::connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state){
+        player->stop();
+        player->deleteLater();
+        //delete player;
+        qDebug() << "play state is " << state;
+    });
 
 }
