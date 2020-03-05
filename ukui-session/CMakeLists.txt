@@ -20,14 +20,14 @@ set(ukui-session_SRCS
     ../tools/powerprovider.cpp
 )
 
-find_package(QT5XDG )
+#find_package(QT5XDG )
 #find_package(PkgConfig)
 #pkg_search_module(GSETTINGS_QT REQUIRED gsettings-qt)
 #include_directories(${GSETTINGS_QT_INCLUDES})
 
 add_executable(ukui-session ${ukui-session_SRCS}
                ${PROJECT_SOURCE_DIR}/data/music.qrc)
-target_link_libraries(ukui-session Qt5::Widgets Qt5::Core Qt5Xdg Qt5::Multimedia KF5::IdleTime)
+target_link_libraries(ukui-session Qt5::Widgets Qt5::Core Qt5::DBus Qt5::Multimedia KF5::IdleTime)
 #${GSETTINGS_QT_LIBRARIES}
 
 install(TARGETS ukui-session DESTINATION bin)
