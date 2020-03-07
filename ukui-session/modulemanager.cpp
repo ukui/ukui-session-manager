@@ -101,7 +101,7 @@ void ModuleManager::constructStartupList()
 
     QString desktop_phase = "X-UKUI-Autostart-Phase";
     QString desktop_type = "Type";
-    const XdgDesktopFileList all_file_list = XdgAutoStart::desktopFileList();
+    const XdgDesktopFileList all_file_list = XdgAutoStart::desktopFileList(true);
     for (XdgDesktopFileList::const_iterator i = all_file_list.constBegin(); i != all_file_list.constEnd(); ++i)
     {
         const XdgDesktopFile file = *i;
@@ -174,6 +174,7 @@ void ModuleManager::timerUpdate(){
     qDebug() << "Start application: ";
     QFile file("/etc/xdg/autostart/kylin-nm.desktop");
     for (XdgDesktopFileList::const_iterator i = mApplication.constBegin(); i != mApplication.constEnd(); ++i){
+        qDebug() << i->fileName();
         if(i->fileName()=="/etc/xdg/autostart/nm-applet.desktop" && file.exists()){
             qDebug() << "the kylin-nm exist so the nm-applet will not start";
             continue;

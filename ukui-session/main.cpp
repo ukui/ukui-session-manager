@@ -65,32 +65,11 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     logFile.close();
 }
 
-void playmusic(){
-//    //加载开机音乐
-//    QSoundEffect *soundplayer = new QSoundEffect();
-//    soundplayer->setSource(QUrl("qrc:/startup.wav"));
-//    soundplayer->play();
-//    //Qtimer timer = new QTimer();
-    QMediaPlayer *player = new QMediaPlayer;
-        //QString path("qrc:/startup.wav");
-        player->setMedia(QUrl("qrc:/startup.wav"));
-        //qDebug() << path1 << player->state() << player->mediaStatus();
-        player->play();
-        QObject::connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state){
-            qDebug() <<"sssssssssssssssssssssssss";
-           //delete player;
-           qDebug() << "play state is " << state;
-        });
-
-}
-
 int main(int argc, char **argv)
 {
     qInstallMessageHandler(myMessageOutput);
     qDebug() << "UKUI session manager start.";
     SessionApplication app(argc, argv);
-
-    //playmusic();
 
     app.setQuitOnLastWindowClosed(false);
     return app.exec();
