@@ -101,7 +101,8 @@ void ModuleManager::constructStartupList()
 
     QString desktop_phase = "X-UKUI-Autostart-Phase";
     QString desktop_type = "Type";
-    const XdgDesktopFileList all_file_list = XdgAutoStart::desktopFileList();
+    //设置excludeHidden为true，判断所有desktop文件的Hidden值，若为true，则将其从自启列表中去掉
+    const XdgDesktopFileList all_file_list = XdgAutoStart::desktopFileList(true);
     for (XdgDesktopFileList::const_iterator i = all_file_list.constBegin(); i != all_file_list.constEnd(); ++i)
     {
         const XdgDesktopFile file = *i;
@@ -174,6 +175,7 @@ void ModuleManager::timerUpdate(){
     qDebug() << "Start application: ";
     QFile file("/etc/xdg/autostart/kylin-nm.desktop");
     for (XdgDesktopFileList::const_iterator i = mApplication.constBegin(); i != mApplication.constEnd(); ++i){
+        qDebug() << i->fileName();
         if(i->fileName()=="/etc/xdg/autostart/nm-applet.desktop" && file.exists()){
             qDebug() << "the kylin-nm exist so the nm-applet will not start";
             continue;
@@ -260,7 +262,6 @@ bool ModuleManager::nativeEventFilter(const QByteArray &eventType, void *message
 bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 {
     QString auto_restart = "X-UKUI-AutoRestart";
-    qDebug()<<"123456789"<<file.value(auto_restart).toString();
     return file.value(auto_restart).toBool();
 }
 
