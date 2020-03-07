@@ -101,6 +101,7 @@ void ModuleManager::constructStartupList()
 
     QString desktop_phase = "X-UKUI-Autostart-Phase";
     QString desktop_type = "Type";
+    //设置excludeHidden为true，判断所有desktop文件的Hidden值，若为true，则将其从自启列表中去掉
     const XdgDesktopFileList all_file_list = XdgAutoStart::desktopFileList(true);
     for (XdgDesktopFileList::const_iterator i = all_file_list.constBegin(); i != all_file_list.constEnd(); ++i)
     {
