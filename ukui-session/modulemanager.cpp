@@ -99,6 +99,12 @@ void ModuleManager::constructStartupList()
             break;
     }
 
+    //配置文件所给的窗口管理器找不到.desktop文件时，将所给QString设为可执行命令，创建一个desktop文件赋给mWindowManager
+    if(wm_found == false){
+        const QString wm_notfound = mSettings->value(QLatin1String("WindowManager")).toString();
+        mWindowManager = XdgDesktopFile(XdgDesktopFile::ApplicationType,"window-manager", wm_notfound);
+    }
+
     QString desktop_phase = "X-UKUI-Autostart-Phase";
     QString desktop_type = "Type";
     //设置excludeHidden为true，判断所有desktop文件的Hidden值，若为true，则将其从自启列表中去掉
@@ -148,6 +154,7 @@ void ModuleManager::startup()
     for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i){
         startProcess(*i, true);
     }
+
     qDebug() << "Start window manager: " << mWindowManager.name();
     startProcess(mWindowManager, true);
 

@@ -44,7 +44,7 @@ void SessionApplication::InitSettings()
 
     if (!config_exists)
     {
-        mSettings->setValue("WindowManager", "ukwm");
+        mSettings->setValue("WindowManager", "kwin_x11");
         mSettings->setValue("Panel", "ukui-panel");
         mSettings->setValue("FileManager", "peony-desktop");
         mSettings->setValue("Desktop", "");
