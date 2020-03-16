@@ -178,11 +178,10 @@ void ModuleManager::timerUpdate(){
 
     qDebug() << "Start desktop: ";
     for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i){
-        //startProcess(*i, true);
+        startProcess(*i, true);
     }
 
     qDebug() << "Start application: ";
-    qDebug() << mApplication.count();
     QFile file("/etc/xdg/autostart/kylin-nm.desktop");
     for (XdgDesktopFileList::const_iterator i = mApplication.constBegin(); i != mApplication.constEnd(); ++i){
         qDebug() << i->fileName();
