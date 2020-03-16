@@ -35,10 +35,10 @@ public:
           mManager(manager),
           mPower(new UkuiPower())
     {
-        connect(mManager, SIGNAL(moduleStateChanged(QString, bool)), SIGNAL(moduleStateChanged(QString, bool)));
+        connect(mManager, &ModuleManager::moduleStateChanged, this , &SessionDBusAdaptor::moduleStateChanged);
     }
 
-signals:
+Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
 
 public slots:

@@ -40,7 +40,7 @@ public:
     const XdgDesktopFile file;
     const QString fileName;
 
-signals:
+Q_SIGNALS:
     void moduleStateChanged(QString name, bool state);
 
 private slots:

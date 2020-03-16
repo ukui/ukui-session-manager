@@ -45,7 +45,7 @@
   </schema>
   <schema id="org.ukui.session.required-components" path="/org/ukui/desktop/session/required-components/">
     <key name="windowmanager" type="s">
-      <default>'@DEFAULT_WM@'</default>
+      <default>'kwin_x11'</default>
       <summary>Window Manager</summary>
       <description>The window manager is the program that draws the title bar and borders around windows, and allows you to move and resize windows.</description>
     </key>
@@ -55,14 +55,14 @@
       <description>The panel provides the bar at the top or bottom of the screen containing menus, the window list, status icons, the clock, etc.</description>
     </key>
     <key name="filemanager" type="s">
-      <default>'peony'</default>
+      <default>'peony-desktop'</default>
       <summary>File Manager</summary>
       <description>The file manager provides the desktop icons and allows you to interact with your saved files.</description>
     </key>
-    <key name="dock" type="s">
-      <default>''</default>
-      <summary>Dock</summary>
-      <description>A dock provides a dockable area, similar to a panel, for launching and switching applications.</description>
+    <key name="idletimesec" type="i">
+      <default>600</default>
+      <summary>IdleTimeSec</summary>
+      <description>Idletimesec</description>
     </key>
   </schema>
 </schemalist>

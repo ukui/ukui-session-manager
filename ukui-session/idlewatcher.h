@@ -41,7 +41,7 @@ private slots:
     void timeoutReached(int identifier);
     void setup();
 
-signals:
+Q_SIGNALS:
     void StatusChanged(uint status);
 
 private:

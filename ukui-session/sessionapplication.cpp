@@ -31,42 +31,9 @@ void InitialEnvironment()
     qputenv("XDG_CURRENT_DESKTOP","UKUI");
 }
 
-void SessionApplication::InitSettings()
-{
-    QString config_file = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session.ini";
-    bool config_exists;
-    if (QFile::exists(config_file))
-        config_exists = true;
-    else
-        config_exists = false;
-
-    mSettings = new QSettings(config_file, QSettings::IniFormat);
-
-    if (!config_exists)
-    {
-        mSettings->setValue("WindowManager", "kwin_x11");
-        mSettings->setValue("Panel", "ukui-panel");
-        mSettings->setValue("FileManager", "peony-desktop");
-        mSettings->setValue("Desktop", "");
-        mSettings->setValue("ForceApplication", "");
-        mSettings->setValue("InhibitApplication", "nm-applet");
-        mSettings->setValue("IdleTimeSecs", 600);
-        mSettings->sync();
-    }
-
-    QStringList config_list;
-    config_list << config_file;
-    mSettingsWatcher = new QFileSystemWatcher(config_list);
-    connect(mSettingsWatcher, SIGNAL(fileChanged(QString)), this, SLOT(settingsChanged(QString)));
-}
-
-void SessionApplication::settingsChanged(QString path)
-{
-    qDebug() << "session manager settings changed!";
-    mSettings->sync();
-    int timeout = mSettings->value(QLatin1String("IdleTimeSecs")).toInt();
-    //TODO
-    mIdleWatcher->reset(timeout);
+void SessionApplication::updatevalue(){
+    const int time = gs->get("idletimesec").toInt();
+    mIdleWatcher->reset(time);
 }
 
 void SessionApplication::registerDBus()
@@ -83,7 +50,8 @@ void SessionApplication::registerDBus()
                     << "/org/gnome/SessionManager";
     }
 
-    int timeout = mSettings->value(QLatin1String("IdleTimeSecs")).toInt();
+    const int timeout = gs->get("idletimesec").toInt();
+    connect(gs,&QGSettings::changed,this,&SessionApplication::updatevalue);
     mIdleWatcher = new IdleWatcher(timeout);
     new IdleDBusAdaptor(mIdleWatcher);
     if (!dbus.registerObject("/org/gnome/SessionManager/Presence", mIdleWatcher))
@@ -98,9 +66,9 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
 {
     InitialEnvironment();
 
-    InitSettings();
+    gs = new QGSettings("org.ukui.session.required-components","/org/ukui/desktop/session/required-components/",this);
 
-    modman = new ModuleManager(mSettings);
+    modman = new ModuleManager();
 
     // Wait until the event loop starts
     QTimer::singleShot(0, this, SLOT(startup()));
@@ -113,7 +81,7 @@ SessionApplication::~SessionApplication()
     delete modman;
     delete mIdleWatcher;
     //delete mSettings;
-    delete mSettingsWatcher;
+    delete gs;
 }
 
 bool SessionApplication::startup()
