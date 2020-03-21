@@ -25,10 +25,38 @@
 
 #include <QDebug>
 #include <QMediaPlayer>
+#include <QDesktopWidget>
 
-void InitialEnvironment()
+void SessionApplication::InitialEnvironment()
 {
+    int gdk_scale;
+    int qt_scale_factor;
+    QDesktopWidget *desktop = QApplication::desktop();
+    qDebug()<< "Screen-height is"<<desktop->height()<<",Screnn-width is"<<desktop->width();
+    bool Hidpi = gs->get("hidpi").toBool();
+    qDebug()<< "Hidpi is "<<Hidpi;
+    if(Hidpi){
+        gdk_scale = gs->get("gdk-scale").toInt();
+        qt_scale_factor = gs->get("qt-scale-factor").toInt();
+    }else{
+        int i = 1;
+        if(desktop->height() >= 2000)
+            i = 2;
+        gdk_scale = i;
+        qt_scale_factor = i;
+    }
+    QString qt1 = QString::number(qt_scale_factor);
+    QByteArray qt2;
+    qt2.append(qt1);
+    QString gdk1 = QString::number(gdk_scale);
+    QByteArray gdk2;
+    gdk2.append(gdk1);
+
+    qDebug()<< "gdk_scale"<<gdk2<<"qt_scale_factor"<<qt2;
     qputenv("XDG_CURRENT_DESKTOP","UKUI");
+    qputenv("GDK_SCALE",gdk2);
+    qputenv("QT_SCALE_FACTOR",qt2);
+    qputenv("QT_AUTO_SCRENN_SET_FACTOR","0");
 }
 
 void SessionApplication::updatevalue(){
@@ -64,9 +92,9 @@ void SessionApplication::registerDBus()
 SessionApplication::SessionApplication(int& argc, char** argv) :
     QApplication(argc, argv)
 {
-    InitialEnvironment();
-
     gs = new QGSettings("org.ukui.session.required-components","/org/ukui/desktop/session/required-components/",this);
+
+    InitialEnvironment();
 
     modman = new ModuleManager();
 

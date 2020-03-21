@@ -45,7 +45,7 @@
   </schema>
   <schema id="org.ukui.session.required-components" path="/org/ukui/desktop/session/required-components/">
     <key name="windowmanager" type="s">
-      <default>'kwin_x11'</default>
+      <default>'ukwm'</default>
       <summary>Window Manager</summary>
       <description>The window manager is the program that draws the title bar and borders around windows, and allows you to move and resize windows.</description>
     </key>
@@ -64,5 +64,21 @@
       <summary>IdleTimeSec</summary>
       <description>Idletimesec</description>
     </key>
+    <key name="gdk-scale" type="i"> 
+	    <default>1</default>
+	    <summary>GDK_SCALE</summary>
+	    <description>gdk</description>
+    </key>
+    <key name="qt-scale-factor" type="i">
+            <default>1</default>
+	    <summary>QT_SCALE_FACTOR</summary>
+	    <description>qt</description>
+    </key>
+    <key name="hidpi" type="b">
+            <default>false</default>
+	    <summary>HIDPI</summary>
+	     <description>button</description>
+    </key>
+
   </schema>
 </schemalist>

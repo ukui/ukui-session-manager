@@ -16,5 +16,5 @@ if [ "x$DESKTOP_SESSION" = "xukui" ] || [ "x$XDG_SESSION_DESKTOP" == "xukui" ]; 
 
     # Change to GDK_SCALE=2 for experimental HiDPI support.
     # Requires reboot.
-    export GDK_SCALE=1
+    # export GDK_SCALE=1
 fi

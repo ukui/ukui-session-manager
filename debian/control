@@ -26,7 +26,7 @@ Depends: ukui-themes | ubuntukylin-theme,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: peony,
-            kwin-x11,
+            ukwm,
             ukui-panel,
             ukui-polkit,
             ukui-screensaver,

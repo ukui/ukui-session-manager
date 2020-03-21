@@ -48,7 +48,7 @@ private Q_SLOTS:
     void updatevalue();
 
 private:
-    void InitSettings();
+    void InitialEnvironment();
 
     QGSettings * gs;
     ModuleManager* modman;
