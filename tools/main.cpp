@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
                 powermanager.doAction(UkuiPower::Action(0));
                 a.exit();
         });
-        timer->start(500);
+        timer->start(1000);
         flag = false;
     }
     if (parser.isSet(shutdownOption)) {
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
                 powermanager.doAction(UkuiPower::Action(4));
                 a.exit();
         });
-        timer->start(500);
+        timer->start(1000);
         flag = false;
     }
     if (parser.isSet(switchuserOption)) {
@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
                 powermanager.doAction(UkuiPower::Action(1));
                 a.exit();
         });
-        timer->start(500);
+        timer->start(1000);
         flag = false;
     }
     if (parser.isSet(rebootOption)) {
@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
                 powermanager.doAction(UkuiPower::Action(3));
                 a.exit();
         });
-        timer->start(500);
+        timer->start(1000);
         flag = false;
     }
     if (flag) {

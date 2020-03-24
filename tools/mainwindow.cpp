@@ -129,7 +129,7 @@ void MainWindow::doevent(QEvent *event, QString test2,int i){
             defaultnum = i;
             qDebug()<<defaultnum;
             this->hide();
-            timer->start(500);
+            timer->start(1000);
         }catch(QException &e) {
             qWarning() << e.what();
         }
