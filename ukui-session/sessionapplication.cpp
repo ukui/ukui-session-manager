@@ -60,7 +60,7 @@ void SessionApplication::InitialEnvironment()
 }
 
 void SessionApplication::updatevalue(){
-    const int time = gs->get("idletimesec").toInt();
+    const int time = gs->get("idle-delay").toInt() * 60;
     mIdleWatcher->reset(time);
 }
 
@@ -78,7 +78,7 @@ void SessionApplication::registerDBus()
                     << "/org/gnome/SessionManager";
     }
 
-    const int timeout = gs->get("idletimesec").toInt();
+    const int timeout = gs->get("idle-delay").toInt() * 60;
     connect(gs,&QGSettings::changed,this,&SessionApplication::updatevalue);
     mIdleWatcher = new IdleWatcher(timeout);
     new IdleDBusAdaptor(mIdleWatcher);
@@ -92,7 +92,7 @@ void SessionApplication::registerDBus()
 SessionApplication::SessionApplication(int& argc, char** argv) :
     QApplication(argc, argv)
 {
-    gs = new QGSettings("org.ukui.session.required-components","/org/ukui/desktop/session/required-components/",this);
+    gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/",this);
 
     InitialEnvironment();
 
@@ -114,9 +114,9 @@ SessionApplication::~SessionApplication()
 
 bool SessionApplication::startup()
 {
+    QTimer::singleShot(0, this, SLOT(registerDBus()));
+	
     modman->startup();
-
-    QTimer::singleShot(5 * 1000, this, SLOT(registerDBus()));
 
     return true;
 }

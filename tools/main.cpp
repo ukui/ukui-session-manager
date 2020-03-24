@@ -131,14 +131,19 @@ int main(int argc, char* argv[])
         qss.close();
 
         w.showFullScreen();
-
         QObject::connect(w.timer,&QTimer::timeout,
                          [&]()
         {
             w.timer->stop();
             delete w.timer;
-            powermanager.doAction(UkuiPower::Action(w.defaultnum));
-            a.exit();
+            if(!w.isVisible()){
+                qDebug()<<w.close();
+                powermanager.doAction(UkuiPower::Action(w.defaultnum));
+                a.exit();
+            }else{
+                qDebug()<<"somethings wrong has happened! Window can not hide!";
+                a.exit();
+            }
         });
 
         return a.exec();
