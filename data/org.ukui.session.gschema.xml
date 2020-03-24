@@ -1,19 +1,19 @@
 <schemalist gettext-domain="@GETTEXT_PACKAGE@">
   <schema id="org.ukui.session" path="/org/ukui/desktop/session/">
-    <key name="session-start" type="i">
-      <default>0</default>
-      <summary>Current session start time</summary>
-      <description>Unix time of the start of the current session.</description>
+    <key name="gdk-scale" type="i"> 
+	    <default>1</default>
+	    <summary>GDK_SCALE</summary>
+	    <description>gdk</description>
     </key>
-    <key name="auto-save-session" type="b">
-      <default>false</default>
-      <summary>Save sessions</summary>
-      <description>If enabled, ukui-session will save the session automatically.</description>
+    <key name="qt-scale-factor" type="i">
+            <default>1</default>
+	    <summary>QT_SCALE_FACTOR</summary>
+	    <description>qt</description>
     </key>
-    <key name="logout-prompt" type="b">
-      <default>true</default>
-      <summary>Logout prompt</summary>
-      <description>If enabled, ukui-session will prompt the user before ending a session.</description>
+    <key name="hidpi" type="b">
+            <default>false</default>
+	    <summary>HIDPI</summary>
+	     <description>button</description>
     </key>
     <key name="logout-timeout" type="i">
       <default>60</default>
@@ -26,26 +26,11 @@
       <summary>Time before session is considered idle</summary>
       <description>The number of minutes of inactivity before the session is considered idle.</description>
     </key>
-    <key name="default-session" type="as">
-      <default>[ 'ukui-settings-daemon' ]</default>
-      <summary>Default session</summary>
-      <description>List of applications that are part of the default session.</description>
-    </key>
-    <key name="required-components-list" type="as">
-      <default>[ 'windowmanager', 'panel', 'filemanager', 'dock' ]</default>
-      <summary>Required session components</summary>
-      <description>List of components that are required as part of the session. (Each element names a key under "/org/ukui/desktop/session/required_components"). The Startup Applications preferences tool will not normally allow users to remove a required component from the session, and the session manager will automatically add the required components back to the session at login time if they do get removed.</description>
-    </key>
-    <key name="gnome-compat-startup" type="as">
-      <default>[ 'keyring', 'smproxy' ]</default>
-      <summary>Control gnome compatibility component startup</summary>
-      <description>Control which compatibility components to start.</description>
-    </key>
     <child name="required-components" schema="org.ukui.session.required-components"/>
   </schema>
   <schema id="org.ukui.session.required-components" path="/org/ukui/desktop/session/required-components/">
     <key name="windowmanager" type="s">
-      <default>'@DEFAULT_WM@'</default>
+      <default>'ukwm'</default>
       <summary>Window Manager</summary>
       <description>The window manager is the program that draws the title bar and borders around windows, and allows you to move and resize windows.</description>
     </key>
@@ -55,14 +40,9 @@
       <description>The panel provides the bar at the top or bottom of the screen containing menus, the window list, status icons, the clock, etc.</description>
     </key>
     <key name="filemanager" type="s">
-      <default>'peony'</default>
+      <default>'peony-desktop'</default>
       <summary>File Manager</summary>
       <description>The file manager provides the desktop icons and allows you to interact with your saved files.</description>
-    </key>
-    <key name="dock" type="s">
-      <default>''</default>
-      <summary>Dock</summary>
-      <description>A dock provides a dockable area, similar to a panel, for launching and switching applications.</description>
     </key>
   </schema>
 </schemalist>

@@ -128,7 +128,8 @@ void MainWindow::doevent(QEvent *event, QString test2,int i){
             m_power->playmusic();
             defaultnum = i;
             qDebug()<<defaultnum;
-            timer->start(500);
+            this->hide();
+            timer->start(1000);
         }catch(QException &e) {
             qWarning() << e.what();
         }

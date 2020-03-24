@@ -31,10 +31,16 @@
 #include <QStandardPaths>
 #include <QDebug>
 #include <QTimer>
+#include <QGSettings/QGSettings>
+/* qt会将glib里的signals成员识别为宏，所以取消该宏
+ * 后面如果用到signals时，使用Q_SIGNALS代替即可
+ **/
+#ifdef signals
+#undef signals
+#endif
 
-ModuleManager::ModuleManager(QSettings* settings, QObject* parent)
-    : QObject(parent),
-      mSettings(settings)
+ModuleManager::ModuleManager( QObject* parent)
+    : QObject(parent)
 {
     constructStartupList();
 }
@@ -56,18 +62,10 @@ ModuleManager::~ModuleManager()
 
 void ModuleManager::constructStartupList()
 {
-    QString window_manager;
-    QString panel;
-    QString file_manager;
-
-    if (mSettings->contains(QLatin1String("WindowManager")))
-        window_manager = mSettings->value(QLatin1String("WindowManager")).toString() + ".desktop";
-
-    if (mSettings->contains(QLatin1String("Panel")))
-        panel = mSettings->value(QLatin1String("Panel")).toString() + ".desktop";
-
-    if (mSettings->contains(QLatin1String("FileManager")))
-        file_manager = mSettings->value(QLatin1String("FileManager")).toString() + ".desktop";
+    const QGSettings* gs = new QGSettings("org.ukui.session.required-components","/org/ukui/desktop/session/required-components/",this);
+    const QString window_manager = gs->get("windowmanager").toString() + ".desktop";
+    const QString panel = gs->get("panel").toString() + ".desktop";
+    const QString file_manager = gs->get("filemanager").toString() + ".desktop";
 
     QStringList desktop_paths;
     desktop_paths << "/usr/share/applications";
@@ -83,16 +81,19 @@ void ModuleManager::constructStartupList()
         {
             mPanel = file;
             panel_found = true;
+            qDebug() << "panel has been found";
         }
         if (QFileInfo(file.fileName()).fileName() == file_manager)
         {
             mFileManager = file;
             fm_found = true;
+            qDebug() << "filemanager has been found";
         }
         if (QFileInfo(file.fileName()).fileName() == window_manager)
         {
             mWindowManager = file;
             wm_found = true;
+            qDebug() << "windowmanager has been found";
         }
 
         if(fm_found && panel_found && wm_found)
@@ -101,8 +102,9 @@ void ModuleManager::constructStartupList()
 
     //配置文件所给的窗口管理器找不到.desktop文件时，将所给QString设为可执行命令，创建一个desktop文件赋给mWindowManager
     if(wm_found == false){
-        const QString wm_notfound = mSettings->value(QLatin1String("WindowManager")).toString();
+        const QString wm_notfound = gs->get("windowmanager").toString();
         mWindowManager = XdgDesktopFile(XdgDesktopFile::ApplicationType,"window-manager", wm_notfound);
+        qDebug() << "windowmanager has been created";
     }
 
     QString desktop_phase = "X-UKUI-Autostart-Phase";
@@ -158,6 +160,9 @@ void ModuleManager::startup()
     qDebug() << "Start window manager: " << mWindowManager.name();
     startProcess(mWindowManager, true);
 
+    qDebug() << "Start panel: " << mPanel.name();
+    startProcess(mPanel, true);
+
     qDebug() << "wait for ukui-settings-daemon start-up";
     timer = new QTimer();
     connect(timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
@@ -167,9 +172,6 @@ void ModuleManager::startup()
 void ModuleManager::timerUpdate(){
     timer->stop();
     delete timer;
-
-    qDebug() << "Start panel: " << mPanel.name();
-    startProcess(mPanel, true);
 
     qDebug() << "Start file manager: " << mFileManager.name();
     startProcess(mFileManager, true);
@@ -191,6 +193,9 @@ void ModuleManager::timerUpdate(){
     }
 
     qDebug() << "Start force application: ";
+    const QString ws = "ukui-window-switch";
+    XdgDesktopFile ukui_ws= XdgDesktopFile(XdgDesktopFile::ApplicationType,"ukui-window-switch", ws);
+    startProcess(ukui_ws,true);
     for (XdgDesktopFileList::const_iterator i = mForceApplication.constBegin(); i != mForceApplication.constEnd(); ++i){
         startProcess(*i, true);
     }
@@ -222,7 +227,7 @@ void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
     if (!mNameMap.contains(name))
     {
         UkuiModule* proc = new UkuiModule(file, this);
-        connect(proc, SIGNAL(moduleStateChanged(QString, bool)), this, SIGNAL(moduleStateChanged(QString, bool)));
+        connect(proc, &UkuiModule::moduleStateChanged, this, &ModuleManager::moduleStateChanged);
         proc->start();
 
         mNameMap[name] = proc;

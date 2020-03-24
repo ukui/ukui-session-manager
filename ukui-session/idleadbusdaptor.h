@@ -36,10 +36,10 @@ public:
     IdleDBusAdaptor(IdleWatcher *mIdleWatch)
         : QDBusAbstractAdaptor(mIdleWatch)
     {
-        connect(mIdleWatch, SIGNAL(StatusChanged(uint)), SIGNAL(StatusChanged(uint)));
+        connect(mIdleWatch, &IdleWatcher::StatusChanged, this , &IdleDBusAdaptor::StatusChanged);
     }
 
-signals:
+Q_SIGNALS:
     void StatusChanged(uint status);
 
 private:

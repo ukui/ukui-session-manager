@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
                 powermanager.doAction(UkuiPower::Action(0));
                 a.exit();
         });
-        timer->start(500);
+        timer->start(1000);
         flag = false;
     }
     if (parser.isSet(shutdownOption)) {
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
                 powermanager.doAction(UkuiPower::Action(4));
                 a.exit();
         });
-        timer->start(500);
+        timer->start(1000);
         flag = false;
     }
     if (parser.isSet(switchuserOption)) {
@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
                 powermanager.doAction(UkuiPower::Action(1));
                 a.exit();
         });
-        timer->start(500);
+        timer->start(1000);
         flag = false;
     }
     if (parser.isSet(rebootOption)) {
@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
                 powermanager.doAction(UkuiPower::Action(3));
                 a.exit();
         });
-        timer->start(500);
+        timer->start(1000);
         flag = false;
     }
     if (flag) {
@@ -131,14 +131,19 @@ int main(int argc, char* argv[])
         qss.close();
 
         w.showFullScreen();
-
         QObject::connect(w.timer,&QTimer::timeout,
                          [&]()
         {
             w.timer->stop();
             delete w.timer;
-            powermanager.doAction(UkuiPower::Action(w.defaultnum));
-            a.exit();
+            if(!w.isVisible()){
+                qDebug()<<w.close();
+                powermanager.doAction(UkuiPower::Action(w.defaultnum));
+                a.exit();
+            }else{
+                qDebug()<<"somethings wrong has happened! Window can not hide!";
+                a.exit();
+            }
         });
 
         return a.exec();

@@ -23,6 +23,13 @@
 #include <QApplication>
 #include <QFileSystemWatcher>
 #include <QSettings>
+#include <QGSettings/QGSettings>
+/* qt会将glib里的signals成员识别为宏，所以取消该宏
+ * 后面如果用到signals时，使用Q_SIGNALS代替即可
+ **/
+#ifdef signals
+#undef signals
+#endif
 
 class ModuleManager;
 class IdleWatcher;
@@ -31,21 +38,21 @@ class SessionApplication : public QApplication
 {
     Q_OBJECT
 public:
+    void test();
     SessionApplication(int& argc, char** argv);
     ~SessionApplication();
 
 private Q_SLOTS:
     bool startup();
-    void settingsChanged(QString path);
     void registerDBus();
+    void updatevalue();
 
 private:
-    void InitSettings();
+    void InitialEnvironment();
 
+    QGSettings * gs;
     ModuleManager* modman;
     IdleWatcher* mIdleWatcher;
-    QFileSystemWatcher *mSettingsWatcher;
-    QSettings *mSettings;
     QWidget *widget;
     void playmusic();
 };

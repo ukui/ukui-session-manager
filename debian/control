@@ -13,6 +13,7 @@ Build-Depends: debhelper-compat (= 12),
                libsystemd-dev,
                qttools5-dev,
                qtmultimedia5-dev,
+               libgsettings-qt-dev,
 Rules-requires-root: no
 Standards-Version: 4.5.0
 Vcs-Browser: https://github.com/ukui/ukui-session-manager
@@ -25,7 +26,7 @@ Depends: ukui-themes | ubuntukylin-theme,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: peony,
-            kwin-x11,
+            ukwm,
             ukui-panel,
             ukui-polkit,
             ukui-screensaver,

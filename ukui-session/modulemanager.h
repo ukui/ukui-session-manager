@@ -42,7 +42,7 @@ class ModuleManager : public QObject, public QAbstractNativeEventFilter
     Q_OBJECT
 
 public:
-    ModuleManager(QSettings* settings, QObject* parent = nullptr);
+    ModuleManager(QObject* parent = nullptr);
     ~ModuleManager() override;
 
     void startProcess(const QString& name, bool detach);
@@ -58,7 +58,7 @@ public slots:
     void logout(bool doExit);
     void timerUpdate();
 
-signals:
+Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
 
 private:
@@ -74,8 +74,6 @@ private:
     ModulesMap mNameMap;
 
     QList<QString> mAllAppList;
-
-    QSettings* mSettings;
 
     bool mWmStarted;
     bool mTrayStarted;
