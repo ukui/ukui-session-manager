@@ -26,6 +26,7 @@
 
 #include <QObject>
 
+
 //class ScreenSaver;
 
 class IdleWatcher : public QObject
@@ -38,6 +39,7 @@ public:
     void reset(int timeout);
 
 private slots:
+    void resumingFromIdle();
     void timeoutReached(int identifier);
     void setup();
 

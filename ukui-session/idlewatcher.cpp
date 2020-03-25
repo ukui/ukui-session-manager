@@ -31,6 +31,10 @@ IdleWatcher::IdleWatcher(int secs, QObject *parent) :
     mSecs(secs)
 {
     connect(KIdleTime::instance(),
+            &KIdleTime::resumingFromIdle,
+            this,
+            &IdleWatcher::resumingFromIdle);
+    connect(KIdleTime::instance(),
             static_cast<void (KIdleTime::*)(int)>(&KIdleTime::timeoutReached),
             this,
             &IdleWatcher::timeoutReached);
@@ -50,8 +54,14 @@ void IdleWatcher::setup()
 
 void IdleWatcher::timeoutReached(int identifier)
 {
-    qDebug() << "Timeout Reached, emit StatusChanged signal!";
+    KIdleTime::instance()->catchNextResumeEvent();
+    qDebug() << "Timeout Reached, emit StatusChanged 3 signal!";
     emit StatusChanged(3);
+}
+
+void IdleWatcher::resumingFromIdle(){
+    qDebug() << "Somethings happened, emit StatusChanged 0 signal!";
+    emit StatusChanged(0);
 }
 
 void IdleWatcher::reset(int timeout)
@@ -61,3 +71,4 @@ void IdleWatcher::reset(int timeout)
     mSecs = timeout;
     setup();
 }
+
