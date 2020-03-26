@@ -1,3 +1,19 @@
+ukui-session-manager (2.0.1-1) unstable; urgency=medium
+
+  * New upstream bugfix release.
+    - Add missing QFile include directive.
+    - Delete mediaplayer after it finished.
+    - Don't launch application with hide=true.
+    - Bring back the gsettings to fix that the corresponding settings of
+      ukui-control-center does not take effect.
+    - Remove the useless gsettings.
+    - Fix that can't resuming from idle.
+    - Set the scale environment to fix high DPI issues.
+  * debian/control:
+    - Drop libqt5xdg-dev.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Thu, 26 Mar 2020 14:43:39 +0800
+
 ukui-session-manager (2.0.0-1) unstable; urgency=medium
 
   * New upstream release.
