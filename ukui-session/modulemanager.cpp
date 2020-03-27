@@ -203,19 +203,6 @@ void ModuleManager::timerUpdate(){
 
 void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
 {
-    if (!required && !file.value(QL1S("OnlyShowIn")).toString().toUpper().contains("UKUI"))
-    {
-        if (file.value((QL1S("NotShowIn"))).toString().toUpper().contains("UKUI") || file.contains("OnlyShowIn"))
-        {
-            qDebug() << "Do not launch " << file.fileName();
-            return;
-        }
-
-        qDebug() << "Start detached: " << file.fileName();
-        file.startDetached();
-        return;
-    }
-
     QStringList args = file.expandExecString();
     if (args.isEmpty())
     {
