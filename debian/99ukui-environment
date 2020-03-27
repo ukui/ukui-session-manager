@@ -12,7 +12,7 @@ if [ "x$DESKTOP_SESSION" = "xukui" ] || [ "x$XDG_SESSION_DESKTOP" == "xukui" ]; 
     export GTK_OVERLAY_SCROLLING=0
 
     # QT apps to use GTK styling
-    export QT_QPA_PLATFORMTHEME=ukui
+    # export QT_QPA_PLATFORMTHEME=ukui
 
     # Change to GDK_SCALE=2 for experimental HiDPI support.
     # Requires reboot.

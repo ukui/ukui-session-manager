@@ -39,6 +39,9 @@
 #undef signals
 #endif
 
+#define SESSION_REQUIRED_COMPONENTS "org.ukui.session.required-components"
+#define SESSION_REQUIRED_COMPONENTS_PATH "/org/ukui/desktop/session/required-components/"
+
 ModuleManager::ModuleManager( QObject* parent)
     : QObject(parent)
 {
@@ -62,10 +65,24 @@ ModuleManager::~ModuleManager()
 
 void ModuleManager::constructStartupList()
 {
-    const QGSettings* gs = new QGSettings("org.ukui.session.required-components","/org/ukui/desktop/session/required-components/",this);
-    const QString window_manager = gs->get("windowmanager").toString() + ".desktop";
-    const QString panel = gs->get("panel").toString() + ".desktop";
-    const QString file_manager = gs->get("filemanager").toString() + ".desktop";
+    const QByteArray id(SESSION_REQUIRED_COMPONENTS);
+    QString window_manager;
+    QString panel;
+    QString file_manager;
+    QString wm_notfound;
+    if(QGSettings::isSchemaInstalled(id)) {
+        const QGSettings* gs = new QGSettings(SESSION_REQUIRED_COMPONENTS,SESSION_REQUIRED_COMPONENTS_PATH,this);
+        window_manager = gs->get("windowmanager").toString() + ".desktop";
+        panel = gs->get("panel").toString() + ".desktop";
+        file_manager = gs->get("filemanager").toString() + ".desktop";
+        wm_notfound = gs->get("windowmanager").toString();
+    }else{
+        //gsetting安装失败，或无法获取，设置默认值
+        qDebug() << "从gsettings 中或取值失败，设置默认值";
+        window_manager = "ukwm.desktop";
+        panel = "ukui-panel.desktop";
+        file_manager = "peony-qt-desktop.desktop";
+    }
 
     QStringList desktop_paths;
     desktop_paths << "/usr/share/applications";
@@ -102,7 +119,6 @@ void ModuleManager::constructStartupList()
 
     //配置文件所给的窗口管理器找不到.desktop文件时，将所给QString设为可执行命令，创建一个desktop文件赋给mWindowManager
     if(wm_found == false){
-        const QString wm_notfound = gs->get("windowmanager").toString();
         mWindowManager = XdgDesktopFile(XdgDesktopFile::ApplicationType,"window-manager", wm_notfound);
         qDebug() << "windowmanager has been created";
     }
@@ -321,3 +337,4 @@ void ModuleManager::logout(bool doExit)
     if (doExit)
         QCoreApplication::exit(0);
 }
+

@@ -50,6 +50,7 @@ private Q_SLOTS:
 private:
     void InitialEnvironment();
 
+    bool gsettings_usable;
     QGSettings * gs;
     ModuleManager* modman;
     IdleWatcher* mIdleWatcher;
