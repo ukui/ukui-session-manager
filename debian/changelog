@@ -1,3 +1,12 @@
+ukui-session-manager (2.0.2-1) unstable; urgency=medium
+
+  * New upstream bugfix release:
+    - Don't crash when the gsettings missing.
+    - Set the QT_QPA_PLATFORM_THEME according to the actual situation
+      to avoid the icon missing.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Fri, 27 Mar 2020 21:40:35 +0800
+
 ukui-session-manager (2.0.1-1) unstable; urgency=medium
 
   * New upstream bugfix release.
