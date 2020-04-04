@@ -76,7 +76,7 @@ void SessionApplication::InitialEnvironment()
     qputenv("XDG_CURRENT_DESKTOP","UKUI");
     qputenv("GDK_SCALE",gdk_scale_QB);
     qputenv("QT_SCALE_FACTOR",qt_scale_factor_QB);
-    qputenv("QT_AUTO_SCRENN_SET_FACTOR","0");
+    qputenv("QT_AUTO_SCREEN_SET_FACTOR","0");
     qputenv("QT_QPA_PLATFORMTHEME",QT_QPA_PLATFORMTHEME);
 }
 
