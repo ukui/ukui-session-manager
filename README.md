@@ -4,8 +4,8 @@
 
 * ukui-session-tool: Deals with 'logout', 'shutdown', 'reboot', 'hibernate' and so on.
 
-## build & install
-### Cmake
+## Build & Install
+### cmake
 ```
 cd ukui-session-manager
 mkdir build
@@ -24,5 +24,5 @@ cd ..
 sudo dpkg -i ukui-session-manager_{version}_{arch}.deb
 ```
 
-### issues
+## Issues
 [ukui-session-manager issues](https://github.com/ukui/ukui-session-manager/issues)
