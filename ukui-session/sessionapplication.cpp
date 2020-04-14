@@ -28,35 +28,59 @@
 #include <QDesktopWidget>
 
 #define SESSION_DEFAULT_SETTINGS "org.ukui.session"
+#define SESSION_DEFAULT_SETTINGS_PATH "/org/ukui/desktop/session/"
 #define QT5_UKUI_STYLE "org.ukui.style"
+#define PERIPHERALS_MOUSE "org.ukui.peripherals-mouse"
+#define PERIPHERALS_MOUSE_PATH "/org/ukui/desktop/peripherals/mouse/"
+
+QByteArray typeConver(int i){
+    QString str = QString::number(i);
+    QByteArray byte;
+    byte.append(str);
+    return byte;
+}
 
 void SessionApplication::InitialEnvironment()
 {
     QByteArray gdk_scale_QB;
     QByteArray qt_scale_factor_QB;
+    int size = 1;//放大倍率
+    QDesktopWidget *desktop = QApplication::desktop();
+    qDebug()<< "Screen-height is"<<desktop->height()<<",Screnn-width is"<<desktop->width();
+    if(desktop->height() >= 2000){
+        size = 2;
+    }
+    delete desktop;
     if(gsettings_usable){
         int gdk_scale;
         int qt_scale_factor;
-        QDesktopWidget *desktop = QApplication::desktop();
-        qDebug()<< "Screen-height is"<<desktop->height()<<",Screnn-width is"<<desktop->width();
         bool Hidpi = gs->get("hidpi").toBool();
         qDebug()<< "Hidpi is "<<Hidpi;
         if(Hidpi){
-            gdk_scale = gs->get("gdk-scale").toInt();
-            qt_scale_factor = gs->get("qt-scale-factor").toInt();
+            ;
         }else{
-            int i = 1;
-            if(desktop->height() >= 2000)
-                i = 2;
-            gdk_scale = i;
-            qt_scale_factor = i;
+            //gsettings值跟着改变,同步控制面板的值
+            gs->set("gdk-scale",typeConver(size));
+            gs->set("qt-scale-factor",typeConver(size));
         }
-        //转换类型
-        QString qt_scale_factor_QS = QString::number(qt_scale_factor);
-        qt_scale_factor_QB.append(qt_scale_factor_QS);
+        gdk_scale = gs->get("gdk-scale").toInt();
+        qt_scale_factor = gs->get("qt-scale-factor").toInt();
+        qt_scale_factor_QB = typeConver(qt_scale_factor);
+        gdk_scale_QB = typeConver(gdk_scale);
 
-        QString gdk_scale_QS = QString::number(gdk_scale);
-        gdk_scale_QB.append(gdk_scale_QS);
+        //鼠标大小也根据分辨率来变
+        const QByteArray id(PERIPHERALS_MOUSE);
+        if(QGSettings::isSchemaInstalled(id)) {
+            QGSettings *gs_mouse = new QGSettings(PERIPHERALS_MOUSE,PERIPHERALS_MOUSE_PATH,this);
+            QByteArray mouseSize = "24";
+            if(!gs->get("himouse-size").toBool()){
+                if(size > 1){
+                    mouseSize = "48";
+                }
+                gs_mouse->set("cursor-size",mouseSize);
+            }           
+            delete gs_mouse;
+        }
     }else{
         //设为默认值
         gdk_scale_QB = "1";
@@ -124,7 +148,7 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
     const QByteArray id(SESSION_DEFAULT_SETTINGS);
     if(QGSettings::isSchemaInstalled(id)) {
         gsettings_usable = true;
-        gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/",this);
+        gs = new QGSettings(SESSION_DEFAULT_SETTINGS,SESSION_DEFAULT_SETTINGS_PATH,this);
     }else{
         //gsetting安装失败，或无法获取，设置默认值
         qDebug() << "从gsettings 中或取值失败，设置默认值";
@@ -159,14 +183,21 @@ bool SessionApplication::startup()
 }
 
 void SessionApplication::playmusic(){
-    QMediaPlayer *player = new QMediaPlayer;
-    player->setMedia(QUrl("qrc:/startup.wav"));
-    player->play();
-    QObject::connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state){
-        player->stop();
-        player->deleteLater();
-        //delete player;
-        qDebug() << "play state is " << state;
-    });
+    //set default value of whether boot-music is opened
+    bool mus = true;
+    if(gsettings_usable){
+        mus = gs->get("ismusopen").toBool();
+    }
+    if(mus){
+        QMediaPlayer *player = new QMediaPlayer;
+        player->setMedia(QUrl("qrc:/startup.wav"));
+        player->play();
+        QObject::connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state){
+            player->stop();
+            player->deleteLater();
+            //delete player;
+            qDebug() << "play state is " << state;
+        });
+    }
 
 }

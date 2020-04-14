@@ -1,5 +1,15 @@
 <schemalist gettext-domain="@GETTEXT_PACKAGE@">
-  <schema id="org.ukui.session" path="/org/ukui/desktop/session/">
+    <schema id="org.ukui.session" path="/org/ukui/desktop/session/">
+	<key name="himouse-size" type="b">
+            <default>false</default>
+            <summary>HiMouseSize</summary>
+            <description>The bool-value of whether the mouse size has been changed</description>
+    </key>
+    <key name="ismusopen" type="b">
+            <default>true</default>
+            <summary>IS_MUSIC_OPEN</summary>
+            <description>Whether the boot-music and shutdown-music oped</description>
+    </key>
     <key name="gdk-scale" type="i"> 
 	    <default>1</default>
 	    <summary>GDK_SCALE</summary>
@@ -30,7 +40,7 @@
   </schema>
   <schema id="org.ukui.session.required-components" path="/org/ukui/desktop/session/required-components/">
     <key name="windowmanager" type="s">
-      <default>'ukwm'</default>
+      <default>'ukui-kwin'</default>
       <summary>Window Manager</summary>
       <description>The window manager is the program that draws the title bar and borders around windows, and allows you to move and resize windows.</description>
     </key>

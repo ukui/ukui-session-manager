@@ -27,16 +27,49 @@
 #include <QString>
 #include <QSoundEffect>
 #include <QTimer>
+#include <QGSettings/QGSettings>
 
 #include "ukuipower.h"
 #include "mainwindow.h"
+
+#ifdef signals
+#undef signals
+#endif
+
+bool playMusic(UkuiPower &powermanager, int num)
+{
+    bool mus = true;
+    const QByteArray id("org.ukui.session");
+    if(QGSettings::isSchemaInstalled(id)) {
+        QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
+        mus = gs->get("ismusopen").toBool();
+    }
+    static int action = num;
+    QTimer *timer = new QTimer();
+    timer->setSingleShot(true);
+    if(mus){
+        QSoundEffect *soundplayer = new QSoundEffect();
+        soundplayer->setSource(QUrl("qrc:/shutdown.wav"));
+        soundplayer->play();
+
+        QObject::connect(timer, &QTimer::timeout, [&]()
+        {
+            powermanager.doAction(UkuiPower::Action(action));
+            exit(0);
+        });
+        timer->start(1000);
+    }else{
+        powermanager.doAction(UkuiPower::Action(action));
+        exit(0);
+    }
+    return false;
+}
 
 int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
 
     UkuiPower powermanager(&a);
-    QTimer *timer = new QTimer();
     bool flag = true;
 
     QCommandLineParser parser;
@@ -59,59 +92,19 @@ int main(int argc, char* argv[])
     parser.process(a);
 
     if (parser.isSet(logoutOption)) {
-        powermanager.playmusic();
-        QObject::connect(timer,&QTimer::timeout,
-                         [&]()
-        {
-                timer->stop();
-                delete timer;
-                powermanager.doAction(UkuiPower::Action(0));
-                a.exit();
-        });
-        timer->start(1000);
-        flag = false;
+        flag = playMusic(powermanager, 0);
     }
     if (parser.isSet(shutdownOption)) {
-        powermanager.playmusic();
-        QObject::connect(timer,&QTimer::timeout,
-                         [&]()
-        {
-                timer->stop();
-                delete timer;
-                powermanager.doAction(UkuiPower::Action(4));
-                a.exit();
-        });
-        timer->start(1000);
-        flag = false;
+        flag = playMusic(powermanager, 4);
     }
     if (parser.isSet(switchuserOption)) {
-        powermanager.playmusic();
-        QObject::connect(timer,&QTimer::timeout,
-                         [&]()
-        {
-                timer->stop();
-                delete timer;
-                powermanager.doAction(UkuiPower::Action(1));
-                a.exit();
-        });
-        timer->start(1000);
-        flag = false;
+        flag = playMusic(powermanager, 1);
     }
     if (parser.isSet(rebootOption)) {
-        powermanager.playmusic();
-        QObject::connect(timer,&QTimer::timeout,
-                         [&]()
-        {
-                timer->stop();
-                delete timer;
-                powermanager.doAction(UkuiPower::Action(3));
-                a.exit();
-        });
-        timer->start(1000);
-        flag = false;
+        flag = playMusic(powermanager, 3);
     }
     if (flag) {
-        //加载翻译文件
+        // Load ts files
         const QString locale = QLocale::system().name();
         QTranslator translator;
         qDebug() << "local: " << locale;
@@ -122,30 +115,19 @@ int main(int argc, char* argv[])
            qDebug() << "Load translations file failed!";
         }
 
-        MainWindow w ;
+        MainWindow *w = new MainWindow();
 
-        //加载qss文件
+        // Load qss file
         QFile qss(":/powerwin.qss");
         qss.open(QFile::ReadOnly);
         a.setStyleSheet(qss.readAll());
         qss.close();
 
-        w.showFullScreen();
-        QObject::connect(w.timer,&QTimer::timeout,
-                         [&]()
+        w->showFullScreen();
+        QObject::connect(w, &MainWindow::signalTostart, [&]()
         {
-            w.timer->stop();
-            delete w.timer;
-            if(!w.isVisible()){
-                qDebug()<<w.close();
-                powermanager.doAction(UkuiPower::Action(w.defaultnum));
-                a.exit();
-            }else{
-                qDebug()<<"somethings wrong has happened! Window can not hide!";
-                a.exit();
-            }
+            playMusic(powermanager, w->defaultnum);
         });
-
         return a.exec();
     }
     return a.exec();

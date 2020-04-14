@@ -54,9 +54,3 @@ bool UkuiPower::doAction(UkuiPower::Action action)
 
     return false;
 }
-
-void UkuiPower::playmusic(){
-    QSoundEffect *soundplayer = new QSoundEffect();
-    soundplayer->setSource(QUrl("qrc:/shutdown.wav"));
-    soundplayer->play();
-}
