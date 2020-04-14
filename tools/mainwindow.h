@@ -21,12 +21,15 @@
 #include <QMainWindow>
 #include "powerprovider.h"
 #include <QTimer>
+#include <QAbstractNativeEventFilter>
+
+class XEventMonitor;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
+class MainWindow : public QMainWindow,public QAbstractNativeEventFilter
 {
     Q_OBJECT
 
@@ -35,6 +38,8 @@ public:
     QRect m_screen;
     ~MainWindow();
     void doevent(QEvent *event, QString test2,int i);
+    void closeEvent(QCloseEvent *event);
+    virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
 
     QTimer *timer;
     int defaultnum = 0;
@@ -42,7 +47,11 @@ public:
 private:
     Ui::MainWindow *ui;
     UkuiPower *m_power;
+    XEventMonitor *xEventMonitor;
     void ResizeEvent();
+
+private Q_SLOTS:
+    void onGlobalKeyRelease(const QString &key);
 
 protected:
     void paintEvent(QPaintEvent *e);

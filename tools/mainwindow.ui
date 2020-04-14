@@ -47,14 +47,18 @@
     <property name="font">
      <font>
       <family>Noto Sans CJK SC</family>
-      <pointsize>16</pointsize>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:white</string>
+     <string notr="true">color:white;
+font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="text">
-     <string>suspend</string>
+     <string>Suspend</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -95,14 +99,18 @@
     <property name="font">
      <font>
       <family>Noto Sans CJK SC</family>
-      <pointsize>16</pointsize>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:white</string>
+     <string notr="true">color:white;
+font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="text">
-     <string>switchuser</string>
+     <string>Switch User</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -143,14 +151,18 @@
     <property name="font">
      <font>
       <family>Noto Sans CJK SC</family>
-      <pointsize>16</pointsize>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:white</string>
+     <string notr="true">color:white;
+font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="text">
-     <string>logout</string>
+     <string>Log Out</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -191,14 +203,18 @@
     <property name="font">
      <font>
       <family>Noto Sans CJK SC</family>
-      <pointsize>16</pointsize>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:white</string>
+     <string notr="true">color:white;
+font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="text">
-     <string>reboot</string>
+     <string>Restart</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -239,14 +255,18 @@
     <property name="font">
      <font>
       <family>Noto Sans CJK SC</family>
-      <pointsize>16</pointsize>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:white</string>
+     <string notr="true">color:white;
+font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="text">
-     <string>shutdown</string>
+     <string>Power Off</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -274,14 +294,18 @@
     <property name="font">
      <font>
       <family>Noto Sans CJK SC</family>
-      <pointsize>20</pointsize>
+      <pointsize>28</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="contextMenuPolicy">
      <enum>Qt::NoContextMenu</enum>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:white</string>
+     <string notr="true">color:white;
+font:28pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="lineWidth">
      <number>1</number>
@@ -305,11 +329,15 @@
     <property name="font">
      <font>
       <family>Noto Sans CJK SC</family>
-      <pointsize>10</pointsize>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:white</string>
+     <string notr="true">color:white;
+font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="text">
      <string/>

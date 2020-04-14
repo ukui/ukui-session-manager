@@ -26,13 +26,22 @@
 #include <QDesktopWidget>
 #include <QDateTime>
 #include <QScreen>
+#include <QCloseEvent>
 #include <QMouseEvent>
+#include <QX11Info>
+#include <X11/extensions/XTest.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <X11/keysym.h>
+#include "grab-x11.h"
+#include "xeventmonitor.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , m_power(new UkuiPower(this))
-    ,timer(new QTimer())
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    m_power(new UkuiPower(this)),
+    timer(new QTimer()),
+    xEventMonitor(new XEventMonitor(this))
 {
     ui->setupUi(this);
     ui->suspend->installEventFilter(this);
@@ -53,14 +62,38 @@ MainWindow::MainWindow(QWidget *parent)
     move(0,0);//设置初始位置的值
     ResizeEvent();
 
-    setWindowFlags(Qt::FramelessWindowHint);//设置窗体无边框，不可拖动拖拽拉伸
-    setAttribute(Qt::WA_TranslucentBackground, true);//设定该窗口透明显示
-    setWindowFlag(Qt::WindowStaysOnTopHint);//设置为顶层窗口，无法被切屏
+    //| Qt::X11BypassWindowManagerHint
+    //设置窗体无边框，不可拖动拖拽拉伸,为顶层窗口，无法被切屏
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    //setAttribute(Qt::WA_TranslucentBackground, true);//设定该窗口透明显示
+
+    /*捕获键盘，如果捕获失败，那么模拟一次esc按键来退出菜单，如果仍捕获失败，则放弃捕获*/
+    if(establishGrab())
+        qDebug()<<"establishGrab : true";
+    else {
+        qDebug()<<"establishGrab : false";
+        XTestFakeKeyEvent(QX11Info::display(), XKeysymToKeycode(QX11Info::display(),XK_Escape), True, 1);
+        XTestFakeKeyEvent(QX11Info::display(), XKeysymToKeycode(QX11Info::display(),XK_Escape), False, 1);
+        XFlush(QX11Info::display());
+        sleep(1);
+        if(!establishGrab())
+        {
+            qDebug()<<"establishGrab : false again!";
+            //exit(1);
+        }
+    }
+    connect(xEventMonitor, SIGNAL(keyRelease(const QString &)),this, SLOT(onGlobalKeyRelease(const QString &)));
+    xEventMonitor->start();
+
     this->show();
+    //waiting for bug-solution
+    //qApp->installNativeEventFilter(this);
 }
 
 MainWindow::~MainWindow()
 {
+    delete m_power;
+    delete xEventMonitor;
     delete ui;
 }
 
@@ -138,10 +171,55 @@ void MainWindow::doevent(QEvent *event, QString test2,int i){
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if(!ui->suspend->geometry().contains(event->pos()) &&
-       !ui->switchuser->geometry().contains(event->pos()) &&
-       !ui->logout->geometry().contains(event->pos()) &&
-       !ui->reboot->geometry().contains(event->pos()) &&
-       !ui->shutdown->geometry().contains(event->pos()))
+            !ui->switchuser->geometry().contains(event->pos()) &&
+            !ui->logout->geometry().contains(event->pos()) &&
+            !ui->reboot->geometry().contains(event->pos()) &&
+            !ui->shutdown->geometry().contains(event->pos())){
         close();
+        exit(0);
+    }
 }
 
+void MainWindow::onGlobalKeyRelease(const QString &key){
+    if(key == "Escape")
+    {
+        close();
+        exit(0);
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event){
+    qDebug()<<"MainWindow:: CloseEvent";
+    if(closeGrab()){
+        qDebug()<<"success to close Grab";
+    }else{
+        qDebug()<<"failure to close Grab";
+    }
+    return QWidget::closeEvent(event);
+}
+
+bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+{
+    if (qstrcmp(eventType, "xcb_generic_event_t") != 0) {
+        return false;
+    }
+    xcb_generic_event_t *event = reinterpret_cast<xcb_generic_event_t*>(message);
+    const uint8_t responseType = event->response_type & ~0x80;
+    if (responseType == XCB_CONFIGURE_NOTIFY) {
+        xcb_configure_notify_event_t *xc = reinterpret_cast<xcb_configure_notify_event_t*>(event);
+        if (xc->event == QX11Info::appRootWindow())
+        {
+            XRaiseWindow(QX11Info::display(), this->winId());
+            XFlush(QX11Info::display());
+            //raise();
+        }
+        return false;
+    }
+    else if(responseType == XCB_PROPERTY_NOTIFY)
+    {
+        //raise();
+        XRaiseWindow(QX11Info::display(), this->winId());
+        XFlush(QX11Info::display());
+    }
+    return false;
+}
