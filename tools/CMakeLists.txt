@@ -1,16 +1,3 @@
-#pkg_check_modules(X11 REQUIRED x11)
-#pkg_check_modules(XCB REQUIRED xcb)
-
-#include_directories(
-#    ${X11_INCLUDE_DIRS}
-#    ${XCB_INCLUDE_DIRS}
-#    )
-
-#set(EXTRA_LIBS
-#    ${X11_LIBRARIES}
-#    ${XCB_LIBRARIES}
-#    )
-
 set(tools_SRCS
     main.cpp
     ukuipower.cpp
@@ -23,6 +10,10 @@ set(tools_SRCS
     xeventmonitor.h
     mainwindow.ui
 )
+
+find_package(PkgConfig)
+pkg_search_module(GSETTINGS_QT REQUIRED gsettings-qt)
+include_directories(${GSETTINGS_QT_INCLUDES})
 
 add_executable(ukui-session-tools
                ${tools_SRCS}
@@ -38,6 +29,7 @@ target_link_libraries(ukui-session-tools
     Qt5::DBus
     Qt5::Multimedia
     Qt5::X11Extras
+    ${GSETTINGS_QT_LIBRARIES}
     -lxcb
     -lX11
     -lXtst

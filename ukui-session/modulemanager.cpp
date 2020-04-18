@@ -334,7 +334,10 @@ void ModuleManager::logout(bool doExit)
             p->kill();
         }
     }
-    if (doExit)
-        QCoreApplication::exit(0);
+    if (doExit){
+        //qApp->~QCoreApplication();
+        //QCoreApplication::exit(0);
+        exit(0);
+    }
 }
 

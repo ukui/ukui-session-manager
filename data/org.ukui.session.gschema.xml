@@ -1,19 +1,29 @@
 <schemalist gettext-domain="@GETTEXT_PACKAGE@">
-  <schema id="org.ukui.session" path="/org/ukui/desktop/session/">
+    <schema id="org.ukui.session" path="/org/ukui/desktop/session/">
+	<key name="mouse-size-changed" type="b">
+            <default>false</default>
+            <summary>Weather mouse size changed</summary>
+            <description>The bool-value of whether the mouse size has been changed</description>
+    </key>
+    <key name="boot-music" type="b">
+            <default>true</default>
+            <summary>Weathe play boot/shutdown music </summary>
+            <description>Whether the boot-music and shutdown-music oped</description>
+    </key>
     <key name="gdk-scale" type="i"> 
 	    <default>1</default>
-	    <summary>GDK_SCALE</summary>
-	    <description>gdk</description>
+	    <summary>Gdk scale</summary>
+	    <description>The scale value of Gdk</description>
     </key>
     <key name="qt-scale-factor" type="i">
             <default>1</default>
-	    <summary>QT_SCALE_FACTOR</summary>
-	    <description>qt</description>
+	    <summary>Qt scale factor</summary>
+	    <description>The scale factor value of Qt</description>
     </key>
     <key name="hidpi" type="b">
             <default>false</default>
 	    <summary>HIDPI</summary>
-	     <description>button</description>
+	     <description>Weather set High DPI value automatic</description>
     </key>
     <key name="logout-timeout" type="i">
       <default>60</default>
@@ -30,7 +40,7 @@
   </schema>
   <schema id="org.ukui.session.required-components" path="/org/ukui/desktop/session/required-components/">
     <key name="windowmanager" type="s">
-      <default>'ukwm'</default>
+      <default>'ukui-kwin'</default>
       <summary>Window Manager</summary>
       <description>The window manager is the program that draws the title bar and borders around windows, and allows you to move and resize windows.</description>
     </key>

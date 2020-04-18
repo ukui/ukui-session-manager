@@ -26,8 +26,6 @@
 
 #include <QObject>
 #include <QList>
-#include <QSoundEffect>
-#include <QTimer>
 
 class PowerProvider;
 
@@ -49,9 +47,6 @@ public:
     virtual ~UkuiPower();
 
     bool canAction(Action action) const;
-
-    QSoundEffect *soundplayer;
-    void playmusic();
 
 public slots:
     bool doAction(Action action);

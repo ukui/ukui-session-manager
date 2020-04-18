@@ -24,7 +24,7 @@ set(ukui-session_SRCS
 find_package(PkgConfig)
 pkg_search_module(GSETTINGS_QT REQUIRED gsettings-qt)
 include_directories(${GSETTINGS_QT_INCLUDES})
-find_package(PkgConfig)
+#find_package(PkgConfig)
 
 add_executable(ukui-session ${ukui-session_SRCS}
                ${PROJECT_SOURCE_DIR}/data/music.qrc)
