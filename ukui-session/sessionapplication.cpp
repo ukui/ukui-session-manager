@@ -73,7 +73,7 @@ void SessionApplication::InitialEnvironment()
         if(QGSettings::isSchemaInstalled(id)) {
             QGSettings *gs_mouse = new QGSettings(PERIPHERALS_MOUSE,PERIPHERALS_MOUSE_PATH,this);
             QByteArray mouseSize = "24";
-            if(!gs->get("himouse-size").toBool()){
+            if(!gs->get("initialize-mouse-size").toBool()){
                 if(size > 1){
                     mouseSize = "48";
                 }
@@ -186,7 +186,7 @@ void SessionApplication::playmusic(){
     //set default value of whether boot-music is opened
     bool mus = true;
     if(gsettings_usable){
-        mus = gs->get("ismusopen").toBool();
+        mus = gs->get("boot-music").toBool();
     }
     if(mus){
         QMediaPlayer *player = new QMediaPlayer;

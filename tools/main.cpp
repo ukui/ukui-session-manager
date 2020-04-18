@@ -42,7 +42,7 @@ bool playMusic(UkuiPower &powermanager, int num)
     const QByteArray id("org.ukui.session");
     if(QGSettings::isSchemaInstalled(id)) {
         QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
-        mus = gs->get("ismusopen").toBool();
+        mus = gs->get("boot-music").toBool();
     }
     static int action = num;
     QTimer *timer = new QTimer();
