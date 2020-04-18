@@ -36,18 +36,18 @@
 #undef signals
 #endif
 
-bool playMusic(UkuiPower &powermanager, int num)
+bool playShutdownMusic(UkuiPower &powermanager, int num)
 {
-    bool mus = true;
+    bool play_music = true;
     const QByteArray id("org.ukui.session");
-    if(QGSettings::isSchemaInstalled(id)) {
+    if (QGSettings::isSchemaInstalled(id)) {
         QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
-        mus = gs->get("boot-music").toBool();
+        play_music = gs->get("boot-music").toBool();
     }
     static int action = num;
     QTimer *timer = new QTimer();
     timer->setSingleShot(true);
-    if(mus){
+    if (play_music) {
         QSoundEffect *soundplayer = new QSoundEffect();
         soundplayer->setSource(QUrl("qrc:/shutdown.wav"));
         soundplayer->play();
@@ -58,7 +58,7 @@ bool playMusic(UkuiPower &powermanager, int num)
             exit(0);
         });
         timer->start(1000);
-    }else{
+    } else {
         powermanager.doAction(UkuiPower::Action(action));
         exit(0);
     }
@@ -92,16 +92,16 @@ int main(int argc, char* argv[])
     parser.process(a);
 
     if (parser.isSet(logoutOption)) {
-        flag = playMusic(powermanager, 0);
+        flag = playShutdownMusic(powermanager, 0);
     }
     if (parser.isSet(shutdownOption)) {
-        flag = playMusic(powermanager, 4);
+        flag = playShutdownMusic(powermanager, 4);
     }
     if (parser.isSet(switchuserOption)) {
-        flag = playMusic(powermanager, 1);
+        flag = playShutdownMusic(powermanager, 1);
     }
     if (parser.isSet(rebootOption)) {
-        flag = playMusic(powermanager, 3);
+        flag = playShutdownMusic(powermanager, 3);
     }
     if (flag) {
         // Load ts files
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
         w->showFullScreen();
         QObject::connect(w, &MainWindow::signalTostart, [&]()
         {
-            playMusic(powermanager, w->defaultnum);
+            playShutdownMusic(powermanager, w->defaultnum);
         });
         return a.exec();
     }

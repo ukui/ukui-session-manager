@@ -34,11 +34,11 @@
 #define Button2            2
 #define Button3            3
 #define WheelUp            4
-#define WheelDown        5
-#define WheelLeft        6
-#define WheelRight        7
-#define XButton1        8
-#define XButton2        9
+#define WheelDown          5
+#define WheelLeft          6
+#define WheelRight         7
+#define XButton1           8
+#define XButton2           9
 
 class XEventMonitorPrivate
 {
@@ -63,12 +63,10 @@ private:
 XEventMonitorPrivate::XEventMonitorPrivate(XEventMonitor *parent)
     : q_ptr(parent)
 {
-
 }
 
 XEventMonitorPrivate::~XEventMonitorPrivate()
 {
-
 }
 
 void XEventMonitorPrivate::emitButtonSignal(const char *member, xEvent *event)
@@ -149,20 +147,17 @@ void XEventMonitorPrivate::handleRecordEvent(XRecordInterceptData* data)
 
     if (data->category == XRecordFromServer) {
         xEvent * event = (xEvent *)data->data;
-        switch (event->u.u.type)
-        {
+        switch (event->u.u.type) {
         case ButtonPress:
-            if (filterWheelEvent(event->u.u.detail)) {
+            if (filterWheelEvent(event->u.u.detail))
                 emitButtonSignal("buttonPress", event);
-            }
             break;
         case MotionNotify:
             emitButtonSignal("buttonDrag", event);
             break;
         case ButtonRelease:
-            if (filterWheelEvent(event->u.u.detail)) {
+            if (filterWheelEvent(event->u.u.detail))
                 emitButtonSignal("buttonRelease", event);
-            }
             break;
         case KeyPress:
             emitKeySignal("keyPress", event);
@@ -200,8 +195,7 @@ XEventMonitor::~XEventMonitor()
 
 void XEventMonitor::run()
 {
-    if(!isInterruptionRequested())
-    {
+    if (!isInterruptionRequested()) {
         d_ptr->run();
     }
 }

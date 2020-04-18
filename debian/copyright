@@ -51,8 +51,8 @@ Files: debian/*
 Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd
 License: LGPL-2.1+
 
-Files: src/xeventmonitor.h
-       src/xeventmonitor.cpp
+Files: tools/xeventmonitor.h
+       tools/xeventmonitor.cpp
 Copyright: 2011 ~ 2017 Deepin, Inc.
            2011 ~ 2017 Wang Yong
            2018, Tianjin KYLIN Information Technology Co., Ltd.

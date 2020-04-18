@@ -46,19 +46,16 @@ void SessionApplication::InitialEnvironment()
     QByteArray qt_scale_factor_QB;
     int size = 1;//放大倍率
     QDesktopWidget *desktop = QApplication::desktop();
-    qDebug()<< "Screen-height is"<<desktop->height()<<",Screnn-width is"<<desktop->width();
-    if(desktop->height() >= 2000){
+    qDebug() << "Screen-height is" << desktop->height() << ",Screnn-width is" << desktop->width();
+    if (desktop->height() >= 2000)
         size = 2;
-    }
     delete desktop;
-    if(gsettings_usable){
+    if (gsettings_usable) {
         int gdk_scale;
         int qt_scale_factor;
         bool Hidpi = gs->get("hidpi").toBool();
-        qDebug()<< "Hidpi is "<<Hidpi;
-        if(Hidpi){
-            ;
-        }else{
+        qDebug() << "Hidpi is "<< Hidpi;
+        if (!Hidpi) {
             //gsettings值跟着改变,同步控制面板的值
             gs->set("gdk-scale",typeConver(size));
             gs->set("qt-scale-factor",typeConver(size));
@@ -70,18 +67,17 @@ void SessionApplication::InitialEnvironment()
 
         //鼠标大小也根据分辨率来变
         const QByteArray id(PERIPHERALS_MOUSE);
-        if(QGSettings::isSchemaInstalled(id)) {
+        if (QGSettings::isSchemaInstalled(id)) {
             QGSettings *gs_mouse = new QGSettings(PERIPHERALS_MOUSE,PERIPHERALS_MOUSE_PATH,this);
             QByteArray mouseSize = "24";
-            if(!gs->get("mouse-size-changed").toBool()){
-                if(size > 1){
+            if (!gs->get("mouse-size-changed").toBool()) {
+                if(size > 1)
                     mouseSize = "48";
-                }
                 gs_mouse->set("cursor-size",mouseSize);
             }           
             delete gs_mouse;
         }
-    }else{
+    } else {
         //设为默认值
         gdk_scale_QB = "1";
         qt_scale_factor_QB = "1";
@@ -90,13 +86,13 @@ void SessionApplication::InitialEnvironment()
     //检查qt主题是否安装
     const QByteArray qt_style(QT5_UKUI_STYLE);
     QByteArray QT_QPA_PLATFORMTHEME;
-    if(QGSettings::isSchemaInstalled(qt_style)) {
+    if (QGSettings::isSchemaInstalled(qt_style)) {
         QT_QPA_PLATFORMTHEME = "ukui";
-    }else{
+    } else {
         QT_QPA_PLATFORMTHEME = "gtk2";
     }
 
-    qDebug()<< "gdk_scale"<<gdk_scale_QB<<"qt_scale_factor"<<qt_scale_factor_QB;
+    qDebug() << "gdk_scale" << gdk_scale_QB << "qt_scale_factor" << qt_scale_factor_QB;
     qputenv("XDG_CURRENT_DESKTOP","UKUI");
     qputenv("GDK_SCALE",gdk_scale_QB);
     qputenv("QT_SCALE_FACTOR",qt_scale_factor_QB);
@@ -104,39 +100,35 @@ void SessionApplication::InitialEnvironment()
     qputenv("QT_QPA_PLATFORMTHEME",QT_QPA_PLATFORMTHEME);
 }
 
-void SessionApplication::updatevalue(){
-    if(gsettings_usable){
+void SessionApplication::updateIdleDelay(){
+    if (gsettings_usable) {
         const int time = gs->get("idle-delay").toInt() * 60;
         mIdleWatcher->reset(time);
-    }else
-        return;
+    }
 }
 
 void SessionApplication::registerDBus()
 {
     new SessionDBusAdaptor(modman);
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    if (!dbus.registerService(QStringLiteral("org.gnome.SessionManager")))
-    {
+    if (!dbus.registerService(QStringLiteral("org.gnome.SessionManager"))) {
         qCritical() << "Can't register org.gnome.SessionManager, there is already a session manager!";
     }
-    if (!dbus.registerObject(("/org/gnome/SessionManager"), modman))
-    {
+    if (!dbus.registerObject(("/org/gnome/SessionManager"), modman)) {
         qCritical() << "Can't register object, there is already an object registered at "
                     << "/org/gnome/SessionManager";
     }
 
     int timeout;
-    if(gsettings_usable){
+    if (gsettings_usable) {
         timeout = gs->get("idle-delay").toInt() * 60;
-        connect(gs,&QGSettings::changed,this,&SessionApplication::updatevalue);
-    }else{
+        connect(gs, &QGSettings::changed, this, &SessionApplication::updateIdleDelay);
+    } else {
         timeout = 5 * 60;
     }
     mIdleWatcher = new IdleWatcher(timeout);
     new IdleDBusAdaptor(mIdleWatcher);
-    if (!dbus.registerObject("/org/gnome/SessionManager/Presence", mIdleWatcher))
-    {
+    if (!dbus.registerObject("/org/gnome/SessionManager/Presence", mIdleWatcher)) {
         qCritical() << "Cant' register object, there is already an object registered at "
                     << "org/gnome/SessionManager/Presence";
     }
@@ -146,12 +138,11 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
     QApplication(argc, argv)
 {
     const QByteArray id(SESSION_DEFAULT_SETTINGS);
-    if(QGSettings::isSchemaInstalled(id)) {
+    if (QGSettings::isSchemaInstalled(id)) {
         gsettings_usable = true;
         gs = new QGSettings(SESSION_DEFAULT_SETTINGS,SESSION_DEFAULT_SETTINGS_PATH,this);
-    }else{
-        //gsetting安装失败，或无法获取，设置默认值
-        qDebug() << "从gsettings 中或取值失败，设置默认值";
+    } else {
+        qWarning() << "Failed to get default value from gsettings, set gsettings_usable to false!";
         gsettings_usable = false;
     }
 
@@ -162,7 +153,7 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
     // Wait until the event loop starts
     QTimer::singleShot(0, this, SLOT(startup()));
 
-    playmusic();
+    playBootMusic();
 }
 
 SessionApplication::~SessionApplication()
@@ -182,22 +173,20 @@ bool SessionApplication::startup()
     return true;
 }
 
-void SessionApplication::playmusic(){
+void SessionApplication::playBootMusic(){
     //set default value of whether boot-music is opened
-    bool mus = true;
-    if(gsettings_usable){
-        mus = gs->get("boot-music").toBool();
-    }
-    if(mus){
+    bool play_music = true;
+    if (gsettings_usable)
+        play_music = gs->get("boot-music").toBool();
+    if (play_music) {
         QMediaPlayer *player = new QMediaPlayer;
         player->setMedia(QUrl("qrc:/startup.wav"));
         player->play();
-        QObject::connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state){
+        QObject::connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state) {
             player->stop();
             player->deleteLater();
             //delete player;
             qDebug() << "play state is " << state;
         });
     }
-
 }
