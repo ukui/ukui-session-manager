@@ -1,13 +1,13 @@
 <schemalist gettext-domain="@GETTEXT_PACKAGE@">
     <schema id="org.ukui.session" path="/org/ukui/desktop/session/">
-	<key name="initialize-mouse-size" type="b">
+	<key name="mouse-size-changed" type="b">
             <default>false</default>
-            <summary>HiMouseSize</summary>
+            <summary>MOUSE_SIZE_CHANGED</summary>
             <description>The bool-value of whether the mouse size has been changed</description>
     </key>
     <key name="boot-music" type="b">
             <default>true</default>
-            <summary>IS_MUSIC_OPEN</summary>
+            <summary>BOOT_MUSIC</summary>
             <description>Whether the boot-music and shutdown-music oped</description>
     </key>
     <key name="gdk-scale" type="i"> 

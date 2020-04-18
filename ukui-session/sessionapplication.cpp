@@ -73,7 +73,7 @@ void SessionApplication::InitialEnvironment()
         if(QGSettings::isSchemaInstalled(id)) {
             QGSettings *gs_mouse = new QGSettings(PERIPHERALS_MOUSE,PERIPHERALS_MOUSE_PATH,this);
             QByteArray mouseSize = "24";
-            if(!gs->get("initialize-mouse-size").toBool()){
+            if(!gs->get("mouse-size-changed").toBool()){
                 if(size > 1){
                     mouseSize = "48";
                 }
