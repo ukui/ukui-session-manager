@@ -10,6 +10,8 @@ set(CMAKE_AUTORCC ON)
 # Create code from a list of Qt designer ui files
 set(CMAKE_AUTOUIC ON)
 
+set(CMAKE_CXX_STANDARD 11)
+
 include(GNUInstallDirs)
 
 # Enable funcion names and line numbers even for release builds

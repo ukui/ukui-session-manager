@@ -37,7 +37,11 @@ UkuiPower::~UkuiPower()
 
 bool UkuiPower::canAction(UkuiPower::Action action) const
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
+    foreach(const PowerProvider *provider, mProviders) {
+#else
     for (const PowerProvider *provider : qAsConst(mProviders)) {
+#endif
         if (provider->canAction(action))
             return true;
     }
@@ -47,7 +51,11 @@ bool UkuiPower::canAction(UkuiPower::Action action) const
 
 bool UkuiPower::doAction(UkuiPower::Action action)
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
+    foreach(PowerProvider *provider, mProviders) {
+#else
     for (PowerProvider *provider : qAsConst(mProviders)) {
+#endif
         if (provider->canAction(action) && provider->doAction(action))
             return true;
     }
