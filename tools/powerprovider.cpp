@@ -26,20 +26,19 @@
 #include <QDBusInterface>
 #include <QDebug>
 
-#include <systemd/sd-login.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 #define LIGHTDM_SERVICE     "org.freedesktop.DisplayManager"
 #define LIGTHDM_INTERFACE   "org.freedesktop.DisplayManager.Seat"
 
-#define SYSTEMD_SERVICE         "org.freedesktop.login1"
-#define SYSTEMD_PATH            "/org/freedesktop/login1"
-#define SYSTEMD_INTERFACE       "org.freedesktop.login1.Manager"
+#define SYSTEMD_SERVICE     "org.freedesktop.login1"
+#define SYSTEMD_PATH        "/org/freedesktop/login1"
+#define SYSTEMD_INTERFACE   "org.freedesktop.login1.Manager"
 
-#define UKUI_SERVICE      "org.gnome.SessionManager"
-#define UKUI_PATH         "/org/gnome/SessionManager"
-#define UKUI_INTERFACE    "org.gnome.SessionManager"
+#define UKUI_SERVICE        "org.gnome.SessionManager"
+#define UKUI_PATH           "/org/gnome/SessionManager"
+#define UKUI_INTERFACE      "org.gnome.SessionManager"
 
 #define PROPERTIES_INTERFACE    "org.freedesktop.DBus.Properties"
 
@@ -166,25 +165,25 @@ bool SystemdProvider::canAction(UkuiPower::Action action) const
     QString command;
 
     switch (action) {
-      case UkuiPower::PowerSwitchUser:
+    case UkuiPower::PowerSwitchUser:
         return canSwitchUser();
-      case UkuiPower::PowerReboot:
+    case UkuiPower::PowerReboot:
         command = QLatin1String("CanReboot");
         break;
 
-      case UkuiPower::PowerShutdown:
+    case UkuiPower::PowerShutdown:
         command = QLatin1String("CanPowerOff");
         break;
 
-      case UkuiPower::PowerSuspend:
+    case UkuiPower::PowerSuspend:
         command = QLatin1String("CanSuspend");
         break;
 
-      case UkuiPower::PowerHibernate:
+    case UkuiPower::PowerHibernate:
         command = QLatin1String("CanHibernate");
         break;
 
-      default:
+    default:
         return false;
     }
 
@@ -215,26 +214,21 @@ bool SystemdProvider::doAction(UkuiPower::Action action)
 {
     QString command;
 
-    switch (action)
-    {
+    switch (action) {
     case UkuiPower::PowerSwitchUser:
         return doSwitchUser();
     case UkuiPower::PowerReboot:
         command = QLatin1String("Reboot");
         break;
-
     case UkuiPower::PowerShutdown:
         command = QLatin1String("PowerOff");
         break;
-
     case UkuiPower::PowerSuspend:
         command = QLatin1String("Suspend");
         break;
-
     case UkuiPower::PowerHibernate:
         command = QLatin1String("Hibernate");
         break;
-
     default:
         return false;
     }

@@ -67,16 +67,15 @@ MainWindow::MainWindow(QWidget *parent)
     //setAttribute(Qt::WA_TranslucentBackground, true);//设定该窗口透明显示
 
     /*捕获键盘，如果捕获失败，那么模拟一次esc按键来退出菜单，如果仍捕获失败，则放弃捕获*/
-    if(establishGrab())
+    if (establishGrab()) {
         qDebug()<<"establishGrab : true";
-    else {
+    } else {
         qDebug()<<"establishGrab : false";
         XTestFakeKeyEvent(QX11Info::display(), XKeysymToKeycode(QX11Info::display(),XK_Escape), True, 1);
         XTestFakeKeyEvent(QX11Info::display(), XKeysymToKeycode(QX11Info::display(),XK_Escape), False, 1);
         XFlush(QX11Info::display());
         sleep(1);
-        if(!establishGrab())
-        {
+        if (!establishGrab()) {
             qDebug()<<"establishGrab : false again!";
             //exit(1);
         }
@@ -99,7 +98,7 @@ MainWindow::~MainWindow()
 void MainWindow::ResizeEvent(){
     int xx = m_screen.x();
     int yy = m_screen.y();//取得当前鼠标所在屏幕的最左，上坐标
-    if(m_screen.width()<928){
+    if (m_screen.width()<928) {
         ui->suspend->move(0,(m_screen.height()-168)/2);
         ui->switchuser->move(168,(m_screen.height()-168)/2);
         ui->logout->move(168*2,(m_screen.height()-168)/2);
@@ -124,7 +123,7 @@ void MainWindow::paintEvent(QPaintEvent *e)
     //painter.setBrush(QColor("#0a4989"));
     QPixmap pix;
     pix.load(":/images/background-ukui.png");
-    for(QScreen *screen : QApplication::screens()){
+    for(QScreen *screen : QApplication::screens()) {
         //draw picture to every screen
         QRect rect = screen->geometry();
         painter.drawPixmap(rect,pix);
@@ -152,7 +151,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 }
 
 void MainWindow::doevent(QEvent *event, QString test, int i){
-    if (event->type() == QEvent::MouseButtonRelease){
+    if (event->type() == QEvent::MouseButtonRelease) {
         try {
 //            close();
 //            m_power->doAction(UkuiPower::Action(i));
@@ -168,56 +167,59 @@ void MainWindow::doevent(QEvent *event, QString test, int i){
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    if(!ui->suspend->geometry().contains(event->pos()) &&
+    if (!ui->suspend->geometry().contains(event->pos()) &&
             !ui->switchuser->geometry().contains(event->pos()) &&
             !ui->logout->geometry().contains(event->pos()) &&
             !ui->reboot->geometry().contains(event->pos()) &&
-            !ui->shutdown->geometry().contains(event->pos())){
+            !ui->shutdown->geometry().contains(event->pos())) {
         close();
         exit(0);
     }
 }
 
-void MainWindow::onGlobalKeyRelease(const QString &key){
-    if(key == "Escape")
-    {
+void MainWindow::onGlobalKeyRelease(const QString &key)
+{
+    if (key == "Escape") {
         close();
         exit(0);
     }
 }
 
-void MainWindow::closeEvent(QCloseEvent *event){
+void MainWindow::closeEvent(QCloseEvent *event)
+{
     qDebug()<<"MainWindow:: CloseEvent";
-    if(closeGrab()){
+    if (closeGrab()) {
         qDebug()<<"success to close Grab";
-    }else{
+    } else {
         qDebug()<<"failure to close Grab";
     }
     return QWidget::closeEvent(event);
 }
 
-//bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
-//{
-//    if (qstrcmp(eventType, "xcb_generic_event_t") != 0) {
-//        return false;
-//    }
-//    xcb_generic_event_t *event = reinterpret_cast<xcb_generic_event_t*>(message);
-//    const uint8_t responseType = event->response_type & ~0x80;
-//    if (responseType == XCB_CONFIGURE_NOTIFY) {
-//        xcb_configure_notify_event_t *xc = reinterpret_cast<xcb_configure_notify_event_t*>(event);
-//        if (xc->event == QX11Info::appRootWindow())
-//        {
-//            XRaiseWindow(QX11Info::display(), this->winId());
-//            XFlush(QX11Info::display());
-//            //raise();
-//        }
-//        return false;
-//    }
-//    else if(responseType == XCB_PROPERTY_NOTIFY)
-//    {
-//        //raise();
-//        XRaiseWindow(QX11Info::display(), this->winId());
-//        XFlush(QX11Info::display());
-//    }
-//    return false;
-//}
+/*
+bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+{
+    if (qstrcmp(eventType, "xcb_generic_event_t") != 0) {
+        return false;
+    }
+    xcb_generic_event_t *event = reinterpret_cast<xcb_generic_event_t*>(message);
+    const uint8_t responseType = event->response_type & ~0x80;
+    if (responseType == XCB_CONFIGURE_NOTIFY) {
+        xcb_configure_notify_event_t *xc = reinterpret_cast<xcb_configure_notify_event_t*>(event);
+        if (xc->event == QX11Info::appRootWindow())
+        {
+            XRaiseWindow(QX11Info::display(), this->winId());
+            XFlush(QX11Info::display());
+            //raise();
+        }
+        return false;
+    }
+    else if(responseType == XCB_PROPERTY_NOTIFY)
+    {
+        //raise();
+        XRaiseWindow(QX11Info::display(), this->winId());
+        XFlush(QX11Info::display());
+    }
+    return false;
+}
+*/

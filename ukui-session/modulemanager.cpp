@@ -70,13 +70,13 @@ void ModuleManager::constructStartupList()
     QString panel;
     QString file_manager;
     QString wm_notfound;
-    if(QGSettings::isSchemaInstalled(id)) {
+    if (QGSettings::isSchemaInstalled(id)) {
         const QGSettings* gs = new QGSettings(SESSION_REQUIRED_COMPONENTS,SESSION_REQUIRED_COMPONENTS_PATH,this);
         window_manager = gs->get("windowmanager").toString() + ".desktop";
         panel = gs->get("panel").toString() + ".desktop";
         file_manager = gs->get("filemanager").toString() + ".desktop";
         wm_notfound = gs->get("windowmanager").toString();
-    }else{
+    } else {
         //gsetting安装失败，或无法获取，设置默认值
         qDebug() << "从gsettings 中或取值失败，设置默认值";
         window_manager = "ukwm.desktop";
@@ -92,33 +92,29 @@ void ModuleManager::constructStartupList()
     bool wm_found = false;
 
     const auto files = XdgAutoStart::desktopFileList(desktop_paths, false);
-    for (const XdgDesktopFile& file : files)
-    {
-        if (QFileInfo(file.fileName()).fileName() == panel)
-        {
+    for (const XdgDesktopFile& file : files) {
+        if (QFileInfo(file.fileName()).fileName() == panel) {
             mPanel = file;
             panel_found = true;
             qDebug() << "panel has been found";
         }
-        if (QFileInfo(file.fileName()).fileName() == file_manager)
-        {
+        if (QFileInfo(file.fileName()).fileName() == file_manager) {
             mFileManager = file;
             fm_found = true;
             qDebug() << "filemanager has been found";
         }
-        if (QFileInfo(file.fileName()).fileName() == window_manager)
-        {
+        if (QFileInfo(file.fileName()).fileName() == window_manager) {
             mWindowManager = file;
             wm_found = true;
             qDebug() << "windowmanager has been found";
         }
 
-        if(fm_found && panel_found && wm_found)
+        if (fm_found && panel_found && wm_found)
             break;
     }
 
     //配置文件所给的窗口管理器找不到.desktop文件时，将所给QString设为可执行命令，创建一个desktop文件赋给mWindowManager
-    if(wm_found == false){
+    if (wm_found == false) {
         mWindowManager = XdgDesktopFile(XdgDesktopFile::ApplicationType,"window-manager", wm_notfound);
         qDebug() << "windowmanager has been created";
     }
@@ -169,7 +165,7 @@ void ModuleManager::constructStartupList()
 void ModuleManager::startup()
 {
     qDebug() << "Start Initialization app: ";
-    for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i){
+    for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i) {
         startProcess(*i, true);
     }
 
@@ -193,13 +189,13 @@ void ModuleManager::timerUpdate(){
     startProcess(mFileManager, true);
 
     qDebug() << "Start desktop: ";
-    for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i){
+    for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
         startProcess(*i, true);
     }
 
     qDebug() << "Start application: ";
     QFile file("/etc/xdg/autostart/kylin-nm.desktop");
-    for (XdgDesktopFileList::const_iterator i = mApplication.constBegin(); i != mApplication.constEnd(); ++i){
+    for (XdgDesktopFileList::const_iterator i = mApplication.constBegin(); i != mApplication.constEnd(); ++i) {
         qDebug() << i->fileName();
         if(i->fileName()=="/etc/xdg/autostart/nm-applet.desktop" && file.exists()){
             qDebug() << "the kylin-nm exist so the nm-applet will not start";
@@ -220,23 +216,20 @@ void ModuleManager::timerUpdate(){
 void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
 {
     QStringList args = file.expandExecString();
-    if (args.isEmpty())
-    {
+    if (args.isEmpty()) {
         qWarning() << "Wrong desktop file: " << file.fileName();
         return;
     }
 
     QString name = QFileInfo(file.fileName()).fileName();
-    if (!mNameMap.contains(name))
-    {
+    if (!mNameMap.contains(name)) {
         UkuiModule* proc = new UkuiModule(file, this);
         connect(proc, &UkuiModule::moduleStateChanged, this, &ModuleManager::moduleStateChanged);
         proc->start();
 
         mNameMap[name] = proc;
 
-        if (required || autoRestart(file))
-        {
+        if (required || autoRestart(file)) {
             connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
                 this, SLOT(restartModules(int, QProcess::ExitStatus)));
         }
@@ -250,10 +243,8 @@ void ModuleManager::startProcess(const QString& name, bool required)
     desktop_paths << "/usr/share/applications";
 
     const auto files = XdgAutoStart::desktopFileList(desktop_paths, false);
-    for (const XdgDesktopFile& file : files)
-    {
-        if (QFileInfo(file.fileName()).fileName() == desktop_name)
-        {
+    for (const XdgDesktopFile& file : files) {
+        if (QFileInfo(file.fileName()).fileName() == desktop_name) {
             startProcess(file, required);
             return;
         }
@@ -283,7 +274,7 @@ bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitStatus)
 {
     UkuiModule* proc = qobject_cast<UkuiModule*>(sender());
-    if(proc->restartNum > 10){
+    if (proc->restartNum > 10) {
         mNameMap.remove(proc->fileName);
         disconnect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), nullptr, nullptr);
         proc->deleteLater();
@@ -294,22 +285,19 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
         return;
     }
 
-    if (!proc->isTerminating())
-    {
+    if (!proc->isTerminating()) {
         QString procName = proc->file.name();
-        switch (exitStatus)
-        {
-            case QProcess::NormalExit:
-                qDebug() << "Process" << procName << "(" << proc << ") exited correctly.";
-                break;
-            case QProcess::CrashExit:
-            {
-                qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
-                proc->start();
-                proc->restartNum++;
-                return;
-//                time_t now = time(NULL);
-            }
+        switch (exitStatus) {
+        case QProcess::NormalExit:
+            qDebug() << "Process" << procName << "(" << proc << ") exited correctly.";
+            break;
+        case QProcess::CrashExit:
+            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
+            proc->start();
+            proc->restartNum++;
+            return;
+        default:
+            qWarning() << "Unknown exit status: " << procName << "(" << proc << ")";
         }
     }
     mNameMap.remove(proc->fileName);
@@ -334,8 +322,7 @@ void ModuleManager::logout(bool doExit)
             p->kill();
         }
     }
-    if (doExit){
-        //qApp->~QCoreApplication();
+    if (doExit) {
         //QCoreApplication::exit(0);
         exit(0);
     }

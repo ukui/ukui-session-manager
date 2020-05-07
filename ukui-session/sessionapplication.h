@@ -45,7 +45,7 @@ public:
 private Q_SLOTS:
     bool startup();
     void registerDBus();
-    void updatevalue();
+    void updateIdleDelay();
 
 private:
     void InitialEnvironment();
@@ -55,7 +55,7 @@ private:
     ModuleManager* modman;
     IdleWatcher* mIdleWatcher;
     QWidget *widget;
-    void playmusic();
+    void playBootMusic();
 };
 
 #endif // SESSIONAPPLICATION_H
