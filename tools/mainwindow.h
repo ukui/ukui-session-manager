@@ -21,6 +21,7 @@
 #include <QMainWindow>
 #include "powerprovider.h"
 #include <QTimer>
+#include "QProcess"
 //#include <QAbstractNativeEventFilter>
 
 class XEventMonitor;

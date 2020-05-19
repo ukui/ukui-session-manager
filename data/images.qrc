@@ -1,10 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/icon-suspend.png</file>
-        <file>images/icon-switchuser.png</file>
-        <file>images/icon-logout.png</file>
-        <file>images/icon-reboot.png</file>
-        <file>images/icon-shutdown.png</file>
+        <file>images/sleep.png</file>
+        <file>images/lockscreen.png</file>
+        <file>images/switchuser.png</file>
+        <file>images/logout.png</file>
+        <file>images/reboot.png</file>
+        <file>images/shutdown.png</file>
         <file>images/background-ukui.png</file>
     </qresource>
 </RCC>
