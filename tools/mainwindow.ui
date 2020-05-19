@@ -13,22 +13,22 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QWidget" name="suspend" native="true">
+  <widget class="QWidget" name="sleep" native="true">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>300</y>
-     <width>168</width>
-     <height>168</height>
+     <width>140</width>
+     <height>140</height>
     </rect>
    </property>
-   <widget class="QLabel" name="suspend_icon">
+   <widget class="QLabel" name="sleep_icon">
     <property name="geometry">
      <rect>
-      <x>55</x>
-      <y>20</y>
-      <width>58</width>
-      <height>58</height>
+      <x>46</x>
+      <y>30</y>
+      <width>48</width>
+      <height>48</height>
      </rect>
     </property>
     <property name="text">
@@ -39,8 +39,8 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>108</y>
-      <width>168</width>
+      <y>100</y>
+      <width>140</width>
       <height>40</height>
      </rect>
     </property>
@@ -58,29 +58,29 @@
 font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="text">
-     <string>Suspend</string>
+     <string>Sleep</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
-  <widget class="QWidget" name="switchuser" native="true">
+  <widget class="QWidget" name="lockscreen" native="true">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>158</x>
      <y>300</y>
-     <width>168</width>
-     <height>168</height>
+     <width>140</width>
+     <height>140</height>
     </rect>
    </property>
-   <widget class="QLabel" name="switchuser_icon">
+   <widget class="QLabel" name="lockscreen_icon">
     <property name="geometry">
      <rect>
-      <x>55</x>
-      <y>20</y>
-      <width>58</width>
-      <height>58</height>
+      <x>46</x>
+      <y>30</y>
+      <width>48</width>
+      <height>48</height>
      </rect>
     </property>
     <property name="text">
@@ -91,8 +91,8 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>108</y>
-      <width>168</width>
+      <y>100</y>
+      <width>140</width>
       <height>40</height>
      </rect>
     </property>
@@ -110,163 +110,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
 font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="text">
-     <string>Switch User</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QWidget" name="logout" native="true">
-   <property name="geometry">
-    <rect>
-     <x>380</x>
-     <y>300</y>
-     <width>168</width>
-     <height>168</height>
-    </rect>
-   </property>
-   <widget class="QLabel" name="logout_icon">
-    <property name="geometry">
-     <rect>
-      <x>55</x>
-      <y>20</y>
-      <width>58</width>
-      <height>58</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="logout_lable">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>108</y>
-      <width>168</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Noto Sans CJK SC</family>
-      <pointsize>12</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
-    </property>
-    <property name="text">
-     <string>Log Out</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QWidget" name="reboot" native="true">
-   <property name="geometry">
-    <rect>
-     <x>570</x>
-     <y>300</y>
-     <width>168</width>
-     <height>168</height>
-    </rect>
-   </property>
-   <widget class="QLabel" name="reboot_icon">
-    <property name="geometry">
-     <rect>
-      <x>55</x>
-      <y>20</y>
-      <width>58</width>
-      <height>58</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="reboot_label">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>108</y>
-      <width>167</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Noto Sans CJK SC</family>
-      <pointsize>12</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
-    </property>
-    <property name="text">
-     <string>Restart</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QWidget" name="shutdown" native="true">
-   <property name="geometry">
-    <rect>
-     <x>760</x>
-     <y>300</y>
-     <width>168</width>
-     <height>168</height>
-    </rect>
-   </property>
-   <widget class="QLabel" name="shutdown_icon">
-    <property name="geometry">
-     <rect>
-      <x>55</x>
-      <y>20</y>
-      <width>58</width>
-      <height>58</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="shutdown_label">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>108</y>
-      <width>168</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Noto Sans CJK SC</family>
-      <pointsize>12</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
-    </property>
-    <property name="text">
-     <string>Power Off</string>
+     <string>Lock Screen</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -341,6 +185,214 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="switchuser" native="true">
+   <property name="geometry">
+    <rect>
+     <x>316</x>
+     <y>300</y>
+     <width>140</width>
+     <height>140</height>
+    </rect>
+   </property>
+   <widget class="QLabel" name="switchuser_icon">
+    <property name="geometry">
+     <rect>
+      <x>46</x>
+      <y>30</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="switchuser_label_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>100</y>
+      <width>140</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Noto Sans CJK SC</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white;
+font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Switch User</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="logout" native="true">
+   <property name="geometry">
+    <rect>
+     <x>474</x>
+     <y>300</y>
+     <width>140</width>
+     <height>140</height>
+    </rect>
+   </property>
+   <widget class="QLabel" name="logout_icon">
+    <property name="geometry">
+     <rect>
+      <x>46</x>
+      <y>30</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="switchuser_label_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>100</y>
+      <width>140</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Noto Sans CJK SC</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white;
+font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Logout</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="reboot" native="true">
+   <property name="geometry">
+    <rect>
+     <x>632</x>
+     <y>300</y>
+     <width>140</width>
+     <height>140</height>
+    </rect>
+   </property>
+   <widget class="QLabel" name="reboot_icon">
+    <property name="geometry">
+     <rect>
+      <x>46</x>
+      <y>30</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="switchuser_label_4">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>100</y>
+      <width>140</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Noto Sans CJK SC</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white;
+font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Reboot</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="shutdown" native="true">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>300</y>
+     <width>140</width>
+     <height>140</height>
+    </rect>
+   </property>
+   <widget class="QLabel" name="shutdown_icon">
+    <property name="geometry">
+     <rect>
+      <x>46</x>
+      <y>30</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="switchuser_label_5">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>100</y>
+      <width>140</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Noto Sans CJK SC</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white;
+font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Shut Down</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

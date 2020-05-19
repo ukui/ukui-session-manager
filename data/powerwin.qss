@@ -1,10 +1,10 @@
 /* 挂起按钮 */
-QWidget::hover#suspend{
+QWidget::hover#sleep{
     border-radius: 6px;
     background-color: rgb(255,255,255,50);
 }
-QLabel#suspend_icon{
-    background:url(:/images/icon-suspend.png);
+QLabel#sleep_icon{
+    background:url(:/images/sleep.png);
     background-repeat:no-repeat;
 }
 
@@ -14,7 +14,7 @@ QWidget::hover#switchuser{
     background-color: rgba(255,255,255,50);
 }
 QLabel#switchuser_icon{
-    background:url(:/images/icon-switchuser.png);
+    background:url(:/images/switchuser.png);
     background-repeat:no-repeat;
 }
 
@@ -24,7 +24,7 @@ QWidget::hover#logout{
     background-color: rgb(255,255,255,50);
 }
 QLabel#logout_icon{
-    background:url(:/images/icon-logout.png);
+    background:url(:/images/logout.png);
     background-repeat:no-repeat;
 }
 
@@ -34,7 +34,7 @@ QWidget::hover#reboot{
     background-color: rgb(255,255,255,50);
 }
 QLabel#reboot_icon{
-    background:url(:/images/icon-reboot.png);
+    background:url(:/images/reboot.png);
     background-repeat:no-repeat;
 }
 
@@ -44,25 +44,16 @@ QWidget::hover#shutdown{
     background-color: rgb(255,255,255,50);
 }
 QLabel#shutdown_icon{
-    background:url(:/images/icon-shutdown.png);
+    background:url(:/images/shutdown.png);
     background-repeat:no-repeat;
 }
-/*取消按钮*/
-QLabel#cancel{
-	border-radius: 3px;
-	background-color: rgb(255,255,255,50)
-}
-QLabel::hover#cancel{
-	border-radius: 3px;
-	background: rgb(255,255,255,100)
-}
 
-
-/* 电源对话框中间区域 */
-/*QWidget#PoerWinCenterWidget{
-    background: rgb(0, 0, 0, 0)
+/*锁屏按钮*/
+QWidget::hover#lockscreen{
+    border-radius: 6px;
+    background-color: rgb(255,255,255,50);
 }
-QWidget#PowerWin{
-    background: rgb(0, 0, 0, 150);
-}*/
-
+QLabel#lockscreen_icon{
+    background:url(:/images/lockscreen.png);
+    background-repeat:no-repeat;
+}

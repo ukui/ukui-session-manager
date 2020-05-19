@@ -44,7 +44,8 @@ MainWindow::MainWindow(QWidget *parent)
     xEventMonitor(new XEventMonitor(this))
 {
     ui->setupUi(this);
-    ui->suspend->installEventFilter(this);
+    ui->sleep->installEventFilter(this);
+    ui->lockscreen->installEventFilter(this);
     ui->switchuser->installEventFilter(this);
     ui->logout->installEventFilter(this);
     ui->reboot->installEventFilter(this);
@@ -98,21 +99,15 @@ MainWindow::~MainWindow()
 void MainWindow::ResizeEvent(){
     int xx = m_screen.x();
     int yy = m_screen.y();//取得当前鼠标所在屏幕的最左，上坐标
-    if (m_screen.width()<928) {
-        ui->suspend->move(0,(m_screen.height()-168)/2);
-        ui->switchuser->move(168,(m_screen.height()-168)/2);
-        ui->logout->move(168*2,(m_screen.height()-168)/2);
-        ui->reboot->move(168*3,(m_screen.height()-168)/2);
-        ui->shutdown->move(168*4,(m_screen.height()-168)/2);
-        ui->widget->move((m_screen.width()-130)/2,m_screen.height()/4);
-    }
-    int spaceW = (m_screen.width() - 928) / 2;
-    int spaceH = (m_screen.height() - 168) / 2 -20;
-    ui->suspend->move(xx + spaceW + 0,yy + spaceH);
-    ui->switchuser->move(xx+spaceW + 190,yy+spaceH);
-    ui->logout->move(xx+spaceW + 190*2,yy+spaceH);
-    ui->reboot->move(xx+spaceW + 190*3,yy+spaceH);
-    ui->shutdown->move(xx+spaceW + 190*4,yy+spaceH);
+
+    int spaceW = (m_screen.width() - 930) / 2;
+    int spaceH = (m_screen.height() - 140) / 2 -20;
+    ui->sleep->move(xx + spaceW + 0,yy + spaceH);
+    ui->lockscreen->move(xx + spaceW + 158,yy + spaceH);
+    ui->switchuser->move(xx+spaceW + 158*2,yy+spaceH);
+    ui->logout->move(xx+spaceW + 158*3,yy+spaceH);
+    ui->reboot->move(xx+spaceW + 158*4,yy+spaceH);
+    ui->shutdown->move(xx+spaceW + 158*5,yy+spaceH);
     ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
 }
 
@@ -134,10 +129,17 @@ void MainWindow::paintEvent(QPaintEvent *e)
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-    if (obj->objectName() == "suspend") {
-        doevent(event,"suspend",5);
-//    } else if (obj == m_hibernate) {
-//        doevent(event,"hibernate",2);
+    if (obj->objectName() == "sleep") {
+        doevent(event,"sleep",5);
+    } else if (obj->objectName() == "lockscreen") {
+        if (event->type() == QEvent::MouseButtonRelease) {
+            QString arg = "-l";
+            QStringList args;
+            args.append(arg);
+            QString command = "ukui-screensaver-command";
+            qDebug() << "Start ukui module: " << command << "args: " << args;
+            QProcess::execute(command, args);
+        }
     } else if (obj->objectName() == "reboot") {
         doevent(event,"reboot",3);
     } else if(obj->objectName() == "shutdown") {
@@ -167,7 +169,8 @@ void MainWindow::doevent(QEvent *event, QString test, int i){
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    if (!ui->suspend->geometry().contains(event->pos()) &&
+    if (!ui->sleep->geometry().contains(event->pos()) &&
+            !ui->lockscreen->geometry().contains(event->pos()) &&
             !ui->switchuser->geometry().contains(event->pos()) &&
             !ui->logout->geometry().contains(event->pos()) &&
             !ui->reboot->geometry().contains(event->pos()) &&
