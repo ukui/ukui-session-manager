@@ -1,58 +1,34 @@
 /* 挂起按钮 */
-QWidget::hover#sleep{
-    border-radius: 6px;
-    background-color: rgb(255,255,255,50);
-}
 QLabel#sleep_icon{
     background:url(:/images/sleep.png);
     background-repeat:no-repeat;
 }
 
 /*切换账户按钮*/
-QWidget::hover#switchuser{
-    border-radius: 6px;
-    background-color: rgba(255,255,255,50);
-}
 QLabel#switchuser_icon{
     background:url(:/images/switchuser.png);
     background-repeat:no-repeat;
 }
 
 /*注销按钮*/
-QWidget::hover#logout{
-    border-radius: 6px;
-    background-color: rgb(255,255,255,50);
-}
 QLabel#logout_icon{
     background:url(:/images/logout.png);
     background-repeat:no-repeat;
 }
 
 /*重启按钮*/
-QWidget::hover#reboot{
-    border-radius: 6px;
-    background-color: rgb(255,255,255,50);
-}
 QLabel#reboot_icon{
     background:url(:/images/reboot.png);
     background-repeat:no-repeat;
 }
 
 /*注销按钮*/
-QWidget::hover#shutdown{
-    border-radius: 6px;
-    background-color: rgb(255,255,255,50);
-}
 QLabel#shutdown_icon{
     background:url(:/images/shutdown.png);
     background-repeat:no-repeat;
 }
 
 /*锁屏按钮*/
-QWidget::hover#lockscreen{
-    border-radius: 6px;
-    background-color: rgb(255,255,255,50);
-}
 QLabel#lockscreen_icon{
     background:url(:/images/lockscreen.png);
     background-repeat:no-repeat;

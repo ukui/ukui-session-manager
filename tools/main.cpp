@@ -92,16 +92,16 @@ int main(int argc, char* argv[])
     parser.process(a);
 
     if (parser.isSet(logoutOption)) {
-        flag = playShutdownMusic(powermanager, 0);
+        flag = playShutdownMusic(powermanager, 3);
     }
     if (parser.isSet(shutdownOption)) {
-        flag = playShutdownMusic(powermanager, 4);
+        flag = playShutdownMusic(powermanager, 5);
     }
     if (parser.isSet(switchuserOption)) {
-        flag = playShutdownMusic(powermanager, 1);
+        flag = playShutdownMusic(powermanager, 2);
     }
     if (parser.isSet(rebootOption)) {
-        flag = playShutdownMusic(powermanager, 3);
+        flag = playShutdownMusic(powermanager, 4);
     }
     if (flag) {
         // Load ts files

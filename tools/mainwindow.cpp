@@ -51,6 +51,19 @@ MainWindow::MainWindow(QWidget *parent)
     ui->reboot->installEventFilter(this);
     ui->shutdown->installEventFilter(this);
 
+    //Make a hash-map to store tableNum-to-lastWidget
+    map.insert(0,ui->sleep);
+    map.insert(1,ui->lockscreen);
+    map.insert(2,ui->switchuser);
+    map.insert(3,ui->logout);
+    map.insert(4,ui->reboot);
+    map.insert(5,ui->shutdown);
+
+    //Set the default value
+    lastWidget = ui->switchuser;
+    tableNum = 2;
+    ui->switchuser->setStyleSheet("QWidget#switchuser{background-color: rgb(255,255,255,50);}");
+
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy-MM-dd ddd");
     QString current_time =current_date_time.toString("hh:mm");
@@ -81,7 +94,9 @@ MainWindow::MainWindow(QWidget *parent)
             //exit(1);
         }
     }
-    connect(xEventMonitor, SIGNAL(keyRelease(const QString &)),this, SLOT(onGlobalKeyRelease(const QString &)));
+    //KeyPress, KeyRelease, ButtonPress, ButtonRelease and MotionNotify events has been redirected
+    connect(xEventMonitor, SIGNAL(keyRelease(const QString &)),this, SLOT(onGlobalKeyPress(const QString &)));
+
     xEventMonitor->start();
 
     this->show();
@@ -102,6 +117,7 @@ void MainWindow::ResizeEvent(){
 
     int spaceW = (m_screen.width() - 930) / 2;
     int spaceH = (m_screen.height() - 140) / 2 -20;
+    //Move the widget to the direction where they should be
     ui->sleep->move(xx + spaceW + 0,yy + spaceH);
     ui->lockscreen->move(xx + spaceW + 158,yy + spaceH);
     ui->switchuser->move(xx+spaceW + 158*2,yy+spaceH);
@@ -111,6 +127,7 @@ void MainWindow::ResizeEvent(){
     ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
 }
 
+//Paint the background picture
 void MainWindow::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
@@ -127,47 +144,80 @@ void MainWindow::paintEvent(QPaintEvent *e)
     QWidget::paintEvent(e);
 }
 
+//lock screen
+void doLockscreen(){
+    QString arg = "-l";
+    QStringList args;
+    args.append(arg);
+    QString command = "ukui-screensaver-command";
+    qDebug() << "Start ukui module: " << command << "args: " << args;
+    QProcess::execute(command, args);
+}
+
+//handle mouse-clicked event
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj->objectName() == "sleep") {
-        doevent(event,"sleep",5);
-    } else if (obj->objectName() == "lockscreen") {
+        changePoint(ui->sleep,event,0);
         if (event->type() == QEvent::MouseButtonRelease) {
-            QString arg = "-l";
-            QStringList args;
-            args.append(arg);
-            QString command = "ukui-screensaver-command";
-            qDebug() << "Start ukui module: " << command << "args: " << args;
-            QProcess::execute(command, args);
+            doevent("sleep",0);
         }
-    } else if (obj->objectName() == "reboot") {
-        doevent(event,"reboot",3);
-    } else if(obj->objectName() == "shutdown") {
-        doevent(event,"shutdown",4);
-    } else if (obj->objectName() == "logout") {
-        doevent(event,"logout",0);
+    } else if (obj->objectName() == "lockscreen") {
+        changePoint(ui->lockscreen,event,1);
+        if (event->type() == QEvent::MouseButtonRelease) {
+            doLockscreen();
+        }
     } else if (obj->objectName() == "switchuser") {
-        doevent(event,"switchuser",1);
+        changePoint(ui->switchuser,event,2);
+        if (event->type() == QEvent::MouseButtonRelease) {
+            doevent("switchuser",2);
+        }
+    }else if (obj->objectName() == "logout") {
+        changePoint(ui->logout,event,3);
+        if (event->type() == QEvent::MouseButtonRelease) {
+            doevent("logout",3);
+        }
+    }else if (obj->objectName() == "reboot") {
+        changePoint(ui->reboot,event,4);
+        if (event->type() == QEvent::MouseButtonRelease) {
+            doevent("reboot",4);
+        }
+    } else if(obj->objectName() == "shutdown") {
+        changePoint(ui->shutdown,event,5);
+        if (event->type() == QEvent::MouseButtonRelease) {
+            doevent("shutdown",5);
+        }
     }
     return QWidget::eventFilter(obj, event);
 }
 
-void MainWindow::doevent(QEvent *event, QString test, int i){
-    if (event->type() == QEvent::MouseButtonRelease) {
-        try {
-//            close();
-//            m_power->doAction(UkuiPower::Action(i));
-            defaultnum = i;
-            qDebug()<<"Start do action"<<test<<defaultnum;
-            this->hide();
-            emit signalTostart();
-            //timer->start(1000);
-        } catch (QException &e) {
-            qWarning() << e.what();
-        }
+void MainWindow::changePoint(QWidget *widget, QEvent *event, int i){
+    if(event->type() == QEvent::Enter){
+        tableNum = i;
+        flag = true;
+        refreshBlur(lastWidget,widget);
+    }
+    if(event->type() == QEvent::Leave){
+        flag = false;
+        lastWidget = widget;
     }
 }
 
+void MainWindow::doevent(QString test, int i){
+    try {
+        //close();
+        //m_power->doAction(UkuiPower::Action(i));
+        defaultnum = i;
+        qDebug()<<"Start do action"<<test<<defaultnum;
+        this->hide();
+        emit signalTostart();
+        //timer->start(1000);
+    } catch (QException &e) {
+        qWarning() << e.what();
+    }
+}
+
+//handle the blank-area mousePressEvent
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if (!ui->sleep->geometry().contains(event->pos()) &&
             !ui->lockscreen->geometry().contains(event->pos()) &&
@@ -180,12 +230,73 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     }
 }
 
-void MainWindow::onGlobalKeyRelease(const QString &key)
+//handle "Esc","Left","Right","Enter" keyPress event
+void MainWindow::onGlobalKeyPress(const QString &key)
 {
     if (key == "Escape") {
         close();
         exit(0);
     }
+    if (key == "Left"){
+        if (flag == false){
+            if(tableNum == 0){
+                tableNum = 5;
+                refreshBlur(lastWidget,map[tableNum]);
+                lastWidget = map[tableNum];
+            }else{
+                tableNum = tableNum-1;
+                refreshBlur(lastWidget,map[tableNum]);
+                lastWidget = map[tableNum];
+            }
+        }
+    }
+    if (key == "Right"){
+        if(flag == false){
+            if(tableNum == 5){
+                tableNum = 0;
+                refreshBlur(lastWidget,map[tableNum]);
+                lastWidget = map[tableNum];
+            }else{
+                tableNum = tableNum+1;
+                refreshBlur(lastWidget,map[tableNum]);
+                lastWidget = map[tableNum];
+            }
+        }
+    }
+    if (key == "Return"){
+        qDebug()<<map[tableNum]->objectName()<<"";
+        switch (tableNum) {
+        case 0:
+            doevent("sleep",0);
+            break;
+        case 1:
+            doLockscreen();
+            break;
+        case 2:
+            doevent("switchuser",2);
+            break;
+        case 3:
+            doevent("logout",3);
+            break;
+        case 4:
+            doevent("reboot",4);
+            break;
+        case 5:
+            doevent("shutdown",5);
+            break;
+        }
+        close();
+        exit(0);
+    }
+}
+
+void MainWindow::refreshBlur(QWidget *last, QWidget *now){
+    QString pastName = last->objectName();
+    QString name = now->objectName();
+    QString strlast = "QWidget#" + pastName + "{background-color: rgb(0,0,0,0)}";
+    QString str = "QWidget#" + name + "{background-color: rgb(255,255,255,50);border-radius: 6px;}";
+    last->setStyleSheet(strlast);
+    now->setStyleSheet(str);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
