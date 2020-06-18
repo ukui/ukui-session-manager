@@ -113,11 +113,28 @@ void ModuleManager::constructStartupList()
             break;
     }
 
-    //配置文件所给的窗口管理器找不到.desktop文件时，将所给QString设为可执行命令，创建一个desktop文件赋给mWindowManager
     if (wm_found == false) {
-        mWindowManager = XdgDesktopFile(XdgDesktopFile::ApplicationType,"window-manager", wm_notfound);
-        qDebug() << "windowmanager has been created";
+        QFileInfo check_ukwm("/usr/share/applications/ukwm.desktop");
+        QFileInfo check_ukuikwin("/usr/share/applications/ukui-kwin.desktop");
+        if(check_ukwm.exists()) {
+            window_manager = "ukwm.desktop";
+        }else if(check_ukuikwin.exists()) {
+            window_manager = "ukui-kwin.desktop";
+        }
     }
+
+    for (const XdgDesktopFile& file : files) {
+	if (QFileInfo(file.fileName()).fileName() == window_manager){
+	    mWindowManager = file;
+	    wm_found = true;
+	}
+    }
+
+    //配置文件所给的窗口管理器找不到.desktop文件时，将所给QString设为可执行命令，创建一个desktop文件赋给mWindowManager
+//    if (wm_found == false) {
+//        mWindowManager = XdgDesktopFile(XdgDesktopFile::ApplicationType,"window-manager", wm_notfound);
+//        qDebug() << "windowmanager has been created";
+//    }
 
     QString desktop_phase = "X-UKUI-Autostart-Phase";
     QString desktop_type = "Type";
