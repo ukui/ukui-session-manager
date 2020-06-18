@@ -22,6 +22,7 @@
 #include "powerprovider.h"
 #include <QTimer>
 #include "QProcess"
+#include <QHash>
 //#include <QAbstractNativeEventFilter>
 
 class XEventMonitor;
@@ -38,7 +39,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     QRect m_screen;
     ~MainWindow();
-    void doevent(QEvent *event, QString test2,int i);
+    void doevent(QString test2,int i);
+    void changePoint(QWidget *widget ,QEvent *event ,int i);
     void closeEvent(QCloseEvent *event);
     //virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
 
@@ -50,12 +52,17 @@ private:
     UkuiPower *m_power;
     XEventMonitor *xEventMonitor;
     void ResizeEvent();
+    bool flag = false;
+    QWidget *lastWidget;
+    int tableNum;
+    QHash<int , QWidget*> map;
+    void refreshBlur(QWidget *last , QWidget *now);
 
 Q_SIGNALS:
     void signalTostart();
 
 private Q_SLOTS:
-    void onGlobalKeyRelease(const QString &key);
+    void onGlobalKeyPress(const QString &key);
 
 protected:
     void paintEvent(QPaintEvent *e);
