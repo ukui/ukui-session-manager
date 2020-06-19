@@ -93,7 +93,7 @@ void SessionApplication::InitialEnvironment()
         QT_QPA_PLATFORMTHEME = "gtk2";
     }
 
-    qDebug() << "gdk_scale" << gdk_scale_QB << "qt_scale_factor" << qt_scale_factor_QB;
+    //qDebug() << "gdk_scale" << gdk_scale_QB << "qt_scale_factor" << qt_scale_factor_QB;
     qputenv("XDG_CURRENT_DESKTOP","UKUI");
     //high-dpi settings has been setted by settings-daemon 
     //qputenv("GDK_SCALE",gdk_scale_QB);

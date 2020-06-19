@@ -263,7 +263,7 @@ void MainWindow::onGlobalKeyPress(const QString &key)
             }
         }
     }
-    if (key == "Return"){
+    if (key == "Return"){//space,KP_Enter
         qDebug()<<map[tableNum]->objectName()<<"";
         switch (tableNum) {
         case 0:
@@ -285,8 +285,7 @@ void MainWindow::onGlobalKeyPress(const QString &key)
             doevent("shutdown",5);
             break;
         }
-        close();
-        exit(0);
+        this->hide();
     }
 }
 
