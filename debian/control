@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Kylin Team <team+kylin@tracker.debian.org>
 Uploaders: Aron Xu <aron@debian.org>,
            handsome_feng <jianfengli@ubuntukylin.com>,
-Build-Depends: debhelper (>=10),
+Build-Depends: debhelper-compat (= 12),
                cmake,
                libx11-dev,
                xdg-user-dirs,
@@ -16,6 +16,8 @@ Build-Depends: debhelper (>=10),
                libqt5x11extras5-dev,
                libxtst-dev,
                qttools5-dev-tools,
+               pkg-config,
+Rules-requires-root: no
 Standards-Version: 4.5.0
 Vcs-Browser: https://github.com/ukui/ukui-session-manager
 Vcs-Git: https://github.com/ukui/ukui-session-manager.git
