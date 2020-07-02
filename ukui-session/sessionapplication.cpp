@@ -32,6 +32,11 @@
 #define QT5_UKUI_STYLE "org.ukui.style"
 #define PERIPHERALS_MOUSE "org.ukui.peripherals-mouse"
 #define PERIPHERALS_MOUSE_PATH "/org/ukui/desktop/peripherals/mouse/"
+#define MOUSE_KEY "cursor-size"
+
+#define FONT_RENDERING_SCHEMAS "org.ukui.font-rendering"
+#define FONT_REENDERING_PATH "/org/ukui/desktop/font-rendering/"
+#define DPI_KEY "dpi"
 
 QByteArray typeConver(int i){
     QString str = QString::number(i);
@@ -84,6 +89,31 @@ void SessionApplication::InitialEnvironment()
 //        qt_scale_factor_QB = "1";
 //    }
 
+
+    // When the qt version is 5.6, set the default DPI value
+#if QT_VERSION < QT_VERSION_CHECK(5,7,0)
+    QDesktopWidget *desktop = QApplication::desktop();
+    qDebug() << "Screen-height is" << desktop->height() << ",Screnn-width is" << desktop->width();
+    const QByteArray id(PERIPHERALS_MOUSE);
+    if (QGSettings::isSchemaInstalled(id)) {
+        QGSettings *gs_mouse = new QGSettings(PERIPHERALS_MOUSE,PERIPHERALS_MOUSE_PATH,this);
+        QGSettings *dpiGSetting = new QGSettings(FONT_RENDERING_SCHEMAS, FONT_REENDERING_PATH, this);
+
+        if (desktop->height() >= 2000) {
+            dpiGSetting->set(DPI_KEY, 192);
+            gs_mouse->set(MOUSE_KEY, 48);
+        } else {
+            dpiGSetting->set(DPI_KEY, 96);
+            gs_mouse->set(MOUSE_KEY, 24);
+        }
+        delete gs_mouse;
+        delete dpiGSetting;
+    }
+    desktop->deleteLater();
+#else
+
+#endif
+
     //检查qt主题是否安装
     const QByteArray qt_style(QT5_UKUI_STYLE);
     QByteArray QT_QPA_PLATFORMTHEME;
@@ -95,7 +125,7 @@ void SessionApplication::InitialEnvironment()
 
     //qDebug() << "gdk_scale" << gdk_scale_QB << "qt_scale_factor" << qt_scale_factor_QB;
     qputenv("XDG_CURRENT_DESKTOP","UKUI");
-    //high-dpi settings has been setted by settings-daemon 
+    //high-dpi settings has been setted by settings-daemon
     //qputenv("GDK_SCALE",gdk_scale_QB);
     //qputenv("QT_SCALE_FACTOR",qt_scale_factor_QB);
     //qputenv("QT_AUTO_SCREEN_SET_FACTOR","0");
@@ -144,6 +174,7 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
     if (QGSettings::isSchemaInstalled(id)) {
         gsettings_usable = true;
         gs = new QGSettings(SESSION_DEFAULT_SETTINGS,SESSION_DEFAULT_SETTINGS_PATH,this);
+
     } else {
         qWarning() << "Failed to get default value from gsettings, set gsettings_usable to false!";
         gsettings_usable = false;
@@ -170,7 +201,7 @@ SessionApplication::~SessionApplication()
 bool SessionApplication::startup()
 {
     QTimer::singleShot(0, this, SLOT(registerDBus()));
-	
+
     modman->startup();
 
     return true;
