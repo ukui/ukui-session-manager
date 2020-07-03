@@ -27,6 +27,7 @@
 /* qt会将glib里的signals成员识别为宏，所以取消该宏
  * 后面如果用到signals时，使用Q_SIGNALS代替即可
  **/
+
 #ifdef signals
 #undef signals
 #endif
@@ -38,7 +39,6 @@ class SessionApplication : public QApplication
 {
     Q_OBJECT
 public:
-    void test();
     SessionApplication(int& argc, char** argv);
     ~SessionApplication();
 
@@ -54,7 +54,7 @@ private:
     QGSettings * gs;
     ModuleManager* modman;
     IdleWatcher* mIdleWatcher;
-    QWidget *widget;
+    //QWidget *widget;
     void playBootMusic();
 };
 

@@ -34,13 +34,13 @@ class UkuiPower : public QObject
     Q_OBJECT
 public:
     enum Action {
-        PowerSuspend,
-        PowerMonitorOff,
         PowerSwitchUser,
+        PowerHibernate,
+        PowerSuspend,
+        PowerMonitorOff,        
         PowerLogout,
         PowerReboot,
         PowerShutdown,
-        PowerHibernate,
     };
 
     explicit UkuiPower(QObject *parent = nullptr);

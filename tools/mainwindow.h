@@ -57,6 +57,8 @@ private:
     int tableNum;
     QHash<int , QWidget*> map;
     void refreshBlur(QWidget *last , QWidget *now);
+    bool isSwitchuserHide = true;
+    bool isHibernateHide = true;
 
 Q_SIGNALS:
     void signalTostart();

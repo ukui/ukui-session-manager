@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>images/sleep.png</file>
+        <file>images/hibernate.png</file>
         <file>images/lockscreen.png</file>
         <file>images/switchuser.png</file>
         <file>images/logout.png</file>

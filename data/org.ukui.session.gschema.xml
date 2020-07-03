@@ -36,6 +36,11 @@
       <summary>Time before session is considered idle</summary>
       <description>The number of minutes of inactivity before the session is considered idle.</description>
     </key>
+    <key name="canhibernate" type="b">
+      <default>false</default>
+      <summary>Can Hibernate</summary>
+      <description>A bool value whether the hibernate function can execute or not.</description>
+    </key>
     <child name="required-components" schema="org.ukui.session.required-components"/>
   </schema>
   <schema id="org.ukui.session.required-components" path="/org/ukui/desktop/session/required-components/">
