@@ -36,6 +36,22 @@
 #include "grab-x11.h"
 #include "xeventmonitor.h"
 
+void getUserNum(){
+    QStringList args;
+    QString cmd = "/bin/sh -c \"cat file | grep string\"";
+    //args<<"-l";
+//    QString command = "cat /etc/passwd | grep string";
+//    qDebug() << "Start ukui module: " << command << "args: " << args;
+    QProcess *process;
+    process->start(cmd,args);
+    process->waitForFinished();
+    process->waitForReadyRead();
+    QString s = process->readAll();
+    //process->close();
+    qDebug()<<s;
+    //return s.toInt();
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -44,25 +60,35 @@ MainWindow::MainWindow(QWidget *parent)
     xEventMonitor(new XEventMonitor(this))
 {
     ui->setupUi(this);
+    ui->switchuser->installEventFilter(this);
+    ui->hibernate->installEventFilter(this);
     ui->sleep->installEventFilter(this);
     ui->lockscreen->installEventFilter(this);
-    ui->switchuser->installEventFilter(this);
     ui->logout->installEventFilter(this);
     ui->reboot->installEventFilter(this);
     ui->shutdown->installEventFilter(this);
 
     //Make a hash-map to store tableNum-to-lastWidget
-    map.insert(0,ui->sleep);
-    map.insert(1,ui->lockscreen);
-    map.insert(2,ui->switchuser);
-    map.insert(3,ui->logout);
-    map.insert(4,ui->reboot);
-    map.insert(5,ui->shutdown);
+    map.insert(0,ui->switchuser);
+    map.insert(1,ui->hibernate);
+    map.insert(2,ui->sleep);
+    map.insert(3,ui->lockscreen);
+    map.insert(4,ui->logout);
+    map.insert(5,ui->reboot);
+    map.insert(6,ui->shutdown);
+
+    if(m_power->canAction(UkuiPower::PowerHibernate)){
+        isHibernateHide = false;
+    }
+
+    if(true){
+        isSwitchuserHide = false;
+    }
 
     //Set the default value
-    lastWidget = ui->switchuser;
-    tableNum = 2;
-    ui->switchuser->setStyleSheet("QWidget#switchuser{background-color: rgb(255,255,255,50);}");
+    lastWidget = ui->lockscreen;
+    tableNum = 3;
+    ui->lockscreen->setStyleSheet("QWidget#lockscreen{background-color: rgb(255,255,255,50);}");
 
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy-MM-dd ddd");
@@ -115,15 +141,31 @@ void MainWindow::ResizeEvent(){
     int xx = m_screen.x();
     int yy = m_screen.y();//取得当前鼠标所在屏幕的最左，上坐标
 
-    int spaceW = (m_screen.width() - 930) / 2;
+    int hideNum = 0;
+    if(isHibernateHide){
+        hideNum = hideNum + 1;
+    }
+    if(isSwitchuserHide){
+        hideNum = hideNum + 1;
+    }
+
+    int spaceW = (m_screen.width() - 158*(7-hideNum)+20) / 2;
     int spaceH = (m_screen.height() - 140) / 2 -20;
     //Move the widget to the direction where they should be
-    ui->sleep->move(xx + spaceW + 0,yy + spaceH);
-    ui->lockscreen->move(xx + spaceW + 158,yy + spaceH);
-    ui->switchuser->move(xx+spaceW + 158*2,yy+spaceH);
-    ui->logout->move(xx+spaceW + 158*3,yy+spaceH);
-    ui->reboot->move(xx+spaceW + 158*4,yy+spaceH);
-    ui->shutdown->move(xx+spaceW + 158*5,yy+spaceH);
+    int sum = 0;
+    int maxXX = 1000*1000;
+    for(int i=0;i<=6;i++){
+        if(isHibernateHide && i == 1){
+            map[i]->move(maxXX , maxXX);
+            continue;
+        }
+        if(isSwitchuserHide && i == 0){
+            map[i]->move(maxXX , maxXX);
+            continue;
+        }
+        map[i]->move(xx+spaceW + 158*sum,yy+spaceH);
+        sum = sum+1;
+    }
     ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
 }
 
@@ -157,35 +199,40 @@ void doLockscreen(){
 //handle mouse-clicked event
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-    if (obj->objectName() == "sleep") {
-        changePoint(ui->sleep,event,0);
+    if (obj->objectName() == "switchuser") {
+        changePoint(ui->switchuser,event,0);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("sleep",0);
+            doevent("switchuser",0);
+        }
+    }else if (obj->objectName() == "hibernate") {
+        changePoint(ui->hibernate,event,1);
+        if (event->type() == QEvent::MouseButtonRelease) {
+            doevent("hibernate",1);
+        }
+    }else if (obj->objectName() == "sleep") {
+        changePoint(ui->sleep,event,2);
+        if (event->type() == QEvent::MouseButtonRelease) {
+            doevent("sleep",2);
         }
     } else if (obj->objectName() == "lockscreen") {
-        changePoint(ui->lockscreen,event,1);
+        changePoint(ui->lockscreen,event,3);
         if (event->type() == QEvent::MouseButtonRelease) {
             doLockscreen();
         }
-    } else if (obj->objectName() == "switchuser") {
-        changePoint(ui->switchuser,event,2);
-        if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("switchuser",2);
-        }
     }else if (obj->objectName() == "logout") {
-        changePoint(ui->logout,event,3);
+        changePoint(ui->logout,event,4);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("logout",3);
+            doevent("logout",4);
         }
     }else if (obj->objectName() == "reboot") {
-        changePoint(ui->reboot,event,4);
+        changePoint(ui->reboot,event,5);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("reboot",4);
+            doevent("reboot",5);
         }
     } else if(obj->objectName() == "shutdown") {
-        changePoint(ui->shutdown,event,5);
+        changePoint(ui->shutdown,event,6);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("shutdown",5);
+            doevent("shutdown",6);
         }
     }
     return QWidget::eventFilter(obj, event);
@@ -240,49 +287,66 @@ void MainWindow::onGlobalKeyPress(const QString &key)
     if (key == "Left"){
         if (flag == false){
             if(tableNum == 0){
-                tableNum = 5;
-                refreshBlur(lastWidget,map[tableNum]);
-                lastWidget = map[tableNum];
+                tableNum = 6;
             }else{
-                tableNum = tableNum-1;
-                refreshBlur(lastWidget,map[tableNum]);
-                lastWidget = map[tableNum];
+                if(isHibernateHide && tableNum == 2){
+                    if(isSwitchuserHide){
+                        tableNum = 6;
+                    }else
+                        tableNum = 0;
+                }else{
+                    if(isSwitchuserHide && tableNum == 1){
+                        tableNum = 6;
+                    }else
+                        tableNum = tableNum-1;
+                }
             }
         }
+        refreshBlur(lastWidget,map[tableNum]);
+        lastWidget = map[tableNum];
     }
     if (key == "Right"){
         if(flag == false){
-            if(tableNum == 5){
+            if(!isSwitchuserHide && tableNum == 6){
                 tableNum = 0;
-                refreshBlur(lastWidget,map[tableNum]);
-                lastWidget = map[tableNum];
+            }else if(isSwitchuserHide && tableNum == 6){
+                if(isHibernateHide)
+                    tableNum = 2;
+                else
+                    tableNum = 1;
             }else{
-                tableNum = tableNum+1;
-                refreshBlur(lastWidget,map[tableNum]);
-                lastWidget = map[tableNum];
+                if(isHibernateHide && tableNum == 0)
+                    tableNum = 2;
+                else
+                    tableNum = tableNum+1;
             }
         }
+        refreshBlur(lastWidget,map[tableNum]);
+        lastWidget = map[tableNum];
     }
     if (key == "Return"){//space,KP_Enter
         qDebug()<<map[tableNum]->objectName()<<"";
         switch (tableNum) {
         case 0:
-            doevent("sleep",0);
+            doevent("switchuser",0);
             break;
         case 1:
-            doLockscreen();
+            doevent("hibernate",1);
             break;
         case 2:
-            doevent("switchuser",2);
+            doevent("sleep",2);
             break;
         case 3:
-            doevent("logout",3);
+            doLockscreen();
             break;
         case 4:
-            doevent("reboot",4);
+            doevent("logout",4);
             break;
         case 5:
-            doevent("shutdown",5);
+            doevent("reboot",5);
+            break;
+        case 6:
+            doevent("shutdown",6);
             break;
         }
         this->hide();

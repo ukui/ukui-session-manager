@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QMediaPlayer>
 #include <QDesktopWidget>
+#include "../tools/ukuipower.h"
 
 #define SESSION_DEFAULT_SETTINGS "org.ukui.session"
 #define SESSION_DEFAULT_SETTINGS_PATH "/org/ukui/desktop/session/"
@@ -94,8 +95,8 @@ void SessionApplication::InitialEnvironment()
 #if QT_VERSION < QT_VERSION_CHECK(5,7,0)
     QDesktopWidget *desktop = QApplication::desktop();
     qDebug() << "Screen-height is" << desktop->height() << ",Screnn-width is" << desktop->width();
-    const QByteArray id(PERIPHERALS_MOUSE);
-    if (QGSettings::isSchemaInstalled(id)) {
+    const QByteArray idd(PERIPHERALS_MOUSE);
+    if (QGSettings::isSchemaInstalled(idd)) {
         QGSettings *gs_mouse = new QGSettings(PERIPHERALS_MOUSE,PERIPHERALS_MOUSE_PATH,this);
         QGSettings *dpiGSetting = new QGSettings(FONT_RENDERING_SCHEMAS, FONT_REENDERING_PATH, this);
 
@@ -113,6 +114,14 @@ void SessionApplication::InitialEnvironment()
 #else
 
 #endif
+
+    UkuiPower *upower = new UkuiPower();
+    if(gsettings_usable){
+        if(upower->canAction(UkuiPower::PowerHibernate))
+            gs->set("canhibernate",true);
+	else
+	    gs->set("canhibernate",false);
+    }
 
     //检查qt主题是否安装
     const QByteArray qt_style(QT5_UKUI_STYLE);

@@ -84,28 +84,38 @@ int main(int argc, char* argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    QCommandLineOption logoutOption(QStringLiteral("logout"), QApplication::tr("Logout this computer."));
-    parser.addOption(logoutOption);
-    QCommandLineOption shutdownOption(QStringLiteral("shutdown"), QApplication::tr("Shutdown this computer."));
-    parser.addOption(shutdownOption);
     QCommandLineOption switchuserOption(QStringLiteral("switchuser"), QApplication::tr("Switch the user of this computer."));
     parser.addOption(switchuserOption);
+    QCommandLineOption hibernateOption(QStringLiteral("hibernate"), QApplication::tr("Hibernate this computer."));
+    parser.addOption(hibernateOption);
+    QCommandLineOption sleepOption(QStringLiteral("sleep"), QApplication::tr("Sleep this computer."));
+    parser.addOption(sleepOption);
+    QCommandLineOption logoutOption(QStringLiteral("logout"), QApplication::tr("Logout this computer."));
+    parser.addOption(logoutOption);
     QCommandLineOption rebootOption(QStringLiteral("reboot"), QApplication::tr("Restart this computer."));
     parser.addOption(rebootOption);
+    QCommandLineOption shutdownOption(QStringLiteral("shutdown"), QApplication::tr("Shutdown this computer."));
+    parser.addOption(shutdownOption);
 
     parser.process(a);
 
-    if (parser.isSet(logoutOption)) {
-        flag = playShutdownMusic(powermanager, 3);
-    }
-    if (parser.isSet(shutdownOption)) {
-        flag = playShutdownMusic(powermanager, 5);
-    }
     if (parser.isSet(switchuserOption)) {
+        flag = playShutdownMusic(powermanager, 0);
+    }
+    if (parser.isSet(hibernateOption)) {
+        flag = playShutdownMusic(powermanager, 1);
+    }
+    if (parser.isSet(sleepOption)) {
         flag = playShutdownMusic(powermanager, 2);
     }
-    if (parser.isSet(rebootOption)) {
+    if (parser.isSet(logoutOption)) {
         flag = playShutdownMusic(powermanager, 4);
+    }
+    if (parser.isSet(rebootOption)) {
+        flag = playShutdownMusic(powermanager, 5);
+    }
+    if (parser.isSet(shutdownOption)) {
+        flag = playShutdownMusic(powermanager, 6);
     }
     if (flag) {
         // Load ts files

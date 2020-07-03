@@ -4,6 +4,12 @@ QLabel#sleep_icon{
     background-repeat:no-repeat;
 }
 
+/* 休眠按钮 */
+QLabel#hibernate_icon{
+    background:url(:/images/hibernate.png);
+    background-repeat:no-repeat;
+}
+
 /*切换账户按钮*/
 QLabel#switchuser_icon{
     background:url(:/images/switchuser.png);
