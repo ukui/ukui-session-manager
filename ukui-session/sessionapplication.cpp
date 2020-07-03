@@ -107,10 +107,9 @@ void SessionApplication::InitialEnvironment()
             dpiGSetting->set(DPI_KEY, 96);
             gs_mouse->set(MOUSE_KEY, 24);
         }
-        delete gs_mouse;
-        delete dpiGSetting;
+        gs_mouse->deleteLater();
+        gs_mouse->deleteLater();
     }
-    desktop->deleteLater();
 #else
 
 #endif
