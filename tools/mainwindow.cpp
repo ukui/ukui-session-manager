@@ -149,24 +149,50 @@ void MainWindow::ResizeEvent(){
         hideNum = hideNum + 1;
     }
 
-    int spaceW = (m_screen.width() - 158*(7-hideNum)+20) / 2;
-    int spaceH = (m_screen.height() - 140) / 2 -20;
     //Move the widget to the direction where they should be
+    int spaceW,spaceH;
     int sum = 0;
     int maxXX = 1000*1000;
-    for(int i=0;i<=6;i++){
-        if(isHibernateHide && i == 1){
-            map[i]->move(maxXX , maxXX);
-            continue;
+    int k = 0;
+    if(m_screen.width()>1088){
+        spaceW = (m_screen.width() - 158*(7-hideNum)+18) / 2;
+        spaceH = (m_screen.height() - 140) / 2 -20;
+        for(int i=0;i<=6;i++){
+            if(isHibernateHide && i == 1){
+                map[i]->move(maxXX , maxXX);
+                continue;
+            }
+            if(isSwitchuserHide && i == 0){
+                map[i]->move(maxXX , maxXX);
+                continue;
+            }
+            map[i]->move(xx+spaceW + 158*sum,yy+spaceH);
+            sum = sum+1;
         }
-        if(isSwitchuserHide && i == 0){
-            map[i]->move(maxXX , maxXX);
-            continue;
+        ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
+    }else{
+        int spaceWw = (m_screen.width() - 158*(3-hideNum)+18) / 2;
+        spaceW = (m_screen.width() - 158*4+18) / 2;
+        spaceH = (m_screen.height() - 80) / 2;
+        for(int i=0;i<=6;i++){
+            if(i < 3){
+                if(isHibernateHide && i == 1){
+                    map[i]->move(maxXX , maxXX);
+                    continue;
+                }
+                if(isSwitchuserHide && i == 0){
+                    map[i]->move(maxXX , maxXX);
+                    continue;
+                }
+                map[i]->move(xx+spaceWw + 158*sum,yy+spaceH-120);
+                sum = sum+1;
+            }else{
+                map[i]->move(xx+spaceW + 158*k,yy+spaceH+38);
+                k++;
+            }
         }
-        map[i]->move(xx+spaceW + 158*sum,yy+spaceH);
-        sum = sum+1;
+        ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
     }
-    ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
 }
 
 //Paint the background picture
