@@ -25,7 +25,7 @@ jobs:
       run: sudo apt-get -y install build-essential qt5-default qttools5-dev-tools
 
     - name: Instal dependcies
-      run: sudo apt-get install -y debhelper-compat cmake xdg-user-dirs libkf5idletime-dev libsystemd-dev qttools5-dev qtmultimedia5-dev libgsettings-qt-dev
+      run: sudo apt-get install -y debhelper-compat cmake xdg-user-dirs libkf5idletime-dev libsystemd-dev qttools5-dev qtmultimedia5-dev libgsettings-qt-dev libqt5x11extras5-dev
 
     - name: CMake generate & Make
       run: mkdir build && cd build && cmake .. && make -j$(nproc)
