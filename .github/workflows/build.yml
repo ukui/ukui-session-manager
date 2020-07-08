@@ -27,5 +27,5 @@ jobs:
     - name: Instal dependcies
       run: sudo apt-get install -y debhelper-compat cmake xdg-user-dirs libkf5idletime-dev libsystemd-dev qttools5-dev qtmultimedia5-dev libgsettings-qt-dev
 
-    - name: QMake generate & Make
-      run: mkdir build && cd build && qmake .. && make -j$(nproc)
+    - name: CMake generate & Make
+      run: mkdir build && cd build && cmake .. && make -j$(nproc)
