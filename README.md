@@ -1,6 +1,6 @@
 # ukui-session-manager
 
-![build](https://github.com/ukui/ukui-session-manager/workflows/build/badge.svg?branch=master)
+![build](https://github.com/ukui/ukui-session-manager/workflows/Check%20build/badge.svg?branch=master)
 
 * ukui-session: Launched at the beginning of UKUI sessions and responsible for launching and monitoring all other components constituing the sessions.
 
