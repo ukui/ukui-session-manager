@@ -92,27 +92,27 @@ void SessionApplication::InitialEnvironment()
 
 
     // When the qt version is 5.6, set the default DPI value
-#if QT_VERSION < QT_VERSION_CHECK(5,7,0)
-    QDesktopWidget *desktop = QApplication::desktop();
-    qDebug() << "Screen-height is" << desktop->height() << ",Screnn-width is" << desktop->width();
-    const QByteArray idd(PERIPHERALS_MOUSE);
-    if (QGSettings::isSchemaInstalled(idd)) {
-        QGSettings *gs_mouse = new QGSettings(PERIPHERALS_MOUSE,PERIPHERALS_MOUSE_PATH,this);
-        QGSettings *dpiGSetting = new QGSettings(FONT_RENDERING_SCHEMAS, FONT_REENDERING_PATH, this);
+//#if QT_VERSION < QT_VERSION_CHECK(5,7,0)
+//    QDesktopWidget *desktop = QApplication::desktop();
+//    qDebug() << "Screen-height is" << desktop->height() << ",Screnn-width is" << desktop->width();
+//    const QByteArray idd(PERIPHERALS_MOUSE);
+//    if (QGSettings::isSchemaInstalled(idd)) {
+//        QGSettings *gs_mouse = new QGSettings(PERIPHERALS_MOUSE,PERIPHERALS_MOUSE_PATH,this);
+//        QGSettings *dpiGSetting = new QGSettings(FONT_RENDERING_SCHEMAS, FONT_REENDERING_PATH, this);
 
-        if (desktop->height() >= 2000) {
-            dpiGSetting->set(DPI_KEY, 192);
-            gs_mouse->set(MOUSE_KEY, 48);
-        } else {
-            dpiGSetting->set(DPI_KEY, 96);
-            gs_mouse->set(MOUSE_KEY, 24);
-        }
-        gs_mouse->deleteLater();
-        gs_mouse->deleteLater();
-    }
-#else
+//        if (desktop->height() >= 2000) {
+//            dpiGSetting->set(DPI_KEY, 192);
+//            gs_mouse->set(MOUSE_KEY, 48);
+//        } else {
+//            dpiGSetting->set(DPI_KEY, 96);
+//            gs_mouse->set(MOUSE_KEY, 24);
+//        }
+//        gs_mouse->deleteLater();
+//        gs_mouse->deleteLater();
+//    }
+//#else
 
-#endif
+//#endif
 
     UkuiPower *upower = new UkuiPower();
     if(gsettings_usable){

@@ -28,6 +28,11 @@
 #include <QTimer>
 #include <QMediaPlayer>
 #include <QSoundEffect>
+#include <QFileInfo>
+#include <QScreen>
+#include <QProcess>
+#include <QGSettings/QGSettings>
+
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -65,11 +70,60 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     logFile.close();
 }
 
+/* 判断文件是否存在 */
+bool isFileExist(QString XresourcesFile)
+{
+    QFileInfo fileInfo(XresourcesFile);
+    if(fileInfo.isFile()){
+        qDebug()<<"file is true";
+        return true;
+    }
+    qDebug()<<"file is false";
+    return false;
+}
+/* 写配置文件并设置DPI和鼠标大小*/
+void WriteXresourcesFile(QString XresourcesFile)
+{
+    QFile file(XresourcesFile);
+    QString content = "Xft.dpi:192\nXcursor.size:48";
+    file.open(QIODevice::ReadWrite | QIODevice::Text);
+    QByteArray str = content.toLatin1().data();
+    file.write(str);
+    file.close();
+    QProcess ::execute("xrdb -merge "+ XresourcesFile);
+    QGSettings *settings = new QGSettings("org.ukui.font-rendering");
+    QGSettings *mouse_settings = new QGSettings("org.ukui.peripherals-mouse");
+    mouse_settings->set("cursor-size",48);
+    settings->set("dpi",192);
+    delete settings;
+    delete mouse_settings;
+}
+/* 配置新装系统、新建用户第一次登陆时，4K缩放功能*/
+void Set4KScreenScale()
+{
+    int ScreenNum = QApplication::screens().length();
+    for (int i=0;i<ScreenNum;i++)
+    {
+        QScreen *screen = QApplication::screens().at(i);
+        int height = screen->size().height();
+        if(height > 2000){
+                bool res;
+                QString homePath = getenv("HOME");
+                QString XresourcesFile = homePath+"/.Xresources";
+                res = isFileExist(XresourcesFile);
+                if(!res)
+                    WriteXresourcesFile(XresourcesFile);
+        }
+    }
+}
+
 int main(int argc, char **argv)
 {
     qInstallMessageHandler(myMessageOutput);
     qDebug() << "UKUI session manager start.";
     SessionApplication app(argc, argv);
+
+    Set4KScreenScale();
 
     app.setQuitOnLastWindowClosed(false);
     return app.exec();
