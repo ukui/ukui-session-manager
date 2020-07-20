@@ -75,6 +75,15 @@ MainWindow::MainWindow(QWidget *parent)
     timer(new QTimer()),
     xEventMonitor(new XEventMonitor(this))
 {
+    const QByteArray id(BACKGROUND_SETTINGS);
+    if (QGSettings::isSchemaInstalled(id)) {
+        QGSettings *gs = new QGSettings(BACKGROUND_SETTINGS,"",this);
+        pix.load(gs->get("picture-filename").toString());
+        pix = blurPixmap(pix);
+        gs->deleteLater();
+    }else
+        pix.load(":/images/background-ukui.png");
+
     ui->setupUi(this);
     ui->switchuser->installEventFilter(this);
     ui->hibernate->installEventFilter(this);
@@ -216,15 +225,6 @@ void MainWindow::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
     painter.setPen(Qt::transparent); 
-    QPixmap pix;
-    const QByteArray id(BACKGROUND_SETTINGS);
-    if (QGSettings::isSchemaInstalled(id)) {
-        QGSettings *gs = new QGSettings(BACKGROUND_SETTINGS,"",this);
-        pix.load(gs->get("picture-filename").toString());
-        pix = blurPixmap(pix);
-        gs->deleteLater();
-    }else
-        pix.load(":/images/background-ukui.png");
     for(QScreen *screen : QApplication::screens()) {
         //draw picture to every screen
         QRect rect = screen->geometry();

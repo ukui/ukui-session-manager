@@ -22,6 +22,7 @@
 #include "powerprovider.h"
 #include <QTimer>
 #include "QProcess"
+#include <QPixmap>
 #include <QHash>
 //#include <QAbstractNativeEventFilter>
 
@@ -59,6 +60,7 @@ private:
     void refreshBlur(QWidget *last , QWidget *now);
     bool isSwitchuserHide = true;
     bool isHibernateHide = true;
+    QPixmap pix;
 
 Q_SIGNALS:
     void signalTostart();
