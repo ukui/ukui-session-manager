@@ -17,7 +17,7 @@ Build-Depends: debhelper-compat (= 12),
                libxtst-dev,
                qttools5-dev-tools,
                pkg-config,
-Rules-requires-root: no
+Rules-Requires-Root: no
 Standards-Version: 4.5.0
 Vcs-Browser: https://github.com/ukui/ukui-session-manager
 Vcs-Git: https://github.com/ukui/ukui-session-manager.git
