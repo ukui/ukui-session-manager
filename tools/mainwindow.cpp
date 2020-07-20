@@ -35,6 +35,13 @@
 #include <X11/keysym.h>
 #include "grab-x11.h"
 #include "xeventmonitor.h"
+#include <QGSettings/QGSettings>
+
+QT_BEGIN_NAMESPACE
+extern void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
+QT_END_NAMESPACE
+#define BLUR_RADIUS 300
+#define BACKGROUND_SETTINGS "org.mate.background"
 
 void getUserNum(){
     QStringList args;
@@ -50,6 +57,15 @@ void getUserNum(){
     //process->close();
     qDebug()<<s;
     //return s.toInt();
+}
+
+QPixmap blurPixmap(QPixmap pixmap)
+{
+    QPainter painter(&pixmap);
+    QImage srcImg = pixmap.toImage();
+    qt_blurImage(&painter, srcImg, BLUR_RADIUS, false, false);
+    painter.end();
+    return pixmap;
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -88,7 +104,7 @@ MainWindow::MainWindow(QWidget *parent)
     //Set the default value
     lastWidget = ui->lockscreen;
     tableNum = 3;
-    ui->lockscreen->setStyleSheet("QWidget#lockscreen{background-color: rgb(255,255,255,50);}");
+    ui->lockscreen->setStyleSheet("QWidget#lockscreen{background-color: rgb(255,255,255,100);}");
 
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy-MM-dd ddd");
@@ -199,10 +215,16 @@ void MainWindow::ResizeEvent(){
 void MainWindow::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
-    painter.setPen(Qt::transparent);
-    //painter.setBrush(QColor("#0a4989"));
+    painter.setPen(Qt::transparent); 
     QPixmap pix;
-    pix.load(":/images/background-ukui.png");
+    const QByteArray id(BACKGROUND_SETTINGS);
+    if (QGSettings::isSchemaInstalled(id)) {
+        QGSettings *gs = new QGSettings(BACKGROUND_SETTINGS,"",this);
+        pix.load(gs->get("picture-filename").toString());
+        pix = blurPixmap(pix);
+        gs->deleteLater();
+    }else
+        pix.load(":/images/background-ukui.png");
     for(QScreen *screen : QApplication::screens()) {
         //draw picture to every screen
         QRect rect = screen->geometry();
@@ -383,7 +405,7 @@ void MainWindow::refreshBlur(QWidget *last, QWidget *now){
     QString pastName = last->objectName();
     QString name = now->objectName();
     QString strlast = "QWidget#" + pastName + "{background-color: rgb(0,0,0,0)}";
-    QString str = "QWidget#" + name + "{background-color: rgb(255,255,255,50);border-radius: 6px;}";
+    QString str = "QWidget#" + name + "{background-color: rgb(255,255,255,100);border-radius: 6px;}";
     last->setStyleSheet(strlast);
     now->setStyleSheet(str);
 }

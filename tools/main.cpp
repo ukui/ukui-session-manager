@@ -67,11 +67,15 @@ bool playShutdownMusic(UkuiPower &powermanager, int num)
 
 int main(int argc, char* argv[])
 {
-    //for hidpi
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-
     QApplication a(argc, argv);
+
+    if (QApplication::desktop()->width() >= 2560) {
+        #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+                QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+                QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+        #endif
+    }
+    //for hidpi
 
     UkuiPower powermanager(&a);
     bool flag = true;
