@@ -68,12 +68,17 @@ bool playShutdownMusic(UkuiPower &powermanager, int num)
 
 int main(int argc, char* argv[])
 {
-    Display *disp = XOpenDisplay(NULL);
-    Screen *scrn = DefaultScreenOfDisplay(disp);
-    if (NULL == scrn) {
-        return 0;
+    Display *display = XOpenDisplay(NULL);
+    if (NULL == display) {
+	qDebug() << "Can't open display!";
+	return -1;
     }
-    int width = scrn->width;
+    Screen *screen = DefaultScreenOfDisplay(display);
+    if (NULL == screen) {
+	qDebug() << "Get default screen failed!";
+        return -1;
+    }
+    int width = screen->width;
 
     if (width > 2560) {
         #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
@@ -81,6 +86,8 @@ int main(int argc, char* argv[])
                 QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
         #endif
     }
+
+    XCloseDisplay(display);
 
     QApplication a(argc, argv);
     //for hidpi

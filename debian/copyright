@@ -48,6 +48,7 @@ Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd
 License: LGPL-2.1+
 
 Files: debian/*
+       .github/workflows/build.yml
 Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd
 License: LGPL-2.1+
 
