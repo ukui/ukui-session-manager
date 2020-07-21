@@ -28,6 +28,7 @@
 #include <QSoundEffect>
 #include <QTimer>
 #include <QGSettings/QGSettings>
+#include <X11/Xlib.h>
 
 #include "ukuipower.h"
 #include "mainwindow.h"
@@ -67,14 +68,21 @@ bool playShutdownMusic(UkuiPower &powermanager, int num)
 
 int main(int argc, char* argv[])
 {
-    QApplication a(argc, argv);
+    Display *disp = XOpenDisplay(NULL);
+    Screen *scrn = DefaultScreenOfDisplay(disp);
+    if (NULL == scrn) {
+        return 0;
+    }
+    int width = scrn->width;
 
-    if (QApplication::desktop()->width() >= 2560) {
+    if (width > 2560) {
         #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
                 QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
                 QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
         #endif
     }
+
+    QApplication a(argc, argv);
     //for hidpi
 
     UkuiPower powermanager(&a);
