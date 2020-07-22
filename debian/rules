@@ -3,7 +3,6 @@
 DEB_HOST_ARCH_OS ?= $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
 export LC_ALL=C.UTF-8
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
-export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
 ifeq ($(DEB_HOST_ARCH_OS),linux)
     CMAKE_ARGS += -DWITH_LIBUDEV=ON

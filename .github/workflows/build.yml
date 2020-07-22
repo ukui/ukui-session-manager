@@ -1,0 +1,86 @@
+name: Check build
+
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  archlinux:
+    name: on Archlinux
+    runs-on: ubuntu-20.04
+    container: docker.io/library/archlinux:latest
+    steps:
+      - name: Checkout ukui-session-manager source code
+        uses: actions/checkout@v2
+      - name: Refresh pacman repository
+        run: pacman -Sy
+      - name: Install build dependencies
+        run: pacman -S --noconfirm base-devel qt5-base kidletime peony qt5-multimedia xtrans cmake qt5-tools systemd-libs xdg-user-dirs
+      - name: CMake configure & Make
+        run: |
+          mkdir build;
+          cd build;
+          cmake ..;
+          make -j$(nproc);
+  debian:
+    name: on Debian Sid
+    runs-on: ubuntu-20.04
+    container: docker.io/library/debian:sid
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Checkout ukui-session-manager source code
+        uses: actions/checkout@v2
+      - name: Update apt repository
+        run: apt-get update -y
+      - name: Install build dependcies
+        run: apt-get install -y build-essential qt5-default qttools5-dev-tools cmake debhelper-compat cmake xdg-user-dirs libkf5idletime-dev libsystemd-dev qttools5-dev qtmultimedia5-dev libgsettings-qt-dev libqt5x11extras5-dev libxtst-dev
+      - name: CMake configure & Make
+        run: |
+          mkdir build;
+          cd build;
+          cmake ..;
+          make -j$(nproc);
+
+  fedora:
+    name: on Fedora 32
+    runs-on: ubuntu-20.04
+    container: docker.io/library/fedora:32
+    steps:
+      - name: Checkout ukui-session-manager source code
+        uses: actions/checkout@v2
+      - name: Install build dependencies
+        run: dnf install -y which gcc gcc-c++ make cmake cmake-rpm-macros autoconf automake intltool rpm-build qt5-rpm-macros   qt5-qtdeclarative-devel qt5-qtbase-devel qt5-qtmultimedia-devel qt5-qtx11extras-devel kf5-kidletime-devel qt5-qttools-devel qt5-qttools qt5-linguist gsettings-qt-devel libXtst-devel libqtxdg-devel systemd-devel
+      - name: CMake configure & Make
+        run: |
+          mkdir build;
+          cd build;
+          cmake ..;
+          make -j$(nproc);
+  ubuntu:
+    name: on Ubuntu 20.04
+    runs-on: ubuntu-20.04
+    container: docker.io/library/ubuntu:focal
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Checkout ukui-session-manager source code
+        uses: actions/checkout@v2
+      - name: Update apt repository
+        run: apt-get update -y
+      - name: Install build dependcies
+        run: apt-get install -y build-essential qt5-default qttools5-dev-tools cmake debhelper-compat cmake xdg-user-dirs libkf5idletime-dev libsystemd-dev qttools5-dev qtmultimedia5-dev libgsettings-qt-dev libqt5x11extras5-dev libxtst-dev
+      - name: CMake configure & Make
+        run: |
+          mkdir build;
+          cd build;
+          cmake ..;
+          make -j$(nproc);
