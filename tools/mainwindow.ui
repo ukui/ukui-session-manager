@@ -191,7 +191,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
    </widget>
   </widget>
-  <widget class="QWidget" name="sleep" native="true">
+  <widget class="QWidget" name="suspend" native="true">
    <property name="geometry">
     <rect>
      <x>316</x>
@@ -200,7 +200,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
      <height>140</height>
     </rect>
    </property>
-   <widget class="QLabel" name="sleep_icon">
+   <widget class="QLabel" name="suspend_icon">
     <property name="geometry">
      <rect>
       <x>46</x>
@@ -213,7 +213,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="sleep_label">
+   <widget class="QLabel" name="suspend_label">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -236,7 +236,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
 font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="text">
-     <string>Sleep</string>
+     <string>Suspend</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

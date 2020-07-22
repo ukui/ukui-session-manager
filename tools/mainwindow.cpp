@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->switchuser->installEventFilter(this);
     ui->hibernate->installEventFilter(this);
-    ui->sleep->installEventFilter(this);
+    ui->suspend->installEventFilter(this);
     ui->lockscreen->installEventFilter(this);
     ui->logout->installEventFilter(this);
     ui->reboot->installEventFilter(this);
@@ -96,7 +96,7 @@ MainWindow::MainWindow(QWidget *parent)
     //Make a hash-map to store tableNum-to-lastWidget
     map.insert(0,ui->switchuser);
     map.insert(1,ui->hibernate);
-    map.insert(2,ui->sleep);
+    map.insert(2,ui->suspend);
     map.insert(3,ui->lockscreen);
     map.insert(4,ui->logout);
     map.insert(5,ui->reboot);
@@ -257,10 +257,10 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         if (event->type() == QEvent::MouseButtonRelease) {
             doevent("hibernate",1);
         }
-    }else if (obj->objectName() == "sleep") {
-        changePoint(ui->sleep,event,2);
+    }else if (obj->objectName() == "suspend") {
+        changePoint(ui->suspend,event,2);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("sleep",2);
+            doevent("suspend",2);
         }
     } else if (obj->objectName() == "lockscreen") {
         changePoint(ui->lockscreen,event,3);
@@ -314,7 +314,7 @@ void MainWindow::doevent(QString test, int i){
 
 //handle the blank-area mousePressEvent
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    if (!ui->sleep->geometry().contains(event->pos()) &&
+    if (!ui->suspend->geometry().contains(event->pos()) &&
             !ui->lockscreen->geometry().contains(event->pos()) &&
             !ui->switchuser->geometry().contains(event->pos()) &&
             !ui->logout->geometry().contains(event->pos()) &&
@@ -382,7 +382,7 @@ void MainWindow::onGlobalKeyPress(const QString &key)
             doevent("hibernate",1);
             break;
         case 2:
-            doevent("sleep",2);
+            doevent("suspend",2);
             break;
         case 3:
             doLockscreen();

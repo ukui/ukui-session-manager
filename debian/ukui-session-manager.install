@@ -1,1 +1,2 @@
 debian/99ukui-environment etc/X11/Xsession.d
+data/com.ubuntu.enable-hibernate.pkla /etc/polkit-1/localauthority/50-local.d

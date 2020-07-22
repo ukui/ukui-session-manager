@@ -1,6 +1,6 @@
 /* 挂起按钮 */
-QLabel#sleep_icon{
-    background:url(:/images/sleep.png);
+QLabel#suspend_icon{
+    background:url(:/images/suspend.png);
     background-repeat:no-repeat;
 }
 

@@ -92,8 +92,8 @@ int main(int argc, char* argv[])
     parser.addOption(switchuserOption);
     QCommandLineOption hibernateOption(QStringLiteral("hibernate"), QApplication::tr("Hibernate this computer."));
     parser.addOption(hibernateOption);
-    QCommandLineOption sleepOption(QStringLiteral("sleep"), QApplication::tr("Sleep this computer."));
-    parser.addOption(sleepOption);
+    QCommandLineOption suspendOption(QStringLiteral("suspend"), QApplication::tr("Suspend this computer."));
+    parser.addOption(suspendOption);
     QCommandLineOption logoutOption(QStringLiteral("logout"), QApplication::tr("Logout this computer."));
     parser.addOption(logoutOption);
     QCommandLineOption rebootOption(QStringLiteral("reboot"), QApplication::tr("Restart this computer."));
@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
     if (parser.isSet(hibernateOption)) {
         flag = playShutdownMusic(powermanager, 1);
     }
-    if (parser.isSet(sleepOption)) {
+    if (parser.isSet(suspendOption)) {
         flag = playShutdownMusic(powermanager, 2);
     }
     if (parser.isSet(logoutOption)) {
