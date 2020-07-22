@@ -315,6 +315,7 @@ void MainWindow::doevent(QString test, int i){
 //handle the blank-area mousePressEvent
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if (!ui->suspend->geometry().contains(event->pos()) &&
+            !ui->hibernate->geometry().contains(event->pos()) &&
             !ui->lockscreen->geometry().contains(event->pos()) &&
             !ui->switchuser->geometry().contains(event->pos()) &&
             !ui->logout->geometry().contains(event->pos()) &&
