@@ -36,6 +36,7 @@
 #include "grab-x11.h"
 #include "xeventmonitor.h"
 #include <QGSettings/QGSettings>
+#include <QFileInfo>
 
 QT_BEGIN_NAMESPACE
 extern void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
@@ -78,9 +79,14 @@ MainWindow::MainWindow(QWidget *parent)
     const QByteArray id(BACKGROUND_SETTINGS);
     if (QGSettings::isSchemaInstalled(id)) {
         QGSettings *gs = new QGSettings(BACKGROUND_SETTINGS,"",this);
-        pix.load(gs->get("picture-filename").toString());
-        pix = blurPixmap(pix);
-        gs->deleteLater();
+        QString fullstr = gs->get("picture-filename").toString();
+        QFileInfo fileInfo(fullstr);
+        if(fileInfo.isFile()){
+            pix.load(fullstr);
+            pix = blurPixmap(pix);
+            gs->deleteLater();
+        }else
+            pix.load(":/images/background-ukui.png");
     }else
         pix.load(":/images/background-ukui.png");
 
