@@ -142,6 +142,10 @@ void ModuleManager::constructStartupList()
     const XdgDesktopFileList all_file_list = XdgAutoStart::desktopFileList(true);
     for (XdgDesktopFileList::const_iterator i = all_file_list.constBegin(); i != all_file_list.constEnd(); ++i)
     {
+        QString filename = QFileInfo(i->fileName()).fileName();
+        if(filename == panel || filename == file_manager || filename == window_manager){
+            continue;
+        }
         const XdgDesktopFile file = *i;
         if (i->contains(desktop_phase)) {
             QStringList s1 =file.value(desktop_phase).toString().split(QLatin1Char(';'));
