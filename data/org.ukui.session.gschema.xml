@@ -5,6 +5,11 @@
             <summary>Weather mouse size changed</summary>
             <description>The bool-value of whether the mouse size has been changed</description>
     </key>
+    <key name="win-key-release" type="b">
+            <default>false</default>
+            <summary>whether release the Win-Key shortcut bound </summary>
+            <description>whether release the Win-Key shortcut bound</description>
+    </key>
     <key name="boot-music" type="b">
             <default>true</default>
             <summary>Weathe play boot/shutdown music </summary>

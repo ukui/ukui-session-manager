@@ -49,6 +49,7 @@ public:
     int defaultnum = 0;
 
 private:
+    bool exitt();
     Ui::MainWindow *ui;
     UkuiPower *m_power;
     XEventMonitor *xEventMonitor;
@@ -67,6 +68,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void onGlobalKeyPress(const QString &key);
+    void onGlobalkeyRelease(const QString &key);
 
 protected:
     void paintEvent(QPaintEvent *e);

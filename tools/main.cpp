@@ -40,11 +40,9 @@
 bool playShutdownMusic(UkuiPower &powermanager, int num)
 {
     bool play_music = true;
-    const QByteArray id("org.ukui.session");
-    if (QGSettings::isSchemaInstalled(id)) {
-        QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
-        play_music = gs->get("boot-music").toBool();
-    }
+    QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
+    play_music = gs->get("boot-music").toBool();
+    gs->set("win-key-release",false);
     static int action = num;
     QTimer *timer = new QTimer();
     timer->setSingleShot(true);
@@ -90,7 +88,9 @@ int main(int argc, char* argv[])
     XCloseDisplay(display);
 
     QApplication a(argc, argv);
-    //for hidpi
+
+    QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
+    gs->set("win-key-release",true);
 
     UkuiPower powermanager(&a);
     bool flag = true;

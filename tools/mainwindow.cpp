@@ -152,7 +152,8 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
     //KeyPress, KeyRelease, ButtonPress, ButtonRelease and MotionNotify events has been redirected
-    connect(xEventMonitor, SIGNAL(keyRelease(const QString &)),this, SLOT(onGlobalKeyPress(const QString &)));
+    connect(xEventMonitor, SIGNAL(keyPress(const QString &)),this, SLOT(onGlobalKeyPress(const QString &)));
+    connect(xEventMonitor, SIGNAL(keyRelease(const QString &)),this, SLOT(onGlobalkeyRelease(const QString &)));
 
     xEventMonitor->start();
 
@@ -327,17 +328,27 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
             !ui->logout->geometry().contains(event->pos()) &&
             !ui->reboot->geometry().contains(event->pos()) &&
             !ui->shutdown->geometry().contains(event->pos())) {
-        close();
-        exit(0);
+        exitt();
     }
 }
 
+bool MainWindow::exitt(){
+    QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
+    gs->set("win-key-release",false);
+    close();
+    exit(0);
+}
+
+void MainWindow::onGlobalKeyPress(const QString &key){
+
+}
+
 //handle "Esc","Left","Right","Enter" keyPress event
-void MainWindow::onGlobalKeyPress(const QString &key)
+void MainWindow::onGlobalkeyRelease(const QString &key)
 {
+    qDebug()<<"key: "<<key;
     if (key == "Escape") {
-        close();
-        exit(0);
+        exitt();
     }
     if (key == "Left"){
         if (flag == false){
