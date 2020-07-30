@@ -91,8 +91,10 @@ void WriteXresourcesFile(QString XresourcesFile)
     file.write(str);
     file.close();
     QProcess ::execute("xrdb -merge "+ XresourcesFile);
+    QGSettings *gs = new QGSettings("get org.ukui.font-rendering");
     QGSettings *settings = new QGSettings("org.ukui.SettingsDaemon.plugins.xsettings");
     QGSettings *mouse_settings = new QGSettings("org.ukui.peripherals-mouse");
+    gs->set("dpi",96.0);
     mouse_settings->set("cursor-size",48);
     settings->set("scaling-factor",2);
     delete settings;

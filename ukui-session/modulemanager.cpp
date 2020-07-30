@@ -189,25 +189,30 @@ void ModuleManager::startup()
     for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i) {
         startProcess(*i, true);
     }
+    QTimer::singleShot(1000, this, [&]()
+    {
+        qDebug() << "Start window manager: " << mWindowManager.name();
+        startProcess(mWindowManager, true);
 
-    qDebug() << "Start window manager: " << mWindowManager.name();
-    startProcess(mWindowManager, true);
+        QTimer::singleShot(1000, this, [&]()
+        {
+            qDebug() << "Start file manager: " << mFileManager.name();
+            startProcess(mFileManager, true);
 
-    qDebug() << "Start panel: " << mPanel.name();
-    startProcess(mPanel, true);
+            qDebug() << "Start panel: " << mPanel.name();
+            startProcess(mPanel, true);
 
-    qDebug() << "wait for ukui-settings-daemon start-up";
-    timer = new QTimer();
-    connect(timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
-    timer->start(1000);
+            qDebug() << "wait for ukui-settings-daemon start-up";
+            timer = new QTimer();
+            connect(timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
+            timer->start(3000);
+        });
+    });
 }
 
 void ModuleManager::timerUpdate(){
     timer->stop();
     delete timer;
-
-    qDebug() << "Start file manager: " << mFileManager.name();
-    startProcess(mFileManager, true);
 
     qDebug() << "Start desktop: ";
     for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {

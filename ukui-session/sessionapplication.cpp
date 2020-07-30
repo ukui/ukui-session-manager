@@ -48,72 +48,6 @@ QByteArray typeConver(int i){
 
 void SessionApplication::InitialEnvironment()
 {
-//high-dpi settings has been setted by settings-daemon
-//    QByteArray gdk_scale_QB;
-//    QByteArray qt_scale_factor_QB;
-//    int size = 1;//放大倍率
-//    QDesktopWidget *desktop = QApplication::desktop();
-//    qDebug() << "Screen-height is" << desktop->height() << ",Screnn-width is" << desktop->width();
-//    if (desktop->height() >= 2000)
-//        size = 2;
-//    desktop->deleteLater();
-//    if (gsettings_usable) {
-//        int gdk_scale;
-//        int qt_scale_factor;
-//        bool Hidpi = gs->get("hidpi").toBool();
-//        qDebug() << "Hidpi is "<< Hidpi;
-//        if (!Hidpi) {
-//            //gsettings值跟着改变,同步控制面板的值
-//            gs->set("gdk-scale",typeConver(size));
-//            gs->set("qt-scale-factor",typeConver(size));
-//        }
-//        gdk_scale = gs->get("gdk-scale").toInt();
-//        qt_scale_factor = gs->get("qt-scale-factor").toInt();
-//        qt_scale_factor_QB = typeConver(qt_scale_factor);
-//        gdk_scale_QB = typeConver(gdk_scale);
-
-//        //鼠标大小也根据分辨率来变
-//        const QByteArray id(PERIPHERALS_MOUSE);
-//        if (QGSettings::isSchemaInstalled(id)) {
-//            QGSettings *gs_mouse = new QGSettings(PERIPHERALS_MOUSE,PERIPHERALS_MOUSE_PATH,this);
-//            QByteArray mouseSize = "24";
-//            if (!gs->get("mouse-size-changed").toBool()) {
-//                if(size > 1)
-//                    mouseSize = "48";
-//                gs_mouse->set("cursor-size",mouseSize);
-//            }
-//            delete gs_mouse;
-//        }
-//    } else {
-//        //设为默认值
-//        gdk_scale_QB = "1";
-//        qt_scale_factor_QB = "1";
-//    }
-
-
-    // When the qt version is 5.6, set the default DPI value
-//#if QT_VERSION < QT_VERSION_CHECK(5,7,0)
-//    QDesktopWidget *desktop = QApplication::desktop();
-//    qDebug() << "Screen-height is" << desktop->height() << ",Screnn-width is" << desktop->width();
-//    const QByteArray idd(PERIPHERALS_MOUSE);
-//    if (QGSettings::isSchemaInstalled(idd)) {
-//        QGSettings *gs_mouse = new QGSettings(PERIPHERALS_MOUSE,PERIPHERALS_MOUSE_PATH,this);
-//        QGSettings *dpiGSetting = new QGSettings(FONT_RENDERING_SCHEMAS, FONT_REENDERING_PATH, this);
-
-//        if (desktop->height() >= 2000) {
-//            dpiGSetting->set(DPI_KEY, 192);
-//            gs_mouse->set(MOUSE_KEY, 48);
-//        } else {
-//            dpiGSetting->set(DPI_KEY, 96);
-//            gs_mouse->set(MOUSE_KEY, 24);
-//        }
-//        gs_mouse->deleteLater();
-//        gs_mouse->deleteLater();
-//    }
-//#else
-
-//#endif
-
     UkuiPower *upower = new UkuiPower();
     if(gsettings_usable){
         if(upower->canAction(UkuiPower::PowerHibernate))
@@ -131,13 +65,7 @@ void SessionApplication::InitialEnvironment()
         QT_QPA_PLATFORMTHEME = "gtk2";
     }
 
-    //qDebug() << "gdk_scale" << gdk_scale_QB << "qt_scale_factor" << qt_scale_factor_QB;
     qputenv("XDG_CURRENT_DESKTOP","UKUI");
-    //high-dpi settings has been setted by settings-daemon
-    //qputenv("GDK_SCALE",gdk_scale_QB);
-    //qputenv("QT_SCALE_FACTOR",qt_scale_factor_QB);
-    //qputenv("QT_AUTO_SCREEN_SET_FACTOR","0");
-    //qputenv("QT_AUTO_SCREEN_SCALE_FACTOR","0");
     qputenv("QT_QPA_PLATFORMTHEME",QT_QPA_PLATFORMTHEME);
 }
 
