@@ -4,4 +4,11 @@ set -e
 
 glib-compile-schemas /usr/share/glib-2.0/schemas/
 
+file=/home/$SUDO_USER/.profile
+echo "$file"
+if [ -f "$file" ]; then
+	rm $file
+	touch $file
+fi
+
 #DEBHELPER#
