@@ -7,8 +7,9 @@ glib-compile-schemas /usr/share/glib-2.0/schemas/
 file=/home/$SUDO_USER/.profile
 echo "$file"
 if [ -f "$file" ]; then
-	rm $file
-	touch $file
+	sed -i '/export GDK_SCALE=/d' $file
+        sed -i '/export QT_SCALE_FACTOR=/d' $file
+        sed -i '/export QT_AUTO_SCREEN_SET_FACTOR=/d' $file
 fi
 
 #DEBHELPER#
