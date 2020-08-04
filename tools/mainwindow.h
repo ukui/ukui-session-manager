@@ -42,7 +42,7 @@ public:
     ~MainWindow();
     void doevent(QString test2,int i);
     void changePoint(QWidget *widget ,QEvent *event ,int i);
-    void closeEvent(QCloseEvent *event);
+    //void closeEvent(QCloseEvent *event);
     //virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
 
     QTimer *timer;

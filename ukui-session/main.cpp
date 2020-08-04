@@ -90,8 +90,7 @@ void WriteXresourcesFile(QString XresourcesFile)
     QByteArray str = content.toLatin1().data();
     file.write(str);
     file.close();
-    QProcess ::execute("xrdb -merge "+ XresourcesFile);
-    QGSettings *gs = new QGSettings("get org.ukui.font-rendering");
+    QGSettings *gs = new QGSettings("org.ukui.font-rendering");
     QGSettings *settings = new QGSettings("org.ukui.SettingsDaemon.plugins.xsettings");
     QGSettings *mouse_settings = new QGSettings("org.ukui.peripherals-mouse");
     gs->set("dpi",96.0);
@@ -99,6 +98,7 @@ void WriteXresourcesFile(QString XresourcesFile)
     settings->set("scaling-factor",2);
     delete settings;
     delete mouse_settings;
+    delete gs;
 }
 /* 配置新装系统、新建用户第一次登陆时，4K缩放功能*/
 void Set4KScreenScale()

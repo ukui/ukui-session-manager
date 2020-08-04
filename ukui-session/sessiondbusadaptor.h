@@ -47,34 +47,38 @@ public slots:
         return true;
     }
 
-    bool canReboot()
-    {
-        return mPower->canAction(UkuiPower::PowerReboot);
-    }
+//    bool canReboot()
+//    {
+//        return mPower->canAction(UkuiPower::PowerReboot);
+//    }
 
-    bool canPowerOff()
-    {
-        return mPower->canAction(UkuiPower::PowerShutdown);
-    }
+//    bool canPowerOff()
+//    {
+//        return mPower->canAction(UkuiPower::PowerShutdown);
+//    }
 
     Q_NOREPLY void logout()
     {
         mManager->logout(true);
     }
 
-    Q_NOREPLY void reboot()
-    {
-        mManager->logout(false);
-        mPower->doAction(UkuiPower::PowerReboot);
-        QCoreApplication::exit(0);
-    }
+//    Q_NOREPLY void reboot()
+//    {
+//        if(mPower->canAction(UkuiPower::PowerReboot)){
+//            mManager->logout(false);
+//            mPower->doAction(UkuiPower::PowerReboot);
+//        }
+//        //QCoreApplication::exit(0);
+//    }
 
-    Q_NOREPLY void powerOff()
-    {
-        mManager->logout(false);
-        mPower->doAction(UkuiPower::PowerShutdown);
-        QCoreApplication::exit(0);
-    }
+//    Q_NOREPLY void powerOff()
+//    {
+//        if(mPower->canAction(UkuiPower::PowerShutdown)){
+//            mManager->logout(false);
+//            mPower->doAction(UkuiPower::PowerShutdown);
+//        }
+//        //QCoreApplication::exit(0);
+//    }
 
 //    QDBusVariant listModules()
 //    {

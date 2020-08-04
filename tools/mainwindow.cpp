@@ -307,13 +307,15 @@ void MainWindow::changePoint(QWidget *widget, QEvent *event, int i){
 
 void MainWindow::doevent(QString test, int i){
     try {
-        //close();
-        //m_power->doAction(UkuiPower::Action(i));
         defaultnum = i;
         qDebug()<<"Start do action"<<test<<defaultnum;
+        if (closeGrab()) {
+            qDebug()<<"success to close Grab";
+        } else {
+            qDebug()<<"failure to close Grab";
+        }
         this->hide();
         emit signalTostart();
-        //timer->start(1000);
     } catch (QException &e) {
         qWarning() << e.what();
     }
@@ -335,6 +337,11 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 bool MainWindow::exitt(){
     QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
     gs->set("win-key-release",false);
+    if (closeGrab()) {
+        qDebug()<<"success to close Grab";
+    } else {
+        qDebug()<<"failure to close Grab";
+    }
     close();
     exit(0);
 }
@@ -428,16 +435,16 @@ void MainWindow::refreshBlur(QWidget *last, QWidget *now){
     now->setStyleSheet(str);
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-    qDebug()<<"MainWindow:: CloseEvent";
-    if (closeGrab()) {
-        qDebug()<<"success to close Grab";
-    } else {
-        qDebug()<<"failure to close Grab";
-    }
-    return QWidget::closeEvent(event);
-}
+//void MainWindow::closeEvent(QCloseEvent *event)
+//{
+//    qDebug()<<"MainWindow:: CloseEvent";
+//    if (closeGrab()) {
+//        qDebug()<<"success to close Grab";
+//    } else {
+//        qDebug()<<"failure to close Grab";
+//    }
+//    return QWidget::closeEvent(event);
+//}
 
 /*
 bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
