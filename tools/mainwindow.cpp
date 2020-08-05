@@ -108,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent)
     map.insert(5,ui->reboot);
     map.insert(6,ui->shutdown);
 
-    if(m_power->canAction(UkuiPower::PowerHibernate)){
+    if(false){//m_power->canAction(UkuiPower::PowerHibernate)
         isHibernateHide = false;
     }
 
