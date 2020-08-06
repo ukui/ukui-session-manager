@@ -1,3 +1,12 @@
+ukui-session-manager (3.0.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian:
+    - drop 99ukui-environment. (Closes: #966482)
+    - update watch.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Thu, 06 Aug 2020 17:49:34 +0800
+
 ukui-session-manager (2.0.3-1) unstable; urgency=medium
 
   * New upstream release.
