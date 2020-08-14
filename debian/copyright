@@ -3,80 +3,81 @@ Upstream-Name: ukui-session-manager
 Source: https://github.com/ukui/ukui-session-manager
 
 Files: *
-Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd.
-           2012-2018 LXQt team
-           2010-2012 Razor team
-License: LGPL-2.1+
-
-Files: ukui-session/modulemanager.*
-       ukui-session/sessiondbusadaptor.h
-       tools/main.cpp
-Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd.
-           2010-2016 LXQt team
-License: LGPL-2.1+
-
-Files: ukui-session/sessionapplication.*
-Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd.
-           2014  Hong Jen Yee (PCMan) <pcman.tw@gmail.com>
-License: LGPL-2.1+
-
-Files: ukui-session/xdgdirs.*
-       ukui-session/xdgautostart.*
-       ukui-session/xdgdesktopfile.*
-Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd
+Copyright: 2019, Tianjin KYLIN Information Technology Co., Ltd.
+           2012-2018, LXQt team
            2010-2012, Razor team
 License: LGPL-2.1+
 
-Files: ukui-session/xdgmacros.h
-Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd
-           2014-2018, Luís Pereira <luis.artur.pereira@gmail.com>
+Files: man/*
+Copyright: 2016, Tianjin KYLIN Information Technology Co., Ltd.
+           2010, Vincent Untz (vuntz@gnome.org)
+           2000, Miguel de Icaza (miguel@helixcode.com)
 License: LGPL-2.1+
 
-Files: tools/powerprovider.*
-       tools/ukuipower.*
-       ukui-session/idlewatcher.*
-       ukui-session/idleadbusdaptor.h
-Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd.
-           2013-2018 LXQt team
+Files: tools/*
+Copyright: LGPL2+ / 2019, Tianjin KYLIN Information Technology Co., Ltd.
 License: LGPL-2.1+
 
-Files: tools/grab-x11.*
-       tools/mainwindow*
-       ukui-session/ukuimodule.*
-       ukui-session/main.cpp
-Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd
-License: LGPL-2.1+
-
-Files: debian/*
-       .github/workflows/build.yml
-Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd
-License: LGPL-2.1+
-
-Files: tools/xeventmonitor.h
-       tools/xeventmonitor.cpp
-Copyright: 2011 ~ 2017 Deepin, Inc.
-           2011 ~ 2017 Wang Yong
-           2018, Tianjin KYLIN Information Technology Co., Ltd.
-License: GPL-3+
-
-Files: tools/grab-x11.*
+Files: tools/grab-x11.cpp
+       tools/grab-x11.h
 Copyright: 2018, Tianjin KYLIN Information Technology Co., Ltd.
 License: GPL-3+
 
+Files: tools/main.cpp
+       tools/mainwindow.cpp
+       tools/mainwindow.h
+Copyright: 2019, Tianjin KYLIN Information Technology Co., Ltd.
+License: GPL-2+
+
+Files: tools/xeventmonitor.cpp
+       tools/xeventmonitor.h
+Copyright: 2018, Tianjin KYLIN Information Technology Co., Ltd.
+License: GPL-3+
+
+Files: ukui-session/*
+Copyright: LGPL2+ / 2019, Tianjin KYLIN Information Technology Co., Ltd.
 License: LGPL-2.1+
- This program or library is free software; you can redistribute it
- and/or modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
+
+Files: ukui-session/modulemanager.cpp
+       ukui-session/modulemanager.h
+       ukui-session/sessiondbusadaptor.h
+Copyright: 2019, Tianjin KYLIN Information Technology Co., Ltd.
+License: GPL-2+
+
+Files: ukui-session/sessionapplication.cpp
+       ukui-session/sessionapplication.h
+Copyright: 2019, Tianjin KYLIN Information Technology Co., Ltd.
+License: LGPL-2.1+
+
+Files: ukui-session/xdgautostart.cpp
+       ukui-session/xdgautostart.h
+Copyright: 2012, Razor team
+License: LGPL-2.1+
+
+Files: ukui-session/xdgdesktopfile.cpp
+       ukui-session/xdgdesktopfile.h
+       ukui-session/xdgdirs.cpp
+       ukui-session/xdgdirs.h
+Copyright: 2010-2011, Razor team
+License: LGPL-2.1+
+
+Files: ukui-session/xdgmacros.h
+Copyright: 2014, Luís Pereira <luis.artur.pereira@gmail.com>
+License: LGPL-2.1+
+
+License: GPL-2+
+ This software is Copyright (c) 2020 by X. Ample.
  .
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
+ This is free software, licensed under:
  .
- On Debian systems, the complete text of the GNU Lesser General
- Public License version 2.1 can be found in
- "/usr/share/common-licenses/LGPL-2.1".
+   The GNU General Public License, Version 2, June 1991
+ .
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; version 2 dated June, 1991, or (at
+ your option) any later version.
+ On Debian systems, the complete text of version 2 of the GNU General
+ Public License can be found in '/usr/share/common-licenses/GPL-2'.
 
 License: GPL-3+
  This package is free software; you can redistribute it and/or modify
@@ -94,3 +95,18 @@ License: GPL-3+
  .
  On Debian systems, the complete text of the GNU General
  Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
+
+License: LGPL-2.1+
+ This program or library is free software; you can redistribute it
+ and/or modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ On Debian systems, the complete text of the GNU Lesser General
+ Public License version 2.1 can be found in
+ "/usr/share/common-licenses/LGPL-2.1".
