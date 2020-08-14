@@ -119,7 +119,7 @@ MainWindow::MainWindow(QWidget *parent)
     //Set the default value
     lastWidget = ui->lockscreen;
     tableNum = 3;
-    ui->lockscreen->setStyleSheet("QWidget#lockscreen{background-color: rgb(255,255,255,100);}");
+    ui->lockscreen->setStyleSheet("QWidget#lockscreen{background-color: rgb(255,255,255,100);border-radius: 6px;}");
 
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy-MM-dd ddd");
