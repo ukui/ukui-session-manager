@@ -43,7 +43,7 @@
 #define SESSION_REQUIRED_COMPONENTS "org.ukui.session.required-components"
 #define SESSION_REQUIRED_COMPONENTS_PATH "/org/ukui/desktop/session/required-components/"
 
-void playBootMusic(){
+void ModuleManager::playBootMusic(){
     //set default value of whether boot-music is opened
     bool play_music = true;
     if (QGSettings::isSchemaInstalled("org.ukui.session")){
@@ -223,7 +223,7 @@ void ModuleManager::startup()
             qDebug() << "Start panel: " << mPanel.name();
             startProcess(mPanel, true);
 
-            playBootMusic()
+            playBootMusic();
 
             qDebug() << "wait for ukui-settings-daemon start-up";
             timer = new QTimer();

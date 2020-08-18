@@ -64,7 +64,7 @@ Q_SIGNALS:
 private:
 
     QTimer *timer;
-
+    void playBootMusic();
     void startProcess(const XdgDesktopFile &file, bool required);
 
     void constructStartupList();
