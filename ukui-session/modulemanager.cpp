@@ -32,6 +32,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <QGSettings/QGSettings>
+#include <QMediaPlayer>
 /* qt会将glib里的signals成员识别为宏，所以取消该宏
  * 后面如果用到signals时，使用Q_SIGNALS代替即可
  **/
@@ -41,6 +42,26 @@
 
 #define SESSION_REQUIRED_COMPONENTS "org.ukui.session.required-components"
 #define SESSION_REQUIRED_COMPONENTS_PATH "/org/ukui/desktop/session/required-components/"
+
+void playBootMusic(){
+    //set default value of whether boot-music is opened
+    bool play_music = true;
+    if (QGSettings::isSchemaInstalled("org.ukui.session")){
+        QGSettings *gset = new QGSettings("org.ukui.session","/org/ukui/desktop/session/",this);
+        play_music = gset->get("boot-music").toBool();
+    }
+    if (play_music) {
+        QMediaPlayer *player = new QMediaPlayer;
+        player->setMedia(QUrl("qrc:/startup.wav"));
+        player->play();
+        QObject::connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state) {
+            player->stop();
+            player->deleteLater();
+            //delete player;
+            qDebug() << "play state is " << state;
+        });
+    }
+}
 
 ModuleManager::ModuleManager( QObject* parent)
     : QObject(parent)
@@ -201,6 +222,8 @@ void ModuleManager::startup()
 
             qDebug() << "Start panel: " << mPanel.name();
             startProcess(mPanel, true);
+
+            playBootMusic()
 
             qDebug() << "wait for ukui-settings-daemon start-up";
             timer = new QTimer();

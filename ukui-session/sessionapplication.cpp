@@ -122,8 +122,6 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
 
     // Wait until the event loop starts
     QTimer::singleShot(0, this, SLOT(startup()));
-
-    playBootMusic();
 }
 
 SessionApplication::~SessionApplication()
@@ -141,22 +139,4 @@ bool SessionApplication::startup()
     modman->startup();
 
     return true;
-}
-
-void SessionApplication::playBootMusic(){
-    //set default value of whether boot-music is opened
-    bool play_music = true;
-    if (gsettings_usable)
-        play_music = gs->get("boot-music").toBool();
-    if (play_music) {
-        QMediaPlayer *player = new QMediaPlayer;
-        player->setMedia(QUrl("qrc:/startup.wav"));
-        player->play();
-        QObject::connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state) {
-            player->stop();
-            player->deleteLater();
-            //delete player;
-            qDebug() << "play state is " << state;
-        });
-    }
 }
