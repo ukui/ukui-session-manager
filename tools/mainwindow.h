@@ -24,6 +24,7 @@
 #include "QProcess"
 #include <QPixmap>
 #include <QHash>
+#include <QGSettings/QGSettings>
 //#include <QAbstractNativeEventFilter>
 
 class XEventMonitor;
@@ -50,6 +51,7 @@ public:
 
 private:
     bool exitt();
+    QGSettings *gs;
     Ui::MainWindow *ui;
     UkuiPower *m_power;
     XEventMonitor *xEventMonitor;
