@@ -35,8 +35,8 @@
 #include <X11/keysym.h>
 #include "grab-x11.h"
 #include "xeventmonitor.h"
-#include <QGSettings/QGSettings>
 #include <QFileInfo>
+#include <QDBusInterface>
 
 QT_BEGIN_NAMESPACE
 extern void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
@@ -78,13 +78,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     const QByteArray id(BACKGROUND_SETTINGS);
     if (QGSettings::isSchemaInstalled(id)) {
-        QGSettings *gs = new QGSettings(BACKGROUND_SETTINGS,"",this);
-        QString fullstr = gs->get("picture-filename").toString();
+        QGSettings *gset = new QGSettings(BACKGROUND_SETTINGS,"",this);
+        QString fullstr = gset->get("picture-filename").toString();
         QFileInfo fileInfo(fullstr);
         if(fileInfo.isFile()){
             pix.load(fullstr);
             pix = blurPixmap(pix);
-            gs->deleteLater();
+            gset->deleteLater();
         }else
             pix.load(":/images/background-ukui.png");
     }else
@@ -115,6 +115,8 @@ MainWindow::MainWindow(QWidget *parent)
     if(true){
         isSwitchuserHide = false;
     }
+
+    gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
 
     //Set the default value
     lastWidget = ui->lockscreen;
@@ -243,12 +245,12 @@ void MainWindow::paintEvent(QPaintEvent *e)
 
 //lock screen
 void doLockscreen(){
-    QString arg = "-l";
-    QStringList args;
-    args.append(arg);
-    QString command = "ukui-screensaver-command";
-    qDebug() << "Start ukui module: " << command << "args: " << args;
-    QProcess::execute(command, args);
+    QDBusInterface *interface = new QDBusInterface("org.ukui.ScreenSaver",
+                                                   "/",
+                                                   "org.ukui.ScreenSaver"
+                                                   );
+    QDBusMessage msg = interface->call("Lock");
+    exit(0);
 }
 
 //handle mouse-clicked event
@@ -272,7 +274,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     } else if (obj->objectName() == "lockscreen") {
         changePoint(ui->lockscreen,event,3);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doLockscreen();
+            doevent("screensaver",3);
         }
     }else if (obj->objectName() == "logout") {
         changePoint(ui->logout,event,4);
@@ -307,6 +309,8 @@ void MainWindow::changePoint(QWidget *widget, QEvent *event, int i){
 
 void MainWindow::doevent(QString test, int i){
     try {
+        gs->set("win-key-release",false);
+
         defaultnum = i;
         qDebug()<<"Start do action"<<test<<defaultnum;
         if (closeGrab()) {
@@ -315,7 +319,12 @@ void MainWindow::doevent(QString test, int i){
             qDebug()<<"failure to close Grab";
         }
         this->hide();
-        emit signalTostart();
+        if(i == 3){
+            doLockscreen();
+        }
+        else{
+            emit signalTostart();
+        }
     } catch (QException &e) {
         qWarning() << e.what();
     }
@@ -335,7 +344,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 }
 
 bool MainWindow::exitt(){
-    QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
     gs->set("win-key-release",false);
     if (closeGrab()) {
         qDebug()<<"success to close Grab";
@@ -410,7 +418,7 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
             doevent("suspend",2);
             break;
         case 3:
-            doLockscreen();
+            doevent("screensaver",3);
             break;
         case 4:
             doevent("logout",4);

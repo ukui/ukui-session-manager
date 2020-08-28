@@ -27,7 +27,8 @@ Package: ukui-session-manager
 Architecture: any
 Depends: ukui-themes | ubuntukylin-theme,
          ${misc:Depends},
-         ${shlibs:Depends}
+         ${shlibs:Depends},
+         libglib2.0-bin,
 Recommends: peony,
             ukui-kwin | ukwm,
             ukui-panel,
