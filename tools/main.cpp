@@ -89,9 +89,6 @@ int main(int argc, char* argv[])
 
     QApplication a(argc, argv);
 
-    QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
-    gs->set("win-key-release",true);
-
     UkuiPower powermanager(&a);
     bool flag = true;
 
@@ -137,6 +134,9 @@ int main(int argc, char* argv[])
         flag = playShutdownMusic(powermanager, 6);
     }
     if (flag) {
+        QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
+        gs->set("win-key-release",true);
+
         // Load ts files
         const QString locale = QLocale::system().name();
         QTranslator translator;

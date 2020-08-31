@@ -39,3 +39,28 @@ QLabel#lockscreen_icon{
     background:url(:/images/lockscreen.png);
     background-repeat:no-repeat;
 }
+
+/*平板注销按钮*/
+QLabel#logout_t_icon{
+    background:url(:/images/logout_t.png);
+    background-repeat:no-repeat;
+}
+
+/*平板重启按钮*/
+QLabel#reboot_t_icon{
+    background:url(:/images/reboot_t.png);
+    background-repeat:no-repeat;
+}
+
+/*平板关机按钮*/
+QLabel#shutdown_t_icon{
+    background:url(:/images/shutdown_t.png);
+    background-repeat:no-repeat;
+}
+
+/*平板锁屏按钮*/
+QLabel#lockscreen_t_icon{
+    background:url(:/images/lockscreen_t.png);
+    background-repeat:no-repeat;
+}
+

@@ -35,14 +35,20 @@
 #include <X11/keysym.h>
 #include "grab-x11.h"
 #include "xeventmonitor.h"
-#include <QGSettings/QGSettings>
 #include <QFileInfo>
+#include <QDBusInterface>
+#include<QGSettings/QGSettings>
+#include <QDebug>
+
+
 
 QT_BEGIN_NAMESPACE
 extern void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
 #define BLUR_RADIUS 300
 #define BACKGROUND_SETTINGS "org.mate.background"
+#define TABLED_SCHEMA "org.ukui.SettingsDaemon.plugins.tablet-mode"
+
 
 void getUserNum(){
     QStringList args;
@@ -78,17 +84,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     const QByteArray id(BACKGROUND_SETTINGS);
     if (QGSettings::isSchemaInstalled(id)) {
-        QGSettings *gs = new QGSettings(BACKGROUND_SETTINGS,"",this);
-        QString fullstr = gs->get("picture-filename").toString();
+        QGSettings *gset = new QGSettings(BACKGROUND_SETTINGS,"",this);
+        QString fullstr = gset->get("picture-filename").toString();
         QFileInfo fileInfo(fullstr);
         if(fileInfo.isFile()){
             pix.load(fullstr);
             pix = blurPixmap(pix);
-            gs->deleteLater();
+            gset->deleteLater();
         }else
             pix.load(":/images/background-ukui.png");
     }else
         pix.load(":/images/background-ukui.png");
+
 
     ui->setupUi(this);
     ui->switchuser->installEventFilter(this);
@@ -99,6 +106,26 @@ MainWindow::MainWindow(QWidget *parent)
     ui->reboot->installEventFilter(this);
     ui->shutdown->installEventFilter(this);
 
+    ui->lockscreen_t->installEventFilter(this);
+    ui->lockscreen_t->setStyleSheet("background-color:white;opacity:10%,border-radius:16px");
+    ui->logout_t->installEventFilter(this);
+    ui->shutdown_t->installEventFilter(this);
+    ui->reboot_t->installEventFilter(this);
+
+    ui->lockscreen_t_label->installEventFilter(this);
+    ui->logout_t_label->installEventFilter(this);
+    ui->shutdown_t_label->installEventFilter(this);
+    ui->reboot_t_label->installEventFilter(this);
+
+    ui->lockscreen_t->setStyleSheet("background-color: rgb(255,255,255,15)");
+    ui->logout_t->setStyleSheet("background-color: rgb(255,255,255,15)");
+    ui->shutdown_t->setStyleSheet("background-color: rgb(255,255,255,15)");
+    ui->reboot_t->setStyleSheet("background-color: rgb(255,255,255,15)");
+    ui->lockscreen_t_icon->setStyleSheet("background-color: rgb(255,255,255,15)");
+    ui->logout_t_icon->setStyleSheet("background-color: rgb(255,255,255,15)");
+    ui->shutdown_t_icon->setStyleSheet("background-color: rgb(255,255,255,15)");
+    ui->reboot_t_icon->setStyleSheet("background-color: rgb(255,255,255,15)");
+
     //Make a hash-map to store tableNum-to-lastWidget
     map.insert(0,ui->switchuser);
     map.insert(1,ui->hibernate);
@@ -108,6 +135,16 @@ MainWindow::MainWindow(QWidget *parent)
     map.insert(5,ui->reboot);
     map.insert(6,ui->shutdown);
 
+    map.insert(7,ui->lockscreen_t);
+    map.insert(8,ui->logout_t);
+    map.insert(9,ui->reboot_t);
+    map.insert(10,ui->shutdown_t);
+    map.insert(11,ui->lockscreen_t_label);
+    map.insert(12,ui->logout_t_label);
+    map.insert(13,ui->reboot_t_label);
+    map.insert(14,ui->shutdown_t_label);
+
+
     if(false){//m_power->canAction(UkuiPower::PowerHibernate)
         isHibernateHide = false;
     }
@@ -115,6 +152,8 @@ MainWindow::MainWindow(QWidget *parent)
     if(true){
         isSwitchuserHide = false;
     }
+
+    gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
 
     //Set the default value
     lastWidget = ui->lockscreen;
@@ -186,28 +225,33 @@ void MainWindow::ResizeEvent(){
     int sum = 0;
     int maxXX = 1000*1000;
     int k = 0;
+    const QByteArray tabletId(TABLED_SCHEMA);
+    if (QGSettings::isSchemaInstalled(tabletId)){
+        QGSettings *tabletMode = new QGSettings(TABLED_SCHEMA);
+        res=tabletMode->get("tablet-mode").toBool();
+}
     if(m_screen.width()>1088){
-        spaceW = (m_screen.width() - 158*(7-hideNum)+18) / 2;
-        spaceH = (m_screen.height() - 140) / 2 -20;
-        for(int i=0;i<=6;i++){
-            if(isHibernateHide && i == 1){
-                map[i]->move(maxXX , maxXX);
-                continue;
+        if(res)
+        {
+            ui->time_lable->hide();
+            ui->date_label->hide();
+            spaceW = (m_screen.width() - 200*(5-hideNum)+18) / 2;
+            spaceH = (m_screen.height() - 140) / 2 -20;
+            for(int i=0;i<=6;i++){
+                map[i]->move(maxXX,maxXX);
             }
-            if(isSwitchuserHide && i == 0){
-                map[i]->move(maxXX , maxXX);
-                continue;
+            for(int i=7;i<=10;i++){
+                map[i]->move(xx+spaceW + 200*sum,yy+spaceH);
+                map[i+4]->move(xx+spaceW+200*sum+48,yy+spaceH+144);
+                sum = sum+1;
             }
-            map[i]->move(xx+spaceW + 158*sum,yy+spaceH);
-            sum = sum+1;
         }
-        ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
-    }else{
-        int spaceWw = (m_screen.width() - 158*(3-hideNum)+18) / 2;
-        spaceW = (m_screen.width() - 158*4+18) / 2;
-        spaceH = (m_screen.height() - 80) / 2;
-        for(int i=0;i<=6;i++){
-            if(i < 3){
+        else
+        {
+            spaceW = (m_screen.width() - 158*(7-hideNum)+18) / 2;
+            spaceH = (m_screen.height() - 140) / 2 -20;
+
+            for(int i=0;i<=6;i++){
                 if(isHibernateHide && i == 1){
                     map[i]->move(maxXX , maxXX);
                     continue;
@@ -216,16 +260,59 @@ void MainWindow::ResizeEvent(){
                     map[i]->move(maxXX , maxXX);
                     continue;
                 }
-                map[i]->move(xx+spaceWw + 158*sum,yy+spaceH-120);
-                sum = sum+1;
-            }else{
-                map[i]->move(xx+spaceW + 158*k,yy+spaceH+38);
-                k++;
+                    map[i]->move(xx+spaceW + 158*sum,yy+spaceH);
+                    sum = sum+1;
+                }
+            for(int i=7;i<=10;i++){
+                map[i]->move(maxXX,maxXX);
+                map[i+4]->move(maxXX,maxXX);
             }
+
         }
         ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
+
+    }else{
+        if(res)
+        {
+            ui->time_lable->hide();
+            ui->date_label->hide();
+            int spaceWw = (m_screen.width() - 200*(5-hideNum)+18) / 2;
+            spaceW = (m_screen.width() - 200*4+18) / 2;
+            spaceH = (m_screen.height() - 80) / 2;
+            for(int i=0;i<=6;i++){
+                map[i]->move(maxXX,maxXX);
+            }
+            for(int i=7;i<=10;i++){
+                map[i]->move(xx+spaceW + 200*k,yy+spaceH+38);
+                map[i]->move(xx+spaceW+200*k+48,yy+spaceH+38+144);
+                k++;
+
+            }
+        }
+        else
+        {
+            int spaceWw = (m_screen.width() - 158*(7-hideNum)+18) / 2;
+            spaceW = (m_screen.width() - 158*4+18) / 2;
+            spaceH = (m_screen.height() - 80) / 2;
+            for(int i=7;i<=10;i++){
+                map[i]->move(xx+spaceW + 158*k,yy+spaceH+38);
+                map[i]->move(xx+spaceW+158*k+48,yy+spaceH+38+144);
+                k++;
+
+        }
+            for(int i=7;i<=10;i++){
+                map[i]->move(maxXX,maxXX);
+                map[i+4]->move(maxXX,maxXX);
+            }
+        }
+       ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
+
     }
 }
+
+
+
+
 
 //Paint the background picture
 void MainWindow::paintEvent(QPaintEvent *e)
@@ -243,12 +330,12 @@ void MainWindow::paintEvent(QPaintEvent *e)
 
 //lock screen
 void doLockscreen(){
-    QString arg = "-l";
-    QStringList args;
-    args.append(arg);
-    QString command = "ukui-screensaver-command";
-    qDebug() << "Start ukui module: " << command << "args: " << args;
-    QProcess::execute(command, args);
+    QDBusInterface *interface = new QDBusInterface("org.ukui.ScreenSaver",
+                                                   "/",
+                                                   "org.ukui.ScreenSaver"
+                                                   );
+    QDBusMessage msg = interface->call("Lock");
+    exit(0);
 }
 
 //handle mouse-clicked event
@@ -269,10 +356,31 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         if (event->type() == QEvent::MouseButtonRelease) {
             doevent("suspend",2);
         }
-    } else if (obj->objectName() == "lockscreen") {
+    }else if (obj->objectName() == "lockscreen_t") {
+        changePoint(ui->lockscreen_t,event,3);
+        if (event->type() == QEvent::MouseButtonRelease) {
+            doevent("screensaver",3);
+        }
+    }else if (obj->objectName() == "logout_t") {
+        changePoint(ui->logout_t,event,4);
+        if (event->type() == QEvent::MouseButtonRelease) {
+            doevent("logout",4);
+        }
+    }else if (obj->objectName() == "reboot_t") {
+        changePoint(ui->reboot_t,event,5);
+        if (event->type() == QEvent::MouseButtonRelease) {
+            doevent("reboot",5);
+        }
+    }else if(obj->objectName() == "shutdown_t") {
+        changePoint(ui->shutdown_t,event,6);
+        if (event->type() == QEvent::MouseButtonRelease) {
+            doevent("shutdown",6);
+        }
+    }
+    else if (obj->objectName() == "lockscreen") {
         changePoint(ui->lockscreen,event,3);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doLockscreen();
+            doevent("screensaver",3);
         }
     }else if (obj->objectName() == "logout") {
         changePoint(ui->logout,event,4);
@@ -307,6 +415,8 @@ void MainWindow::changePoint(QWidget *widget, QEvent *event, int i){
 
 void MainWindow::doevent(QString test, int i){
     try {
+        gs->set("win-key-release",false);
+
         defaultnum = i;
         qDebug()<<"Start do action"<<test<<defaultnum;
         if (closeGrab()) {
@@ -315,7 +425,12 @@ void MainWindow::doevent(QString test, int i){
             qDebug()<<"failure to close Grab";
         }
         this->hide();
-        emit signalTostart();
+        if(i == 3){
+            doLockscreen();
+        }
+        else{
+            emit signalTostart();
+        }
     } catch (QException &e) {
         qWarning() << e.what();
     }
@@ -326,16 +441,19 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
     if (!ui->suspend->geometry().contains(event->pos()) &&
             !ui->hibernate->geometry().contains(event->pos()) &&
             !ui->lockscreen->geometry().contains(event->pos()) &&
+            !ui->lockscreen_t->geometry().contains(event->pos()) &&
             !ui->switchuser->geometry().contains(event->pos()) &&
             !ui->logout->geometry().contains(event->pos()) &&
+            !ui->logout_t->geometry().contains(event->pos()) &&
             !ui->reboot->geometry().contains(event->pos()) &&
+            !ui->reboot_t->geometry().contains(event->pos()) &&
+            !ui->shutdown_t->geometry().contains(event->pos()) &&
             !ui->shutdown->geometry().contains(event->pos())) {
         exitt();
     }
 }
 
 bool MainWindow::exitt(){
-    QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
     gs->set("win-key-release",false);
     if (closeGrab()) {
         qDebug()<<"success to close Grab";
@@ -410,7 +528,7 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
             doevent("suspend",2);
             break;
         case 3:
-            doLockscreen();
+            doevent("screensaver",3);
             break;
         case 4:
             doevent("logout",4);
@@ -430,6 +548,8 @@ void MainWindow::refreshBlur(QWidget *last, QWidget *now){
     QString pastName = last->objectName();
     QString name = now->objectName();
     QString strlast = "QWidget#" + pastName + "{background-color: rgb(0,0,0,0)}";
+    if(res)
+        QString strlast = "QWidget#" + pastName + "{background-color: rgb(255,255,255,15)}";
     QString str = "QWidget#" + name + "{background-color: rgb(255,255,255,100);border-radius: 6px;}";
     last->setStyleSheet(strlast);
     now->setStyleSheet(str);

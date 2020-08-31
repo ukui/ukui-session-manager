@@ -8,5 +8,9 @@
         <file>images/reboot.png</file>
         <file>images/shutdown.png</file>
         <file>images/background-ukui.png</file>
+        <file>images/lockscreen_t.png</file>
+        <file>images/logout_t.png</file>
+        <file>images/reboot_t.png</file>
+        <file>images/shutdown_t.png</file>
     </qresource>
 </RCC>
