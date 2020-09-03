@@ -336,6 +336,12 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
 
     if (!proc->isTerminating()) {
         QString procName = proc->file.name();
+        if(procName == QFileInfo(mWindowManager.name()).fileName()){
+            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
+            proc->start();
+            proc->restartNum++;
+            return;
+        }
         switch (exitStatus) {
         case QProcess::NormalExit:
             qDebug() << "Process" << procName << "(" << proc << ") exited correctly.";
