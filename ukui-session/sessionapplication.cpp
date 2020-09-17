@@ -116,9 +116,15 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
         gsettings_usable = false;
     }
 
+    window = new mainwindow();
+    window->showFullScreen();
+
     InitialEnvironment();
 
     modman = new ModuleManager();
+    connect(modman, &ModuleManager::finished, window, &mainwindow::hide);
+    connect(modman, &ModuleManager::finished, window, &mainwindow::deleteLater);
+
 
     // Wait until the event loop starts
     QTimer::singleShot(0, this, SLOT(startup()));
