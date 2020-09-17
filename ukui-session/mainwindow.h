@@ -4,10 +4,15 @@
 #include <QMainWindow>
 #include <QObject>
 
-class mainwindow
+class mainwindow : public QMainWindow
 {
+    Q_OBJECT
 public:
     mainwindow();
+    QPixmap pix;
+
+protected:
+    void paintEvent(QPaintEvent *e);
 };
 
 #endif // MAINWINDOW_H
