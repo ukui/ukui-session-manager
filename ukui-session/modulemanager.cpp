@@ -260,6 +260,10 @@ void ModuleManager::timerUpdate(){
     for (XdgDesktopFileList::const_iterator i = mForceApplication.constBegin(); i != mForceApplication.constEnd(); ++i){
         startProcess(*i, true);
     }
+    QTimer::singleShot(1000, this, [&]()
+    {
+        emit finished();
+    });
 }
 
 void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)

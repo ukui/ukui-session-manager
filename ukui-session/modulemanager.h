@@ -60,6 +60,7 @@ public slots:
 
 Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
+    void finished();
 
 private:
 
