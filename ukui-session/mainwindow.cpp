@@ -3,20 +3,30 @@
 #include <QApplication>
 #include <QPainter>
 #include <QPixmap>
+#include <QSettings>
+#include <QFile>
+#include <QDebug>
 #include <QGSettings/QGSettings>
 
 #define BACKGROUND_SETTINGS "org.mate.background"
 
 mainwindow::mainwindow()
 {
+    QString path = "/tmp/greeter-background.conf";
+    QString fullstr;
+    QFile file(path);
     const QByteArray id(BACKGROUND_SETTINGS);
-    if (QGSettings::isSchemaInstalled(id)) {
-        QGSettings *gset = new QGSettings(BACKGROUND_SETTINGS,"",this);
-        QString fullstr = gset->get("picture-filename").toString();
-        pix.load(fullstr);
-    }else{
-        pix.load(":/images/background-ukui.png");
+    if(file.exists()){
+        QSettings qset(path,QSettings::NativeFormat);
+        fullstr = qset.value("Greeter").toString();
     }
+    else if (QGSettings::isSchemaInstalled(id)) {
+        QGSettings *gset = new QGSettings(BACKGROUND_SETTINGS,"",this);
+        fullstr = gset->get("picture-filename").toString();
+    }else
+        fullstr = "/usr/share/backgrounds/default.jpg";
+    qDebug()<<"picture file is "<<fullstr;
+    pix.load(fullstr);
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
     setFixedSize(QApplication::primaryScreen()->virtualSize());
 }
