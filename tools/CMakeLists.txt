@@ -9,6 +9,8 @@ set(tools_SRCS
     xeventmonitor.cpp
     xeventmonitor.h
     mainwindow.ui
+    window.cpp
+    window.h
 )
 
 find_package(PkgConfig)

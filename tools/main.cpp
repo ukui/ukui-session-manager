@@ -32,6 +32,7 @@
 
 #include "ukuipower.h"
 #include "mainwindow.h"
+#include "window.h"
 
 #ifdef signals
 #undef signals
@@ -112,6 +113,8 @@ int main(int argc, char* argv[])
     parser.addOption(rebootOption);
     QCommandLineOption shutdownOption(QStringLiteral("shutdown"), QApplication::tr("Shutdown this computer."));
     parser.addOption(shutdownOption);
+    QCommandLineOption windowOption(QStringLiteral("window"), QApplication::tr("A window above the desktop."));
+    parser.addOption(windowOption);
 
     parser.process(a);
 
@@ -132,6 +135,11 @@ int main(int argc, char* argv[])
     }
     if (parser.isSet(shutdownOption)) {
         flag = playShutdownMusic(powermanager, 6);
+    }
+    if (parser.isSet(windowOption)) {
+        flag = false;
+        window *win = new window();
+        win->showFullScreen();
     }
     if (flag) {
         QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
@@ -161,7 +169,7 @@ int main(int argc, char* argv[])
         {
             playShutdownMusic(powermanager, w->defaultnum);
         });
-        return a.exec();
+        //return a.exec();
     }
     return a.exec();
 }
