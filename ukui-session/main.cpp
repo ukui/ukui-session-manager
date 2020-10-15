@@ -127,6 +127,6 @@ int main(int argc, char **argv)
 
     Set4KScreenScale();
 
-    app.setQuitOnLastWindowClosed(false);
+    //app.setQuitOnLastWindowClosed(false);
     return app.exec();
 }
