@@ -35,7 +35,6 @@
 
 class ModuleManager;
 class IdleWatcher;
-class QProcess;
 
 class SessionApplication : public QCoreApplication
 {
