@@ -27,6 +27,7 @@
 #include <QMediaPlayer>
 #include <QDesktopWidget>
 #include "../tools/ukuipower.h"
+#include <QProcess>
 
 #define SESSION_DEFAULT_SETTINGS "org.ukui.session"
 #define SESSION_DEFAULT_SETTINGS_PATH "/org/ukui/desktop/session/"
@@ -104,7 +105,7 @@ void SessionApplication::registerDBus()
 }
 
 SessionApplication::SessionApplication(int& argc, char** argv) :
-    QApplication(argc, argv)
+    QCoreApplication(argc, argv)
 {
     const QByteArray id(SESSION_DEFAULT_SETTINGS);
     if (QGSettings::isSchemaInstalled(id)) {
@@ -116,14 +117,16 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
         gsettings_usable = false;
     }
 
-    window = new mainwindow();
-    window->showFullScreen();
+    QProcess *win = new QProcess(this);
+    QStringList args;
+    QString arg = "--window";
+    args.append(arg);
+    win->start("ukui-session-tools",args);
 
     InitialEnvironment();
 
     modman = new ModuleManager();
-    connect(modman, &ModuleManager::finished, window, &mainwindow::hide);
-    connect(modman, &ModuleManager::finished, window, &mainwindow::deleteLater);
+    connect(modman, &ModuleManager::finished, win,&QProcess::terminate);
 
 
     // Wait until the event loop starts
