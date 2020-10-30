@@ -92,10 +92,13 @@ void WriteXresourcesFile(QString XresourcesFile)
     file.close();
     QGSettings *gs = new QGSettings("org.ukui.font-rendering");
     QGSettings *settings = new QGSettings("org.ukui.SettingsDaemon.plugins.xsettings");
+    QGSettings *mouse_settings = new QGSettings("org.ukui.peripherals-mouse");
     gs->set("dpi",96.0);
     settings->set("scaling-factor",2);
+    mouse_settings->set("cursor-size",48);
     delete settings;
     delete gs;
+    delete mouse_settings;
 }
 /* 配置新装系统、新建用户第一次登陆时，4K缩放功能*/
 void Set4KScreenScale()

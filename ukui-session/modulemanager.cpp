@@ -243,11 +243,16 @@ void ModuleManager::timerUpdate(){
     }
 
     qDebug() << "Start application: ";
-    QFile file("/etc/xdg/autostart/kylin-nm.desktop");
+    QFile file_nm("/etc/xdg/autostart/kylin-nm.desktop");
+    QFile file_sogou("/usr/bin/sogouImeService");
     for (XdgDesktopFileList::const_iterator i = mApplication.constBegin(); i != mApplication.constEnd(); ++i) {
         qDebug() << i->fileName();
-        if(i->fileName()=="/etc/xdg/autostart/nm-applet.desktop" && file.exists()){
+        if(i->fileName()=="/etc/xdg/autostart/nm-applet.desktop" && file_nm.exists()){
             qDebug() << "the kylin-nm exist so the nm-applet will not start";
+            continue;
+        }
+        if(i->fileName()=="/etc/xdg/autostart/fcitx-qimpanel-autostart.desktop" && file_sogou.exists()){
+            qDebug() << "the sogouImeService exist so the fcitx-ui-qimpanel will not start";
             continue;
         }
         startProcess(*i, false);
