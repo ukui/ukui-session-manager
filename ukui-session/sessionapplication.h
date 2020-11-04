@@ -24,7 +24,6 @@
 #include <QFileSystemWatcher>
 #include <QSettings>
 #include <QGSettings/QGSettings>
-#include "mainwindow.h"
 /* qt会将glib里的signals成员识别为宏，所以取消该宏
  * 后面如果用到signals时，使用Q_SIGNALS代替即可
  **/
@@ -41,7 +40,6 @@ class SessionApplication : public QCoreApplication
     Q_OBJECT
 public:
     SessionApplication(int& argc, char** argv);
-    mainwindow *window;
     ~SessionApplication();
 
 private Q_SLOTS:
@@ -56,7 +54,6 @@ private:
     QGSettings * gs;
     ModuleManager* modman;
     IdleWatcher* mIdleWatcher;
-    //QWidget *widget;
     void playBootMusic();
 };
 
