@@ -105,7 +105,7 @@ void SessionApplication::registerDBus()
 }
 
 SessionApplication::SessionApplication(int& argc, char** argv) :
-    QCoreApplication(argc, argv)
+    QApplication(argc, argv)
 {
     const QByteArray id(SESSION_DEFAULT_SETTINGS);
     if (QGSettings::isSchemaInstalled(id)) {
