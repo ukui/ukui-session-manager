@@ -30,9 +30,9 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QDebug>
-#include <QTimer>
 #include <QGSettings/QGSettings>
-#include <QMediaPlayer>
+#include <QThread>
+#include <QSoundEffect>
 /* qt会将glib里的signals成员识别为宏，所以取消该宏
  * 后面如果用到signals时，使用Q_SIGNALS代替即可
  **/
@@ -43,6 +43,20 @@
 #define SESSION_REQUIRED_COMPONENTS "org.ukui.session.required-components"
 #define SESSION_REQUIRED_COMPONENTS_PATH "/org/ukui/desktop/session/required-components/"
 
+class WorkerThread : public QThread
+{
+    Q_OBJECT
+    void run() override {
+        QSoundEffect *player = new QSoundEffect();
+        player->setSource(QUrl("qrc:/startup.wav"));
+        player->play();
+        QTimer *a = new QTimer();
+        a->start(8*1000);
+        connect(a,&QTimer::timeout,this,&WorkerThread::quit);
+        exec();
+    }
+};
+
 void ModuleManager::playBootMusic(){
     //set default value of whether boot-music is opened
     bool play_music = true;
@@ -51,15 +65,9 @@ void ModuleManager::playBootMusic(){
         play_music = gset->get("boot-music").toBool();
     }
     if (play_music) {
-        QMediaPlayer *player = new QMediaPlayer;
-        player->setMedia(QUrl("qrc:/startup.wav"));
-        player->play();
-        QObject::connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state) {
-            player->stop();
-            player->deleteLater();
-            //delete player;
-            qDebug() << "play state is " << state;
-        });
+        WorkerThread *workerThread = new WorkerThread();
+        connect(workerThread, &WorkerThread::finished, workerThread, &QObject::deleteLater);
+        workerThread->start();
     }
 }
 
@@ -225,8 +233,9 @@ void ModuleManager::startup()
 
             playBootMusic();
 
-            qDebug() << "wait for ukui-settings-daemon start-up";
+            //qDebug() << "wait for ukui-settings-daemon start-up";
             timer = new QTimer();
+            timer->setSingleShot(true);
             connect(timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
             timer->start(3000);
         });
@@ -398,3 +407,4 @@ void ModuleManager::logout(bool doExit)
     }
 }
 
+#include "modulemanager.moc"
