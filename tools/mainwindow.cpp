@@ -186,18 +186,17 @@ void MainWindow::ResizeEvent(){
     //Move the widget to the direction where they should be
     int spaceW,spaceH;
     int sum = 0;
-    int maxXX = 1000*1000;
     int k = 0;
     if(m_screen.width()>1088){
         spaceW = (m_screen.width() - 158*(7-hideNum)+18) / 2;
         spaceH = (m_screen.height() - 140) / 2 -20;
         for(int i=0;i<=6;i++){
             if(isHibernateHide && i == 1){
-                map[i]->move(maxXX , maxXX);
+                map[i]->hide();
                 continue;
             }
             if(isSwitchuserHide && i == 0){
-                map[i]->move(maxXX , maxXX);
+                map[i]->hide();
                 continue;
             }
             map[i]->move(xx+spaceW + 158*sum,yy+spaceH);
@@ -211,11 +210,11 @@ void MainWindow::ResizeEvent(){
         for(int i=0;i<=6;i++){
             if(i < 3){
                 if(isHibernateHide && i == 1){
-                    map[i]->move(maxXX , maxXX);
+                    map[i]->hide();
                     continue;
                 }
                 if(isSwitchuserHide && i == 0){
-                    map[i]->move(maxXX , maxXX);
+                    map[i]->hide();
                     continue;
                 }
                 map[i]->move(xx+spaceWw + 158*sum,yy+spaceH-120);

@@ -68,6 +68,9 @@ void SessionApplication::InitialEnvironment()
 
     qputenv("XDG_CURRENT_DESKTOP","UKUI");
     qputenv("QT_QPA_PLATFORMTHEME",QT_QPA_PLATFORMTHEME);
+
+    //restart user's gvfs-daemon.service
+    QProcess::startDetached("systemctl", QStringList() << "--user" << "restart" << "gvfs-daemon.service");
 }
 
 void SessionApplication::updateIdleDelay(){
