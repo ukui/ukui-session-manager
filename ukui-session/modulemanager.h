@@ -51,12 +51,15 @@ public:
 
     void startup();
 
+    void startupfinished(const QString& appName ,const QString& string);
+
     // Qt5 users native event filter
     bool nativeEventFilter(const QByteArray &eventType, void* message, long* result) override;
 
 public slots:
     void logout(bool doExit);
     void timerUpdate();
+    void timeup();
 
 Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
@@ -65,6 +68,9 @@ Q_SIGNALS:
 private:
 
     QTimer *timer;
+    QTimer *tt;
+    bool runNum = true;
+    void startprotect();
     void playBootMusic();
     void startProcess(const XdgDesktopFile &file, bool required);
 

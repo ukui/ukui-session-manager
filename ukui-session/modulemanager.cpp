@@ -212,6 +212,14 @@ void ModuleManager::constructStartupList()
  *  Application
  *
  */
+
+void ModuleManager::startprotect(){
+    tt = new QTimer();
+    tt->setSingleShot(true);
+    connect(tt,SIGNAL(timeout()),this,SLOT(timeup()));
+    tt->start(2*1000);
+}
+
 void ModuleManager::startup()
 {
     qDebug() << "Start Initialization app: ";
@@ -222,9 +230,14 @@ void ModuleManager::startup()
     {
         qDebug() << "Start window manager: " << mWindowManager.name();
         startProcess(mWindowManager, true);
+        startprotect();
 
-        QTimer::singleShot(1000, this, [&]()
+        connect(this, &ModuleManager::finished, [&]()
         {
+            if(runNum == false)
+                return;
+            runNum = false;
+            tt->stop();
             qDebug() << "Start file manager: " << mFileManager.name();
             startProcess(mFileManager, true);
 
@@ -341,7 +354,7 @@ bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitStatus)
 {
     UkuiModule* proc = qobject_cast<UkuiModule*>(sender());
-    if (proc->restartNum > 10) {
+    if (proc->restartNum > 0) {
         mNameMap.remove(proc->fileName);
         disconnect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), nullptr, nullptr);
         proc->deleteLater();
@@ -375,6 +388,16 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
     }
     mNameMap.remove(proc->fileName);
     proc->deleteLater();
+}
+
+void ModuleManager::startupfinished(const QString& appName , const QString& string ){
+    qDebug() << "moudle :" + appName + "startup finished, and it want to say " + string;
+    emit finished();
+}
+
+void ModuleManager::timeup(){
+    qDebug() << "超时";
+    emit finished();
 }
 
 void ModuleManager::logout(bool doExit)

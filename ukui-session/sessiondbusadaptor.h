@@ -42,6 +42,11 @@ Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
 
 public slots:
+    void startupfinished(const QString& appName ,const QString& string)
+    {
+        return mManager->startupfinished(appName,string);
+    }
+
     bool canLogout()
     {
         return true;
