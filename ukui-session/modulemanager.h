@@ -51,6 +51,8 @@ public:
 
     void startup();
 
+    void doStart();
+
     void startupfinished(const QString& appName ,const QString& string);
 
     // Qt5 users native event filter

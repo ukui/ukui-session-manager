@@ -217,7 +217,23 @@ void ModuleManager::startprotect(){
     tt = new QTimer();
     tt->setSingleShot(true);
     connect(tt,SIGNAL(timeout()),this,SLOT(timeup()));
-    tt->start(2*1000);
+    tt->start(1*1000);
+}
+
+void ModuleManager::doStart(){
+    qDebug() << "Start file manager: " << mFileManager.name();
+    startProcess(mFileManager, true);
+
+    qDebug() << "Start panel: " << mPanel.name();
+    startProcess(mPanel, true);
+
+    playBootMusic();
+
+    //qDebug() << "wait for ukui-settings-daemon start-up";
+    timer = new QTimer();
+    timer->setSingleShot(true);
+    connect(timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
+    timer->start(3000);
 }
 
 void ModuleManager::startup()
@@ -229,29 +245,24 @@ void ModuleManager::startup()
     QTimer::singleShot(1000, this, [&]()
     {
         qDebug() << "Start window manager: " << mWindowManager.name();
-        startProcess(mWindowManager, true);
-        startprotect();
-
-        connect(this, &ModuleManager::finished, [&]()
-        {
-            if(runNum == false)
-                return;
-            runNum = false;
-            tt->stop();
-            qDebug() << "Start file manager: " << mFileManager.name();
-            startProcess(mFileManager, true);
-
-            qDebug() << "Start panel: " << mPanel.name();
-            startProcess(mPanel, true);
-
-            playBootMusic();
-
-            //qDebug() << "wait for ukui-settings-daemon start-up";
-            timer = new QTimer();
-            timer->setSingleShot(true);
-            connect(timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
-            timer->start(3000);
-        });
+        if(mWindowManager.name() == "UKUI-KWin"){
+            connect(this, &ModuleManager::finished, [&]()
+            {
+                if(runNum == false)
+                    return;
+                runNum = false;
+                tt->stop();
+                doStart();
+            });
+            startProcess(mWindowManager, true);
+            startprotect();
+        }else{
+            startProcess(mWindowManager, true);
+            QTimer::singleShot(1000, this, [&]()
+            {
+                doStart();
+            });
+        }
     });
 }
 
@@ -350,7 +361,7 @@ bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitStatus)
 {
     UkuiModule* proc = qobject_cast<UkuiModule*>(sender());
-    if (proc->restartNum > 0) {
+    if (proc->restartNum > 10) {
         mNameMap.remove(proc->fileName);
         disconnect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), nullptr, nullptr);
         proc->deleteLater();
