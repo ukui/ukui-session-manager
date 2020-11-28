@@ -153,10 +153,10 @@ void ModuleManager::constructStartupList()
     }
 
     for (const XdgDesktopFile& file : files) {
-	if (QFileInfo(file.fileName()).fileName() == window_manager){
-	    mWindowManager = file;
-	    wm_found = true;
-	}
+        if (QFileInfo(file.fileName()).fileName() == window_manager){
+            mWindowManager = file;
+            wm_found = true;
+        }
     }
 
     //配置文件所给的窗口管理器找不到.desktop文件时，将所给QString设为可执行命令，创建一个desktop文件赋给mWindowManager
@@ -213,11 +213,48 @@ void ModuleManager::constructStartupList()
  *
  */
 
-void ModuleManager::startprotect(){
-    tt = new QTimer();
-    tt->setSingleShot(true);
-    connect(tt,SIGNAL(timeout()),this,SLOT(timeup()));
-    tt->start(1*1000);
+bool ModuleManager::startWmTimer(int i){
+    qDebug() << "startprotect";
+    twm = new QTimer();
+    twm->setSingleShot(true);
+    connect(twm,SIGNAL(timeout()),this,SLOT(timeup()));
+    twm->start(i*1000);
+}
+
+bool ModuleManager::startPanelTimer(int i){
+    tpanel = new QTimer();
+    tpanel->setSingleShot(true);
+    connect(tpanel,SIGNAL(timeout()),this,SLOT(timeup()));
+    tpanel->start(i*1000);
+}
+
+void ModuleManager::startupfinished(const QString& appName , const QString& string ){
+    qDebug() << "moudle :" + appName + "startup finished, and it want to say " + string;
+    if(appName == "ukui-kwin"){
+        if(runWm == false)
+            disconnect(this, &ModuleManager::wmfinished,0,0);
+        emit wmfinished();
+        return;
+    }
+    if(appName == "ukui-panel"){
+        if(runPanel == false)
+            disconnect(this, &ModuleManager::panelfinished,0,0);
+        emit panelfinished();
+        return;
+    }
+}
+
+void ModuleManager::timeup(){
+    qDebug() << execAppName + "启动超时";
+    if(execAppName == "ukui-kwin"){
+        emit wmfinished();
+        return;
+    }
+    if(execAppName == "ukui-panel"){
+        qDebug() <<"panel超时";
+        emit panelfinished();
+        return;
+    }
 }
 
 void ModuleManager::doStart(){
@@ -225,15 +262,12 @@ void ModuleManager::doStart(){
     startProcess(mFileManager, true);
 
     qDebug() << "Start panel: " << mPanel.name();
+    execAppName = "ukui-panel";
+    connect(this, &ModuleManager::panelfinished,this,&ModuleManager::timerUpdate);
     startProcess(mPanel, true);
+    startPanelTimer(3);
 
     playBootMusic();
-
-    //qDebug() << "wait for ukui-settings-daemon start-up";
-    timer = new QTimer();
-    timer->setSingleShot(true);
-    connect(timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
-    timer->start(3000);
 }
 
 void ModuleManager::startup()
@@ -246,16 +280,17 @@ void ModuleManager::startup()
     {
         qDebug() << "Start window manager: " << mWindowManager.name();
         if(mWindowManager.name() == "UKUI-KWin"){
-            connect(this, &ModuleManager::finished, [&]()
+            connect(this, &ModuleManager::wmfinished, [&]()
             {
-                if(runNum == false)
+                twm->stop();
+                if(runWm == false)
                     return;
-                runNum = false;
-                tt->stop();
+                runWm = false;
                 doStart();
             });
             startProcess(mWindowManager, true);
-            startprotect();
+            execAppName = "ukui-kwin";
+            startWmTimer(1);
         }else{
             startProcess(mWindowManager, true);
             QTimer::singleShot(1000, this, [&]()
@@ -267,8 +302,11 @@ void ModuleManager::startup()
 }
 
 void ModuleManager::timerUpdate(){
-    timer->stop();
-    delete timer;
+    //endprotect();
+    tpanel->stop();
+    if(runPanel == false)
+        return;
+    runPanel = false;
 
     qDebug() << "Start desktop: ";
     for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
@@ -395,16 +433,6 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
     }
     mNameMap.remove(proc->fileName);
     proc->deleteLater();
-}
-
-void ModuleManager::startupfinished(const QString& appName , const QString& string ){
-    qDebug() << "moudle :" + appName + "startup finished, and it want to say " + string;
-    emit finished();
-}
-
-void ModuleManager::timeup(){
-    qDebug() << "超时";
-    emit finished();
 }
 
 void ModuleManager::logout(bool doExit)
