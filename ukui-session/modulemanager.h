@@ -65,14 +65,18 @@ public slots:
 
 Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
-    void finished();
+    void wmfinished();
+    void panelfinished();
 
 private:
+    QTimer *twm = nullptr;
+    QTimer *tpanel = nullptr;
+    bool startWmTimer(int i);
+    bool startPanelTimer(int i);
 
-    QTimer *timer;
-    QTimer *tt;
-    bool runNum = true;
-    void startprotect();
+    QString execAppName = NULL;
+    bool runWm = true;
+    bool runPanel = true;
     void playBootMusic();
     void startProcess(const XdgDesktopFile &file, bool required);
 
