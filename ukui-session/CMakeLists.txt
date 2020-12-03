@@ -16,6 +16,8 @@ set(ukui-session_SRCS
     xdgdirs.cpp
     xdgdirs.h
     xdgmacros.h
+#    usminhibit.cpp
+#    usminhibit.h
     ../tools/ukuipower.cpp
     ../tools/powerprovider.cpp
 )
