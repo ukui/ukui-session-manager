@@ -9,20 +9,12 @@ public:
     inhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags ,quint32 cookie ,QString inhibitorName);
     ~inhibit();
 
-    QString get_app_id();
-    quint32 get_toplevel_xid();
-    QString get_reason();
-    quint32 get_flags();
-    quint32 get_cookie();
-    QString get_inhibitorName();
-
-private:
     QString app_id;
     quint32 toplevel_xid;
     QString reason;
     quint32 flags;
     quint32 cookie;
-    QString inhibitorName = "";
+    QString inhibitorName;
 };
 
 class usminhibit
@@ -43,7 +35,7 @@ public:
     QHash<quint32 , inhibit> hash;
 
     quint32 addinhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags);
-    bool uninhibit(quint32 cookie);
+    uint uninhibit(quint32 cookie);
     QStringList getinhibitor();
 
 private:
