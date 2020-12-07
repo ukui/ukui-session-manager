@@ -12,15 +12,15 @@
 
 window::window()
 {
-    QString path = "/tmp/greeter-background.conf";
+    //QString path = "/tmp/greeter-background.conf";
     QString fullstr;
-    QFile file(path);
+    //QFile file(path);
     const QByteArray id(BACKGROUND_SETTINGS);
-    if(file.exists()){
-        QSettings qset(path,QSettings::NativeFormat);
-        fullstr = qset.value("Greeter").toString();
-    }
-    else if (QGSettings::isSchemaInstalled(id)) {
+//    if(file.exists()){
+//        QSettings qset(path,QSettings::NativeFormat);
+//        fullstr = qset.value("Greeter").toString();
+//    }
+    if (QGSettings::isSchemaInstalled(id)) {
         QGSettings *gset = new QGSettings(BACKGROUND_SETTINGS,"",this);
         fullstr = gset->get("picture-filename").toString();
     }else
