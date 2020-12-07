@@ -76,19 +76,20 @@ MainWindow::MainWindow(QWidget *parent)
     timer(new QTimer()),
     xEventMonitor(new XEventMonitor(this))
 {
-    const QByteArray id(BACKGROUND_SETTINGS);
-    if (QGSettings::isSchemaInstalled(id)) {
-        QGSettings *gset = new QGSettings(BACKGROUND_SETTINGS,"",this);
-        QString fullstr = gset->get("picture-filename").toString();
-        QFileInfo fileInfo(fullstr);
-        if(fileInfo.isFile()){
-            pix.load(fullstr);
-            pix = blurPixmap(pix);
-            gset->deleteLater();
-        }else
-            pix.load(":/images/background-ukui.png");
-    }else
-        pix.load(":/images/background-ukui.png");
+//    const QByteArray id(BACKGROUND_SETTINGS);
+//    if (QGSettings::isSchemaInstalled(id)) {
+//        QGSettings *gset = new QGSettings(BACKGROUND_SETTINGS,"",this);
+//        QString fullstr = gset->get("picture-filename").toString();
+//        QFileInfo fileInfo(fullstr);
+//        if(fileInfo.isFile()){
+//            pix.load(fullstr);
+//            pix = blurPixmap(pix);
+//            gset->deleteLater();
+//        }else
+//            pix.load(":/images/background-ukui.png");
+//    }else
+//        pix.load(":/images/background-ukui.png");
+    pix.load(":/images/background-ukui.png");
 
     ui->setupUi(this);
     ui->switchuser->installEventFilter(this);

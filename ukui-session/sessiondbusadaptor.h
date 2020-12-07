@@ -23,6 +23,7 @@
 #include <QtDBus>
 #include "../tools/ukuipower.h"
 #include "modulemanager.h"
+#include "usminhibit.h"
 
 class SessionDBusAdaptor : public QDBusAbstractAdaptor
 {
@@ -33,13 +34,16 @@ public:
     SessionDBusAdaptor(ModuleManager *manager)
         : QDBusAbstractAdaptor(manager),
           mManager(manager),
-          mPower(new UkuiPower())
+          mPower(new UkuiPower()),
+          minhibit(new usminhibit())
     {
         connect(mManager, &ModuleManager::moduleStateChanged, this , &SessionDBusAdaptor::moduleStateChanged);
     }
 
 Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
+    void inhibitadded(quint32 flags);
+    void inhibitremove(quint32 flags);
 
 public slots:
     void startupfinished(const QString& appName ,const QString& string)
@@ -100,9 +104,45 @@ public slots:
         mManager->stopProcess(name);
     }
 
+    uint Inhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
+    {
+        uint result = minhibit->addinhibit(app_id,toplevel_xid,reason,flags);
+        if(result < 0){
+            return 0;
+        }
+        emit inhibitadded(flags);
+        return result;
+    }
+
+    Q_NOREPLY void Uninhibit(uint cookie){
+        uint result = minhibit->uninhibit(cookie);
+        if(result > 0){
+            emit inhibitremove(result);
+        }
+    }
+
+    QStringList GetInhibitors(){
+        return minhibit->getinhibitor();
+    }
+
+    bool IsSessionRunning(){
+        QString xdg_session_desktop = qgetenv("XDG_SESSION_DESKTOP").toLower();
+        if(xdg_session_desktop == "ukui")
+            return true;
+        return false;
+    }
+
+    QString GetSessionName(){
+        QString xdg_session_desktop = qgetenv("XDG_SESSION_DESKTOP").toLower();
+        if(xdg_session_desktop == "ukui")
+            return "ukui-session";
+        return "error";
+    }
+
 private:
     ModuleManager *mManager;
     UkuiPower *mPower;
+    usminhibit *minhibit;
 };
 
 #endif // SESSIONDBUSADAPTOR_H

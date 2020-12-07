@@ -24,6 +24,7 @@
 #include "idlewatcher.h"
 
 #include <KIdleTime>
+#include <QDBusInterface>
 #include <QDebug>
 
 IdleWatcher::IdleWatcher(int secs, QObject *parent) :
@@ -40,11 +41,37 @@ IdleWatcher::IdleWatcher(int secs, QObject *parent) :
             &IdleWatcher::timeoutReached);
 
     setup();
+
+    QDBusInterface *interface = new QDBusInterface(
+                "org.gnome.SessionManager",
+                "/org/gnome/SessionManager",
+                "org.gnome.SessionManager",
+                QDBusConnection::sessionBus());
+
+    connect(interface, SIGNAL(inhibitadded(quint32)),this, SLOT(addflags(quint32)));
+    connect(interface, SIGNAL(inhibitremove(quint32)),this, SLOT(removeflags(quint32)));
+
+    num = 0;
 }
 
 IdleWatcher::~IdleWatcher()
 {
     KIdleTime::instance()->removeAllIdleTimeouts();
+}
+
+void IdleWatcher::addflags(uint flags){
+    if((flags & 8) == 8){
+        num ++;
+    }
+}
+
+void IdleWatcher::removeflags(uint flags){
+    if(num < 0){
+        return;
+    }
+    if((flags & 8) == 8){
+        num--;
+    }
 }
 
 void IdleWatcher::setup()
@@ -54,9 +81,15 @@ void IdleWatcher::setup()
 
 void IdleWatcher::timeoutReached(int identifier)
 {
-    KIdleTime::instance()->catchNextResumeEvent();
-    qDebug() << "Timeout Reached, emit StatusChanged 3 signal!";
-    emit StatusChanged(3);
+    if(num > 0){
+        qDebug() <<"some applications inhibit idle.";
+        return;
+    }
+    if(num == 0){
+        KIdleTime::instance()->catchNextResumeEvent();
+        qDebug() << "Timeout Reached, emit StatusChanged 3 signal!";
+        emit StatusChanged(3);
+    }
 }
 
 void IdleWatcher::resumingFromIdle(){

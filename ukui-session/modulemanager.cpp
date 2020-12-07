@@ -33,6 +33,7 @@
 #include <QGSettings/QGSettings>
 #include <QThread>
 #include <QSoundEffect>
+#include <QDBusInterface>
 /* qt会将glib里的signals成员识别为宏，所以取消该宏
  * 后面如果用到signals时，使用Q_SIGNALS代替即可
  **/
@@ -219,6 +220,7 @@ bool ModuleManager::startWmTimer(int i){
     twm->setSingleShot(true);
     connect(twm,SIGNAL(timeout()),this,SLOT(timeup()));
     twm->start(i*1000);
+    return true;
 }
 
 bool ModuleManager::startPanelTimer(int i){
@@ -226,6 +228,7 @@ bool ModuleManager::startPanelTimer(int i){
     tpanel->setSingleShot(true);
     connect(tpanel,SIGNAL(timeout()),this,SLOT(timeup()));
     tpanel->start(i*1000);
+    return true;
 }
 
 void ModuleManager::startupfinished(const QString& appName , const QString& string ){
@@ -441,32 +444,39 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
 
 void ModuleManager::logout(bool doExit)
 {
+    QString session_id =  qgetenv("XDG_SESSION_ID");
+    qDebug() << "session_id: " + session_id;
+    QDBusInterface face("org.freedesktop.login1",\
+                             "/org/freedesktop/login1/session/" + session_id,\
+                             "org.freedesktop.login1.Session",\
+                             QDBusConnection::systemBus());
     ModulesMapIterator i(mNameMap);
-    UkuiModule *winman;
+//    UkuiModule *winman;
     while (i.hasNext()) {
         i.next();
         qDebug() << "Module logout" << i.key();
         UkuiModule *p = i.value();
-        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
-            winman = p;
-            continue;
-        }
+//        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
+//            winman = p;
+//            continue;
+//        }
         p->terminate();
     }
-    i.toFront();
-    while (i.hasNext()) {
-        i.next();
-        UkuiModule *p = i.value();
-        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
-            continue;
-        }
-        if (p->state() != QProcess::NotRunning && !p->waitForFinished(200)) {
-            qWarning() << "Module " << qPrintable(i.key()) << " won't termiante .. killing.";
-            p->kill();
-        }
-    }
-    winman->terminate();
+//    i.toFront();
+//    while (i.hasNext()) {
+//        i.next();
+//        UkuiModule *p = i.value();
+//        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
+//            continue;
+//        }
+//        if (p->state() != QProcess::NotRunning && !p->waitForFinished(200)) {
+//            qWarning() << "Module " << qPrintable(i.key()) << " won't termiante .. killing.";
+//            p->kill();
+//        }
+//    }
+    //winman->terminate();
 
+    face.call("Terminate");
     if (doExit) {
         //QCoreApplication::exit(0);
         exit(0);
