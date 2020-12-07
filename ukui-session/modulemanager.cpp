@@ -293,7 +293,7 @@ void ModuleManager::startup()
             });
             startProcess(mWindowManager, true);
             execAppName = "ukui-kwin";
-            startWmTimer(1);
+            startWmTimer(18);
         }else{
             startProcess(mWindowManager, true);
             QTimer::singleShot(1000, this, [&]()
