@@ -120,16 +120,9 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
         gsettings_usable = false;
     }
 
-    QProcess *win = new QProcess(this);
-    QStringList args;
-    QString arg = "--window";
-    args.append(arg);
-    win->start("ukui-session-tools",args);
-
     InitialEnvironment();
 
     modman = new ModuleManager();
-    connect(modman, &ModuleManager::finished, win,&QProcess::terminate);
 
 
     // Wait until the event loop starts
