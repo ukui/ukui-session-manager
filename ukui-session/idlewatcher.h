@@ -25,6 +25,7 @@
 #define IDLEWATCHER_H
 
 #include <QObject>
+#include <QDBusInterface>
 
 
 //class ScreenSaver;
@@ -37,16 +38,12 @@ public:
     virtual ~IdleWatcher();
 
     void reset(int timeout);
-
-    int num;
+    QDBusInterface *interface;
 
 private slots:
     void resumingFromIdle();
     void timeoutReached(int identifier);
     void setup();
-
-    void addflags(uint flags);
-    void removeflags(uint flags);
 
 Q_SIGNALS:
     void StatusChanged(uint status);

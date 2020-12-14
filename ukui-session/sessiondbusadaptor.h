@@ -139,6 +139,10 @@ public slots:
         return "error";
     }
 
+    bool IsInhibited(quint32 flags){
+        return minhibit->IsInhibited(flags);
+    }
+
 private:
     ModuleManager *mManager;
     UkuiPower *mPower;
