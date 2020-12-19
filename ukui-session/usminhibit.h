@@ -21,12 +21,13 @@ class usminhibit
 {
     //Q_OBJECT
 public:
-//    enum InhibitorFlag{
-//        GSM_INHIBITOR_FLAG_LOGOUT      = 1 << 0,
-//        GSM_INHIBITOR_FLAG_SWITCH_USER = 1 << 1,
-//        GSM_INHIBITOR_FLAG_SUSPEND     = 1 << 2,
-//        GSM_INHIBITOR_FLAG_IDLE        = 1 << 3
-//    }
+
+    enum InhibitorFlag{
+        GSM_INHIBITOR_FLAG_LOGOUT      = 1 << 0,
+        GSM_INHIBITOR_FLAG_SWITCH_USER = 1 << 1,
+        GSM_INHIBITOR_FLAG_SUSPEND     = 1 << 2,
+        GSM_INHIBITOR_FLAG_IDLE        = 1 << 3
+    };
     usminhibit();
 
     int inhibitor_serial;
@@ -37,6 +38,12 @@ public:
     quint32 addinhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags);
     uint uninhibit(quint32 cookie);
     QStringList getinhibitor();
+    bool IsInhibited(quint32 flags);
+
+    int inhibit_logout_num;
+    int inhibit_switchuser_num;
+    int inhibit_suspend_num;
+    int inhibit_idle_num;
 
 private:
     //QDBusInterface dbus;

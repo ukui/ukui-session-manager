@@ -41,6 +41,11 @@
       <summary>Time before session is considered idle</summary>
       <description>The number of minutes of inactivity before the session is considered idle.</description>
     </key>
+    <key name="power-delay" type="i">
+      <default>5</default>
+      <summary>Time before session is considered idle for powermanager</summary>
+      <description>The number of minutes of inactivity before the session is considered idle for powermanager.</description>
+    </key>
     <key name="canhibernate" type="b">
       <default>false</default>
       <summary>Can Hibernate</summary>

@@ -75,8 +75,9 @@ void SessionApplication::InitialEnvironment()
 
 void SessionApplication::updateIdleDelay(){
     if (gsettings_usable) {
-        const int time = gs->get("idle-delay").toInt() * 60;
-        mIdleWatcher->reset(time);
+        const int idle = gs->get("idle-delay").toInt() * 60;
+        const int power = gs->get("power-delay").toInt() * 60;
+        mIdleWatcher->reset(idle,power);
     }
 }
 
@@ -92,14 +93,16 @@ void SessionApplication::registerDBus()
                     << "/org/gnome/SessionManager";
     }
 
-    int timeout;
+    int idle = 5 * 60;
+    int power = 5 * 60;
+
     if (gsettings_usable) {
-        timeout = gs->get("idle-delay").toInt() * 60;
+        idle = gs->get("idle-delay").toInt() * 60;
+        power = gs->get("power-delay").toInt() * 60;
         connect(gs, &QGSettings::changed, this, &SessionApplication::updateIdleDelay);
-    } else {
-        timeout = 5 * 60;
     }
-    mIdleWatcher = new IdleWatcher(timeout);
+
+    mIdleWatcher = new IdleWatcher(idle,power);
     new IdleDBusAdaptor(mIdleWatcher);
     if (!dbus.registerObject("/org/gnome/SessionManager/Presence", mIdleWatcher)) {
         qCritical() << "Cant' register object, there is already an object registered at "
@@ -120,16 +123,9 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
         gsettings_usable = false;
     }
 
-    QProcess *win = new QProcess(this);
-    QStringList args;
-    QString arg = "--window";
-    args.append(arg);
-    win->start("ukui-session-tools",args);
-
     InitialEnvironment();
 
     modman = new ModuleManager();
-    connect(modman, &ModuleManager::finished, win,&QProcess::terminate);
 
 
     // Wait until the event loop starts

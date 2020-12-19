@@ -36,9 +36,35 @@ usminhibit::usminhibit()
 //                              "org.gnome.SessionManager",
 //                              QDBusConnection::sessionBus());
     inhibitor_serial = 1;//默认inhibitor序号从1开始
+
+    inhibit_logout_num = 0;
+    inhibit_switchuser_num = 0;
+    inhibit_suspend_num = 0;
+    inhibit_idle_num = 0;
 }
 
 usminhibit::~usminhibit(){}
+
+bool usminhibit::IsInhibited(quint32 flags){
+    bool isinhib = false;
+    if ((flags & GSM_INHIBITOR_FLAG_LOGOUT) == GSM_INHIBITOR_FLAG_LOGOUT){
+        if(inhibit_logout_num > 0)
+            isinhib = true;
+    }
+    if ((flags & GSM_INHIBITOR_FLAG_SWITCH_USER) == GSM_INHIBITOR_FLAG_SWITCH_USER){
+        if(inhibit_switchuser_num > 0)
+            isinhib = true;
+    }
+    if ((flags & GSM_INHIBITOR_FLAG_SUSPEND) == GSM_INHIBITOR_FLAG_SUSPEND){
+        if(inhibit_suspend_num > 0)
+            isinhib = true;
+    }
+    if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE){
+        if(inhibit_idle_num > 0)
+            isinhib = true;
+    }
+    return isinhib;
+}
 
 quint32 usminhibit::addinhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags){
     if(app_id.isEmpty()){
@@ -48,6 +74,27 @@ quint32 usminhibit::addinhibit(QString app_id, quint32 toplevel_xid, QString rea
         return -1;
     }
     if(flags == 0){
+        return -1;
+    }
+
+    bool flag = false;
+    if ((flags & GSM_INHIBITOR_FLAG_LOGOUT) == GSM_INHIBITOR_FLAG_LOGOUT){
+        inhibit_logout_num++;
+        flag = true;
+    }
+    if ((flags & GSM_INHIBITOR_FLAG_SWITCH_USER) == GSM_INHIBITOR_FLAG_SWITCH_USER){
+        inhibit_switchuser_num++;
+        flag = true;
+    }
+    if ((flags & GSM_INHIBITOR_FLAG_SUSPEND) == GSM_INHIBITOR_FLAG_SUSPEND){
+        inhibit_suspend_num++;
+        flag = true;
+    }
+    if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE){
+        inhibit_idle_num++;
+        flag = true;
+    }
+    if(flag == false){
         return -1;
     }
 
@@ -73,6 +120,21 @@ uint usminhibit::uninhibit(quint32 cookie){
     while (i != hash.end() && i.key() == cookie) {
         flags = i->flags;
         i = hash.erase(i);
+    }
+    if(flags == 0){
+        return flags;
+    }
+    if ((flags & GSM_INHIBITOR_FLAG_LOGOUT) == GSM_INHIBITOR_FLAG_LOGOUT){
+        inhibit_logout_num--;
+    }
+    if ((flags & GSM_INHIBITOR_FLAG_SWITCH_USER) == GSM_INHIBITOR_FLAG_SWITCH_USER){
+        inhibit_switchuser_num--;
+    }
+    if ((flags & GSM_INHIBITOR_FLAG_SUSPEND) == GSM_INHIBITOR_FLAG_SUSPEND){
+        inhibit_suspend_num--;
+    }
+    if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE){
+        inhibit_idle_num--;
     }
     return flags;
 }
