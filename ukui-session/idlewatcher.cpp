@@ -86,7 +86,8 @@ void IdleWatcher::timeoutReached(int identifier , int timeout)
         if(timeout == 1000 * mSecsidle){
             qDebug() << "idle Timeout Reached, emit StatusChanged 3 signal!";
             emit StatusChanged(3);
-        }else if(timeout == 1000 * mSecspower){
+        }
+        if(timeout == 1000 * mSecspower){
             qDebug() << "power Timeout Reached, emit StatusChanged 5 signal!";
             emit StatusChanged(5);
         }
