@@ -44,26 +44,26 @@
 
 #define PROPERTIES_INTERFACE    "org.freedesktop.DBus.Properties"
 
-bool messageboxcheck(){
-    QMessageBox msgBox;
-    msgBox.setWindowTitle(tr("conform"));
-    msgBox.setText(tr("some applications are running and they dont want you to do this."));
-    QPushButton *stillButton = msgBox.addButton(tr("Still to do!"), QMessageBox::ActionRole);
-    QPushButton *giveupButton = msgBox.addButton(tr("give up"), QMessageBox::ActionRole);
-    QPushButton *abortButton = msgBox.addButton(QMessageBox::Abort);
+//bool messageboxcheck(){
+//    QMessageBox msgBox;
+//    msgBox.setWindowTitle(tr("conform"));
+//    msgBox.setText(tr("some applications are running and they dont want you to do this."));
+//    QPushButton *stillButton = msgBox.addButton(tr("Still to do!"), QMessageBox::ActionRole);
+//    QPushButton *giveupButton = msgBox.addButton(tr("give up"), QMessageBox::ActionRole);
+//    QPushButton *abortButton = msgBox.addButton(QMessageBox::Abort);
 
-    msgBox.exec();
+//    msgBox.exec();
 
-    if (msgBox.clickedButton() == stillButton) {
-        qDebug()<<"Still to do!";
-        return true;
-    } else if (msgBox.clickedButton() == giveupButton) {
-        qDebug()<<"give up";
-        return false;
-    }else if (msgBox.clickedButton() == abortButton) {
-        msgBox.close();
-    }
-}
+//    if (msgBox.clickedButton() == stillButton) {
+//        qDebug()<<"Still to do!";
+//        return true;
+//    } else if (msgBox.clickedButton() == giveupButton) {
+//        qDebug()<<"give up";
+//        return false;
+//    }else if (msgBox.clickedButton() == abortButton) {
+//        msgBox.close();
+//    }
+//}
 
 static bool dbusCall(const QString &service,
                      const QString &path,
