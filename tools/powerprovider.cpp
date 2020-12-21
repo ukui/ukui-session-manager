@@ -30,6 +30,9 @@
 #include <unistd.h>
 
 #include <QMessageBox>
+#include <QPushButton>
+#include <QObject>
+#include <QDBusReply>
 
 #define LIGHTDM_SERVICE     "org.freedesktop.DisplayManager"
 #define LIGTHDM_INTERFACE   "org.freedesktop.DisplayManager.Seat"
@@ -44,26 +47,27 @@
 
 #define PROPERTIES_INTERFACE    "org.freedesktop.DBus.Properties"
 
-//bool messageboxcheck(){
-//    QMessageBox msgBox;
-//    msgBox.setWindowTitle(tr("conform"));
-//    msgBox.setText(tr("some applications are running and they dont want you to do this."));
-//    QPushButton *stillButton = msgBox.addButton(tr("Still to do!"), QMessageBox::ActionRole);
-//    QPushButton *giveupButton = msgBox.addButton(tr("give up"), QMessageBox::ActionRole);
-//    QPushButton *abortButton = msgBox.addButton(QMessageBox::Abort);
+bool messageboxcheck(){
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(QObject::tr("conform"));
+    msgBox.setText(QObject::tr("some applications are running and they dont want you to do this."));
+    QPushButton *stillButton = msgBox.addButton(QObject::tr("Still to do!"), QMessageBox::ActionRole);
+    QPushButton *giveupButton = msgBox.addButton(QObject::tr("give up"), QMessageBox::ActionRole);
+    QPushButton *abortButton = msgBox.addButton(QMessageBox::Abort);
 
-//    msgBox.exec();
+    msgBox.exec();
 
-//    if (msgBox.clickedButton() == stillButton) {
-//        qDebug()<<"Still to do!";
-//        return true;
-//    } else if (msgBox.clickedButton() == giveupButton) {
-//        qDebug()<<"give up";
-//        return false;
-//    }else if (msgBox.clickedButton() == abortButton) {
-//        msgBox.close();
-//    }
-//}
+    if (msgBox.clickedButton() == stillButton) {
+        qDebug()<<"Still to do!";
+        return true;
+    } else if (msgBox.clickedButton() == giveupButton) {
+        qDebug()<<"give up";
+        return false;
+    }else if (msgBox.clickedButton() == abortButton) {
+        return false;
+        msgBox.close();
+    }
+}
 
 static bool dbusCall(const QString &service,
                      const QString &path,
@@ -112,7 +116,13 @@ static bool dbusCallSystemd(const QString &service,
 
     QString response = msg.arguments().constFirst().toString();
     qDebug() << "systemd:" << method << "=" << response;
-    return response == QLatin1String("yes") || response == QLatin1String("challenge");
+
+    //this need to be resolved:
+    //while canReboot and canPoweroff return challenge,users click Reboot or shutdown,
+    //we call logout ,then Reboot(true) and Poweroff(true) is called,
+    //if user click cancel in the polkit messagebox,then Reboot or Poweroff is canceled,
+    //but logout has been executed.
+    return response == QLatin1String("yes"); //|| response == QLatin1String("challenge");
 }
 
 bool dbusGetProperty(const QString &service,
@@ -174,13 +184,38 @@ bool SystemdProvider::canSwitchUser() const
 
     return ret>0;
     */
-    QString property = "CanSwitch";
-    QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
-    return dbusGetProperty(QLatin1String(LIGHTDM_SERVICE),
-                           xdg_seat_path,
-                           QLatin1String(LIGTHDM_INTERFACE),
-                           QDBusConnection::systemBus(),
-                           property);
+
+//    bool isinhibited =false;
+//    QDBusInterface *interface = new QDBusInterface(
+//                "org.gnome.SessionManager",
+//                "/org/gnome/SessionManager",
+//                "org.gnome.SessionManager",
+//                QDBusConnection::sessionBus());
+//    quint32 inhibit_switchuser = 2;
+//    QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_switchuser);
+//    if (reply.isValid()){
+//        // use the returned value
+//        qDebug()<<"Is inhibit by someone: "<<reply.value();
+//        isinhibited = reply.value();
+//    }
+//    else{
+//        qDebug()<<reply.value();
+//    }
+
+//    if(isinhibited == true){
+//        isinhibited = !messageboxcheck();
+//    }
+
+//    if(isinhibited == false){
+//        QString property = "CanSwitch";
+//        QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
+//        return dbusGetProperty(QLatin1String(LIGHTDM_SERVICE),
+//                               xdg_seat_path,
+//                               QLatin1String(LIGTHDM_INTERFACE),
+//                               QDBusConnection::systemBus(),
+//                               property);
+//    }
+    return true;
 }
 
 bool SystemdProvider::canAction(UkuiPower::Action action) const
@@ -224,13 +259,37 @@ bool SystemdProvider::canAction(UkuiPower::Action action) const
 
 bool SystemdProvider::doSwitchUser()
 {
-    QString command = "SwitchToGreeter";
-    QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
-    return dbusCall(QLatin1String(LIGHTDM_SERVICE),
-                    xdg_seat_path,
-                    QLatin1String(LIGTHDM_INTERFACE),
-                    QDBusConnection::systemBus(),
-                    command);
+    bool isinhibited =false;
+    QDBusInterface *interface = new QDBusInterface(
+                "org.gnome.SessionManager",
+                "/org/gnome/SessionManager",
+                "org.gnome.SessionManager",
+                QDBusConnection::sessionBus());
+    quint32 inhibit_switchuser = 2;
+    QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_switchuser);
+    if (reply.isValid()){
+        // use the returned value
+        qDebug()<<"Is inhibit by someone: "<<reply.value();
+        isinhibited = reply.value();
+    }
+    else{
+        qDebug()<<reply.value();
+    }
+
+    if(isinhibited == true){
+        isinhibited = !messageboxcheck();
+    }
+
+    if(isinhibited == false){
+        QString command = "SwitchToGreeter";
+        QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
+        return dbusCall(QLatin1String(LIGHTDM_SERVICE),
+                        xdg_seat_path,
+                        QLatin1String(LIGTHDM_INTERFACE),
+                        QDBusConnection::systemBus(),
+                        command);
+    }
+    return false;
 }
 
 bool SystemdProvider::doAction(UkuiPower::Action action)
@@ -289,11 +348,34 @@ bool UKUIProvider::canAction(UkuiPower::Action action) const
         return false;
     }
 
-    return dbusCall(QLatin1String(UKUI_SERVICE),
-                    QLatin1String(UKUI_PATH),
-                    QLatin1String(UKUI_INTERFACE),
-                    QDBusConnection::sessionBus(),
-                    command);
+    bool isinhibited =false;
+    QDBusInterface *interface = new QDBusInterface(
+                "org.gnome.SessionManager",
+                "/org/gnome/SessionManager",
+                "org.gnome.SessionManager",
+                QDBusConnection::sessionBus());
+    quint32 inhibit_logout = 1;
+    QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_logout);
+    if (reply.isValid()){
+        // use the returned value
+        qDebug()<<"Is inhibit by someone: "<<reply.value();
+        isinhibited = reply.value();
+    }
+    else{
+        qDebug()<<reply.value();
+    }
+
+    if(isinhibited == true){
+        isinhibited = !messageboxcheck();
+    }
+
+    if(isinhibited == false){
+        return dbusCall(QLatin1String(UKUI_SERVICE),
+                        QLatin1String(UKUI_PATH),
+                        QLatin1String(UKUI_INTERFACE),
+                        QDBusConnection::sessionBus(),
+                        command);
+    }
 }
 
 bool UKUIProvider::doAction(UkuiPower::Action action)
