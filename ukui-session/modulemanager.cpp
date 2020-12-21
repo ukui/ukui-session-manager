@@ -472,8 +472,8 @@ void ModuleManager::logout(bool doExit)
 //    }
     //winman->terminate();
 
-    face.call("Terminate");
     if (doExit) {
+        face.call("Terminate");
         //QCoreApplication::exit(0);
         exit(0);
     }
