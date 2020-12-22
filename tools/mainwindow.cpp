@@ -89,7 +89,12 @@ MainWindow::MainWindow(QWidget *parent)
 //            pix.load(":/images/background-ukui.png");
 //    }else
 //        pix.load(":/images/background-ukui.png");
-    pix.load(":/images/background-ukui.png");
+    QFileInfo fileInfo("/usr/share/background/warty-final-ubuntukylin.jpg");
+    if(fileInfo.isFile() && fileInfo.exists()){
+        pix.load(fullstr);
+        pix = blurPixmap(pix);
+    }else
+        pix.load(":/images/background-ukui.png");
 
     ui->setupUi(this);
     ui->switchuser->installEventFilter(this);
