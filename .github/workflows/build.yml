@@ -23,7 +23,7 @@ jobs:
       - name: Refresh pacman repository
         run: pacman -Sy
       - name: Install build dependencies
-        run: pacman -S --noconfirm base-devel qt5-base kidletime peony qt5-multimedia xtrans cmake qt5-tools systemd-libs xdg-user-dirs glibc
+        run: pacman -S --noconfirm base-devel qt5-base kidletime peony qt5-multimedia xtrans cmake qt5-tools systemd-libs xdg-user-dirs glibc gsettings-qt  qt5-x11extras pkg-config libxtst
       - name: CMake configure & Make
         run: |
           mkdir build;
@@ -42,7 +42,7 @@ jobs:
       - name: Update apt repository
         run: apt-get update -y
       - name: Install build dependcies
-        run: apt-get install -y build-essential qt5-default qttools5-dev-tools cmake debhelper-compat cmake xdg-user-dirs libkf5idletime-dev libsystemd-dev qttools5-dev qtmultimedia5-dev libgsettings-qt-dev libqt5x11extras5-dev libxtst-dev
+        run: apt-get install -y build-essential qttools5-dev-tools cmake debhelper-compat cmake xdg-user-dirs libkf5idletime-dev libsystemd-dev qttools5-dev qtmultimedia5-dev libgsettings-qt-dev libqt5x11extras5-dev libxtst-dev pkg-config libx11-dev qtbase5-dev 
       - name: CMake configure & Make
         run: |
           mkdir build;
