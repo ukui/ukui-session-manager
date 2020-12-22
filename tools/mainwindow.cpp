@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent)
 //            pix.load(":/images/background-ukui.png");
 //    }else
 //        pix.load(":/images/background-ukui.png");
-    QString fullstr = "/usr/share/background/warty-final-ubuntukylin.jpg";
+    QString fullstr = "/usr/share/backgrounds/warty-final-ubuntukylin.jpg";
     QFileInfo fileInfo(fullstr);
     if(fileInfo.isFile() && fileInfo.exists()){
         pix.load(fullstr);
