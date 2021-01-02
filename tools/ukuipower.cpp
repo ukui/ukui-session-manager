@@ -1,4 +1,4 @@
-/* BEGIN_COMMON_COPYRIGHT_HEADER
+﻿/* BEGIN_COMMON_COPYRIGHT_HEADER
  * (c)LGPL2+
  * Copyright: 2019 Tianjin KYLIN Information Technology Co., Ltd.
  *            2012 Razor team
@@ -27,8 +27,8 @@
 
 UkuiPower::UkuiPower(QObject *parent) : QObject(parent)
 {
-    mProviders.append(new UKUIProvider(this));
     mProviders.append(new SystemdProvider(this));
+    mProviders.append(new UKUIProvider(this));
 }
 
 UkuiPower::~UkuiPower()

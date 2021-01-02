@@ -72,6 +72,17 @@ int main(int argc, char* argv[])
 
     QApplication a(argc, argv);
 
+    // Load ts files
+    const QString locale = QLocale::system().name();
+    QTranslator translator;
+    qDebug() << "local: " << locale;
+    qDebug() << "path: " << QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager");
+    if (translator.load(locale, QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
+       a.installTranslator(&translator);
+    } else {
+       qDebug() << "Load translations file failed!";
+    }
+
     UkuiPower powermanager(&a);
     bool flag = true;
 
@@ -126,17 +137,6 @@ int main(int argc, char* argv[])
     if (flag) {
         QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
         gs->set("win-key-release",true);
-
-        // Load ts files
-        const QString locale = QLocale::system().name();
-        QTranslator translator;
-        qDebug() << "local: " << locale;
-        qDebug() << "path: " << QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager");
-        if (translator.load(locale, QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
-           a.installTranslator(&translator);
-        } else {
-           qDebug() << "Load translations file failed!";
-        }
 
         MainWindow *w = new MainWindow();
 
