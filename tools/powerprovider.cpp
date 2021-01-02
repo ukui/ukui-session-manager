@@ -52,8 +52,7 @@ bool messageboxcheck(){
     msgBox.setWindowTitle(QObject::tr("conform"));
     msgBox.setText(QObject::tr("some applications are running and they dont want you to do this."));
     QPushButton *stillButton = msgBox.addButton(QObject::tr("Still to do!"), QMessageBox::ActionRole);
-    QPushButton *giveupButton = msgBox.addButton(QObject::tr("give up"), QMessageBox::ActionRole);
-    QPushButton *abortButton = msgBox.addButton(QMessageBox::Abort);
+    QPushButton *giveupButton = msgBox.addButton(QObject::tr("give up"), QMessageBox::RejectRole);
 
     msgBox.exec();
 
@@ -63,9 +62,6 @@ bool messageboxcheck(){
     } else if (msgBox.clickedButton() == giveupButton) {
         qDebug()<<"give up";
         return false;
-    }else if (msgBox.clickedButton() == abortButton) {
-        return false;
-        msgBox.close();
     }
 }
 
