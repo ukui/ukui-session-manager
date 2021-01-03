@@ -30,6 +30,10 @@
 #include <QGSettings/QGSettings>
 #include <X11/Xlib.h>
 
+#include <QMessageBox>
+#include <QDBusInterface>
+#include <QDBusReply>
+
 #include "ukuipower.h"
 #include "mainwindow.h"
 #include "window.h"
@@ -47,6 +51,21 @@ bool playShutdownMusic(UkuiPower &powermanager, int num)
     static int action = num;
     QTimer *timer = new QTimer();
     timer->setSingleShot(true);
+
+    if(num == 4){
+        QDBusInterface dbus("org.gnome.SessionManager", "/org/gnome/SessionManager", "org.gnome.SessionManager", QDBusConnection::sessionBus());
+        if (!dbus.isValid()) {
+            qWarning() << "dbusCall: QDBusInterface is invalid";
+            return false;
+        }
+
+        QDBusMessage msg = dbus.call("emitStartLogout");
+
+        if (!msg.errorName().isEmpty()) {
+            qWarning() << "Dbus error: " << msg;
+        }
+    }
+
     if (play_music) {
         QSoundEffect *soundplayer = new QSoundEffect();
         soundplayer->setSource(QUrl("qrc:/shutdown.wav"));
