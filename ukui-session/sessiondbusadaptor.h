@@ -44,6 +44,7 @@ Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
     void inhibitadded(quint32 flags);
     void inhibitremove(quint32 flags);
+    void StartLogout();
 
 public slots:
     void startupfinished(const QString& appName ,const QString& string)
@@ -141,6 +142,11 @@ public slots:
 
     bool IsInhibited(quint32 flags){
         return minhibit->IsInhibited(flags);
+    }
+
+    Q_NOREPLY void emitStartLogout(){
+        qDebug()<<"emit  StartLogout";
+        emit StartLogout();
     }
 
 private:
