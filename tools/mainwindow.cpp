@@ -37,6 +37,7 @@
 #include "xeventmonitor.h"
 #include <QFileInfo>
 #include <QDBusInterface>
+#include <QTextStream>
 
 QT_BEGIN_NAMESPACE
 extern void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
@@ -97,6 +98,48 @@ MainWindow::MainWindow(QWidget *parent)
     }else
         pix.load(":/images/background-ukui.png");
 
+    QFile file_backup("/tmp/kylin-backup.lock");
+    QFile file_update("/tmp/kylin-update.lock");
+    if(file_backup.exists() || file_update.exists()){
+        lockfile = true;
+        if(file_backup.exists()){
+            file_backup.open(QIODevice::ReadOnly | QIODevice::Text);
+            QTextStream backup(&file_backup);
+            int k = 0;
+            while (!backup.atEnd()) {
+                QString line = backup.readLine();
+                if(k == 0){
+                    QStringList list = line.split("(");
+                    user = list[0];
+                    if(user == qgetenv("USER")){
+                        lockuser = true;
+                    }
+                }
+                k++;
+                qDebug()<<"<---------->"<<line;
+            }
+            file_backup.close();
+        }
+        if(file_update.exists()){
+            file_update.open(QIODevice::ReadOnly | QIODevice::Text);
+            QTextStream update(&file_update);
+            int j = 0;
+            while (!update.atEnd()) {
+                QString line = update.readLine();
+                if(j == 0){
+                    QStringList list = line.split("(");
+                    user = list[0];
+                    if(user == qgetenv("USER")){
+                        lockuser = true;
+                    }
+                }
+                j++;
+                qDebug()<<"<---------->"<<line;
+            }
+            file_backup.close();
+        }
+    }
+
     ui->setupUi(this);
     ui->switchuser->installEventFilter(this);
     ui->hibernate->installEventFilter(this);
@@ -105,6 +148,21 @@ MainWindow::MainWindow(QWidget *parent)
     ui->logout->installEventFilter(this);
     ui->reboot->installEventFilter(this);
     ui->shutdown->installEventFilter(this);
+
+    if(lockfile){
+        QString a = QApplication::tr("(user) is performing a system update or package installation.");
+        QString b = QApplication::tr("For system security,some functions are temporarily unavailable.");
+        ui->message_label1->setText(user+a);
+        ui->message_label2->setText(b);
+        if(lockuser)
+            ui->logout->removeEventFilter(this);
+        ui->shutdown->removeEventFilter(this);
+        ui->reboot->removeEventFilter(this);
+        ui->hibernate->removeEventFilter(this);
+//        ui->reboot->setStyleSheet("QWidget#reboot{background-color: rgb(255,255,0,50);}");
+    }else{
+        ui->message->hide();
+    }
 
     //Make a hash-map to store tableNum-to-lastWidget
     map.insert(0,ui->switchuser);
@@ -128,7 +186,7 @@ MainWindow::MainWindow(QWidget *parent)
     //Set the default value
     lastWidget = ui->lockscreen;
     tableNum = 3;
-    ui->lockscreen->setStyleSheet("QWidget#lockscreen{background-color: rgb(255,255,255,100);border-radius: 6px;}");
+    ui->lockscreen->setStyleSheet("QWidget#lockscreen{background-color: rgb(255,255,255,150);border-radius: 6px;}");
 
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy-MM-dd ddd");
@@ -209,7 +267,6 @@ void MainWindow::ResizeEvent(){
             map[i]->move(xx+spaceW + 158*sum,yy+spaceH);
             sum = sum+1;
         }
-        ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
     }else{
         int spaceWw = (m_screen.width() - 158*(3-hideNum)+18) / 2;
         spaceW = (m_screen.width() - 158*4+18) / 2;
@@ -231,8 +288,9 @@ void MainWindow::ResizeEvent(){
                 k++;
             }
         }
-        ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
     }
+    ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
+    ui->message->move(xx+(m_screen.width()-614)/2,yy+m_screen.height()-100);
 }
 
 //Paint the background picture
@@ -371,41 +429,98 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
     if (key == "Escape") {
         exitt();
     }
-    if (key == "Left"){
+    if(lockfile){
         if (flag == false){
-            if(tableNum == 0){
-                tableNum = 6;
-            }else{
-                if(isHibernateHide && tableNum == 2){
-                    if(isSwitchuserHide){
-                        tableNum = 6;
-                    }else
+            if(key == "Left"){
+                switch (tableNum) {
+                case 4:
+                    tableNum = 3;
+                    break;
+                case 3:
+                    tableNum = 2;
+                    break;
+                case 2:
+                    if(!isSwitchuserHide)
                         tableNum = 0;
+                    else if(!lockuser)
+                        tableNum = 4;
+                    else
+                        tableNum = 3;
+                    break;
+                case 0:
+                    if(!lockuser)
+                        tableNum = 4;
+                    else
+                        tableNum = 3;
+                    break;
+                default:
+                    break;
+                }
+            }
+            if(key == "Right"){
+                switch (tableNum) {
+                case 0:
+                    tableNum = 2;
+                    break;
+                case 2:
+                    tableNum = 3;
+                    break;
+                case 3:
+                    if(!lockuser)
+                        tableNum = 4;
+                    else if(!isSwitchuserHide)
+                        tableNum = 0;
+                    else
+                        tableNum = 2;
+                    break;
+                case 4:
+                    if(!isSwitchuserHide)
+                        tableNum = 0;
+                    else
+                        tableNum = 2;
+                    break;
+                default:
+                    break;
+                }
+            }
+            refreshBlur(lastWidget,map[tableNum]);
+            lastWidget = map[tableNum];
+        }
+    }else{
+        if (key == "Left"){
+            if (flag == false){
+                if(tableNum == 0){
+                    tableNum = 6;
                 }else{
-                    if(isSwitchuserHide && tableNum == 1){
-                        tableNum = 6;
-                    }else
-                        tableNum = tableNum-1;
+                    if(isHibernateHide && tableNum == 2){
+                        if(isSwitchuserHide){
+                            tableNum = 6;
+                        }else
+                            tableNum = 0;
+                    }else{
+                        if(isSwitchuserHide && tableNum == 1){
+                            tableNum = 6;
+                        }else
+                            tableNum = tableNum-1;
+                    }
                 }
             }
         }
-        refreshBlur(lastWidget,map[tableNum]);
-        lastWidget = map[tableNum];
-    }
-    if (key == "Right"){
-        if(flag == false){
-            if(!isSwitchuserHide && tableNum == 6){
-                tableNum = 0;
-            }else if(isSwitchuserHide && tableNum == 6){
-                if(isHibernateHide)
-                    tableNum = 2;
-                else
-                    tableNum = 1;
-            }else{
-                if(isHibernateHide && tableNum == 0)
-                    tableNum = 2;
-                else
-                    tableNum = tableNum+1;
+        if (key == "Right"){
+            if(flag == false){
+                if(!isSwitchuserHide && tableNum == 6){
+                    tableNum = 0;
+                }else if(isSwitchuserHide && tableNum == 6){
+                    if(isHibernateHide)
+                        tableNum = 2;
+                    else
+                        tableNum = 1;
+                }else{
+                    if(isHibernateHide && tableNum == 0)
+                        tableNum = 2;
+                    else
+                        tableNum = tableNum+1;
+                }
             }
         }
         refreshBlur(lastWidget,map[tableNum]);
@@ -444,7 +559,7 @@ void MainWindow::refreshBlur(QWidget *last, QWidget *now){
     QString pastName = last->objectName();
     QString name = now->objectName();
     QString strlast = "QWidget#" + pastName + "{background-color: rgb(0,0,0,0)}";
-    QString str = "QWidget#" + name + "{background-color: rgb(255,255,255,100);border-radius: 6px;}";
+    QString str = "QWidget#" + name + "{background-color: rgb(255,255,255,150);border-radius: 6px;}";
     last->setStyleSheet(strlast);
     now->setStyleSheet(str);
 }
