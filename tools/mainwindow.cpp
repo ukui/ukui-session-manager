@@ -224,6 +224,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     xEventMonitor->start();
 
+    //设置字体跟随主题
+    const QByteArray id("org.ukui.style");
+    QFont font = QFont("Noto Sans CJK SC");
+    if (QGSettings::isSchemaInstalled(id)) {
+        QGSettings *fontSetting = new QGSettings(id, QByteArray(), this);
+        font = QFont(fontSetting->get("systemFont").toString());
+    }
+    for (auto widget : qApp->allWidgets()) {
+        widget->setFont(font);
+    }
+
+
     this->show();
 
     //qApp->installNativeEventFilter(this);

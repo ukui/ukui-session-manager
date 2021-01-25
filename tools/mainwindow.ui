@@ -58,7 +58,7 @@
     </property>
     <property name="styleSheet">
      <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+font:12pt;</string>
     </property>
     <property name="text">
      <string>Switch User</string>
@@ -110,7 +110,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+font:12pt;</string>
     </property>
     <property name="text">
      <string>Hebernate</string>
@@ -152,7 +152,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color:white;
-font:28pt &quot;Noto Sans CJK SC&quot;;</string>
+font:28pt;</string>
     </property>
     <property name="lineWidth">
      <number>1</number>
@@ -184,7 +184,7 @@ font:28pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+font:12pt;</string>
     </property>
     <property name="text">
      <string/>
@@ -236,7 +236,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+font:12pt;</string>
     </property>
     <property name="text">
      <string>Suspend</string>
@@ -288,7 +288,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+font:12pt;</string>
     </property>
     <property name="text">
      <string>Logout</string>
@@ -340,7 +340,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+font:12pt;</string>
     </property>
     <property name="text">
      <string>Reboot</string>
@@ -392,7 +392,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+font:12pt;</string>
     </property>
     <property name="text">
      <string>Shut Down</string>
@@ -444,7 +444,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+font:12pt;</string>
     </property>
     <property name="text">
      <string>Lock Screen</string>
@@ -477,7 +477,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+font:12pt;</string>
     </property>
     <property name="text">
      <string/>
@@ -497,7 +497,7 @@ font:12pt &quot;Noto Sans CJK SC&quot;;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">color:white;
-font:12pt &quot;Noto Sans CJK SC&quot;;</string>
+font:12pt;</string>
     </property>
     <property name="text">
      <string/>
