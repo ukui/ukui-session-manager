@@ -232,9 +232,15 @@ MainWindow::MainWindow(QWidget *parent)
         font = QFont(fontSetting->get("systemFont").toString());
     }
     for (auto widget : qApp->allWidgets()) {
+        font.setWordSpacing(2);
         widget->setFont(font);
     }
-
+//    QFont fontt = font;
+//    qDebug()<<font.wordSpacing()<<"----"<<font.letterSpacing();
+//    fontt.setWordSpacing(13.0);
+//    fontt.setLetterSpacing(QFont::AbsoluteSpacing,100);
+//    ui->time_lable->setFont(fontt);
+//    qDebug()<<fontt.wordSpacing()<<"----"<<font.letterSpacing();
 
     this->show();
 
