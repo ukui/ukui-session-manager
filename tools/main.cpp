@@ -107,6 +107,9 @@ bool playShutdownMusic(UkuiPower &powermanager, int num)
     QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
     play_music = gs->get("boot-music").toBool();
     gs->set("win-key-release",false);
+    if(num != 5 || num != 6){
+        play_music = false;
+    }
     static int action = num;
     QTimer *timer = new QTimer();
     timer->setSingleShot(true);
