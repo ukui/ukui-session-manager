@@ -42,12 +42,74 @@
 #undef signals
 #endif
 
+bool messagecheck(){
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(QObject::tr("notice"));
+    msgBox.setText(QObject::tr("System update or package installation in progress,some functions are temporarily unavailable."));;
+
+    msgBox.exec();
+}
+
 bool playShutdownMusic(UkuiPower &powermanager, int num)
 {
+    bool lockfile = false;
+    bool lockuser = false;
+    QFile file_backup("/tmp/kylin-backup.lock");
+    QFile file_update("/tmp/kylin-update.lock");
+    if(file_backup.exists() || file_update.exists()){
+        lockfile = true;
+        if(file_backup.exists()){
+            file_backup.open(QIODevice::ReadOnly | QIODevice::Text);
+            QTextStream backup(&file_backup);
+            int k = 0;
+            while (!backup.atEnd()) {
+                QString line = backup.readLine();
+                if(k == 0){
+                    QStringList list = line.split("(");
+                    QString user = list[0];
+                    if(user == qgetenv("USER")){
+                        lockuser = true;
+                    }
+                }
+                k++;
+            }
+            file_backup.close();
+        }
+        if(file_update.exists()){
+            file_update.open(QIODevice::ReadOnly | QIODevice::Text);
+            QTextStream update(&file_update);
+            int j = 0;
+            while (!update.atEnd()) {
+                QString line = update.readLine();
+                if(j == 0){
+                    QStringList list = line.split("(");
+                    QString user = list[0];
+                    if(user == qgetenv("USER")){
+                        lockuser = true;
+                    }
+                }
+                j++;
+            }
+            file_backup.close();
+        }
+    }
+    if(lockfile == true){
+        if(num == 1 || num == 5 || num == 6){
+            messagecheck();
+            exit(0);
+        }else if(lockuser == true && num == 4){
+            messagecheck();
+            exit(0);
+        }
+    }
+
     bool play_music = true;
     QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
     play_music = gs->get("boot-music").toBool();
     gs->set("win-key-release",false);
+    if(num != 5 || num != 6){
+        play_music = false;
+    }
     static int action = num;
     QTimer *timer = new QTimer();
     timer->setSingleShot(true);

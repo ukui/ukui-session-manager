@@ -65,6 +65,10 @@ private:
     bool isHibernateHide = true;
     QPixmap pix;
 
+    bool lockfile = false;
+    bool lockuser = false;
+    QString user;
+
 Q_SIGNALS:
     void signalTostart();
 
