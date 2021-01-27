@@ -261,16 +261,20 @@ void ModuleManager::timeup(){
 }
 
 void ModuleManager::doStart(){
-    qDebug() << "Start file manager: " << mFileManager.name();
-    startProcess(mFileManager, true);
-
     qDebug() << "Start panel: " << mPanel.name();
     execAppName = "ukui-panel";
     connect(this, &ModuleManager::panelfinished,this,&ModuleManager::timerUpdate);
     startProcess(mPanel, true);
-    startPanelTimer(3);
 
-    playBootMusic();
+    QTimer::singleShot(1000, this, [&]()
+    {
+        qDebug() << "Start file manager: " << mFileManager.name();
+        startProcess(mFileManager, true);
+
+    });
+    startProcess("hwaudioservice", true);
+
+    startPanelTimer(2);
 }
 
 void ModuleManager::startup()
@@ -279,29 +283,34 @@ void ModuleManager::startup()
     for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i) {
         startProcess(*i, true);
     }
-    QTimer::singleShot(1000, this, [&]()
-    {
-        qDebug() << "Start window manager: " << mWindowManager.name();
-        if(mWindowManager.name() == "UKUI-KWin"){
-            connect(this, &ModuleManager::wmfinished, [&]()
-            {
-                twm->stop();
-                if(runWm == false)
-                    return;
-                runWm = false;
-                doStart();
-            });
-            startProcess(mWindowManager, true);
-            execAppName = "ukui-kwin";
-            startWmTimer(1);
-        }else{
-            startProcess(mWindowManager, true);
-            QTimer::singleShot(1000, this, [&]()
-            {
-                doStart();
-            });
-        }
-    });
+    QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
+    if (xdg_session_type != "wayland"){
+        QTimer::singleShot(1000, this, [&]()
+        {
+            qDebug() << "Start window manager: " << mWindowManager.name();
+            if(mWindowManager.name() == "UKUI-KWin"){
+                connect(this, &ModuleManager::wmfinished, [&]()
+                {
+                    twm->stop();
+                    if(runWm == false)
+                        return;
+                    runWm = false;
+                    doStart();
+                });
+                startProcess(mWindowManager, true);
+                execAppName = "ukui-kwin";
+                startWmTimer(1);
+            }else{
+                startProcess(mWindowManager, true);
+                QTimer::singleShot(1000, this, [&]()
+                {
+                    doStart();
+                });
+            }
+        });
+    }else{
+        doStart();
+    }
 }
 
 void ModuleManager::timerUpdate(){
@@ -311,6 +320,7 @@ void ModuleManager::timerUpdate(){
         return;
     runPanel = false;
 
+    playBootMusic();
     qDebug() << "Start desktop: ";
     for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
         startProcess(*i, true);

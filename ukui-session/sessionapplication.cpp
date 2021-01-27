@@ -68,7 +68,9 @@ void SessionApplication::InitialEnvironment()
 
     qputenv("XDG_CURRENT_DESKTOP","UKUI");
     qputenv("QT_QPA_PLATFORMTHEME",QT_QPA_PLATFORMTHEME);
+    qputenv("QT_QPA_PLATFORM", "xcb");
 
+    QProcess::startDetached("dbus-update-activation-environment", QStringList() << "--systemd" << "DISPLAY");
     //restart user's gvfs-daemon.service
     QProcess::startDetached("systemctl", QStringList() << "--user" << "restart" << "gvfs-daemon.service");
 }
