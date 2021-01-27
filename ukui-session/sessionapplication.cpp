@@ -70,7 +70,10 @@ void SessionApplication::InitialEnvironment()
     qputenv("QT_QPA_PLATFORMTHEME",QT_QPA_PLATFORMTHEME);
     qputenv("QT_QPA_PLATFORM", "xcb");
 
-    QProcess::startDetached("dbus-update-activation-environment", QStringList() << "--systemd" << "DISPLAY");
+    QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
+    if (xdg_session_type == "wayland"){
+        QProcess::startDetached("dbus-update-activation-environment", QStringList() << "--systemd" << "DISPLAY");
+    }
     //restart user's gvfs-daemon.service
     QProcess::startDetached("systemctl", QStringList() << "--user" << "restart" << "gvfs-daemon.service");
 }
