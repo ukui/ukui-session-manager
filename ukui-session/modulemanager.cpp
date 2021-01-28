@@ -272,18 +272,22 @@ void ModuleManager::doStart(){
         startProcess(mFileManager, true);
 
     });
-    startProcess("hwaudioservice", true);
+//    startProcess("hwaudioservice", true);
 
     startPanelTimer(2);
 }
 
 void ModuleManager::startup()
 {
+    QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
+    if(xdg_session_type == "wayland"){
+        startProcess("hwaudioservice", true);
+    }
+
     qDebug() << "Start Initialization app: ";
     for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i) {
         startProcess(*i, true);
     }
-    QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
     if (xdg_session_type != "wayland"){
         QTimer::singleShot(1000, this, [&]()
         {
