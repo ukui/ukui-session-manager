@@ -39,6 +39,10 @@
 #include <QDBusInterface>
 #include <QTextStream>
 
+#include <sys/file.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 QT_BEGIN_NAMESPACE
 extern void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
@@ -100,9 +104,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     QFile file_backup("/tmp/kylin-backup.lock");
     QFile file_update("/tmp/kylin-update.lock");
-    if(file_backup.exists() || file_update.exists()){
-        lockfile = true;
-        if(file_backup.exists()){
+    if(file_backup.exists()){
+        int lock_backup = flock(file_backup, LOCK_EX | LOCK_NB);
+        if(lock_backup>=0){
+            lockfile = true;
             file_backup.open(QIODevice::ReadOnly | QIODevice::Text);
             QTextStream backup(&file_backup);
             int k = 0;
@@ -118,9 +123,13 @@ MainWindow::MainWindow(QWidget *parent)
                 k++;
                 qDebug()<<"<---------->"<<line;
             }
-            file_backup.close();
         }
-        if(file_update.exists()){
+        file_backup.close();
+    }
+    if(file_update.exists()){
+        int lock_update = flock(file_update, LOCK_EX | LOCK_NB);
+        if(lock_update>=0){
+            lockfile = true;
             file_update.open(QIODevice::ReadOnly | QIODevice::Text);
             QTextStream update(&file_update);
             int j = 0;
@@ -136,9 +145,10 @@ MainWindow::MainWindow(QWidget *parent)
                 j++;
                 qDebug()<<"<---------->"<<line;
             }
-            file_backup.close();
         }
+        file_backup.close();
     }
+
 
     ui->setupUi(this);
     ui->switchuser->installEventFilter(this);
