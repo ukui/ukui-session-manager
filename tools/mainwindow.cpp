@@ -105,7 +105,10 @@ MainWindow::MainWindow(QWidget *parent)
     QFile file_backup("/tmp/kylin-backup.lock");
     QFile file_update("/tmp/kylin-update.lock");
     if(file_backup.exists()){
-        int lock_backup = flock(file_backup, LOCK_EX | LOCK_NB);
+        char pid_file_backup[1024] = {0};
+        snprintf(pid_file_backup, 1024, "/tmp/kylin-backup.lock");
+        int pid_file_fd_backup = open(pid_file_backup, O_CREAT | O_TRUNC | O_RDWR, 0666);
+        int lock_backup = flock(pid_file_fd_backup, LOCK_EX | LOCK_NB);
         if(lock_backup>=0){
             lockfile = true;
             file_backup.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -127,8 +130,11 @@ MainWindow::MainWindow(QWidget *parent)
         file_backup.close();
     }
     if(file_update.exists()){
-        int lock_update = flock(file_update, LOCK_EX | LOCK_NB);
-        if(lock_update>=0){
+        char pid_file_update[1024] = {0};
+        snprintf(pid_file_update, 1024, "/tmp/kylin-update.lock");
+        int pid_file_fd_update = open(pid_file_update, O_CREAT | O_TRUNC | O_RDWR, 0666);
+        int lock_backup = flock(pid_file_fd_update, LOCK_EX | LOCK_NB);
+        if(lock_backup>=0){
             lockfile = true;
             file_update.open(QIODevice::ReadOnly | QIODevice::Text);
             QTextStream update(&file_update);
