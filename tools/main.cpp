@@ -38,6 +38,11 @@
 #include "mainwindow.h"
 #include "window.h"
 
+
+#include <sys/file.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #ifdef signals
 #undef signals
 #endif
@@ -50,15 +55,18 @@ bool messagecheck(){
     msgBox.exec();
 }
 
-bool playShutdownMusic(UkuiPower &powermanager, int num)
-{
+int check_lock(){
     bool lockfile = false;
     bool lockuser = false;
+    QString user;
     QFile file_backup("/tmp/kylin-backup.lock");
     QFile file_update("/tmp/kylin-update.lock");
-    if(file_backup.exists() || file_update.exists()){
-        lockfile = true;
-        if(file_backup.exists()){
+    if(file_backup.exists()){
+        int fd_backup = open(QString("/tmp/kylin-backup.lock").toUtf8().data(), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+        int b = lockf(fd_backup, F_TLOCK, 0);
+        qDebug()<<"b"<<b;
+        if(b<0){
+            lockfile = true;
             file_backup.open(QIODevice::ReadOnly | QIODevice::Text);
             QTextStream backup(&file_backup);
             int k = 0;
@@ -66,16 +74,22 @@ bool playShutdownMusic(UkuiPower &powermanager, int num)
                 QString line = backup.readLine();
                 if(k == 0){
                     QStringList list = line.split("(");
-                    QString user = list[0];
+                    user = list[0];
                     if(user == qgetenv("USER")){
                         lockuser = true;
                     }
                 }
                 k++;
             }
-            file_backup.close();
         }
-        if(file_update.exists()){
+        file_backup.close();
+    }
+    if(file_update.exists()){
+        int fd_update = open(QString("/tmp/kylin-update.lock").toUtf8().data(), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+        int c = lockf(fd_update, F_TLOCK, 0);
+        qDebug()<<"c"<<c;
+        if(c<0){
+            lockfile = true;
             file_update.open(QIODevice::ReadOnly | QIODevice::Text);
             QTextStream update(&file_update);
             int j = 0;
@@ -83,24 +97,34 @@ bool playShutdownMusic(UkuiPower &powermanager, int num)
                 QString line = update.readLine();
                 if(j == 0){
                     QStringList list = line.split("(");
-                    QString user = list[0];
+                    user = list[0];
                     if(user == qgetenv("USER")){
                         lockuser = true;
                     }
                 }
                 j++;
             }
-            file_backup.close();
         }
+        file_backup.close();
     }
-    if(lockfile == true){
+    if(lockfile){
+        if(lockuser)
+            return 2;
+        return 1;
+    }
+    return 0;
+}
+
+bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
+{
+    if(cc == 1){
         if(num == 1 || num == 5 || num == 6){
             messagecheck();
             exit(0);
-        }else if(lockuser == true && num == 4){
-            messagecheck();
-            exit(0);
         }
+    }else if(cc == 2 && num == 4){
+        messagecheck();
+        exit(0);
     }
 
     bool play_music = true;
@@ -153,6 +177,9 @@ int main(int argc, char* argv[])
 
     QApplication a(argc, argv);
 
+    int cc = check_lock();
+    qDebug()<<cc<<"   cc";
+
     // Load ts files
     const QString locale = QLocale::system().name();
     QTranslator translator;
@@ -193,22 +220,22 @@ int main(int argc, char* argv[])
     parser.process(a);
 
     if (parser.isSet(switchuserOption)) {
-        flag = playShutdownMusic(powermanager, 0);
+        flag = playShutdownMusic(powermanager, 0, cc);
     }
     if (parser.isSet(hibernateOption)) {
         flag = playShutdownMusic(powermanager, 1);
     }
     if (parser.isSet(suspendOption)) {
-        flag = playShutdownMusic(powermanager, 2);
+        flag = playShutdownMusic(powermanager, 2, cc);
     }
     if (parser.isSet(logoutOption)) {
-        flag = playShutdownMusic(powermanager, 4);
+        flag = playShutdownMusic(powermanager, 4, cc);
     }
     if (parser.isSet(rebootOption)) {
-        flag = playShutdownMusic(powermanager, 5);
+        flag = playShutdownMusic(powermanager, 5, cc);
     }
     if (parser.isSet(shutdownOption)) {
-        flag = playShutdownMusic(powermanager, 6);
+        flag = playShutdownMusic(powermanager, 6, cc);
     }
     if (parser.isSet(windowOption)) {
         flag = false;
@@ -219,7 +246,16 @@ int main(int argc, char* argv[])
         QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
         gs->set("win-key-release",true);
 
-        MainWindow *w = new MainWindow();
+        bool lock_file = false;
+        bool lock_user = false;
+        if(cc == 1){
+            lock_file = true;
+        }
+        if(cc == 2){
+            lock_file = true;
+            lock_user = true;
+        }
+        MainWindow *w = new MainWindow(lock_file,lock_user);
 
         // Load qss file
         QFile qss(":/powerwin.qss");
@@ -230,7 +266,7 @@ int main(int argc, char* argv[])
         w->showFullScreen();
         QObject::connect(w, &MainWindow::signalTostart, [&]()
         {
-            playShutdownMusic(powermanager, w->defaultnum);
+            playShutdownMusic(powermanager, w->defaultnum, cc);
         });
         //return a.exec();
     }

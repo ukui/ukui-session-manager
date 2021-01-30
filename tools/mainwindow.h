@@ -38,7 +38,7 @@ class MainWindow : public QMainWindow//,public QAbstractNativeEventFilter
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(bool a , bool b ,QWidget *parent = nullptr);
     QRect m_screen;
     ~MainWindow();
     void doevent(QString test2,int i);
