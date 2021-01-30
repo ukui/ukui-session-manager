@@ -74,7 +74,7 @@ QPixmap blurPixmap(QPixmap pixmap)
     return pixmap;
 }
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_power(new UkuiPower(this)),
@@ -102,60 +102,6 @@ MainWindow::MainWindow(QWidget *parent)
     }else
         pix.load(":/images/background-ukui.png");
 
-    QFile file_backup("/tmp/kylin-backup.lock");
-    QFile file_update("/tmp/kylin-update.lock");
-    if(file_backup.exists()){
-        char pid_file_backup[1024] = {0};
-        snprintf(pid_file_backup, 1024, "/tmp/kylin-backup.lock");
-        int pid_file_fd_backup = open(pid_file_backup, O_CREAT | O_TRUNC | O_RDWR, 0666);
-        int lock_backup = flock(pid_file_fd_backup, LOCK_EX | LOCK_NB);
-        if(lock_backup>=0){
-            lockfile = true;
-            file_backup.open(QIODevice::ReadOnly | QIODevice::Text);
-            QTextStream backup(&file_backup);
-            int k = 0;
-            while (!backup.atEnd()) {
-                QString line = backup.readLine();
-                if(k == 0){
-                    QStringList list = line.split("(");
-                    user = list[0];
-                    if(user == qgetenv("USER")){
-                        lockuser = true;
-                    }
-                }
-                k++;
-                qDebug()<<"<---------->"<<line;
-            }
-        }
-        file_backup.close();
-    }
-    if(file_update.exists()){
-        char pid_file_update[1024] = {0};
-        snprintf(pid_file_update, 1024, "/tmp/kylin-update.lock");
-        int pid_file_fd_update = open(pid_file_update, O_CREAT | O_TRUNC | O_RDWR, 0666);
-        int lock_backup = flock(pid_file_fd_update, LOCK_EX | LOCK_NB);
-        if(lock_backup>=0){
-            lockfile = true;
-            file_update.open(QIODevice::ReadOnly | QIODevice::Text);
-            QTextStream update(&file_update);
-            int j = 0;
-            while (!update.atEnd()) {
-                QString line = update.readLine();
-                if(j == 0){
-                    QStringList list = line.split("(");
-                    user = list[0];
-                    if(user == qgetenv("USER")){
-                        lockuser = true;
-                    }
-                }
-                j++;
-                qDebug()<<"<---------->"<<line;
-            }
-        }
-        file_backup.close();
-    }
-
-
     ui->setupUi(this);
     ui->switchuser->installEventFilter(this);
     ui->hibernate->installEventFilter(this);
@@ -164,6 +110,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->logout->installEventFilter(this);
     ui->reboot->installEventFilter(this);
     ui->shutdown->installEventFilter(this);
+
+    user = getenv("USER");
+    lockfile = a;
+    lockuser = b;
 
     if(lockfile){
         QString a = QApplication::tr("(user) is performing a system update or package installation.");
