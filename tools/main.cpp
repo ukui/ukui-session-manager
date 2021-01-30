@@ -223,7 +223,7 @@ int main(int argc, char* argv[])
         flag = playShutdownMusic(powermanager, 0, cc);
     }
     if (parser.isSet(hibernateOption)) {
-        flag = playShutdownMusic(powermanager, 1);
+        flag = playShutdownMusic(powermanager, 1, cc);
     }
     if (parser.isSet(suspendOption)) {
         flag = playShutdownMusic(powermanager, 2, cc);
