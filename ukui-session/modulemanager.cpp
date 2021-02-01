@@ -429,24 +429,31 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
 
     if (!proc->isTerminating()) {
         QString procName = proc->file.name();
-        if(procName == QFileInfo(mWindowManager.name()).fileName()){
-            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
-            proc->start();
-            proc->restartNum++;
-            return;
-        }
-        switch (exitStatus) {
-        case QProcess::NormalExit:
-            qDebug() << "Process" << procName << "(" << proc << ") exited correctly.";
-            break;
-        case QProcess::CrashExit:
-            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
-            proc->start();
-            proc->restartNum++;
-            return;
-        default:
-            qWarning() << "Unknown exit status: " << procName << "(" << proc << ")";
-        }
+//        if(procName == QFileInfo(mWindowManager.name()).fileName()){
+//            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
+//            proc->start();
+//            proc->restartNum++;
+//            return;
+//        }
+//        switch (exitStatus) {
+//        case QProcess::NormalExit:
+//            qDebug() << "Process" << procName << "(" << proc << ") exited correctly.";
+//            break;
+//        case QProcess::CrashExit:
+//            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
+//            proc->start();
+//            proc->restartNum++;
+//            return;
+//        default:
+//            qWarning() << "Unknown exit status: " << procName << "(" << proc << ")";
+//        }
+        //panel，menu等程序用killall 的方式杀掉也属于QProcess::NormalExit
+        //所以，不管异常退出还是正常退出，一律重启
+        qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
+        proc->start();
+        proc->restartNum++;
+        return;
+
     }
     mNameMap.remove(proc->fileName);
     proc->deleteLater();
