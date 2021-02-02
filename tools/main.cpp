@@ -59,10 +59,10 @@ int check_lock(){
     bool lockfile = false;
     bool lockuser = false;
     QString user;
-    QFile file_backup("/tmp/kylin-backup.lock");
-    QFile file_update("/tmp/kylin-update.lock");
+    QFile file_backup("/tmp/lock/kylin-backup.lock");
+    QFile file_update("/tmp/lock/kylin-update.lock");
     if(file_backup.exists()){
-        int fd_backup = open(QString("/tmp/kylin-backup.lock").toUtf8().data(), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+        int fd_backup = open(QString("/tmp/lock/kylin-backup.lock").toUtf8().data(), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
         int b = lockf(fd_backup, F_TLOCK, 0);
         qDebug()<<"b"<<b;
         if(b<0){
@@ -85,7 +85,7 @@ int check_lock(){
         file_backup.close();
     }
     if(file_update.exists()){
-        int fd_update = open(QString("/tmp/kylin-update.lock").toUtf8().data(), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+        int fd_update = open(QString("/tmp/lock/kylin-update.lock").toUtf8().data(), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
         int c = lockf(fd_update, F_TLOCK, 0);
         qDebug()<<"c"<<c;
         if(c<0){
