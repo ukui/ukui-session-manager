@@ -325,6 +325,9 @@ void ModuleManager::timerUpdate(){
     runPanel = false;
 
     playBootMusic();
+    QTimer::singleShot(500, this, [&](){
+        emit finished();
+    });
     qDebug() << "Start desktop: ";
     for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
         startProcess(*i, true);
