@@ -125,7 +125,7 @@ font:12pt;</string>
     <rect>
      <x>130</x>
      <y>20</y>
-     <width>130</width>
+     <width>260</width>
      <height>60</height>
     </rect>
    </property>
@@ -134,7 +134,7 @@ font:12pt;</string>
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>130</width>
+      <width>260</width>
       <height>40</height>
      </rect>
     </property>
@@ -169,7 +169,7 @@ font:28pt;</string>
      <rect>
       <x>0</x>
       <y>40</y>
-      <width>130</width>
+      <width>260</width>
       <height>20</height>
      </rect>
     </property>

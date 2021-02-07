@@ -155,8 +155,31 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     ui->lockscreen->setStyleSheet("QWidget#lockscreen{background-color: rgb(255,255,255,150);border-radius: 6px;}");
 
     QDateTime current_date_time =QDateTime::currentDateTime();
-    QString current_date =current_date_time.toString("yyyy-MM-dd ddd");
-    QString current_time =current_date_time.toString("hh:mm");
+    const QByteArray id_control("org.ukui.control-center.panel.plugins");
+    QString current_date;
+    QString current_time;
+    if (QGSettings::isSchemaInstalled(id_control)) {
+        QGSettings *controlSetting = new QGSettings(id_control, QByteArray(), this);
+        QString formate_a = controlSetting->get("date").toString();
+        QString formate_b = controlSetting->get("hoursystem").toString();
+        if(formate_a == "en")
+            current_date =current_date_time.toString("yyyy-MM-dd ddd");
+        else if(formate_a == "cn")
+            current_date =current_date_time.toString("yyyy/MM/dd ddd");
+        else
+            current_date =current_date_time.toString("yyyy-MM-dd ddd");
+
+        if(formate_b == "12")
+            current_time =current_date_time.toString("A hh:mm");
+        else if(formate_b == "24")
+            current_time =current_date_time.toString("hh:mm");
+        else
+            current_time =current_date_time.toString("hh:mm");
+    }else{
+        current_date =current_date_time.toString("yyyy-MM-dd ddd");
+        current_time =current_date_time.toString("hh:mm");
+    }
+
     ui->time_lable->setText(current_time);
     ui->date_label->setText(current_date);
 
@@ -273,7 +296,7 @@ void MainWindow::ResizeEvent(){
             }
         }
     }
-    ui->widget->move(xx+(m_screen.width()-130)/2,yy+40);
+    ui->widget->move(xx+(m_screen.width()-260)/2,yy+40);
     ui->message->move(xx+(m_screen.width()-614)/2,yy+m_screen.height()-100);
 }
 
