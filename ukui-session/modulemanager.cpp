@@ -419,44 +419,36 @@ bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitStatus)
 {
     UkuiModule* proc = qobject_cast<UkuiModule*>(sender());
+
+    if (nullptr == proc) {
+        qWarning() << "Got an invalid (null) module to restart, Ignoring it";
+        return;
+    }
+
     if (proc->restartNum > 10) {
         mNameMap.remove(proc->fileName);
         disconnect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), nullptr, nullptr);
         proc->deleteLater();
         return;
     }
-    if (nullptr == proc) {
-        qWarning() << "Got an invalid (null) module to restart, Ignoring it";
-        return;
-    }
 
     if (!proc->isTerminating()) {
+        //通过killall方式杀死退出的程序，有的为NormalExit，有的为CrashExit
+        //退出码exitCode的返回值为0时，程序为正常退出，此时exitStatus为NormalExit
+        //所以我们不考虑killall杀死的情况，根据程序的返回值来确定是否重启
         QString procName = proc->file.name();
-//        if(procName == QFileInfo(mWindowManager.name()).fileName()){
-//            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
-//            proc->start();
-//            proc->restartNum++;
-//            return;
-//        }
-//        switch (exitStatus) {
-//        case QProcess::NormalExit:
-//            qDebug() << "Process" << procName << "(" << proc << ") exited correctly.";
-//            break;
-//        case QProcess::CrashExit:
-//            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
-//            proc->start();
-//            proc->restartNum++;
-//            return;
-//        default:
-//            qWarning() << "Unknown exit status: " << procName << "(" << proc << ")";
-//        }
-        //panel，menu等程序用killall 的方式杀掉也属于QProcess::NormalExit
-        //所以，不管异常退出还是正常退出，一律重启
-        qDebug() << "Process" << procName << "(" << proc << ") has to be restarted";
-        proc->start();
-        proc->restartNum++;
-        return;
-
+        switch (exitStatus) {
+        case QProcess::NormalExit:
+            qDebug() << "Process" << procName << "(" << proc << ") exited correctly. "<<"With the exitcode = "<<proc->exitCode();
+            break;
+        case QProcess::CrashExit:
+            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted. "<<"With the exitcode = "<<proc->exitCode();
+            proc->start();
+            proc->restartNum++;
+            return;
+        default:
+            qWarning() << "Unknown exit status: " << procName << "(" << proc << ")";
+        }
     }
     mNameMap.remove(proc->fileName);
     proc->deleteLater();
