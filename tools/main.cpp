@@ -122,9 +122,11 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
             messagecheck();
             exit(0);
         }
-    }else if(cc == 2 && num == 4){
-        messagecheck();
-        exit(0);
+    }else if(cc == 2){
+        if(num == 1 || num == 4 || num == 5 || num == 6){
+            messagecheck();
+            exit(0);
+        }
     }
 
     bool play_music = true;
