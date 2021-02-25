@@ -116,8 +116,10 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     lockuser = b;
 
     if(lockfile){
-        QString a = QApplication::tr("(user) is performing a system update or package installation.");
-        QString b = QApplication::tr("For system security,some functions are temporarily unavailable.");
+        QString a1 = QApplication::tr("(user),ukui-control-center is performing a system update or package installation.");
+        QString a2 = QApplication::tr("(user),yhkylin-backup-tools is performing a system backup or restore.");
+        QString b1 = QApplication::tr("For system security,Reboot、Shutdown、Logout and Hibernate are temporarily unavailable.");
+        QString b2 = QApplication::tr("For system security,Reboot、Shutdown and Hibernate are temporarily unavailable.");
         ui->message_label1->setText(user+a);
         ui->message_label2->setText(b);
         if(lockuser)
