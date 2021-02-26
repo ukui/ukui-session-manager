@@ -5,49 +5,41 @@
     <name>MainWindow</name>
     <message>
         <location filename="../tools/mainwindow.ui" line="14"/>
-        <location filename="../build/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="202"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="64"/>
-        <location filename="../build/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="204"/>
         <source>Switch User</source>
         <translation>切换用户</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="116"/>
-        <location filename="../build/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="206"/>
         <source>Hebernate</source>
         <translation>休眠</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="242"/>
-        <location filename="../build/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="210"/>
         <source>Suspend</source>
         <translation>睡眠</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="294"/>
-        <location filename="../build/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="212"/>
         <source>Logout</source>
         <translation>注销</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="346"/>
-        <location filename="../build/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="214"/>
         <source>Reboot</source>
         <translation>重启</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="398"/>
-        <location filename="../build/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="216"/>
         <source>Shut Down</source>
         <translation>关机</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="450"/>
-        <location filename="../build/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="218"/>
         <source>Lock Screen</source>
         <translation>锁屏</translation>
     </message>
@@ -55,62 +47,82 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../tools/main.cpp" line="167"/>
+        <location filename="../tools/main.cpp" line="211"/>
         <source>UKUI session tools, show the shutdown dialog without any arguments.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="174"/>
+        <location filename="../tools/main.cpp" line="218"/>
         <source>Switch the user of this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="178"/>
+        <location filename="../tools/main.cpp" line="220"/>
+        <source>Hibernate this computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../tools/main.cpp" line="222"/>
         <source>Suspend this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="180"/>
+        <location filename="../tools/main.cpp" line="224"/>
         <source>Logout this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="182"/>
+        <location filename="../tools/main.cpp" line="226"/>
         <source>Restart this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="184"/>
+        <location filename="../tools/main.cpp" line="228"/>
         <source>Shutdown this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="186"/>
+        <location filename="../tools/main.cpp" line="230"/>
         <source>A window above the desktop.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="153"/>
-        <source>(user) is performing a system update or package installation.</source>
-        <translation>(用户)正在进行系统更新或者软件包安装</translation>
+        <location filename="../tools/mainwindow.cpp" line="124"/>
+        <source>(user),ukui-control-center is performing a system update or package installation.</source>
+        <translation>（用户），控制面板正在执行系统升级或软件包安装</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="154"/>
-        <source>For system security,some functions are temporarily unavailable.</source>
-        <translation>为了系统安全，一些功能暂时不可用</translation>
+        <location filename="../tools/mainwindow.cpp" line="125"/>
+        <source>(user),yhkylin-backup-tools is performing a system backup or restore.</source>
+        <translation>（用户），麒麟备份还原工具正在进行系统备份或还原</translation>
+    </message>
+    <message>
+        <location filename="../tools/mainwindow.cpp" line="126"/>
+        <source>For system security,Reboot、Shutdown、Logout and Hibernate are temporarily unavailable.</source>
+        <translation>为了系统的安全，重启、关机、注销、和休眠功能暂时不可用</translation>
+    </message>
+    <message>
+        <location filename="../tools/mainwindow.cpp" line="127"/>
+        <source>For system security,Reboot、Shutdown and Hibernate are temporarily unavailable.</source>
+        <translation>为了系统的安全，重启、关机、和休眠功能暂时不可用</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../tools/main.cpp" line="47"/>
+        <location filename="../tools/main.cpp" line="52"/>
         <source>notice</source>
-        <translation>通知</translation>
+        <translation>提示</translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="48"/>
-        <source>System update or package installation in progress,some functions are temporarily unavailable.</source>
-        <translation>系统更新或软件包安装中，部分功能暂时不可用。</translation>
+        <location filename="../tools/main.cpp" line="53"/>
+        <source>System update or package installation in progress,this function is temporarily unavailable.</source>
+        <translation>系统升级或软件包安装正在进行中，此功能暂时不可用</translation>
+    </message>
+    <message>
+        <location filename="../tools/main.cpp" line="54"/>
+        <source>System backup or restore in progress,this function is temporarily unavailable.</source>
+        <translation>系统备份或系统还原正在进行中，此功能暂时不可用</translation>
     </message>
     <message>
         <location filename="../tools/powerprovider.cpp" line="52"/>
@@ -120,12 +132,12 @@
     <message>
         <location filename="../tools/powerprovider.cpp" line="53"/>
         <source>some applications are running and they dont want you to do this.</source>
-        <translation>一些程序正在运行而且他们不希望你执行该操作。</translation>
+        <translation>一些功能正在进行中，并且他们不希望你执行它</translation>
     </message>
     <message>
         <location filename="../tools/powerprovider.cpp" line="54"/>
         <source>Still to do!</source>
-        <translation>仍然执行！</translation>
+        <translation>任然执行！</translation>
     </message>
     <message>
         <location filename="../tools/powerprovider.cpp" line="55"/>
