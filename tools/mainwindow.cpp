@@ -116,14 +116,28 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     lockuser = b;
 
     if(lockfile){
+        QFile file_update("/tmp/lock/kylin-update.lock");
+        QFile file_backup("/tmp/lock/kylin-backup.lock");
+        QString lable1_text;
+        QString lable2_text;
+
         QString a1 = QApplication::tr("(user),ukui-control-center is performing a system update or package installation.");
         QString a2 = QApplication::tr("(user),yhkylin-backup-tools is performing a system backup or restore.");
         QString b1 = QApplication::tr("For system security,Reboot、Shutdown、Logout and Hibernate are temporarily unavailable.");
         QString b2 = QApplication::tr("For system security,Reboot、Shutdown and Hibernate are temporarily unavailable.");
-        ui->message_label1->setText(user+a);
-        ui->message_label2->setText(b);
-        if(lockuser)
+        if(file_update.exists()){
+            lable1_text = a1;
+        }
+        if(file_backup.exists()){
+            lable1_text = a2;
+        }
+        if(lockuser){
+            lable2_text = b1;
             ui->logout->removeEventFilter(this);
+        }else
+            lable2_text = b2;
+        ui->message_label1->setText(user+lable1_text);
+        ui->message_label2->setText(lable2_text);
         ui->shutdown->removeEventFilter(this);
         ui->reboot->removeEventFilter(this);
         ui->hibernate->removeEventFilter(this);
@@ -299,7 +313,7 @@ void MainWindow::ResizeEvent(){
         }
     }
     ui->widget->move(xx+(m_screen.width()-260)/2,yy+40);
-    ui->message->move(xx+(m_screen.width()-614)/2,yy+m_screen.height()-100);
+    ui->message->move(xx+(m_screen.width()-700)/2,yy+m_screen.height()-100);
 }
 
 //Paint the background picture

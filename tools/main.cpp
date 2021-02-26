@@ -50,7 +50,18 @@
 bool messagecheck(){
     QMessageBox msgBox;
     msgBox.setWindowTitle(QObject::tr("notice"));
-    msgBox.setText(QObject::tr("System update or package installation in progress,some functions are temporarily unavailable."));;
+    QString t1 = QObject::tr("System update or package installation in progress,this function is temporarily unavailable.");
+    QString t2 = QObject::tr("System backup or restore in progress,this function is temporarily unavailable.");
+
+    QFile file_update("/tmp/lock/kylin-update.lock");
+    QFile file_backup("/tmp/lock/kylin-backup.lock");
+
+    if(file_update.exists()){
+        msgBox.setText(t1);
+    }
+    if(file_backup.exists()){
+        msgBox.setText(t2);
+    }
 
     msgBox.exec();
 }
