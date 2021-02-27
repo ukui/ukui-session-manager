@@ -34,6 +34,7 @@
 #include <QThread>
 #include <QSoundEffect>
 #include <QDBusInterface>
+#include <QDir>
 /* qt会将glib里的signals成员识别为宏，所以取消该宏
  * 后面如果用到signals时，使用Q_SIGNALS代替即可
  **/
@@ -121,26 +122,32 @@ void ModuleManager::constructStartupList()
     bool fm_found = false;
     bool wm_found = false;
 
-    const auto files = XdgAutoStart::desktopFileList(desktop_paths, false);
-    for (const XdgDesktopFile& file : files) {
-        if (QFileInfo(file.fileName()).fileName() == panel) {
-            mPanel = file;
-            panel_found = true;
-            qDebug() << "panel has been found";
-        }
-        if (QFileInfo(file.fileName()).fileName() == file_manager) {
-            mFileManager = file;
-            fm_found = true;
-            qDebug() << "filemanager has been found";
-        }
-        if (QFileInfo(file.fileName()).fileName() == window_manager) {
-            mWindowManager = file;
-            wm_found = true;
-            qDebug() << "windowmanager has been found";
-        }
+    //const auto files = XdgAutoStart::desktopFileList(desktop_paths, false);
+    for (const QString &dirName : const_cast<const QStringList&>(desktop_paths)) {
+        QDir dir(dirName);
+        if (!dir.exists())
+            continue;
+        const QFileInfoList files = dir.entryInfoList(QStringList(QLatin1String("*.desktop")), QDir::Files | QDir::Readable);
+        for (const QFileInfo &fi : files) {
+            if (fi.fileName() == panel) {
+                mPanel.load(fi.absoluteFilePath());
+                panel_found = true;
+                qDebug() << "panel has been found";
+            }
+            if (fi.fileName() == file_manager) {
+                mFileManager.load(fi.absoluteFilePath());
+                fm_found = true;
+                qDebug() << "filemanager has been found";
+            }
+            if (fi.fileName() == window_manager) {
+                mWindowManager.load(fi.absoluteFilePath());
+                wm_found = true;
+                qDebug() << "windowmanager has been found";
+            }
 
-        if (fm_found && panel_found && wm_found)
-            break;
+            if (fm_found && panel_found && wm_found)
+                break;
+        }
     }
 
     if (wm_found == false) {
@@ -148,16 +155,12 @@ void ModuleManager::constructStartupList()
         QFileInfo check_ukuikwin("/usr/share/applications/ukui-kwin.desktop");
         if(check_ukwm.exists()) {
             window_manager = "ukwm.desktop";
+            mWindowManager.load("/usr/share/applications/ukwm.desktop");
         }else if(check_ukuikwin.exists()) {
             window_manager = "ukui-kwin.desktop";
+            mWindowManager.load("/usr/share/applications/ukui-kwin.desktop");
         }
-    }
-
-    for (const XdgDesktopFile& file : files) {
-        if (QFileInfo(file.fileName()).fileName() == window_manager){
-            mWindowManager = file;
-            wm_found = true;
-        }
+        wm_found = true;
     }
 
     //配置文件所给的窗口管理器找不到.desktop文件时，将所给QString设为可执行命令，创建一个desktop文件赋给mWindowManager
@@ -231,6 +234,14 @@ bool ModuleManager::startPanelTimer(int i){
     return true;
 }
 
+bool ModuleManager::startDesktopTimer(int i){
+    tdesktop = new QTimer();
+    tdesktop->setSingleShot(true);
+    connect(tdesktop,SIGNAL(timeout()),this,SLOT(timeup()));
+    tdesktop->start(i*1000);
+    return true;
+}
+
 void ModuleManager::startupfinished(const QString& appName , const QString& string ){
     qDebug() << "moudle :" + appName + "startup finished, and it want to say " + string;
     if(appName == "ukui-kwin"){
@@ -245,36 +256,39 @@ void ModuleManager::startupfinished(const QString& appName , const QString& stri
         emit panelfinished();
         return;
     }
+    if(appName == "peony-qt-desktop"){
+        if(runDesktop == false)
+            disconnect(this, &ModuleManager::desktopfinished,0,0);
+        emit desktopfinished();
+        return;
+    }
 }
 
 void ModuleManager::timeup(){
-    qDebug() << execAppName + "启动超时";
-    if(execAppName == "ukui-kwin"){
+    QTimer *time_out = qobject_cast<QTimer*>(sender());
+    if(time_out == twm){
+        qDebug() <<"wm超时";
         emit wmfinished();
         return;
     }
-    if(execAppName == "ukui-panel"){
+    if(time_out == tpanel){
         qDebug() <<"panel超时";
         emit panelfinished();
+        return;
+    }
+    if(time_out == tdesktop){
+        qDebug() <<"peony-qt-desktop超时";
+        emit desktopfinished();
         return;
     }
 }
 
 void ModuleManager::doStart(){
     qDebug() << "Start panel: " << mPanel.name();
-    execAppName = "ukui-panel";
     connect(this, &ModuleManager::panelfinished,this,&ModuleManager::timerUpdate);
     startProcess(mPanel, true);
 
-    QTimer::singleShot(1000, this, [&]()
-    {
-        qDebug() << "Start file manager: " << mFileManager.name();
-        startProcess(mFileManager, true);
-
-    });
-//    startProcess("hwaudioservice", true);
-
-    startPanelTimer(2);
+    startPanelTimer(3);
 }
 
 void ModuleManager::startup()
@@ -288,8 +302,29 @@ void ModuleManager::startup()
     for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i) {
         startProcess(*i, true);
     }
+
+    qDebug() << "start peony-qt-desktop----------";
+    QTimer::singleShot(2000, this, [&]()
+    {
+        qDebug() << "Start file manager: " << mFileManager.name();
+        connect(this, &ModuleManager::desktopfinished,[&]()
+        {
+            tdesktop->stop();
+            if(runDesktop == false)
+                return;
+            runDesktop = false;
+            dostartwm();
+        });
+        startProcess(mFileManager, true);
+        startDesktopTimer(5);
+    });
+}
+
+void ModuleManager::dostartwm(){
+    QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
     if (xdg_session_type != "wayland"){
-        QTimer::singleShot(1000, this, [&]()
+        qDebug() <<"============";
+        QTimer::singleShot(0, this, [&]()
         {
             qDebug() << "Start window manager: " << mWindowManager.name();
             if(mWindowManager.name() == "UKUI-KWin"){
@@ -302,7 +337,6 @@ void ModuleManager::startup()
                     doStart();
                 });
                 startProcess(mWindowManager, true);
-                execAppName = "ukui-kwin";
                 startWmTimer(18);
             }else{
                 startProcess(mWindowManager, true);

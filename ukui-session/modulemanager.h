@@ -53,6 +53,8 @@ public:
 
     void doStart();
 
+    void dostartwm();
+
     void startupfinished(const QString& appName ,const QString& string);
 
     // Qt5 users native event filter
@@ -68,16 +70,19 @@ Q_SIGNALS:
     void finished();
     void wmfinished();
     void panelfinished();
+    void desktopfinished();
 
 private:
     QTimer *twm = nullptr;
     QTimer *tpanel = nullptr;
+    QTimer *tdesktop = nullptr;
     bool startWmTimer(int i);
     bool startPanelTimer(int i);
+    bool startDesktopTimer(int i);
 
-    QString execAppName = NULL;
     bool runWm = true;
     bool runPanel = true;
+    bool runDesktop = true;
     void playBootMusic();
     void startProcess(const XdgDesktopFile &file, bool required);
 
