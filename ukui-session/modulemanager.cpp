@@ -490,10 +490,10 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
 
 void ModuleManager::logout(bool doExit)
 {
-    QString session_id =  qgetenv("XDG_SESSION_ID");
-    qDebug() << "session_id: " + session_id;
+    // /org/freedesktop/login1/session/self 和 /org/freedesktop/login1/session/auto
+    //有什么区别
     QDBusInterface face("org.freedesktop.login1",\
-                             "/org/freedesktop/login1/session/" + session_id,\
+                             "/org/freedesktop/login1/session/self",\
                              "org.freedesktop.login1.Session",\
                              QDBusConnection::systemBus());
     ModulesMapIterator i(mNameMap);
