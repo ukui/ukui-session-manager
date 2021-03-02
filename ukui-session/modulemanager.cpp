@@ -76,7 +76,18 @@ void ModuleManager::playBootMusic(){
 ModuleManager::ModuleManager( QObject* parent)
     : QObject(parent)
 {
+    QDBusConnection::systemBus().connect(QString("org.freedesktop.login1"),
+                                         QString("/org/freedesktop/login1"),
+                                         QString("org.freedesktop.login1.Manager"),
+                                         QString("PrepareForSleep"), this, SLOT(weakup(bool)));
     constructStartupList();
+}
+
+void ModuleManager::weakup(bool arg){
+    if(arg)
+        qDebug()<<"准备好睡眠休眠了";
+    else
+        qDebug()<<"从睡眠休眠醒来了";
 }
 
 ModuleManager::~ModuleManager()

@@ -64,6 +64,7 @@ public slots:
     void logout(bool doExit);
     void timerUpdate();
     void timeup();
+    void weakup(bool arg);
 
 Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
