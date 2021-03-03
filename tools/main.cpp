@@ -102,6 +102,11 @@ int check_lock(){
             }
         }
         file_backup.close();
+        if(flock(fd_backup, LOCK_UN) == 0){
+            qDebug()<<"unlock sucess.";
+        }else{
+            qDebug()<<"unlock fail.";
+        }
     }
     if(file_update.exists()){
         int fd_update = open(QString("/tmp/lock/kylin-update.lock").toUtf8().data(), O_CREAT | O_RDWR, 0666);
@@ -115,6 +120,11 @@ int check_lock(){
             }
         }
         file_backup.close();
+        if(flock(fd_update, LOCK_UN) == 0){
+            qDebug()<<"unlock sucess.";
+        }else{
+            qDebug()<<"unlock fail.";
+        }
     }
     if(lockfile){
         if(lockuser)
