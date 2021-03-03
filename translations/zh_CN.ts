@@ -99,12 +99,12 @@
     <message>
         <location filename="../tools/mainwindow.cpp" line="126"/>
         <source>For system security,Reboot、Shutdown、Logout and Hibernate are temporarily unavailable.</source>
-        <translation>为了系统的安全，重启、关机、注销、和休眠功能暂时不可用</translation>
+        <translation>为了系统的安全，重启、关机、注销和休眠功能暂时不可用</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.cpp" line="127"/>
         <source>For system security,Reboot、Shutdown and Hibernate are temporarily unavailable.</source>
-        <translation>为了系统的安全，重启、关机、和休眠功能暂时不可用</translation>
+        <translation>为了系统的安全，重启、关机和休眠功能暂时不可用</translation>
     </message>
 </context>
 <context>
