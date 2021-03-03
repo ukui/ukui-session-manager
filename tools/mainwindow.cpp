@@ -74,6 +74,24 @@ QPixmap blurPixmap(QPixmap pixmap)
     return pixmap;
 }
 
+QString getUserName(QFile *a){
+    QString user = getenv("USER");
+    if(a->exists()){
+        a->open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream fileStream(a);
+        int k = 0;
+        while (!fileStream.atEnd()) {
+            QString line = fileStream.readLine();
+            if(k == 0){
+                QStringList list = line.split("(");
+                user = list[0];
+            }
+            k++;
+        }
+    }
+    return user;
+}
+
 MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -126,9 +144,11 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
         QString b1 = QApplication::tr("For system security,Reboot、Shutdown、Logout and Hibernate are temporarily unavailable.");
         QString b2 = QApplication::tr("For system security,Reboot、Shutdown and Hibernate are temporarily unavailable.");
         if(file_update.exists()){
+            user = getUserName(&file_update);
             lable1_text = a1;
         }
         if(file_backup.exists()){
+            user = getUserName(&file_backup);
             lable1_text = a2;
         }
         if(lockuser){

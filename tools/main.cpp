@@ -47,6 +47,24 @@
 #undef signals
 #endif
 
+QString getName(QFile *a){
+    QString user = getenv("USER");
+    if(a->exists()){
+        a->open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream fileStream(a);
+        int k = 0;
+        while (!fileStream.atEnd()) {
+            QString line = fileStream.readLine();
+            if(k == 0){
+                QStringList list = line.split("(");
+                user = list[0];
+            }
+            k++;
+        }
+    }
+    return user;
+}
+
 bool messagecheck(){
     QMessageBox msgBox;
     msgBox.setWindowTitle(QObject::tr("notice"));
@@ -69,7 +87,7 @@ bool messagecheck(){
 int check_lock(){
     bool lockfile = false;
     bool lockuser = false;
-    QString user;
+
     QFile file_backup("/tmp/lock/kylin-backup.lock");
     QFile file_update("/tmp/lock/kylin-update.lock");
     if(file_backup.exists()){
@@ -78,19 +96,9 @@ int check_lock(){
         qDebug()<<"b"<<b;
         if(b<0){
             lockfile = true;
-            file_backup.open(QIODevice::ReadOnly | QIODevice::Text);
-            QTextStream backup(&file_backup);
-            int k = 0;
-            while (!backup.atEnd()) {
-                QString line = backup.readLine();
-                if(k == 0){
-                    QStringList list = line.split("(");
-                    user = list[0];
-                    if(user == qgetenv("USER")){
-                        lockuser = true;
-                    }
-                }
-                k++;
+            QString file_user = getName(&file_backup);
+            if(file_user == qgetenv("USER")){
+                lockuser = true;
             }
         }
         file_backup.close();
@@ -101,19 +109,9 @@ int check_lock(){
         qDebug()<<"c"<<c;
         if(c<0){
             lockfile = true;
-            file_update.open(QIODevice::ReadOnly | QIODevice::Text);
-            QTextStream update(&file_update);
-            int j = 0;
-            while (!update.atEnd()) {
-                QString line = update.readLine();
-                if(j == 0){
-                    QStringList list = line.split("(");
-                    user = list[0];
-                    if(user == qgetenv("USER")){
-                        lockuser = true;
-                    }
-                }
-                j++;
+            QString file_user = getName(&file_update);
+            if(file_user == qgetenv("USER")){
+                lockuser = true;
             }
         }
         file_backup.close();
