@@ -15,6 +15,11 @@
             <summary>Weathe play boot/shutdown music </summary>
             <description>Whether the boot-music and shutdown-music oped</description>
     </key>
+    <key name="sleep-music" type="b">
+            <default>true</default>
+            <summary>Weathe play hibernate/suspend music </summary>
+            <description>Whether the hibernate-music and suspend-music oped</description>
+    </key>
     <key name="gdk-scale" type="i"> 
 	    <default>1</default>
 	    <summary>Gdk scale</summary>
