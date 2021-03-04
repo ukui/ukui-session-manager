@@ -42,6 +42,7 @@
 #include <sys/file.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <pwd.h>
 
 QT_BEGIN_NAMESPACE
 extern void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
@@ -83,8 +84,15 @@ QString getUserName(QFile *a){
         while (!fileStream.atEnd()) {
             QString line = fileStream.readLine();
             if(k == 0){
-                QStringList list = line.split("(");
-                user = list[0];
+                QString a = line;
+                qDebug()<<"uid="<<a;
+                struct passwd *user1;
+                user1 = getpwuid(a.toInt());
+                qDebug()<<"name="<<user1->pw_name<<",uid="<<user1->pw_uid;
+                if(user1->pw_name == NULL){
+                    return user;
+                }
+                user = user1->pw_name;
             }
             k++;
         }
