@@ -3,6 +3,6 @@
         <file>startup.wav</file>
         <file>shutdown.wav</file>
         <file>weakup-music.wav</file>
-        <file>sleep.wav</file>
+        <file>sleep-music.wav</file>
     </qresource>
 </RCC>
