@@ -31,7 +31,6 @@
 #include <QStandardPaths>
 #include <QDebug>
 #include <QGSettings/QGSettings>
-#include <QThread>
 #include <QSoundEffect>
 #include <QDBusInterface>
 #include <QDir>
@@ -45,31 +44,29 @@
 #define SESSION_REQUIRED_COMPONENTS "org.ukui.session.required-components"
 #define SESSION_REQUIRED_COMPONENTS_PATH "/org/ukui/desktop/session/required-components/"
 
-class WorkerThread : public QThread
-{
-    Q_OBJECT
-    void run() override {
-        QSoundEffect *player = new QSoundEffect();
-        player->setSource(QUrl("qrc:/startup.wav"));
-        player->play();
-        QTimer *a = new QTimer();
-        a->start(8*1000);
-        connect(a,&QTimer::timeout,this,&WorkerThread::quit);
-        exec();
-    }
-};
-
-void ModuleManager::playBootMusic(){
-    //set default value of whether boot-music is opened
+void ModuleManager::playBootMusic(bool arg){
     bool play_music = true;
-    if (QGSettings::isSchemaInstalled("org.ukui.session")){
-        QGSettings *gset = new QGSettings("org.ukui.session","/org/ukui/desktop/session/",this);
-        play_music = gset->get("boot-music").toBool();
-    }
-    if (play_music) {
-        WorkerThread *workerThread = new WorkerThread();
-        connect(workerThread, &WorkerThread::finished, workerThread, &QObject::deleteLater);
-        workerThread->start();
+    if(arg){
+        //set default value of whether boot-music is opened
+        if (QGSettings::isSchemaInstalled("org.ukui.session")){
+            QGSettings *gset = new QGSettings("org.ukui.session","/org/ukui/desktop/session/",this);
+            play_music = gset->get("boot-music").toBool();
+        }
+        if (play_music) {
+            QSoundEffect *player = new QSoundEffect();
+            player->setSource(QUrl("qrc:/startup.wav"));
+            player->play();
+        }
+    }else{
+        if (QGSettings::isSchemaInstalled("org.ukui.session")){
+            QGSettings *gset = new QGSettings("org.ukui.session","/org/ukui/desktop/session/",this);
+            play_music = gset->get("sleep-music").toBool();
+        }
+        if (play_music) {
+            QSoundEffect *player = new QSoundEffect();
+            player->setSource(QUrl("qrc:/sleep-music.wav"));
+            player->play();
+        }
     }
 }
 
@@ -84,10 +81,13 @@ ModuleManager::ModuleManager( QObject* parent)
 }
 
 void ModuleManager::weakup(bool arg){
-    if(arg)
-        qDebug()<<"准备好睡眠休眠了";
-    else
-        qDebug()<<"从睡眠休眠醒来了";
+    if(arg){
+        qDebug()<<"准备执行睡眠休眠";
+    }
+    else{
+        qDebug()<<"从睡眠休眠中唤醒";
+        playBootMusic(false);
+    }
 }
 
 ModuleManager::~ModuleManager()
@@ -369,7 +369,7 @@ void ModuleManager::timerUpdate(){
         return;
     runPanel = false;
 
-    playBootMusic();
+    playBootMusic(true);
     QTimer::singleShot(500, this, [&](){
         emit finished();
     });
@@ -504,9 +504,9 @@ void ModuleManager::logout(bool doExit)
     // /org/freedesktop/login1/session/self 和 /org/freedesktop/login1/session/auto
     //有什么区别
     QDBusInterface face("org.freedesktop.login1",\
-                             "/org/freedesktop/login1/session/self",\
-                             "org.freedesktop.login1.Session",\
-                             QDBusConnection::systemBus());
+                        "/org/freedesktop/login1/session/self",\
+                        "org.freedesktop.login1.Session",\
+                        QDBusConnection::systemBus());
     ModulesMapIterator i(mNameMap);
 //    UkuiModule *winman;
     while (i.hasNext()) {

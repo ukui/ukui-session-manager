@@ -84,7 +84,7 @@ private:
     bool runWm = true;
     bool runPanel = true;
     bool runDesktop = true;
-    void playBootMusic();
+    void playBootMusic(bool arg);
     void startProcess(const XdgDesktopFile &file, bool required);
 
     void constructStartupList();
