@@ -64,7 +64,7 @@ void ModuleManager::playBootMusic(bool arg){
         }
         if (play_music) {
             QSoundEffect *player = new QSoundEffect();
-            player->setSource(QUrl("qrc:/sleep-music.wav"));
+            player->setSource(QUrl("qrc:/weakup-music.wav"));
             player->play();
         }
     }
