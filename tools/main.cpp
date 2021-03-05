@@ -184,13 +184,13 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
         QSoundEffect *soundplayer = new QSoundEffect();
         soundplayer->setSource(QUrl("qrc:/shutdown.wav"));
         soundplayer->play();
-
-        QObject::connect(timer, &QTimer::timeout, [&]()
-        {
-            powermanager.doAction(UkuiPower::Action(action));
-            exit(0);
+        QObject::connect(soundplayer,&QSoundEffect::playingChanged,[&](){
+            qDebug()<<"playingChanged";
+            if(!soundplayer->isPlaying()){
+                powermanager.doAction(UkuiPower::Action(action));
+                exit(0);
+            }
         });
-        timer->start(1000);
     } else {
         powermanager.doAction(UkuiPower::Action(action));
         exit(0);
