@@ -159,7 +159,7 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
     QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
     play_music = gs->get("boot-music").toBool();
     gs->set("win-key-release",false);
-    if(num == 0 || num == 1 || num == 2 || num == 4){
+    if(num == 0 || num == 4){
         play_music = false;
     }
     static int action = num;
@@ -182,10 +182,16 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
 
     if (play_music) {
         QSoundEffect *soundplayer = new QSoundEffect();
-        soundplayer->setSource(QUrl("qrc:/shutdown.wav"));
+        if(num == 5 || num ==6){
+            soundplayer->setSource(QUrl("qrc:/shutdown.wav"));
+        }else if (num == 1 || num == 2){
+            soundplayer->setSource(QUrl("qrc:/sleep-music.wav"));
+        }else{
+            qDebug()<<"error num";
+            return false;
+        }
         soundplayer->play();
         QObject::connect(soundplayer,&QSoundEffect::playingChanged,[&](){
-            qDebug()<<"playingChanged";
             if(!soundplayer->isPlaying()){
                 powermanager.doAction(UkuiPower::Action(action));
                 exit(0);
