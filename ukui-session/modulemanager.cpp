@@ -45,27 +45,28 @@
 #define SESSION_REQUIRED_COMPONENTS_PATH "/org/ukui/desktop/session/required-components/"
 
 void ModuleManager::playBootMusic(bool arg){
+    //set default value of whether boot-music is opened
     bool play_music = true;
-    if(arg){
-        //set default value of whether boot-music is opened
-        if (QGSettings::isSchemaInstalled("org.ukui.session")){
-            QGSettings *gset = new QGSettings("org.ukui.session","/org/ukui/desktop/session/",this);
+    if (QGSettings::isSchemaInstalled("org.ukui.session")){
+        QGSettings *gset = new QGSettings("org.ukui.session","/org/ukui/desktop/session/",this);
+        if(gset == NULL){
+            qDebug()<<"QGSettings init error";
+            free(gset);
+            return;
+        }
+        QSoundEffect *player = new QSoundEffect();
+        if(arg){
             play_music = gset->get("boot-music").toBool();
-        }
-        if (play_music) {
-            QSoundEffect *player = new QSoundEffect();
-            player->setSource(QUrl("qrc:/startup.wav"));
-            player->play();
-        }
-    }else{
-        if (QGSettings::isSchemaInstalled("org.ukui.session")){
-            QGSettings *gset = new QGSettings("org.ukui.session","/org/ukui/desktop/session/",this);
+            if (play_music) {
+                player->setSource(QUrl("qrc:/startup.wav"));
+                player->play();
+            }
+        }else{
             play_music = gset->get("sleep-music").toBool();
-        }
-        if (play_music) {
-            QSoundEffect *player = new QSoundEffect();
-            player->setSource(QUrl("qrc:/weakup-music.wav"));
-            player->play();
+            if (play_music) {
+                player->setSource(QUrl("qrc:/weakup-music.wav"));
+                player->play();
+            }
         }
     }
 }
@@ -114,6 +115,11 @@ void ModuleManager::constructStartupList()
     QString wm_notfound;
     if (QGSettings::isSchemaInstalled(id)) {
         const QGSettings* gs = new QGSettings(SESSION_REQUIRED_COMPONENTS,SESSION_REQUIRED_COMPONENTS_PATH,this);
+        if(gs == NULL){
+            qDebug()<<"QGSettings init error";
+            free(&gs);
+            return;
+        }
         window_manager = gs->get("windowmanager").toString() + ".desktop";
         panel = gs->get("panel").toString() + ".desktop";
         file_manager = gs->get("filemanager").toString() + ".desktop";
@@ -414,6 +420,11 @@ void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
     QString name = QFileInfo(file.fileName()).fileName();
     if (!mNameMap.contains(name)) {
         UkuiModule* proc = new UkuiModule(file, this);
+        if(proc = NULL){
+            qDebug()<<"UkuiModule Init error";
+            free(proc);
+            return;
+        }
         connect(proc, &UkuiModule::moduleStateChanged, this, &ModuleManager::moduleStateChanged);
         proc->start();
 
