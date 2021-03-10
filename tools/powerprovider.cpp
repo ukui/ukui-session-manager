@@ -62,7 +62,8 @@ bool messageboxcheck(){
     } else if (msgBox.clickedButton() == giveupButton) {
         qDebug()<<"give up";
         return false;
-    }
+    }else
+        return false;
 }
 
 static bool dbusCall(const QString &service,
