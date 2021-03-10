@@ -72,7 +72,7 @@ QString getName(QFile *a){
     return user;
 }
 
-bool messagecheck(){
+void messagecheck(){
     QMessageBox msgBox;
     msgBox.setWindowTitle(QObject::tr("notice"));
     QString t1 = QObject::tr("System update or package installation in progress,this function is temporarily unavailable.");
@@ -98,7 +98,7 @@ int check_lock(){
     QFile file_backup("/tmp/lock/kylin-backup.lock");
     QFile file_update("/tmp/lock/kylin-update.lock");
     if(file_backup.exists()){
-        int fd_backup = open(QString("/tmp/lock/kylin-backup.lock").toUtf8().data(), O_CREAT | O_RDWR, 0666);
+        int fd_backup = open(QString("/tmp/lock/kylin-backup.lock").toUtf8().data(), O_RDONLY);
         int b = flock(fd_backup, LOCK_EX | LOCK_NB);
         qDebug()<<"b"<<b;
         if(b<0){
@@ -116,7 +116,7 @@ int check_lock(){
         }
     }
     if(file_update.exists()){
-        int fd_update = open(QString("/tmp/lock/kylin-update.lock").toUtf8().data(), O_CREAT | O_RDWR, 0666);
+        int fd_update = open(QString("/tmp/lock/kylin-update.lock").toUtf8().data(), O_RDONLY);
         int c = flock(fd_update,LOCK_EX | LOCK_NB);
         qDebug()<<"c"<<c;
         if(c<0){
