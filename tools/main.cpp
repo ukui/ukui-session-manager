@@ -190,13 +190,13 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
             qDebug()<<"error num";
             return false;
         }
-        soundplayer->play();
         QObject::connect(soundplayer,&QSoundEffect::playingChanged,[&](){
             if(!soundplayer->isPlaying()){
                 powermanager.doAction(UkuiPower::Action(action));
                 exit(0);
             }
         });
+        soundplayer->play();
     } else {
         powermanager.doAction(UkuiPower::Action(action));
         exit(0);
