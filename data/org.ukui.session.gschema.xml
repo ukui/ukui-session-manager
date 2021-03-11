@@ -20,6 +20,11 @@
             <summary>Weathe play hibernate/suspend music </summary>
             <description>Whether the hibernate-music and suspend-music oped</description>
     </key>
+    <key name="weakup-music" type="b">
+            <default>true</default>
+            <summary>Weathe play weakup music </summary>
+            <description>Whether the weakup music oped</description>
+    </key>
     <key name="gdk-scale" type="i"> 
 	    <default>1</default>
 	    <summary>Gdk scale</summary>
