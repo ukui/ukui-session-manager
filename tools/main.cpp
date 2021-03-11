@@ -204,10 +204,28 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
     return false;
 }
 
+bool require_dbus_session(){
+    QString env_dbus = qgetenv("DBUS_SESSION_BUS_ADDRESS");
+    if(!env_dbus.isEmpty())
+        return true;
+
+    qDebug()<<"Fatal DBus Error";
+    QProcess a;
+    a.setProcessChannelMode(QProcess::ForwardedChannels);
+    a.start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
+    a.waitForFinished(-1);
+    if (a.exitCode()) {
+        qWarning() <<  "exited with code" << a.exitCode();
+    }
+    return true;
+}
+
 int main(int argc, char* argv[])
 {
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+    require_dbus_session();
 
     QApplication a(argc, argv);
 
