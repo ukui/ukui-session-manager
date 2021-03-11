@@ -190,12 +190,12 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
             qDebug()<<"error num";
             return false;
         }
-        QTimer *up_to_time;
+        QTimer *up_to_time = new QTimer();
         up_to_time->setSingleShot(true);
         //timeout set.
         QObject::connect(up_to_time,&QTimer::timeout,soundplayer,&QSoundEffect::playingChanged);
         QObject::connect(soundplayer,&QSoundEffect::playingChanged,[&](){
-            if(!soundplayer->isPlaying()){
+            if(!soundplayer->isPlaying() || up_to_time->remainingTime() == -1){
                 powermanager.doAction(UkuiPower::Action(action));
                 exit(0);
             }
