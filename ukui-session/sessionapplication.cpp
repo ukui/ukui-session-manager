@@ -90,6 +90,16 @@ void SessionApplication::registerDBus()
 {
     new SessionDBusAdaptor(modman);
     QDBusConnection dbus = QDBusConnection::sessionBus();
+    if(!dbus.isConnected()){
+        qDebug()<<"Fatal DBus Error";
+        QProcess a;
+        a.setProcessChannelMode(QProcess::ForwardedChannels);
+        a.start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
+        a.waitForFinished(-1);
+        if (a.exitCode()) {
+            qWarning() <<  "exited with code" << a.exitCode();
+        }
+    }
     if (!dbus.registerService(QStringLiteral("org.gnome.SessionManager"))) {
         qCritical() << "Can't register org.gnome.SessionManager, there is already a session manager!";
     }
@@ -113,6 +123,8 @@ void SessionApplication::registerDBus()
         qCritical() << "Cant' register object, there is already an object registered at "
                     << "org/gnome/SessionManager/Presence";
     }
+
+    modman->startup();
 }
 
 SessionApplication::SessionApplication(int& argc, char** argv) :
@@ -148,8 +160,6 @@ SessionApplication::~SessionApplication()
 bool SessionApplication::startup()
 {
     QTimer::singleShot(0, this, SLOT(registerDBus()));
-
-    modman->startup();
 
     return true;
 }
