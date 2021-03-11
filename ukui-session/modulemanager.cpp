@@ -420,11 +420,6 @@ void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
     QString name = QFileInfo(file.fileName()).fileName();
     if (!mNameMap.contains(name)) {
         UkuiModule* proc = new UkuiModule(file, this);
-        if(proc = NULL){
-            qDebug()<<"UkuiModule Init error";
-            free(proc);
-            return;
-        }
         connect(proc, &UkuiModule::moduleStateChanged, this, &ModuleManager::moduleStateChanged);
         proc->start();
 
