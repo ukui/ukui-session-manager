@@ -62,7 +62,7 @@ void ModuleManager::playBootMusic(bool arg){
                 player->play();
             }
         }else{
-            play_music = gset->get("sleep-music").toBool();
+            play_music = gset->get("weakup-music").toBool();
             if (play_music) {
                 player->setSource(QUrl("qrc:/weakup-music.wav"));
                 player->play();
