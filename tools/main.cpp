@@ -157,7 +157,12 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
 
     bool play_music = true;
     QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
-    play_music = gs->get("boot-music").toBool();
+    if(num == 1 || num ==2){
+        play_music = gs->get("sleep-music").toBool();
+    }
+    if(num == 5 || num ==6){
+        play_music = gs->get("boot-music").toBool();
+    }
     gs->set("win-key-release",false);
     if(num == 0 || num == 4){
         play_music = false;
