@@ -184,6 +184,9 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
     }
 
     if (play_music) {
+        //up_to_time and soundplayer can not be define out of this if().
+        //otherwise run ukui-session-tools --suspend with segmente error.
+        //because they will be delate at the end of the playShutdownMusic().
         QTimer *up_to_time = new QTimer();
         up_to_time->setSingleShot(true);
         QSoundEffect *soundplayer = new QSoundEffect();
