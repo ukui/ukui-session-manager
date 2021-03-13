@@ -141,7 +141,7 @@ int check_lock(){
     return 0;
 }
 
-bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
+bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_time,QSoundEffect *soundplayer)
 {
     if(cc == 1){
         if(num == 1 || num == 5 || num == 6){
@@ -187,9 +187,6 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc)
         //up_to_time and soundplayer can not be define out of this if().
         //otherwise run ukui-session-tools --suspend with segmente error.
         //because they will be delate at the end of the playShutdownMusic().
-        QTimer *up_to_time = new QTimer();
-        up_to_time->setSingleShot(true);
-        QSoundEffect *soundplayer = new QSoundEffect();
         if(num == 5 || num ==6){
             soundplayer->setSource(QUrl("qrc:/shutdown.wav"));
         }else if (num == 1 || num == 2){
@@ -257,6 +254,11 @@ int main(int argc, char* argv[])
     UkuiPower powermanager(&a);
     bool flag = true;
 
+    //define in the main() avoid scope error.
+    QTimer *up_to_time = new QTimer();
+    up_to_time->setSingleShot(true);
+    QSoundEffect *soundplayer = new QSoundEffect();
+
     QCommandLineParser parser;
     parser.setApplicationDescription(QApplication::tr("UKUI session tools, show the shutdown dialog without any arguments."));
     const QString VERINFO = QStringLiteral("2.0");
@@ -283,22 +285,22 @@ int main(int argc, char* argv[])
     parser.process(a);
 
     if (parser.isSet(switchuserOption)) {
-        flag = playShutdownMusic(powermanager, 0, cc);
+        flag = playShutdownMusic(powermanager, 0, cc, up_to_time, soundplayer);
     }
     if (parser.isSet(hibernateOption)) {
-        flag = playShutdownMusic(powermanager, 1, cc);
+        flag = playShutdownMusic(powermanager, 1, cc, up_to_time, soundplayer);
     }
     if (parser.isSet(suspendOption)) {
-        flag = playShutdownMusic(powermanager, 2, cc);
+        flag = playShutdownMusic(powermanager, 2, cc, up_to_time, soundplayer);
     }
     if (parser.isSet(logoutOption)) {
-        flag = playShutdownMusic(powermanager, 4, cc);
+        flag = playShutdownMusic(powermanager, 4, cc, up_to_time, soundplayer);
     }
     if (parser.isSet(rebootOption)) {
-        flag = playShutdownMusic(powermanager, 5, cc);
+        flag = playShutdownMusic(powermanager, 5, cc, up_to_time, soundplayer);
     }
     if (parser.isSet(shutdownOption)) {
-        flag = playShutdownMusic(powermanager, 6, cc);
+        flag = playShutdownMusic(powermanager, 6, cc, up_to_time, soundplayer);
     }
     if (parser.isSet(windowOption)) {
         flag = false;
@@ -330,7 +332,7 @@ int main(int argc, char* argv[])
         w->update();
         QObject::connect(w, &MainWindow::signalTostart, [&]()
         {
-            playShutdownMusic(powermanager, w->defaultnum, cc);
+            playShutdownMusic(powermanager, w->defaultnum, cc, up_to_time, soundplayer);
         });
         //return a.exec();
     }
