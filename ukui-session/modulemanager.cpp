@@ -340,7 +340,6 @@ void ModuleManager::startup()
 void ModuleManager::dostartwm(){
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
     if (xdg_session_type != "wayland"){
-        qDebug() <<"============";
         QTimer::singleShot(0, this, [&]()
         {
             qDebug() << "Start window manager: " << mWindowManager.name();
