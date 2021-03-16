@@ -50,22 +50,6 @@ QT_END_NAMESPACE
 #define BLUR_RADIUS 300
 #define BACKGROUND_SETTINGS "org.mate.background"
 
-void getUserNum(){
-    QStringList args;
-    QString cmd = "/bin/sh -c \"cat file | grep string\"";
-    //args<<"-l";
-//    QString command = "cat /etc/passwd | grep string";
-//    qDebug() << "Start ukui module: " << command << "args: " << args;
-    QProcess *process;
-    process->start(cmd,args);
-    process->waitForFinished();
-    process->waitForReadyRead();
-    QString s = process->readAll();
-    //process->close();
-    qDebug()<<s;
-    //return s.toInt();
-}
-
 QPixmap blurPixmap(QPixmap pixmap)
 {
     QPainter painter(&pixmap);
@@ -107,26 +91,38 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     timer(new QTimer()),
     xEventMonitor(new XEventMonitor(this))
 {
-//    const QByteArray id(BACKGROUND_SETTINGS);
-//    if (QGSettings::isSchemaInstalled(id)) {
-//        QGSettings *gset = new QGSettings(BACKGROUND_SETTINGS,"",this);
-//        QString fullstr = gset->get("picture-filename").toString();
-//        QFileInfo fileInfo(fullstr);
-//        if(fileInfo.isFile()){
-//            pix.load(fullstr);
-//            pix = blurPixmap(pix);
-//            gset->deleteLater();
-//        }else
-//            pix.load(":/images/background-ukui.png");
+    const QByteArray bid(BACKGROUND_SETTINGS);
+    if (QGSettings::isSchemaInstalled(bid)) {
+        QGSettings *gset = new QGSettings(BACKGROUND_SETTINGS,"",this);
+        QString fullstr = gset->get("picture-filename").toString();
+        qDebug()<<"picture path = "<<fullstr;
+        QFileInfo fileInfo(fullstr);
+        if(fileInfo.isFile()){
+            pix.load(fullstr);
+            pix = blurPixmap(pix);
+        }else{
+            qDebug()<<"22222222";
+            QString imagefile = "/usr/share/backgrounds/warty-final-ubuntukylin.jpg";
+            QFileInfo fileimage(imagefile);
+            if(fileimage.isFile() && fileimage.exists()){
+                qDebug()<<"333333333";
+                pix.load(imagefile);
+                pix = blurPixmap(pix);
+            }
+        }
+        gset->deleteLater();
+    }else{
+        pix.load(":/images/background-ukui.png");
+        pix = blurPixmap(pix);
+    }
+
+//    QString fullstr = "/usr/share/backgrounds/warty-final-ubuntukylin.jpg";
+//    QFileInfo fileInfo(fullstr);
+//    if(fileInfo.isFile() && fileInfo.exists()){
+//        pix.load(fullstr);
+//        pix = blurPixmap(pix);
 //    }else
 //        pix.load(":/images/background-ukui.png");
-    QString fullstr = "/usr/share/backgrounds/warty-final-ubuntukylin.jpg";
-    QFileInfo fileInfo(fullstr);
-    if(fileInfo.isFile() && fileInfo.exists()){
-        pix.load(fullstr);
-        pix = blurPixmap(pix);
-    }else
-        pix.load(":/images/background-ukui.png");
 
     ui->setupUi(this);
     ui->switchuser->installEventFilter(this);
@@ -349,6 +345,7 @@ void MainWindow::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
     painter.setPen(Qt::transparent); 
+    painter.setBrush(QColor(0,0,0,78));//178
     for(QScreen *screen : QApplication::screens()) {
         //draw picture to every screen
         QRect rect = screen->geometry();
