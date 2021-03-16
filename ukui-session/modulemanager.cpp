@@ -487,17 +487,13 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
         //退出码exitCode的返回值为0时，程序为正常退出，此时exitStatus为NormalExit
         //所以我们不考虑killall杀死的情况，根据程序的返回值来确定是否重启
         QString procName = proc->file.name();
-        switch (exitStatus) {
-        case QProcess::NormalExit:
-            qDebug() << "Process" << procName << "(" << proc << ") exited correctly. "<<"With the exitcode = "<<proc->exitCode();
-            break;
-        case QProcess::CrashExit:
-            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted. "<<"With the exitcode = "<<proc->exitCode();
+        if(proc->exitCode() == 0){
+            qDebug() << "Process" << procName << "(" << proc << ") exited correctly. "<<"With the exitcode = "<<proc->exitCode()<<",exitStatus = "<<exitStatus;
+        }else{
+            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted. "<<"With the exitcode = "<<proc->exitCode()<<",exitStatus = "<<exitStatus;
             proc->start();
             proc->restartNum++;
             return;
-        default:
-            qWarning() << "Unknown exit status: " << procName << "(" << proc << ")";
         }
     }
     mNameMap.remove(proc->fileName);
