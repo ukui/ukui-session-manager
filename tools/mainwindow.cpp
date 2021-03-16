@@ -101,11 +101,9 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
             pix.load(fullstr);
             pix = blurPixmap(pix);
         }else{
-            qDebug()<<"22222222";
             QString imagefile = "/usr/share/backgrounds/warty-final-ubuntukylin.jpg";
             QFileInfo fileimage(imagefile);
             if(fileimage.isFile() && fileimage.exists()){
-                qDebug()<<"333333333";
                 pix.load(imagefile);
                 pix = blurPixmap(pix);
             }
