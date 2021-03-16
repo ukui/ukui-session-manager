@@ -483,9 +483,7 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
     }
 
     if (!proc->isTerminating()) {
-        //通过killall方式杀死退出的程序，有的为NormalExit，有的为CrashExit
-        //退出码exitCode的返回值为0时，程序为正常退出，此时exitStatus为NormalExit
-        //所以我们不考虑killall杀死的情况，根据程序的返回值来确定是否重启
+        //根据退出码来判断程序是否属于异常退出。
         QString procName = proc->file.name();
         if(proc->exitCode() == 0){
             qDebug() << "Process" << procName << "(" << proc << ") exited correctly. "<<"With the exitcode = "<<proc->exitCode()<<",exitStatus = "<<exitStatus;
