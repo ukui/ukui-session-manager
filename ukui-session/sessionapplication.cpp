@@ -53,8 +53,8 @@ void SessionApplication::InitialEnvironment()
     if(gsettings_usable){
         if(upower->canAction(UkuiPower::PowerHibernate))
             gs->set("canhibernate",true);
-	else
-	    gs->set("canhibernate",false);
+        else
+            gs->set("canhibernate",false);
     }
 
     //检查qt主题是否安装
