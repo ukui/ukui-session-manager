@@ -273,7 +273,7 @@ void ModuleManager::timeup(){
     QTimer *time_out = qobject_cast<QTimer*>(sender());
     if(time_out == tusd){
         qDebug() <<"usd超时";
-        emit wmfinished();
+        emit usdfinished();
         return;
     }
     if(time_out == twm){
@@ -330,7 +330,7 @@ void ModuleManager::startup()
     for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i) {
         startProcess(*i, true);
     }
-    start_module_Timer(tusd,2);
+    start_module_Timer(tusd,5);
 }
 
 void ModuleManager::dostartwm(){
