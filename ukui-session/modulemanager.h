@@ -74,12 +74,10 @@ Q_SIGNALS:
     void desktopfinished();
 
 private:
-    QTimer *twm = nullptr;
-    QTimer *tpanel = nullptr;
-    QTimer *tdesktop = nullptr;
-    bool startWmTimer(int i);
-    bool startPanelTimer(int i);
-    bool startDesktopTimer(int i);
+    QTimer *twm = new QTimer();
+    QTimer *tpanel = new QTimer();
+    QTimer *tdesktop = new QTimer();
+    bool start_module_Timer(QTimer *timer,int i);
 
     bool runWm = true;
     bool runPanel = true;

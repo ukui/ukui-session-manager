@@ -234,28 +234,10 @@ void ModuleManager::constructStartupList()
  *
  */
 
-bool ModuleManager::startWmTimer(int i){
-    qDebug() << "startprotect";
-    twm = new QTimer();
-    twm->setSingleShot(true);
-    connect(twm,SIGNAL(timeout()),this,SLOT(timeup()));
-    twm->start(i*1000);
-    return true;
-}
-
-bool ModuleManager::startPanelTimer(int i){
-    tpanel = new QTimer();
-    tpanel->setSingleShot(true);
-    connect(tpanel,SIGNAL(timeout()),this,SLOT(timeup()));
-    tpanel->start(i*1000);
-    return true;
-}
-
-bool ModuleManager::startDesktopTimer(int i){
-    tdesktop = new QTimer();
-    tdesktop->setSingleShot(true);
-    connect(tdesktop,SIGNAL(timeout()),this,SLOT(timeup()));
-    tdesktop->start(i*1000);
+bool ModuleManager::start_module_Timer(QTimer *timer,int i){
+    timer->setSingleShot(true);
+    connect(timer,SIGNAL(timeout()),this,SLOT(timeup()));
+    timer->start(i*1000);
     return true;
 }
 
@@ -305,7 +287,7 @@ void ModuleManager::doStart(){
     connect(this, &ModuleManager::panelfinished,this,&ModuleManager::timerUpdate);
     startProcess(mPanel, true);
 
-    startPanelTimer(3);
+    start_module_Timer(tpanel,3);
 }
 
 void ModuleManager::startup()
@@ -333,7 +315,7 @@ void ModuleManager::startup()
             dostartwm();
         });
         startProcess(mFileManager, true);
-        startDesktopTimer(5);
+        start_module_Timer(tdesktop,5);
     });
 }
 
@@ -353,7 +335,7 @@ void ModuleManager::dostartwm(){
                     doStart();
                 });
                 startProcess(mWindowManager, true);
-                startWmTimer(18);
+                start_module_Timer(twm,18);
             }else{
                 startProcess(mWindowManager, true);
                 QTimer::singleShot(1000, this, [&]()
