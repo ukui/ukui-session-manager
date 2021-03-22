@@ -242,7 +242,7 @@ bool ModuleManager::start_module_Timer(QTimer *timer,int i){
 }
 
 void ModuleManager::startupfinished(const QString& appName , const QString& string ){
-    qDebug() << "moudle :" + appName + "startup finished, and it want to say " + string;
+    qDebug() << "moudle :" + appName + " startup finished, and it want to say " + string;
     if(appName == "ukui-kwin"){
         if(runWm == false)
             disconnect(this, &ModuleManager::wmfinished,0,0);
