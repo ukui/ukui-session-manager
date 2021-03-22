@@ -243,6 +243,12 @@ bool ModuleManager::start_module_Timer(QTimer *timer,int i){
 
 void ModuleManager::startupfinished(const QString& appName , const QString& string ){
     qDebug() << "moudle :" + appName + " startup finished, and it want to say " + string;
+    if(appName == "ukui-settings-daemon"){
+        if(runUsd == false)
+            disconnect(this, &ModuleManager::usdfinished,0,0);
+        emit usdfinished();
+        return;
+    }
     if(appName == "ukui-kwin"){
         if(runWm == false)
             disconnect(this, &ModuleManager::wmfinished,0,0);
@@ -265,6 +271,11 @@ void ModuleManager::startupfinished(const QString& appName , const QString& stri
 
 void ModuleManager::timeup(){
     QTimer *time_out = qobject_cast<QTimer*>(sender());
+    if(time_out == tusd){
+        qDebug() <<"usd超时";
+        emit wmfinished();
+        return;
+    }
     if(time_out == twm){
         qDebug() <<"wm超时";
         emit wmfinished();
@@ -297,14 +308,11 @@ void ModuleManager::startup()
         startProcess("hwaudioservice", true);
     }
 
-    qDebug() << "Start Initialization app: ";
-    for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i) {
-        startProcess(*i, true);
-    }
-
-    qDebug() << "start peony-qt-desktop----------";
-    QTimer::singleShot(2000, this, [&]()
-    {
+    connect(this,&ModuleManager::usdfinished,[&](){
+        tusd->stop();
+        if(runUsd == false)
+            return;
+        runUsd = false;
         qDebug() << "Start file manager: " << mFileManager.name();
         connect(this, &ModuleManager::desktopfinished,[&]()
         {
@@ -317,6 +325,12 @@ void ModuleManager::startup()
         startProcess(mFileManager, true);
         start_module_Timer(tdesktop,5);
     });
+
+    qDebug() << "Start Initialization app: ";
+    for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i) {
+        startProcess(*i, true);
+    }
+    start_module_Timer(tusd,2);
 }
 
 void ModuleManager::dostartwm(){

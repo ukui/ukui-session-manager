@@ -69,16 +69,19 @@ public slots:
 Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
     void finished();
+    void usdfinished();
     void wmfinished();
     void panelfinished();
     void desktopfinished();
 
 private:
+    QTimer *tusd = new QTimer();
     QTimer *twm = new QTimer();
     QTimer *tpanel = new QTimer();
     QTimer *tdesktop = new QTimer();
     bool start_module_Timer(QTimer *timer,int i);
 
+    bool runUsd = true;
     bool runWm = true;
     bool runPanel = true;
     bool runDesktop = true;
