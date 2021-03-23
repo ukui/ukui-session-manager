@@ -200,8 +200,8 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_ti
             powermanager.doAction(UkuiPower::Action(action));
             exit(0);
         });
-        up_to_time->start(1500);
         soundplayer->play();
+        up_to_time->start(2000);
     } else {
         powermanager.doAction(UkuiPower::Action(action));
         exit(0);
