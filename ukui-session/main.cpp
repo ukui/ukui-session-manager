@@ -108,7 +108,8 @@ void Set4KScreenScale()
     {
         QScreen *screen = QApplication::screens().at(i);
         int height = screen->size().height();
-        if(height > 2000){
+        int width = screen->size().width();
+        if(height > 1500 && width > 2560){
                 bool res;
                 QString homePath = getenv("HOME");
                 QString XresourcesFile = homePath+"/.Xresources";
