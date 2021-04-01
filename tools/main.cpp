@@ -155,18 +155,19 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_ti
         }
     }
 
-    bool play_music = true;
+    bool play_music = false;
     QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
-    if(num == 1 || num ==2){
-        play_music = gs->get("sleep-music").toBool();
+    if(num == 4){
+        play_music = gs->get("logout-music").toBool();
     }
-    if(num == 5 || num ==6){
-        play_music = gs->get("boot-music").toBool();
+    if(num == 5 || num == 6){
+        play_music = gs->get("poweroff-music").toBool();
     }
-    gs->set("win-key-release",false);
-    if(num == 0 || num == 4){
+    if(num == 0 || num == 1 || num == 2){
         play_music = false;
     }
+
+    gs->set("win-key-release",false);
     static int action = num;
 
     if(num == 4){
@@ -189,8 +190,8 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_ti
         //because they will be delate at the end of the playShutdownMusic().
         if(num == 5 || num ==6){
             soundplayer->setSource(QUrl("qrc:/shutdown.wav"));
-        }else if (num == 1 || num == 2){
-            soundplayer->setSource(QUrl("qrc:/sleep-music.wav"));
+        }else if (num == 4){
+            soundplayer->setSource(QUrl("qrc:/logout.wav"));
         }else{
             qDebug()<<"error num";
             return false;
@@ -201,7 +202,7 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_ti
             exit(0);
         });
         soundplayer->play();
-        up_to_time->start(2000);
+        up_to_time->start(1200);
     } else {
         powermanager.doAction(UkuiPower::Action(action));
         exit(0);
