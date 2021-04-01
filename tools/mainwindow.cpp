@@ -228,7 +228,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     ResizeEvent();
 
     //设置窗体无边框，不可拖动拖拽拉伸;为顶层窗口，无法被切屏;不使用窗口管理器
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);//| Qt::X11BypassWindowManagerHint
     //setAttribute(Qt::WA_TranslucentBackground, true);//设定该窗口透明显示
 
     /*捕获键盘，如果捕获失败，那么模拟一次esc按键来退出菜单，如果仍捕获失败，则放弃捕获*/
