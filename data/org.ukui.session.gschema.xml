@@ -10,19 +10,25 @@
             <summary>whether release the Win-Key shortcut bound </summary>
             <description>whether release the Win-Key shortcut bound</description>
     </key>
-    <key name="boot-music" type="b">
+    <key name="startup-music" type="b">
             <default>true</default>
-            <summary>Weathe play boot/shutdown music </summary>
-            <description>Whether the boot-music and shutdown-music oped</description>
+            <summary>whether play startup music </summary>
+            <description>Whether the boot-music button oped</description>
     </key>
-    <key name="sleep-music" type="b">
-            <default>true</default>
-            <summary>Weathe play hibernate/suspend music </summary>
-            <description>Whether the hibernate-music and suspend-music oped</description>
+    <key name="poweroff-music" type="b">
+            <default>false</default>
+            <summary>Weathe play shutdown music </summary>
+            <description>Whether the shutdown-music button oped</description>
+    </key>
+
+    <key name="logout-music" type="b">
+            <default>false</default>
+            <summary>whether play logout music </summary>
+            <description>Whether the logout button oped</description>
     </key>
     <key name="weakup-music" type="b">
             <default>true</default>
-            <summary>Weathe play weakup music </summary>
+            <summary>whether play weakup music </summary>
             <description>Whether the weakup music oped</description>
     </key>
     <key name="gdk-scale" type="i"> 
