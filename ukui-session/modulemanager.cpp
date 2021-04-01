@@ -56,7 +56,7 @@ void ModuleManager::playBootMusic(bool arg){
         }
         QSoundEffect *player = new QSoundEffect();
         if(arg){
-            play_music = gset->get("boot-music").toBool();
+            play_music = gset->get("startup-music").toBool();
             if (play_music) {
                 player->setSource(QUrl("qrc:/startup.wav"));
                 player->play();
@@ -64,7 +64,7 @@ void ModuleManager::playBootMusic(bool arg){
         }else{
             play_music = gset->get("weakup-music").toBool();
             if (play_music) {
-                player->setSource(QUrl("qrc:/weakup-music.wav"));
+                player->setSource(QUrl("qrc:/weakup.wav"));
                 player->play();
             }
         }
