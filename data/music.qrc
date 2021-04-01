@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>startup.wav</file>
         <file>shutdown.wav</file>
-        <file>weakup-music.wav</file>
-        <file>logout-music.wav</file>
+        <file>weakup.wav</file>
+        <file>logout.wav</file>
     </qresource>
 </RCC>
