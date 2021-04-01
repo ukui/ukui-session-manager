@@ -326,7 +326,7 @@ int main(int argc, char* argv[])
         qss.close();
 
         w->showFullScreen();
-        w->update();
+        w->repaint();
         QObject::connect(w, &MainWindow::signalTostart, [&]()
         {
             playShutdownMusic(powermanager, w->defaultnum, cc, up_to_time, soundplayer);
