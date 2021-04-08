@@ -295,10 +295,27 @@ void ModuleManager::timeup(){
 
 void ModuleManager::doStart(){
     qDebug() << "Start panel: " << mPanel.name();
-    connect(this, &ModuleManager::panelfinished,this,&ModuleManager::timerUpdate);
-    startProcess(mPanel, true);
+    connect(this, &ModuleManager::panelfinished,[&](){
+        tpanel->stop();
+        if(runPanel == false)
+            return;
+        runPanel = false;
 
-    start_module_Timer(tpanel,3);
+        qDebug() << "Start file manager: " << mFileManager.name();
+        connect(this, &ModuleManager::desktopfinished,[&]()
+        {
+            tdesktop->stop();
+            if(runDesktop == false)
+                return;
+            runDesktop = false;
+            timerUpdate();
+        });
+        startProcess(mFileManager, true);
+        start_module_Timer(tdesktop,5);
+    });
+
+    startProcess(mPanel, true);
+    start_module_Timer(tpanel,5);
 }
 
 void ModuleManager::startup()
@@ -313,17 +330,7 @@ void ModuleManager::startup()
         if(runUsd == false)
             return;
         runUsd = false;
-        qDebug() << "Start file manager: " << mFileManager.name();
-        connect(this, &ModuleManager::desktopfinished,[&]()
-        {
-            tdesktop->stop();
-            if(runDesktop == false)
-                return;
-            runDesktop = false;
-            dostartwm();
-        });
-        startProcess(mFileManager, true);
-        start_module_Timer(tdesktop,5);
+        dostartwm();
     });
 
     qDebug() << "Start Initialization app: ";
@@ -364,12 +371,6 @@ void ModuleManager::dostartwm(){
 }
 
 void ModuleManager::timerUpdate(){
-    //endprotect();
-    tpanel->stop();
-    if(runPanel == false)
-        return;
-    runPanel = false;
-
     playBootMusic(true);
     QTimer::singleShot(500, this, [&](){
         emit finished();
