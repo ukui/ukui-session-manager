@@ -11,6 +11,7 @@ set(tools_SRCS
     mainwindow.ui
     window.cpp
     window.h
+    loginedusers.h
 )
 
 find_package(PkgConfig)
