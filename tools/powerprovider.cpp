@@ -24,15 +24,18 @@
 #include "powerprovider.h"
 
 #include <QDBusInterface>
+#include <QDBusMetaType>
 #include <QDebug>
 
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <QMainWindow>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QObject>
 #include <QDBusReply>
+#include "loginedusers.h"
 
 #define LIGHTDM_SERVICE     "org.freedesktop.DisplayManager"
 #define LIGTHDM_INTERFACE   "org.freedesktop.DisplayManager.Seat"
@@ -47,12 +50,69 @@
 
 #define PROPERTIES_INTERFACE    "org.freedesktop.DBus.Properties"
 
+QStringList getLoginedUsers() {
+    QStringList m_loginedUser;
+    qRegisterMetaType<LoginedUsers>("LoginedUsers");
+    qDBusRegisterMetaType<LoginedUsers>();
+    QDBusInterface loginInterface(SYSTEMD_SERVICE,
+                                  SYSTEMD_PATH,
+                                  SYSTEMD_INTERFACE,
+                                  QDBusConnection::systemBus());
+
+    if (loginInterface.isValid()) {
+        qDebug() << "create interface success";
+    }
+
+    QDBusMessage result = loginInterface.call("ListUsers");
+    QList<QVariant> outArgs = result.arguments();
+    QVariant first = outArgs.at(0);
+    QDBusArgument dbvFirst = first.value<QDBusArgument>();
+    QVariant vFirst = dbvFirst.asVariant();
+    const QDBusArgument &dbusArgs = vFirst.value<QDBusArgument>();
+
+    QVector<LoginedUsers> loginedUsers;
+
+    dbusArgs.beginArray();
+    while (!dbusArgs.atEnd()) {
+        LoginedUsers user;
+        dbusArgs >> user;
+        loginedUsers.push_back(user);
+    }
+    dbusArgs.endArray();
+
+    for (LoginedUsers user : loginedUsers) {
+
+        QDBusInterface userPertyInterface("org.freedesktop.login1",
+                                          user.objpath.path(),
+                                          "org.freedesktop.DBus.Properties",
+                                          QDBusConnection::systemBus());
+
+        QDBusReply<QVariant> reply = userPertyInterface.call("Get", "org.freedesktop.login1.User", "State");
+        if (reply.isValid()) {
+            QString status = reply.value().toString();
+            if ("closing" != status) {
+                m_loginedUser.append(user.userName);
+            }
+        }
+    }
+    return m_loginedUser;
+}
+
 bool messageboxcheck(){
     QMessageBox msgBox;
-    msgBox.setWindowTitle(QObject::tr("conform"));
+//    msgBox.setWindowTitle(QObject::tr("conform"));
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
+//    msgBox.setModal(false);
     msgBox.setText(QObject::tr("some applications are running and they dont want you to do this."));
     QPushButton *stillButton = msgBox.addButton(QObject::tr("Still to do!"), QMessageBox::ActionRole);
     QPushButton *giveupButton = msgBox.addButton(QObject::tr("give up"), QMessageBox::RejectRole);
+
+    QStringList usrlist = getLoginedUsers();
+    QList<QString>::Iterator it = usrlist.begin(),itend = usrlist.end();
+    for(;it != itend;it++){
+        qDebug()<<*it;
+    }
 
     msgBox.exec();
 
@@ -134,14 +194,18 @@ bool dbusGetProperty(const QString &service,
         return false;
     }
 
-    QDBusMessage msg = dbus.call("SwitchToGreeter");//QLatin1String("Get"), dbus.interface(),property
+//    QDBusMessage msg = dbus.call("SwitchToGreeter");//QLatin1String("Get"), dbus.interface(),property
 
-    if (!msg.errorName().isEmpty()) {
-        qWarning() << "Dbus error: " << msg;
-    }
+//    if (!msg.errorName().isEmpty()) {
+//        qWarning() << "Dbus error: " << msg;
+//    }
 
-    return !msg.arguments().isEmpty() &&
-            msg.arguments().constFirst().value<QDBusVariant>().variant().toBool();
+//    return !msg.arguments().isEmpty() &&
+//            msg.arguments().constFirst().value<QDBusVariant>().variant().toBool();
+
+    QVariant canswitch = dbus.property("CanSwitch");
+    qDebug()<<property<<"="<<canswitch.toString();
+    return canswitch.toBool();
 }
 
 PowerProvider::PowerProvider(QObject *parent) : QObject(parent)
@@ -204,15 +268,19 @@ bool SystemdProvider::canSwitchUser() const
 //    }
 
 //    if(isinhibited == false){
-//        QString property = "CanSwitch";
-//        QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
-//        return dbusGetProperty(QLatin1String(LIGHTDM_SERVICE),
-//                               xdg_seat_path,
-//                               QLatin1String(LIGTHDM_INTERFACE),
-//                               QDBusConnection::systemBus(),
-//                               property);
+
 //    }
-    return true;
+//    return true;
+
+//    QString property = "CanSwitch";
+//    QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
+//    return dbusGetProperty(QLatin1String(LIGHTDM_SERVICE),
+//                           xdg_seat_path,
+//                           QLatin1String(LIGTHDM_INTERFACE),
+//                           QDBusConnection::systemBus(),
+//                           property);
+
+    return messageboxcheck();
 }
 
 bool SystemdProvider::canAction(UkuiPower::Action action) const
