@@ -39,6 +39,9 @@
 #include <QDBusInterface>
 #include <QTextStream>
 
+#include <QMessageBox>
+#include <QPushButton>
+
 #include <sys/file.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -428,7 +431,7 @@ void MainWindow::doevent(QString test, int i){
         } else {
             qDebug()<<"failure to close Grab";
         }
-        this->hide();
+        //this->hide();
         if(i == 3){
             doLockscreen();
         }
@@ -605,7 +608,7 @@ void MainWindow::refreshBlur(QWidget *last, QWidget *now){
     QString pastName = last->objectName();
     QString name = now->objectName();
     QString strlast = "QWidget#" + pastName + "{background-color: rgb(0,0,0,0)}";
-    QString str = "QWidget#" + name + "{background-color: rgb(255,255,255,150);border-radius: 6px;}";
+    QString str = "QWidget#" + name + "{background-color: rgb(255,255,255,80);border-radius: 6px;}";
     last->setStyleSheet(strlast);
     now->setStyleSheet(str);
 }
