@@ -41,11 +41,18 @@
 
 #include <QMessageBox>
 #include <QPushButton>
+#include <QDBusReply>
+#include "loginedusers.h"
+#include <QDBusMetaType>
 
 #include <sys/file.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <pwd.h>
+
+#define SYSTEMD_SERVICE     "org.freedesktop.login1"
+#define SYSTEMD_PATH        "/org/freedesktop/login1"
+#define SYSTEMD_INTERFACE   "org.freedesktop.login1.Manager"
 
 QT_BEGIN_NAMESPACE
 extern void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
@@ -85,6 +92,54 @@ QString getUserName(QFile *a){
         }
     }
     return user;
+}
+
+QStringList getLoginedUsers() {
+    QStringList m_loginedUser;
+    qRegisterMetaType<LoginedUsers>("LoginedUsers");
+    qDBusRegisterMetaType<LoginedUsers>();
+    QDBusInterface loginInterface(SYSTEMD_SERVICE,
+                                  SYSTEMD_PATH,
+                                  SYSTEMD_INTERFACE,
+                                  QDBusConnection::systemBus());
+
+    if (loginInterface.isValid()) {
+        qDebug() << "create interface success";
+    }
+
+    QDBusMessage result = loginInterface.call("ListUsers");
+    QList<QVariant> outArgs = result.arguments();
+    QVariant first = outArgs.at(0);
+    QDBusArgument dbvFirst = first.value<QDBusArgument>();
+    QVariant vFirst = dbvFirst.asVariant();
+    const QDBusArgument &dbusArgs = vFirst.value<QDBusArgument>();
+
+    QVector<LoginedUsers> loginedUsers;
+
+    dbusArgs.beginArray();
+    while (!dbusArgs.atEnd()) {
+        LoginedUsers user;
+        dbusArgs >> user;
+        loginedUsers.push_back(user);
+    }
+    dbusArgs.endArray();
+
+    for (LoginedUsers user : loginedUsers) {
+
+        QDBusInterface userPertyInterface("org.freedesktop.login1",
+                                          user.objpath.path(),
+                                          "org.freedesktop.DBus.Properties",
+                                          QDBusConnection::systemBus());
+
+        QDBusReply<QVariant> reply = userPertyInterface.call("Get", "org.freedesktop.login1.User", "State");
+        if (reply.isValid()) {
+            QString status = reply.value().toString();
+            if ("closing" != status) {
+                m_loginedUser.append(user.userName);
+            }
+        }
+    }
+    return m_loginedUser;
 }
 
 MainWindow::MainWindow(bool a, bool b, QWidget *parent)
@@ -133,6 +188,18 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     ui->logout->installEventFilter(this);
     ui->reboot->installEventFilter(this);
     ui->shutdown->installEventFilter(this);
+
+    QStringList userlist = getLoginedUsers();
+    if(userlist.count() > 1){
+        close_system_needed_to_confirm = true;
+    }
+    QString tips = QApplication::tr("Multiple users are logged in at the same time.Are you sure you want to close this system?");
+    ui->label->setText(tips);
+    connect(ui->cancelButton,&QPushButton::clicked,this,&MainWindow::exitt);
+    connect(ui->confirmButton,&QPushButton::clicked,[&](){
+        emit confirmButtonclicked();
+    });
+    ui->judgeWidget->hide();
 
     user = getenv("USER");
     lockfile = a;
@@ -193,7 +260,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     //Set the default value
     lastWidget = ui->lockscreen;
     tableNum = 3;
-    ui->lockscreen->setStyleSheet("QWidget#lockscreen{background-color: rgb(255,255,255,150);border-radius: 6px;}");
+    ui->lockscreen->setStyleSheet("QWidget#lockscreen{background-color: rgb(255,255,255,80);border-radius: 6px;}");
 
     QDateTime current_date_time =QDateTime::currentDateTime();
     const QByteArray id_control("org.ukui.control-center.panel.plugins");
@@ -204,21 +271,21 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
         QString formate_a = controlSetting->get("date").toString();
         QString formate_b = controlSetting->get("hoursystem").toString();
         if(formate_a == "en")
-            current_date =current_date_time.toString("yyyy-MM-dd ddd");
+            current_date = current_date_time.toString("yyyy-MM-dd ddd");
         else if(formate_a == "cn")
-            current_date =current_date_time.toString("yyyy/MM/dd ddd");
+            current_date = current_date_time.toString("yyyy/MM/dd ddd");
         else
             current_date =current_date_time.toString("yyyy-MM-dd ddd");
 
         if(formate_b == "12")
-            current_time =current_date_time.toString("A hh:mm");
+            current_time = current_date_time.toString("A hh:mm");
         else if(formate_b == "24")
             current_time =current_date_time.toString("hh:mm");
         else
-            current_time =current_date_time.toString("hh:mm");
+            current_time = current_date_time.toString("hh:mm");
     }else{
-        current_date =current_date_time.toString("yyyy-MM-dd ddd");
-        current_time =current_date_time.toString("hh:mm");
+        current_date = current_date_time.toString("yyyy-MM-dd ddd");
+        current_time = current_date_time.toString("hh:mm");
     }
 
     ui->time_lable->setText(current_time);
@@ -421,38 +488,58 @@ void MainWindow::changePoint(QWidget *widget, QEvent *event, int i){
 }
 
 void MainWindow::doevent(QString test, int i){
-    try {
-        gs->set("win-key-release",false);
-
-        defaultnum = i;
-        qDebug()<<"Start do action"<<test<<defaultnum;
-        if (closeGrab()) {
-            qDebug()<<"success to close Grab";
-        } else {
-            qDebug()<<"failure to close Grab";
-        }
-        //this->hide();
-        if(i == 3){
-            doLockscreen();
-        }
-        else{
+    defaultnum = i;
+    if(close_system_needed_to_confirm && (i == 5 || i == 6)){
+        connect(this,&MainWindow::confirmButtonclicked,[&](){
+            gs->set("win-key-release",false);
+            qDebug()<<"Start do action"<<defaultnum;
+            if (closeGrab()) {
+                qDebug()<<"success to close Grab";
+            } else {
+                qDebug()<<"failure to close Grab";
+            }
+            //this->hide();
             emit signalTostart();
+        });
+        this->judgeboxShow();
+    }else{
+        try {
+            gs->set("win-key-release",false);
+
+            defaultnum = i;
+            qDebug()<<"Start do action"<<test<<defaultnum;
+            if(click_blank_space_need_to_exit){
+                if (closeGrab()) {
+                    qDebug()<<"success to close Grab";
+                } else {
+                    qDebug()<<"failure to close Grab";
+                }
+            }
+            //this->hide();
+            if(i == 3){
+                doLockscreen();
+            }
+            else{
+                emit signalTostart();
+            }
+        } catch (QException &e) {
+            qWarning() << e.what();
         }
-    } catch (QException &e) {
-        qWarning() << e.what();
     }
 }
 
 //handle the blank-area mousePressEvent
 void MainWindow::mousePressEvent(QMouseEvent *event){
-    if (!ui->suspend->geometry().contains(event->pos()) &&
-            !ui->hibernate->geometry().contains(event->pos()) &&
-            !ui->lockscreen->geometry().contains(event->pos()) &&
-            !ui->switchuser->geometry().contains(event->pos()) &&
-            !ui->logout->geometry().contains(event->pos()) &&
-            !ui->reboot->geometry().contains(event->pos()) &&
-            !ui->shutdown->geometry().contains(event->pos())) {
-        exitt();
+    if(click_blank_space_need_to_exit){
+        if (!ui->suspend->geometry().contains(event->pos()) &&
+                !ui->hibernate->geometry().contains(event->pos()) &&
+                !ui->lockscreen->geometry().contains(event->pos()) &&
+                !ui->switchuser->geometry().contains(event->pos()) &&
+                !ui->logout->geometry().contains(event->pos()) &&
+                !ui->reboot->geometry().contains(event->pos()) &&
+                !ui->shutdown->geometry().contains(event->pos())) {
+            exitt();
+        }
     }
 }
 
@@ -474,6 +561,10 @@ void MainWindow::onGlobalKeyPress(const QString &key){
 //handle "Esc","Left","Right","Enter" keyPress event
 void MainWindow::onGlobalkeyRelease(const QString &key)
 {
+    if(!click_blank_space_need_to_exit){
+        return;
+    }
+
     qDebug()<<"key: "<<key;
     if (key == "Escape") {
         exitt();
@@ -611,6 +702,20 @@ void MainWindow::refreshBlur(QWidget *last, QWidget *now){
     QString str = "QWidget#" + name + "{background-color: rgb(255,255,255,80);border-radius: 6px;}";
     last->setStyleSheet(strlast);
     now->setStyleSheet(str);
+}
+
+void MainWindow::judgeboxShow(){
+    click_blank_space_need_to_exit = false;
+    for(int j = 0;j < 7;j++){
+        map[j]->hide();
+    }
+
+    int xx = m_screen.x();
+    int yy = m_screen.y();//取得当前鼠标所在屏幕的最左，上坐标
+    ui->judgeWidget->move(xx+(m_screen.width()-850)/2,yy+(m_screen.height()-140)/2-100);
+
+    ui->widget->hide();
+    ui->judgeWidget->show();
 }
 
 //void MainWindow::closeEvent(QCloseEvent *event)

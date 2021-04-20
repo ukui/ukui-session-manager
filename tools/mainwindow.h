@@ -48,9 +48,9 @@ public:
 
     QTimer *timer;
     int defaultnum = 0;
+    void judgeboxShow();
 
 private:
-    bool exitt();
     QGSettings *gs;
     Ui::MainWindow *ui;
     UkuiPower *m_power;
@@ -67,12 +67,16 @@ private:
 
     bool lockfile = false;
     bool lockuser = false;
+    bool click_blank_space_need_to_exit = true;
+    bool close_system_needed_to_confirm = false;
     QString user;
 
 Q_SIGNALS:
     void signalTostart();
+    void confirmButtonclicked();
 
 private Q_SLOTS:
+    bool exitt();
     void onGlobalKeyPress(const QString &key);
     void onGlobalkeyRelease(const QString &key);
 
