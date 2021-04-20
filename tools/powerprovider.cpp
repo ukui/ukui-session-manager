@@ -35,7 +35,7 @@
 #include <QPushButton>
 #include <QObject>
 #include <QDBusReply>
-#include "loginedusers.h"
+//#include "loginedusers.h"
 
 #define LIGHTDM_SERVICE     "org.freedesktop.DisplayManager"
 #define LIGTHDM_INTERFACE   "org.freedesktop.DisplayManager.Seat"
@@ -50,53 +50,53 @@
 
 #define PROPERTIES_INTERFACE    "org.freedesktop.DBus.Properties"
 
-QStringList getLoginedUsers() {
-    QStringList m_loginedUser;
-    qRegisterMetaType<LoginedUsers>("LoginedUsers");
-    qDBusRegisterMetaType<LoginedUsers>();
-    QDBusInterface loginInterface(SYSTEMD_SERVICE,
-                                  SYSTEMD_PATH,
-                                  SYSTEMD_INTERFACE,
-                                  QDBusConnection::systemBus());
+//QStringList getLoginedUsers() {
+//    QStringList m_loginedUser;
+//    qRegisterMetaType<LoginedUsers>("LoginedUsers");
+//    qDBusRegisterMetaType<LoginedUsers>();
+//    QDBusInterface loginInterface(SYSTEMD_SERVICE,
+//                                  SYSTEMD_PATH,
+//                                  SYSTEMD_INTERFACE,
+//                                  QDBusConnection::systemBus());
 
-    if (loginInterface.isValid()) {
-        qDebug() << "create interface success";
-    }
+//    if (loginInterface.isValid()) {
+//        qDebug() << "create interface success";
+//    }
 
-    QDBusMessage result = loginInterface.call("ListUsers");
-    QList<QVariant> outArgs = result.arguments();
-    QVariant first = outArgs.at(0);
-    QDBusArgument dbvFirst = first.value<QDBusArgument>();
-    QVariant vFirst = dbvFirst.asVariant();
-    const QDBusArgument &dbusArgs = vFirst.value<QDBusArgument>();
+//    QDBusMessage result = loginInterface.call("ListUsers");
+//    QList<QVariant> outArgs = result.arguments();
+//    QVariant first = outArgs.at(0);
+//    QDBusArgument dbvFirst = first.value<QDBusArgument>();
+//    QVariant vFirst = dbvFirst.asVariant();
+//    const QDBusArgument &dbusArgs = vFirst.value<QDBusArgument>();
 
-    QVector<LoginedUsers> loginedUsers;
+//    QVector<LoginedUsers> loginedUsers;
 
-    dbusArgs.beginArray();
-    while (!dbusArgs.atEnd()) {
-        LoginedUsers user;
-        dbusArgs >> user;
-        loginedUsers.push_back(user);
-    }
-    dbusArgs.endArray();
+//    dbusArgs.beginArray();
+//    while (!dbusArgs.atEnd()) {
+//        LoginedUsers user;
+//        dbusArgs >> user;
+//        loginedUsers.push_back(user);
+//    }
+//    dbusArgs.endArray();
 
-    for (LoginedUsers user : loginedUsers) {
+//    for (LoginedUsers user : loginedUsers) {
 
-        QDBusInterface userPertyInterface("org.freedesktop.login1",
-                                          user.objpath.path(),
-                                          "org.freedesktop.DBus.Properties",
-                                          QDBusConnection::systemBus());
+//        QDBusInterface userPertyInterface("org.freedesktop.login1",
+//                                          user.objpath.path(),
+//                                          "org.freedesktop.DBus.Properties",
+//                                          QDBusConnection::systemBus());
 
-        QDBusReply<QVariant> reply = userPertyInterface.call("Get", "org.freedesktop.login1.User", "State");
-        if (reply.isValid()) {
-            QString status = reply.value().toString();
-            if ("closing" != status) {
-                m_loginedUser.append(user.userName);
-            }
-        }
-    }
-    return m_loginedUser;
-}
+//        QDBusReply<QVariant> reply = userPertyInterface.call("Get", "org.freedesktop.login1.User", "State");
+//        if (reply.isValid()) {
+//            QString status = reply.value().toString();
+//            if ("closing" != status) {
+//                m_loginedUser.append(user.userName);
+//            }
+//        }
+//    }
+//    return m_loginedUser;
+//}
 
 bool messageboxcheck(){
     QMessageBox msgBox;
@@ -108,11 +108,11 @@ bool messageboxcheck(){
     QPushButton *stillButton = msgBox.addButton(QObject::tr("Still to do!"), QMessageBox::ActionRole);
     QPushButton *giveupButton = msgBox.addButton(QObject::tr("give up"), QMessageBox::RejectRole);
 
-    QStringList usrlist = getLoginedUsers();
-    QList<QString>::Iterator it = usrlist.begin(),itend = usrlist.end();
-    for(;it != itend;it++){
-        qDebug()<<*it;
-    }
+//    QStringList usrlist = getLoginedUsers();
+//    QList<QString>::Iterator it = usrlist.begin(),itend = usrlist.end();
+//    for(;it != itend;it++){
+//        qDebug()<<*it;
+//    }
 
     msgBox.exec();
 
