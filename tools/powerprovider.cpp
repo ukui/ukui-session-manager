@@ -272,15 +272,15 @@ bool SystemdProvider::canSwitchUser() const
 //    }
 //    return true;
 
-//    QString property = "CanSwitch";
-//    QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
-//    return dbusGetProperty(QLatin1String(LIGHTDM_SERVICE),
-//                           xdg_seat_path,
-//                           QLatin1String(LIGTHDM_INTERFACE),
-//                           QDBusConnection::systemBus(),
-//                           property);
+    QString property = "CanSwitch";
+    QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
+    return dbusGetProperty(QLatin1String(LIGHTDM_SERVICE),
+                           xdg_seat_path,
+                           QLatin1String(LIGTHDM_INTERFACE),
+                           QDBusConnection::systemBus(),
+                           property);
 
-    return messageboxcheck();
+//    return messageboxcheck();
 }
 
 bool SystemdProvider::canAction(UkuiPower::Action action) const
