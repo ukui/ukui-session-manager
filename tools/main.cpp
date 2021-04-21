@@ -37,6 +37,7 @@
 #include "ukuipower.h"
 #include "mainwindow.h"
 #include "window.h"
+#include <QPushButton>
 
 #include <sys/file.h>
 #include <stdio.h>
@@ -70,6 +71,28 @@ QString getName(QFile *a){
         }
     }
     return user;
+}
+
+bool messageboxCheck(){
+    QMessageBox msgBox;
+//    msgBox.setWindowTitle(QObject::tr("conform"));
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
+//    msgBox.setModal(false);
+    msgBox.setText(QObject::tr("Multiple users are logged in at the same time.Are you sure you want to close this system?"));
+    QPushButton *cancelButton = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
+    QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
+
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == cancelButton) {
+        qDebug()<<"cancel!";
+        return false;
+    } else if (msgBox.clickedButton() == confirmButton) {
+        qDebug()<<"confirm!";
+        return true;
+    }else
+        return false;
 }
 
 void messagecheck(){
@@ -257,6 +280,20 @@ int main(int argc, char* argv[])
     up_to_time->setSingleShot(true);
     QSoundEffect *soundplayer = new QSoundEffect();
 
+    QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
+    gs->set("win-key-release",true);
+
+    bool lock_file = false;
+    bool lock_user = false;
+    if(cc == 1){
+        lock_file = true;
+    }
+    if(cc == 2){
+        lock_file = true;
+        lock_user = true;
+    }
+    MainWindow *w = new MainWindow(lock_file,lock_user);
+
     QCommandLineParser parser;
     parser.setApplicationDescription(QApplication::tr("UKUI session tools, show the shutdown dialog without any arguments."));
     const QString VERINFO = QStringLiteral("2.0");
@@ -295,10 +332,22 @@ int main(int argc, char* argv[])
         flag = playShutdownMusic(powermanager, 4, cc, up_to_time, soundplayer);
     }
     if (parser.isSet(rebootOption)) {
-        flag = playShutdownMusic(powermanager, 5, cc, up_to_time, soundplayer);
+        if(w->getLoginedUsers().count() > 1){
+            if(messageboxCheck())
+                flag = playShutdownMusic(powermanager, 5, cc, up_to_time, soundplayer);
+            else
+                return 0;
+        }else
+            flag = playShutdownMusic(powermanager, 5, cc, up_to_time, soundplayer);
     }
     if (parser.isSet(shutdownOption)) {
-        flag = playShutdownMusic(powermanager, 6, cc, up_to_time, soundplayer);
+        if(w->getLoginedUsers().count() > 1){
+            if(messageboxCheck())
+                flag = playShutdownMusic(powermanager, 6, cc, up_to_time, soundplayer);
+            else
+                return 0;
+        }else
+            flag = playShutdownMusic(powermanager, 6, cc, up_to_time, soundplayer);
     }
     if (parser.isSet(windowOption)) {
         flag = false;
@@ -306,20 +355,6 @@ int main(int argc, char* argv[])
         win->showFullScreen();
     }
     if (flag) {
-        QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
-        gs->set("win-key-release",true);
-
-        bool lock_file = false;
-        bool lock_user = false;
-        if(cc == 1){
-            lock_file = true;
-        }
-        if(cc == 2){
-            lock_file = true;
-            lock_user = true;
-        }
-        MainWindow *w = new MainWindow(lock_file,lock_user);
-
         // Load qss file
         QFile qss(":/powerwin.qss");
         qss.open(QFile::ReadOnly);
