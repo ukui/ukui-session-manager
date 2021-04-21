@@ -94,54 +94,6 @@ QString getUserName(QFile *a){
     return user;
 }
 
-QStringList getLoginedUsers() {
-    QStringList m_loginedUser;
-    qRegisterMetaType<LoginedUsers>("LoginedUsers");
-    qDBusRegisterMetaType<LoginedUsers>();
-    QDBusInterface loginInterface(SYSTEMD_SERVICE,
-                                  SYSTEMD_PATH,
-                                  SYSTEMD_INTERFACE,
-                                  QDBusConnection::systemBus());
-
-    if (loginInterface.isValid()) {
-        qDebug() << "create interface success";
-    }
-
-    QDBusMessage result = loginInterface.call("ListUsers");
-    QList<QVariant> outArgs = result.arguments();
-    QVariant first = outArgs.at(0);
-    QDBusArgument dbvFirst = first.value<QDBusArgument>();
-    QVariant vFirst = dbvFirst.asVariant();
-    const QDBusArgument &dbusArgs = vFirst.value<QDBusArgument>();
-
-    QVector<LoginedUsers> loginedUsers;
-
-    dbusArgs.beginArray();
-    while (!dbusArgs.atEnd()) {
-        LoginedUsers user;
-        dbusArgs >> user;
-        loginedUsers.push_back(user);
-    }
-    dbusArgs.endArray();
-
-    for (LoginedUsers user : loginedUsers) {
-
-        QDBusInterface userPertyInterface("org.freedesktop.login1",
-                                          user.objpath.path(),
-                                          "org.freedesktop.DBus.Properties",
-                                          QDBusConnection::systemBus());
-
-        QDBusReply<QVariant> reply = userPertyInterface.call("Get", "org.freedesktop.login1.User", "State");
-        if (reply.isValid()) {
-            QString status = reply.value().toString();
-            if ("closing" != status) {
-                m_loginedUser.append(user.userName);
-            }
-        }
-    }
-    return m_loginedUser;
-}
-
 MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -339,7 +291,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
 //    ui->time_lable->setFont(fontt);
 //    qDebug()<<fontt.wordSpacing()<<"----"<<font.letterSpacing();
 
-    this->show();
+//    this->show();
 
     //qApp->installNativeEventFilter(this);
 }
@@ -349,6 +301,54 @@ MainWindow::~MainWindow()
     delete m_power;
     delete xEventMonitor;
     delete ui;
+}
+
+QStringList MainWindow::getLoginedUsers() {
+    QStringList m_loginedUser;
+    qRegisterMetaType<LoginedUsers>("LoginedUsers");
+    qDBusRegisterMetaType<LoginedUsers>();
+    QDBusInterface loginInterface(SYSTEMD_SERVICE,
+                                  SYSTEMD_PATH,
+                                  SYSTEMD_INTERFACE,
+                                  QDBusConnection::systemBus());
+
+    if (loginInterface.isValid()) {
+        qDebug() << "create interface success";
+    }
+
+    QDBusMessage result = loginInterface.call("ListUsers");
+    QList<QVariant> outArgs = result.arguments();
+    QVariant first = outArgs.at(0);
+    QDBusArgument dbvFirst = first.value<QDBusArgument>();
+    QVariant vFirst = dbvFirst.asVariant();
+    const QDBusArgument &dbusArgs = vFirst.value<QDBusArgument>();
+
+    QVector<LoginedUsers> loginedUsers;
+
+    dbusArgs.beginArray();
+    while (!dbusArgs.atEnd()) {
+        LoginedUsers user;
+        dbusArgs >> user;
+        loginedUsers.push_back(user);
+    }
+    dbusArgs.endArray();
+
+    for (LoginedUsers user : loginedUsers) {
+
+        QDBusInterface userPertyInterface("org.freedesktop.login1",
+                                          user.objpath.path(),
+                                          "org.freedesktop.DBus.Properties",
+                                          QDBusConnection::systemBus());
+
+        QDBusReply<QVariant> reply = userPertyInterface.call("Get", "org.freedesktop.login1.User", "State");
+        if (reply.isValid()) {
+            QString status = reply.value().toString();
+            if ("closing" != status) {
+                m_loginedUser.append(user.userName);
+            }
+        }
+    }
+    return m_loginedUser;
 }
 
 void MainWindow::ResizeEvent(){
@@ -691,7 +691,7 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
             doevent("shutdown",6);
             break;
         }
-        this->hide();
+        //this->hide();
     }
 }
 

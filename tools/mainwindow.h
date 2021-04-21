@@ -49,6 +49,7 @@ public:
     QTimer *timer;
     int defaultnum = 0;
     void judgeboxShow();
+    QStringList getLoginedUsers();
 
 private:
     QGSettings *gs;
