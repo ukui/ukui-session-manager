@@ -32,7 +32,7 @@
 #include <QScreen>
 #include <QProcess>
 #include <QGSettings/QGSettings>
-
+#include <ukui-log4qt.h>
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -122,7 +122,8 @@ void Set4KScreenScale()
 
 int main(int argc, char **argv)
 {
-    qInstallMessageHandler(myMessageOutput);
+    //qInstallMessageHandler(myMessageOutput);
+    initUkuiLog4qt("ukui-session");
     qDebug() << "UKUI session manager start.";
     SessionApplication app(argc, argv);
 
