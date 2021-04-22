@@ -17,6 +17,7 @@ Build-Depends: debhelper-compat (= 12),
                libxtst-dev,
                qttools5-dev-tools,
                pkg-config,
+               libukui-log4qt-dev,
 Rules-Requires-Root: no
 Standards-Version: 4.5.0
 Vcs-Browser: https://github.com/ukui/ukui-session-manager
