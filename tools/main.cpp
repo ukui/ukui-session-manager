@@ -43,6 +43,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pwd.h>
+#include <ukui-log4qt.h>
 
 #ifdef signals
 #undef signals
@@ -251,6 +252,8 @@ bool require_dbus_session(){
 
 int main(int argc, char* argv[])
 {
+    initUkuiLog4qt("ukui-session-tools");
+
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
