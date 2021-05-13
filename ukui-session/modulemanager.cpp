@@ -55,6 +55,7 @@ void ModuleManager::playBootMusic(bool arg){
             return;
         }
         QSoundEffect *player = new QSoundEffect();
+        player->setVolume(0.4);
         if(arg){
             play_music = gset->get("startup-music").toBool();
             if (play_music) {

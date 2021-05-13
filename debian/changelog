@@ -1,3 +1,188 @@
+ukui-session-manager (2.0.6-5) v101; urgency=medium
+
+  * Bug 号：无
+  * 任务号：25371
+  * 其他改动说明：无
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 22 Apr 2021 14:56:27 +0800
+
+ukui-session-manager (2.0.6-4) v101; urgency=medium
+
+  * Bug号：  47273
+  * 需求号：无
+  * 其他改动：无
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 20 Apr 2021 19:45:49 +0800
+
+ukui-session-manager (2.0.6-3) v101; urgency=medium
+
+  * 先起kwin后起桌面.
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 08 Apr 2021 16:46:56 +0800
+
+ukui-session-manager (2.0.6-2) v101; urgency=medium
+
+  * 注销音乐添加。
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 06 Apr 2021 01:39:42 +0800
+
+ukui-session-manager (2.0.6-1) v101; urgency=medium
+
+  * 解决部分机型偶现关机重启睡眠休眠不生效问题
+  * 调整dpi缩放判断，将3k屏加入放大范围
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 25 Mar 2021 09:25:52 +0800
+
+ukui-session-manager (2.0.5-47) v101; urgency=medium
+
+  * 接收usd启动完后发送的信号，解决bug #43527
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 22 Mar 2021 11:19:54 +0800
+
+ukui-session-manager (2.0.5-46) v101; urgency=medium
+
+  * 设置关机选择界面壁纸跟随桌面壁纸，当桌面壁纸为颜色时，设置为默认壁纸。
+  * 将图片染暗，突出按钮选项。
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 16 Mar 2021 16:00:30 +0800
+
+ukui-session-manager (2.0.5-45) v101; urgency=medium
+
+  * 根据退出码判断程序是否重新拉起。
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 16 Mar 2021 10:57:20 +0800
+
+ukui-session-manager (2.0.5-44) v101; urgency=medium
+
+  * 修复arm机器上，开始菜单和任务栏右键 关机重启睡眠，休眠选项不生效问题.
+
+ -- liuliang <liuliang@kylinos.cn>  Sat, 13 Mar 2021 15:53:45 +0800
+
+ukui-session-manager (2.0.5-43) v101; urgency=medium
+
+  * 规避DBus初始化错误问题
+  * 添加睡眠休眠和唤醒时的音乐
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 11 Mar 2021 20:48:32 +0800
+
+ukui-session-manager (2.0.5-42) v101; urgency=medium
+
+  * 解决bug #41040 #41154
+  * 更新锁文件中读取的内容
+
+ -- liuliang <liuliang@kylinos.cn>  Wed, 03 Mar 2021 17:12:00 +0800
+
+ukui-session-manager (2.0.5-41) v101; urgency=medium
+
+  * 调整注销使用的dbus.
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 01 Mar 2021 10:51:16 +0800
+
+ukui-session-manager (2.0.5-40) v101; urgency=medium
+
+  * 调整启动顺序，让peony先于ukui-kwin先起
+
+ -- liuliang <liuliang@kylinos.cn>  Sat, 27 Feb 2021 17:38:04 +0800
+
+ukui-session-manager (2.0.5-39) v101; urgency=medium
+
+  * 修复关机和重启没有关机音乐.
+
+ -- liuliang <liuliang@kylinos.cn>  Fri, 26 Feb 2021 16:29:15 +0800
+
+ukui-session-manager (2.0.5-38) v101; urgency=medium
+
+  * 解决bug #39757 #39759 ，关机选择界面描述错误问题。
+
+ -- liuliang <liuliang@kylinos.cn>  Fri, 26 Feb 2021 10:49:17 +0800
+
+ukui-session-manager (2.0.5-37) v101; urgency=medium
+
+  * 关机选择界面日期格式跟随设置
+
+ -- liuliang <liuliang@kylinos.cn>  Sun, 07 Feb 2021 17:30:48 +0800
+
+ukui-session-manager (2.0.5-36icbc) v101; urgency=medium
+
+  * 更新文件锁方式
+
+ -- liuliang <liuliang@kylinos.cn>  Fri, 05 Feb 2021 10:02:26 +0800
+
+ukui-session-manager (2.0.5-35icbc) v101; urgency=medium
+
+  * 更新文件锁地址.
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 02 Feb 2021 17:19:31 +0800
+
+ukui-session-manager (2.0.5-33+test) v101; urgency=medium
+
+  * 启动时画背景，避免黑屏
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 01 Feb 2021 17:49:02 +0800
+
+ukui-session-manager (2.0.5-32) v101; urgency=medium
+
+  * 解决bug：panel和menu kill后没有重启的问题.
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 01 Feb 2021 14:24:37 +0800
+
+ukui-session-manager (2.0.5-31) v101; urgency=medium
+
+  * 完善系统备份与升级时判断.
+
+ -- liuliang <liuliang@kylinos.cn>  Sat, 30 Jan 2021 17:37:42 +0800
+
+ukui-session-manager (2.0.5-30) v101; urgency=medium
+
+  * 调整wayland模式下hwaudioservice的启动顺序.
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 28 Jan 2021 16:48:26 +0800
+
+ukui-session-manager (2.0.5-28icbc) v101; urgency=medium
+
+  * 添加xdg-session-type判断.
+
+ -- liuliang <liuliang@kylinos.cn>  Wed, 27 Jan 2021 17:41:58 +0800
+
+ukui-session-manager (2.0.5-27icbc) v101; urgency=medium
+
+  * 添加wayland适配。
+  * 系统备份与软件更新时无法关机和重启。
+  * 关机选择界面字体跟随主题变化。
+
+ -- liuliang <liuliang@kylinos.cn>  Wed, 27 Jan 2021 10:29:03 +0800
+
+ukui-session-manager (2.0.5-26icbc) v101; urgency=medium
+
+  * 注销时发送信号，安卓兼容环境退出。
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 04 Jan 2021 14:30:20 +0800
+
+ukui-session-manager (2.0.5-25) v101; urgency=medium
+
+  * 解决通过d-bus调用关机和重启接口失效问题。
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 28 Dec 2020 14:27:13 +0800
+
+ukui-session-manager (2.0.5-24) v101; urgency=medium
+
+  * 修改关机管理界面壁纸为v10.1桌面默认壁纸。
+  * inhibit禁止注销时弹出提示框。
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 22 Dec 2020 20:48:32 +0800
+
+ukui-session-manager (2.0.5-23) v101; urgency=medium
+
+  * 单独给电源管理发送信号，将空闲计时和关闭显示器计时分开
+
+ -- liuliang <liuliang@kylinos.cn>  Sat, 19 Dec 2020 16:30:19 +0800
+
+ukui-session-manager (2.0.5-22) v101; urgency=medium
+
+  * remove switchuser button.
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 10 Dec 2020 20:46:03 +0800
+
 ukui-session-manager (2.0.5-21) v101; urgency=medium
 
   * 修改浏览器播放视屏时，系统进入空闲状态bug

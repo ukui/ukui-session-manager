@@ -287,6 +287,7 @@ int main(int argc, char* argv[])
     QTimer *up_to_time = new QTimer();
     up_to_time->setSingleShot(true);
     QSoundEffect *soundplayer = new QSoundEffect();
+    soundplayer->setVolume(0.4);
 
     QGSettings *gs = new QGSettings("org.ukui.session","/org/ukui/desktop/session/");
     gs->set("win-key-release",true);
