@@ -194,14 +194,19 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_ti
     gs->set("win-key-release",false);
     static int action = num;
 
-    if(num == 4){
+    if(num == 4 || num == 0){
         QDBusInterface dbus("org.gnome.SessionManager", "/org/gnome/SessionManager", "org.gnome.SessionManager", QDBusConnection::sessionBus());
         if (!dbus.isValid()) {
             qWarning() << "dbusCall: QDBusInterface is invalid";
             return false;
         }
 
-        QDBusMessage msg = dbus.call("emitStartLogout");
+        QDBusMessage msg;
+        if(num == 4)
+            msg = dbus.call("emitStartLogout");
+
+        if(num == 0)
+            msg = dbus.call("emitPrepareForSwitchuser");
 
         if (!msg.errorName().isEmpty()) {
             qWarning() << "Dbus error: " << msg;
