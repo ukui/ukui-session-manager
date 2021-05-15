@@ -31,7 +31,7 @@
 #include <QStandardPaths>
 #include <QDebug>
 #include <QGSettings/QGSettings>
-#include <QSoundEffect>
+//#include <QSoundEffect>
 #include <QDBusInterface>
 #include <QDir>
 /* qt会将glib里的signals成员识别为宏，所以取消该宏
@@ -54,21 +54,31 @@ void ModuleManager::playBootMusic(bool arg){
             free(gset);
             return;
         }
-        QSoundEffect *player = new QSoundEffect();
-        player->setVolume(0.4);
+        //QSoundEffect *player = new QSoundEffect();
+        player = new QMediaPlayer;
+        connect(player,SIGNAL(stateChanged(QMediaPlayer::State)),this,SLOT(stateChanged(QMediaPlayer::State)));
+        player->setVolume(40);
         if(arg){
             play_music = gset->get("startup-music").toBool();
             if (play_music) {
-                player->setSource(QUrl("qrc:/startup.wav"));
+                player->setMedia(QUrl("qrc:/startup.wav"));
                 player->play();
             }
         }else{
             play_music = gset->get("weakup-music").toBool();
             if (play_music) {
-                player->setSource(QUrl("qrc:/weakup.wav"));
+                player->setMedia(QUrl("qrc:/weakup.wav"));
                 player->play();
             }
         }
+    }
+}
+
+void ModuleManager::stateChanged(QMediaPlayer::State state){
+    qDebug()<<"Player state: "<<state;
+    if(state == QMediaPlayer::StoppedState){
+        player->deleteLater();
+        qDebug()<<"delete player";
     }
 }
 
