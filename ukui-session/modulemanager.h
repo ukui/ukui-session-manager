@@ -30,6 +30,7 @@
 #include <QVector>
 #include <QMap>
 #include <QTimer>
+#include <QMediaPlayer>
 
 class XdgDesktopFile;
 class IdleWatcher;
@@ -65,6 +66,7 @@ public slots:
     void timerUpdate();
     void timeup();
     void weakup(bool arg);
+    void stateChanged(QMediaPlayer::State state);
 
 Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
@@ -81,6 +83,7 @@ private:
     QTimer *tdesktop = new QTimer();
     bool start_module_Timer(QTimer *timer,int i);
 
+    QMediaPlayer *player;
     bool runUsd = true;
     bool runWm = true;
     bool runPanel = true;
