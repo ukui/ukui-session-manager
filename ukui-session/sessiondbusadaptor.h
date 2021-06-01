@@ -45,6 +45,7 @@ Q_SIGNALS:
     void inhibitadded(quint32 flags);
     void inhibitremove(quint32 flags);
     void StartLogout();
+    void PrepareForSwitchuser();
 
 public slots:
     void startupfinished(const QString& appName ,const QString& string)
@@ -147,6 +148,11 @@ public slots:
     Q_NOREPLY void emitStartLogout(){
         qDebug()<<"emit  StartLogout";
         emit StartLogout();
+    }
+
+    Q_NOREPLY void emitPrepareForSwitchuser(){
+        qDebug()<<"emit  PrepareForSwitchuser";
+        emit PrepareForSwitchuser();
     }
 
 private:
