@@ -55,6 +55,12 @@ void SessionApplication::InitialEnvironment()
             gs->set("canhibernate",true);
         else
             gs->set("canhibernate",false);
+
+        //在打开关机管理界面后通过物理按键的方式关机/重启
+        //将导致win-key-release键值为true
+        //造成大部分热键和组合键失效
+        //所以在登录进来时恢复默认值
+        gs->reset("win-key-release");
     }
 
     //检查qt主题是否安装
