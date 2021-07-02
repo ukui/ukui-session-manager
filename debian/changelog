@@ -192,19 +192,19 @@ ukui-session-manager (2.0.5-21) v101; urgency=medium
 
 ukui-session-manager (2.0.5-20) v101; urgency=medium
 
-  *接受任务栏起动完成的信号，添加超时. 
+  *接受任务栏起动完成的信号，添加超时.
 
  -- liuliang <liuliang@kylinos.cn>  Sat, 28 Nov 2020 17:29:17 +0800
 
 ukui-session-manager (2.0.5-19) v101; urgency=medium
 
-  * 超时时间改为18秒，添加窗口管理器判断。 
+  * 超时时间改为18秒，添加窗口管理器判断。
 
  -- liuliang <liuliang@kylinos.cn>  Tue, 24 Nov 2020 22:43:17 +0800
 
 ukui-session-manager (2.0.5-18) v101; urgency=medium
 
-  *添加dbus信号，在接受到窗口管理器起来后再拉起其他应用. 
+  *添加dbus信号，在接受到窗口管理器起来后再拉起其他应用.
 
  -- liuliang <liuliang@kylinos.cn>  Tue, 24 Nov 2020 21:50:16 +0800
 
@@ -217,19 +217,19 @@ ukui-session-manager (2.0.5-17) v101; urgency=medium
 
 ukui-session-manager (2.0.5-16) v101; urgency=medium
 
-  * 解决系统无法进入空闲，自动打开屏保功能。 
+  * 解决系统无法进入空闲，自动打开屏保功能。
 
  -- liuliang <liuliang@kylinos.cn>  Thu, 05 Nov 2020 13:44:09 +0800
 
 ukui-session-manager (2.0.5-15) v101; urgency=medium
 
-  * 搜狗输入法存在时，不启动fcitx-qimpanel. 
+  * 搜狗输入法存在时，不启动fcitx-qimpanel.
 
  -- liuliang <liuliang@kylinos.cn>  Thu, 22 Oct 2020 09:53:54 +0800
 
 ukui-session-manager (2.0.5-13) v101; urgency=medium
 
-  * 顶层遮罩由tools提供，session设置为console模式. 
+  * 顶层遮罩由tools提供，session设置为console模式.
 
  -- liuliang <liuliang@kylinos.cn>  Thu, 15 Oct 2020 20:37:00 +0800
 

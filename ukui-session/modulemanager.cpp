@@ -31,7 +31,7 @@
 #include <QStandardPaths>
 #include <QDebug>
 #include <QGSettings/QGSettings>
-//#include <QSoundEffect>
+// #include <QSoundEffect>
 #include <QDBusInterface>
 #include <QDir>
 /* qt会将glib里的signals成员识别为宏，所以取消该宏
@@ -54,7 +54,6 @@ void ModuleManager::playBootMusic(bool arg){
             free(gset);
             return;
         }
-        //QSoundEffect *player = new QSoundEffect();
         player = new QMediaPlayer;
         connect(player,SIGNAL(stateChanged(QMediaPlayer::State)),this,SLOT(stateChanged(QMediaPlayer::State)));
         player->setVolume(40);

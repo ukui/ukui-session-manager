@@ -1,6 +1,6 @@
 #include "usminhibit.h"
 #include "QDBusConnection"
-#include <QRandomGenerator> 
+#include <QRandomGenerator>
 #include <limits.h>
 #include <QDebug>
 
@@ -148,8 +148,8 @@ QStringList usminhibit::getinhibitor(){
         i.next();
         QString messagelist;
         messagelist = i.value().app_id + "/" + QString::number(i.value().toplevel_xid)+ "/" \
-                + i.value().reason + "/" + QString::number(i.value().flags) + "/" + QString::number(i.value().cookie);
-        inhibitors<<messagelist;
+                    + i.value().reason + "/" + QString::number(i.value().flags) + "/" + QString::number(i.value().cookie);
+        inhibitors << messagelist;
     }
     return inhibitors;
 }
