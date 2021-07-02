@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>startup.wav</file>
-        <file>shutdown.wav</file>
-        <file>weakup.wav</file>
-        <file>logout.wav</file>
-    </qresource>
-</RCC>

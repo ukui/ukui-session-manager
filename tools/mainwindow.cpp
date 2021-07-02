@@ -122,7 +122,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
         }
         gset->deleteLater();
     } else {
-        pix.load(":/images/background-ukui.png");
+        pix.load("/usr/share/ukui/ukui-session-manager/images/background-ukui.png");
         pix = blurPixmap(pix);
     }
 

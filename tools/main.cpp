@@ -227,9 +227,9 @@ bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_t
         // otherwise run ukui-session-tools --suspend with segmente error.
         // because they will be delate at the end of the playShutdownMusic().
         if (num == 5 || num == 6) {
-            soundplayer->setSource(QUrl("qrc:/shutdown.wav"));
+            soundplayer->setSource(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/shutdown.wav"));
         } else if (num == 4) {
-            soundplayer->setSource(QUrl("qrc:/logout.wav"));
+            soundplayer->setSource(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/logout.wav"));
         } else {
             qDebug() << "error num";
             return false;

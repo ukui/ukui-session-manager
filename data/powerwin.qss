@@ -1,41 +1,41 @@
 /* 挂起按钮 */
 QLabel#suspend_icon{
-    background:url(:/images/suspend.png);
+    background:url(/usr/share/ukui/ukui-session-manager/images/suspend.png);
     background-repeat:no-repeat;
 }
 
 /* 休眠按钮 */
 QLabel#hibernate_icon{
-    background:url(:/images/hibernate.png);
+    background:url(/usr/share/ukui/ukui-session-manager/images/hibernate.png);
     background-repeat:no-repeat;
 }
 
 /*切换账户按钮*/
 QLabel#switchuser_icon{
-    background:url(:/images/switchuser.png);
+    background:url(/usr/share/ukui/ukui-session-manager/images/switchuser.png);
     background-repeat:no-repeat;
 }
 
 /*注销按钮*/
 QLabel#logout_icon{
-    background:url(:/images/logout.png);
+    background:url(/usr/share/ukui/ukui-session-manager/images/logout.png);
     background-repeat:no-repeat;
 }
 
 /*重启按钮*/
 QLabel#reboot_icon{
-    background:url(:/images/reboot.png);
+    background:url(/usr/share/ukui/ukui-session-manager/images/reboot.png);
     background-repeat:no-repeat;
 }
 
 /*注销按钮*/
 QLabel#shutdown_icon{
-    background:url(:/images/shutdown.png);
+    background:url(/usr/share/ukui/ukui-session-manager/images/shutdown.png);
     background-repeat:no-repeat;
 }
 
 /*锁屏按钮*/
 QLabel#lockscreen_icon{
-    background:url(:/images/lockscreen.png);
+    background:url(/usr/share/ukui/ukui-session-manager/images/lockscreen.png);
     background-repeat:no-repeat;
 }
