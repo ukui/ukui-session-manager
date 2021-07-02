@@ -33,6 +33,16 @@
 #include <QProcess>
 #include <QGSettings/QGSettings>
 #include <ukui-log4qt.h>
+extern "C" {
+#include <X11/Xatom.h>
+#include <X11/Xlib.h>
+}
+
+#define XSETTINGS_SCHEMA    "org.ukui.SettingsDaemon.plugins.xsettings"
+#define MOUSE_SCHEMA        "org.ukui.peripherals-mouse"
+#define SCALING_KEY         "scaling-factor"
+#define CURSOR_SIZE         "cursor-size"
+#define CURSOR_THEME        "cursor-theme"
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -70,6 +80,44 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     logFile.close();
 }
 
+void screenScaleJudgment(QGSettings   *settings)
+{
+    double       scale;
+    scale = settings->get(SCALING_KEY).toDouble();
+    if(scale > 1.25){
+        bool state = false;
+        for(QScreen *screen : QGuiApplication::screens()){
+            if (screen->geometry().width() <= 1920 &&  screen->geometry().height() <= 1080){
+                state = true;
+            }
+        }
+        if (state){
+            QGSettings   *mGsettings;
+            mGsettings = new QGSettings(MOUSE_SCHEMA);
+            mGsettings->set(CURSOR_SIZE, 24);
+            settings->set(SCALING_KEY, 1.0);
+            delete mGsettings;
+        }
+    }
+}
+
+void setXresources(int dpi)
+{
+    Display    *dpy;
+    QGSettings *mouse_settings = new QGSettings(MOUSE_SCHEMA);
+    QString str = QString("Xft.dpi:\t%1\nXcursor.size:\t%2\nXcursor.theme:\t%3\n")
+            .arg(dpi)
+            .arg(mouse_settings->get(CURSOR_SIZE).toInt())
+            .arg(mouse_settings->get(CURSOR_THEME).toString());
+
+    dpy = XOpenDisplay (NULL);
+    XChangeProperty(dpy, RootWindow (dpy, 0),
+                    XA_RESOURCE_MANAGER, XA_STRING, 8, PropModeReplace, (unsigned char *) str.toLatin1().data(), str.length());
+
+    delete mouse_settings;
+    XCloseDisplay (dpy);
+}
+
 /* 判断文件是否存在 */
 bool isFileExist(QString XresourcesFile)
 {
@@ -82,7 +130,7 @@ bool isFileExist(QString XresourcesFile)
     return false;
 }
 /* 写配置文件并设置DPI和鼠标大小*/
-void WriteXresourcesFile(QString XresourcesFile)
+void WriteXresourcesFile(QString XresourcesFile, QGSettings *settings)
 {
     QFile file(XresourcesFile);
     QString content = "Xft.dpi:192\nXcursor.size:48";
@@ -91,39 +139,50 @@ void WriteXresourcesFile(QString XresourcesFile)
     file.write(str);
     file.close();
     QGSettings *gs = new QGSettings("org.ukui.font-rendering");
-    QGSettings *settings = new QGSettings("org.ukui.SettingsDaemon.plugins.xsettings");
-    QGSettings *mouse_settings = new QGSettings("org.ukui.peripherals-mouse");
+    QGSettings *mouse_settings = new QGSettings(MOUSE_SCHEMA);
     gs->set("dpi",96.0);
-    settings->set("scaling-factor",2);
-    mouse_settings->set("cursor-size",48);
-    delete settings;
+    settings->set(SCALING_KEY, 2.0);
+    mouse_settings->set(CURSOR_SIZE, 48);
     delete gs;
     delete mouse_settings;
 }
+
 /* 配置新装系统、新建用户第一次登陆时，4K缩放功能*/
 void Set4KScreenScale()
 {
+    QGSettings *settings;
     int ScreenNum = QApplication::screens().length();
-    for (int i=0;i<ScreenNum;i++)
-    {
-        QScreen *screen = QApplication::screens().at(i);
-        int height = screen->size().height();
-        int width = screen->size().width();
-        if(height > 1500 && width > 2560){
-                bool res;
-                QString homePath = getenv("HOME");
-                QString XresourcesFile = homePath+"/.Xresources";
-                res = isFileExist(XresourcesFile);
-                if(!res)
-                    WriteXresourcesFile(XresourcesFile);
+    settings = new QGSettings(XSETTINGS_SCHEMA);
+
+    /* 过滤单双屏下小分辨率大缩放值 */
+    screenScaleJudgment(settings);
+    double dpi = settings->get(SCALING_KEY).toDouble() * 96;
+    if (ScreenNum > 1){
+        setXresources(dpi);
+        delete settings;
+        return;
+    }
+    QScreen *screen = QApplication::screens().at(0);
+    int height = screen->size().height();
+    int width = screen->size().width();
+    if (height > 1500 && width > 2560){
+        bool res;
+        QString homePath = getenv("HOME");
+        QString XresourcesFile = homePath+"/.config/xresources";
+        res = isFileExist(XresourcesFile);
+        if(!res){
+            WriteXresourcesFile(XresourcesFile, settings);
         }
     }
+    double Dpi = settings->get(SCALING_KEY).toDouble() * 96.0;
+    setXresources(Dpi);
+    delete settings;
 }
 
 int main(int argc, char **argv)
 {
-    //qInstallMessageHandler(myMessageOutput);
-    initUkuiLog4qt("ukui-session");
+    qInstallMessageHandler(myMessageOutput);
+    //initUkuiLog4qt("ukui-session");
     qDebug() << "UKUI session manager start.";
     SessionApplication app(argc, argv);
 
