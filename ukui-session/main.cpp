@@ -87,9 +87,11 @@ void screenScaleJudgment(QGSettings   *settings)
     if(scale > 1.25){
         bool state = false;
         for(QScreen *screen : QGuiApplication::screens()){
-            if (screen->geometry().width() <= 1920 &&  screen->geometry().height() <= 1080){
+            if (screen->geometry().width() < 1920 &&  screen->geometry().height() < 1080){
                 state = true;
-            }
+            } else if (screen->geometry().width() == 1920 &&  screen->geometry().height() == 1080 && scale > 1.5){
+	        state = true;
+	    }
         }
         if (state){
             QGSettings   *mGsettings;
