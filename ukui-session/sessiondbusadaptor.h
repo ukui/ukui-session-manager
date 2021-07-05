@@ -38,6 +38,7 @@ public:
           minhibit(new usminhibit())
     {
         connect(mManager, &ModuleManager::moduleStateChanged, this , &SessionDBusAdaptor::moduleStateChanged);
+        connect(mManager, &ModuleManager::finished,this,&SessionDBusAdaptor::emitPrepareForPhase2);
     }
 
 Q_SIGNALS:
@@ -46,6 +47,7 @@ Q_SIGNALS:
     void inhibitremove(quint32 flags);
     void StartLogout();
     void PrepareForSwitchuser();
+    void PrepareForPhase2();
 
 public slots:
     void startupfinished(const QString& appName ,const QString& string)
@@ -153,6 +155,11 @@ public slots:
     Q_NOREPLY void emitPrepareForSwitchuser(){
         qDebug()<<"emit  PrepareForSwitchuser";
         emit PrepareForSwitchuser();
+    }
+
+    Q_NOREPLY void emitPrepareForPhase2(){
+        qDebug()<<"emit  PrepareForPhase2";
+        emit PrepareForPhase2();
     }
 
 private:

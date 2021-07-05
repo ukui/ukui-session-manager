@@ -60,13 +60,13 @@ void ModuleManager::playBootMusic(bool arg){
         if(arg){
             play_music = gset->get("startup-music").toBool();
             if (play_music) {
-                player->setMedia(QUrl("qrc:/startup.wav"));
+                player->setMedia(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/startup.wav"));
                 player->play();
             }
         }else{
             play_music = gset->get("weakup-music").toBool();
             if (play_music) {
-                player->setMedia(QUrl("qrc:/weakup.wav"));
+                player->setMedia(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/weakup.wav"));
                 player->play();
             }
         }
@@ -82,7 +82,10 @@ void ModuleManager::stateChanged(QMediaPlayer::State state){
 }
 
 ModuleManager::ModuleManager( QObject* parent)
-    : QObject(parent)
+    : QObject(parent),
+      isPanelStarted(false),
+      isDesktopStarted(false),
+      isWMStarted(false)
 {
     QDBusConnection::systemBus().connect(QString("org.freedesktop.login1"),
                                          QString("/org/freedesktop/login1"),
@@ -143,7 +146,7 @@ void ModuleManager::constructStartupList()
     }
 
     QStringList desktop_paths;
-    desktop_paths << "/usr/share/applications";
+    //desktop_paths << "/usr/share/applications";
     desktop_paths << "/etc/xdg/autostart";
     bool panel_found = false;
     bool fm_found = false;
@@ -303,6 +306,22 @@ void ModuleManager::timeup(){
     }
 }
 
+void ModuleManager::startCompsite(){
+    qDebug() << "Enter:: startCompsite";
+    if(!isPanelStarted || !isDesktopStarted) return;
+    // start composite
+    QDBusInterface dbus("org.ukui.KWin", "/Compositor", "org.ukui.kwin.Compositing", QDBusConnection::sessionBus());
+    if (!dbus.isValid()) {
+        qWarning() << "dbusCall: QDBusInterface is invalid";
+        return;
+    }
+    qDebug() << "start composite";
+    dbus.call("resume");
+
+    timerUpdate();
+}
+
+
 void ModuleManager::doStart(){
     qDebug() << "Start panel: " << mPanel.name();
     connect(this, &ModuleManager::panelfinished,[&](){
@@ -330,24 +349,31 @@ void ModuleManager::doStart(){
 
 void ModuleManager::startup()
 {
+    connect(this, &ModuleManager::panelfinished, [=](){ tpanel->stop(); isPanelStarted = true; startCompsite(); });
+    connect(this, &ModuleManager::desktopfinished, [=](){ tdesktop->stop(); isDesktopStarted = true; startCompsite(); });
+
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
     if(xdg_session_type == "wayland"){
         startProcess("hwaudioservice", true);
     }
 
-    connect(this,&ModuleManager::usdfinished,[&](){
-        tusd->stop();
-        if(runUsd == false)
-            return;
-        runUsd = false;
-        dostartwm();
-    });
-
     qDebug() << "Start Initialization app: ";
     for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i) {
         startProcess(*i, true);
     }
-    start_module_Timer(tusd,5);
+    start_module_Timer(tusd,3);
+
+    startProcess(mWindowManager, true);
+    // start_module_Timer(twm, 3);
+    startProcess(mPanel, true);
+    start_module_Timer(tpanel, 3);
+    startProcess(mFileManager, true);
+    start_module_Timer(tdesktop, 3);
+
+    qDebug() << "Start desktop: ";
+    for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
+        startProcess(*i, true);
+    }
 }
 
 void ModuleManager::dostartwm(){
@@ -525,18 +551,18 @@ void ModuleManager::logout(bool doExit)
 //        }
         p->terminate();
     }
-//    i.toFront();
-//    while (i.hasNext()) {
-//        i.next();
-//        UkuiModule *p = i.value();
+    i.toFront();
+    while (i.hasNext()) {
+        i.next();
+        UkuiModule *p = i.value();
 //        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
 //            continue;
 //        }
-//        if (p->state() != QProcess::NotRunning && !p->waitForFinished(200)) {
-//            qWarning() << "Module " << qPrintable(i.key()) << " won't termiante .. killing.";
-//            p->kill();
-//        }
-//    }
+        if (p->state() != QProcess::NotRunning && !p->waitForFinished(100)) {
+            qWarning() << "Module " << qPrintable(i.key()) << " won't termiante .. killing.";
+            p->kill();
+        }
+    }
     //winman->terminate();
 
     if (doExit) {

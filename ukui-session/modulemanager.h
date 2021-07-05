@@ -31,6 +31,7 @@
 #include <QMap>
 #include <QTimer>
 #include <QMediaPlayer>
+#include <QDBusInterface>
 
 class XdgDesktopFile;
 class IdleWatcher;
@@ -62,6 +63,7 @@ public:
     bool nativeEventFilter(const QByteArray &eventType, void* message, long* result) override;
 
 public slots:
+    void startCompsite();
     void logout(bool doExit);
     void timerUpdate();
     void timeup();
@@ -82,6 +84,7 @@ private:
     QTimer *tpanel = new QTimer();
     QTimer *tdesktop = new QTimer();
     bool start_module_Timer(QTimer *timer,int i);
+    bool isPanelStarted, isDesktopStarted, isWMStarted;
 
     QMediaPlayer *player;
     bool runUsd = true;

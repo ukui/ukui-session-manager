@@ -1,3 +1,9 @@
+ukui-session-manager (2.0.8-2) v101; urgency=medium
+
+  * 性能优化改动
+
+ -- liuliang <liuliang@kylinos.cn>  Sat, 03 Jul 2021 17:40:16 +0800
+
 ukui-session-manager (2.0.6-5) v101; urgency=medium
 
   * Bug 号：无

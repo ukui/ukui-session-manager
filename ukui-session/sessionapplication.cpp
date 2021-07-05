@@ -81,7 +81,7 @@ void SessionApplication::InitialEnvironment()
         QProcess::startDetached("dbus-update-activation-environment", QStringList() << "--systemd" << "DISPLAY"<<"QT_QPA_PLATFORM");
     }
     //restart user's gvfs-daemon.service
-    QProcess::startDetached("systemctl", QStringList() << "--user" << "restart" << "gvfs-daemon.service");
+    //QProcess::startDetached("systemctl", QStringList() << "--user" << "restart" << "gvfs-daemon.service");
 }
 
 void SessionApplication::updateIdleDelay(){
