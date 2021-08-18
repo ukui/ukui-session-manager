@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+if [ "$1" = "install" ] || [ "$1" = "upgrade" ] ; then
+	if dpkg --compare-versions "$2" lt-nl "3.0.2-1.0" ; then
+		update-alternatives --remove x-session-manager /usr/bin/ukui-session
+	fi
+fi
+
+#DEBHELPER#
