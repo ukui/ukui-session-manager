@@ -34,7 +34,7 @@ target_link_libraries(ukui-session-tools
     -lxcb
     -lX11
     -lXtst
-    -lukui-log4qt
+    #    -lukui-log4qt
 )
 
 install(TARGETS

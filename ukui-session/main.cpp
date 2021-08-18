@@ -32,7 +32,7 @@
 #include <QScreen>
 #include <QProcess>
 #include <QGSettings/QGSettings>
-#include <ukui-log4qt.h>
+//#include <ukui-log4qt.h>
 extern "C" {
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>

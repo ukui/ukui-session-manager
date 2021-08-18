@@ -32,7 +32,8 @@ pkg_search_module(X11 REQUIRED x11)
 include_directories(${X11_INCLUDES})
 
 add_executable(ukui-session ${ukui-session_SRCS})
-target_link_libraries(ukui-session Qt5::Widgets Qt5::Core Qt5::DBus Qt5::Multimedia KF5::IdleTime -lukui-log4qt ${GSETTINGS_QT_LIBRARIES} ${X11_LIBRARIES})
+#target_link_libraries(ukui-session Qt5::Widgets Qt5::Core Qt5::DBus Qt5::Multimedia KF5::IdleTime -lukui-log4qt ${GSETTINGS_QT_LIBRARIES} ${X11_LIBRARIES})
+target_link_libraries(ukui-session Qt5::Widgets Qt5::Core Qt5::DBus Qt5::Multimedia KF5::IdleTime ${GSETTINGS_QT_LIBRARIES} ${X11_LIBRARIES})
 #${GSETTINGS_QT_LIBRARIES}
 
 install(TARGETS ukui-session DESTINATION bin)
