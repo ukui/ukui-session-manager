@@ -85,8 +85,16 @@ ModuleManager::ModuleManager( QObject* parent)
     : QObject(parent),
       isPanelStarted(false),
       isDesktopStarted(false),
-      isWMStarted(false)
+      isWMStarted(false),
+      isCompsiteStarted(false)
 {
+    /*const QFile file_installer("/etc/xdg/autostart/kylin-os-installer.desktop");
+    if(file_installer.exists()){
+        XdgDesktopFile installer;
+        installer.load("/etc/xdg/autostart/kylin-os-installer.desktop");
+        startProcess(installer,true);
+    }*/
+
     QDBusConnection::systemBus().connect(QString("org.freedesktop.login1"),
                                          QString("/org/freedesktop/login1"),
                                          QString("org.freedesktop.login1.Manager"),
@@ -179,6 +187,8 @@ void ModuleManager::constructStartupList()
                 break;
         }
     }
+
+    if(!panel_found || !fm_found || !wm_found) isDirectInstall = true;
 
     if (wm_found == false) {
         QFileInfo check_ukwm("/usr/share/applications/ukwm.desktop");
@@ -286,36 +296,41 @@ void ModuleManager::timeup(){
     QTimer *time_out = qobject_cast<QTimer*>(sender());
     if(time_out == tusd){
         qDebug() <<"usd超时";
-        emit usdfinished();
+        //emit usdfinished();
         return;
     }
     if(time_out == twm){
         qDebug() <<"wm超时";
-        emit wmfinished();
+        //emit wmfinished();
         return;
     }
     if(time_out == tpanel){
         qDebug() <<"panel超时";
-        emit panelfinished();
+        //emit panelfinished();
         return;
     }
     if(time_out == tdesktop){
         qDebug() <<"peony-qt-desktop超时";
-        emit desktopfinished();
+        //emit desktopfinished();
         return;
     }
 }
 
 void ModuleManager::startCompsite(){
     qDebug() << "Enter:: startCompsite";
-    if(!isPanelStarted || !isDesktopStarted) return;
+    if(!isPanelStarted || !isDesktopStarted || !isWMStarted) return;
+
+    if(isCompsiteStarted) return;
+    isCompsiteStarted = true;
+
     // start composite
     QDBusInterface dbus("org.ukui.KWin", "/Compositor", "org.ukui.kwin.Compositing", QDBusConnection::sessionBus());
+
     if (!dbus.isValid()) {
         qWarning() << "dbusCall: QDBusInterface is invalid";
         return;
     }
-    qDebug() << "start composite";
+    qDebug() << "Start composite";
     dbus.call("resume");
 
     timerUpdate();
@@ -349,8 +364,17 @@ void ModuleManager::doStart(){
 
 void ModuleManager::startup()
 {
+    const QFile file_installer("/etc/xdg/autostart/kylin-os-installer.desktop");
+    if(file_installer.exists() && isDirectInstall){
+//        XdgDesktopFile installer;
+//        installer.load("/etc/xdg/autostart/kylin-os-installer.desktop");
+//        startProcess(installer,true);
+        timerUpdate();
+    }
+
     connect(this, &ModuleManager::panelfinished, [=](){ tpanel->stop(); isPanelStarted = true; startCompsite(); });
     connect(this, &ModuleManager::desktopfinished, [=](){ tdesktop->stop(); isDesktopStarted = true; startCompsite(); });
+    connect(this, &ModuleManager::wmfinished, [=](){ tdesktop->stop(); isWMStarted = true; startCompsite(); });
 
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
     if(xdg_session_type == "wayland"){
@@ -539,30 +563,30 @@ void ModuleManager::logout(bool doExit)
                         "/org/freedesktop/login1/session/self",\
                         "org.freedesktop.login1.Session",\
                         QDBusConnection::systemBus());
-    ModulesMapIterator i(mNameMap);
+//    ModulesMapIterator i(mNameMap);
 //    UkuiModule *winman;
-    while (i.hasNext()) {
-        i.next();
-        qDebug() << "Module logout" << i.key();
-        UkuiModule *p = i.value();
-//        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
-//            winman = p;
-//            continue;
+//    while (i.hasNext()) {
+//        i.next();
+//        qDebug() << "Module logout" << i.key();
+//        UkuiModule *p = i.value();
+////        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
+////            winman = p;
+////            continue;
+////        }
+//        p->terminate();
+//    }
+//    i.toFront();
+//    while (i.hasNext()) {
+//        i.next();
+//        UkuiModule *p = i.value();
+////        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
+////            continue;
+////        }
+//        if (p->state() != QProcess::NotRunning && !p->waitForFinished(100)) {
+//            qWarning() << "Module " << qPrintable(i.key()) << " won't termiante .. killing.";
+//            p->kill();
 //        }
-        p->terminate();
-    }
-    i.toFront();
-    while (i.hasNext()) {
-        i.next();
-        UkuiModule *p = i.value();
-//        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
-//            continue;
-//        }
-        if (p->state() != QProcess::NotRunning && !p->waitForFinished(100)) {
-            qWarning() << "Module " << qPrintable(i.key()) << " won't termiante .. killing.";
-            p->kill();
-        }
-    }
+//    }
     //winman->terminate();
 
     if (doExit) {

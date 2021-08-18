@@ -84,13 +84,14 @@ private:
     QTimer *tpanel = new QTimer();
     QTimer *tdesktop = new QTimer();
     bool start_module_Timer(QTimer *timer,int i);
-    bool isPanelStarted, isDesktopStarted, isWMStarted;
+    bool isPanelStarted, isDesktopStarted, isWMStarted ,isCompsiteStarted;
 
     QMediaPlayer *player;
     bool runUsd = true;
     bool runWm = true;
     bool runPanel = true;
     bool runDesktop = true;
+    bool isDirectInstall = false;
     void playBootMusic(bool arg);
     void startProcess(const XdgDesktopFile &file, bool required);
 
