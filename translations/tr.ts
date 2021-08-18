@@ -15,7 +15,7 @@
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="113"/>
-        <source>Hebernate</source>
+        <source>Hibernate</source>
         <translation>Hazırda Beklet</translation>
     </message>
     <message>

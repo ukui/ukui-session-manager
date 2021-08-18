@@ -15,7 +15,7 @@
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="116"/>
-        <source>Hebernate</source>
+        <source>Hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
