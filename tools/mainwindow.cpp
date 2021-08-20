@@ -209,7 +209,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
         isHibernateHide = false;
     }
 
-    if (true) {
+    if (getCachedUsers() > 1) {
         isSwitchuserHide = false;
     }
 
@@ -313,6 +313,35 @@ MainWindow::~MainWindow()
     delete m_power;
     delete xEventMonitor;
     delete ui;
+}
+
+int MainWindow::getCachedUsers()
+{
+    QDBusInterface loginInterface("org.freedesktop.Accounts",
+                                  "/org/freedesktop/Accounts",
+                                  "org.freedesktop.Accounts",
+                                  QDBusConnection::systemBus());
+
+    if (loginInterface.isValid()) {
+        qDebug() << "create interface success";
+    }
+
+    QDBusMessage ret = loginInterface.call("ListCachedUsers");
+    QList<QVariant> outArgs = ret.arguments();
+    QVariant first = outArgs.at(0);
+    const QDBusArgument &dbusArgs = first.value<QDBusArgument>();
+    QDBusObjectPath path;
+    dbusArgs.beginArray();
+    int userNum = 0;
+    while (!dbusArgs.atEnd())
+    {
+        dbusArgs >> path;
+        userNum++;
+    }
+    dbusArgs.endArray();
+    qDebug()<<userNum;
+
+    return userNum;
 }
 
 QStringList MainWindow::getLoginedUsers()

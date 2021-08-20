@@ -50,6 +50,7 @@ public:
     int defaultnum = 0;
     void judgeboxShow();
     QStringList getLoginedUsers();
+    int getCachedUsers();
 
 private:
     QGSettings *gs;

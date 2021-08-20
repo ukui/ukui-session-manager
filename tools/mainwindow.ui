@@ -113,7 +113,7 @@ font:12pt;</string>
 font:12pt;</string>
     </property>
     <property name="text">
-     <string>Hebernate</string>
+     <string>Hibernate</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
