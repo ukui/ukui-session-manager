@@ -19,6 +19,7 @@
  *
  * END_COMMON_COPYRIGHT_HEADER */
 #include "sessionapplication.h"
+#include "ukuismserver.h"
 
 #include <QStandardPaths>
 #include <QFile>
@@ -184,12 +185,27 @@ void Set4KScreenScale()
 int main(int argc, char **argv)
 {
     qInstallMessageHandler(myMessageOutput);
-    //initUkuiLog4qt("ukui-session");
+//    initUkuiLog4qt("ukui-session");
     qDebug() << "UKUI session manager start.";
+
     SessionApplication app(argc, argv);
 
     Set4KScreenScale();
 
     app.setQuitOnLastWindowClosed(false);
     return app.exec();
+
+//    QApplication a(argc, argv);
+
+//    UKUISMServer *server = new UKUISMServer;
+//    QByteArray sessionmanager = qgetenv("SESSION_MANAGER");
+
+//    QProcess pluma;
+//    pluma.start(QStringLiteral("/usr/bin/pluma"));
+
+//    QTimer::singleShot(6000, [server](){
+//        server->performLogout();
+//    });
+
+//    return a.exec();
 }

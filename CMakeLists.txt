@@ -22,6 +22,9 @@ find_package(Qt5 COMPONENTS Widgets Core Multimedia X11Extras REQUIRED)
 find_package(Qt5LinguistTools)
 find_package(KF5IdleTime)
 find_package(Qt5DBus)
+find_package(KF5CoreAddons)
+find_package(KF5Config)
+find_package(KF5WindowSystem)
 
 # For debug: cmake -DCMAKE_BUILD_TYPE=debug
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")

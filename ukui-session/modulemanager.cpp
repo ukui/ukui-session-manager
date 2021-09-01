@@ -138,7 +138,6 @@ void ModuleManager::constructStartupList()
         const QGSettings* gs = new QGSettings(SESSION_REQUIRED_COMPONENTS,SESSION_REQUIRED_COMPONENTS_PATH,this);
         if(gs == NULL){
             qDebug()<<"QGSettings init error";
-            free(&gs);
             return;
         }
         window_manager = gs->get("windowmanager").toString() + ".desktop";
