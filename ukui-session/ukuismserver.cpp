@@ -297,6 +297,37 @@ Status SetAuthentication (int count, IceListenObj *listenObjs, IceAuthDataEntry 
     return (1);
 }
 
+void FreeAuthenticationData(int count, IceAuthDataEntry *authDataEntries)
+{
+    /* Each transport has entries for ICE and XSMP */
+    if (only_local)
+        return;
+
+    for (int i = 0; i < count * 2; i++) {
+        free(authDataEntries[i].network_id);
+        free(authDataEntries[i].auth_data);
+    }
+
+    free (authDataEntries);
+
+    QString iceAuth = QStandardPaths::findExecutable(QStringLiteral("iceauth"));
+    if (iceAuth.isEmpty())
+    {
+        qDebug() << "KSMServer: could not find iceauth";
+        return;
+    }
+
+    if (remTempFile)
+    {
+        KProcess p;
+        p << iceAuth << QStringLiteral("source") << remTempFile->fileName();
+        p.execute();
+    }
+
+    delete remTempFile;
+    remTempFile = nullptr;
+}
+
 void UKUISMWatchProc(IceConn iceConn, IcePointer client_data, Bool opening, IcePointer *watch_data)
 {
     UKUISMServer *ds = (UKUISMServer*)client_data;
@@ -580,12 +611,12 @@ void UKUISMServer::performLogout()
 
     //将桌面背景设置为黑色
     QPalette palette;
-    palette.setColor( QApplication::desktop()->backgroundRole(), Qt::black );
+    palette.setColor(QApplication::desktop()->backgroundRole(), Qt::black);
     QApplication::setPalette(palette);
     m_wmPhase1WaitingCount = 0;
     m_saveType = SmSaveBoth;
 
-    foreach(UKUISMClient *c, m_clients) {
+    foreach (UKUISMClient *c, m_clients) {
         c->resetState();
         if(isWM(c))
             ++m_wmPhase1WaitingCount;
@@ -594,12 +625,13 @@ void UKUISMServer::performLogout()
         foreach (UKUISMClient *c, m_clients) {
             //先向窗管发送保存自身的信号
             if(isWM(c)) {
-                SmsSaveYourself( c->connection(), m_saveType, true, SmInteractStyleAny, false );
+                SmsSaveYourself(c->connection(), m_saveType, true, SmInteractStyleAny, false);
             }
 
         }
     } else {
         foreach (UKUISMClient *c, m_clients)
+            qDebug() << "sending saveourself to client " << c->program() << " " << c->clientId();
             SmsSaveYourself(c->connection(), m_saveType, true, SmInteractStyleAny, false);
     }
 
@@ -609,27 +641,25 @@ void UKUISMServer::performLogout()
 
 void UKUISMServer::cleanUp()
 {
-//    if (clean) return;
-//    clean = true;
-//    IceFreeListenObjs (numTransports, listenObjs);
+    if (clean) return;
+    clean = true;
+    IceFreeListenObjs (numTransports, listenObjs);
 
 
-//    QByteArray fName = QFile::encodeName(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QLatin1Char('/') + QStringLiteral("KSMserver"));
-//    QString display  = QString::fromLocal8Bit(::getenv("DISPLAY"));
+    QByteArray fName = QFile::encodeName(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QLatin1Char('/') + QStringLiteral("KSMserver"));
+    QString display  = QString::fromLocal8Bit(::getenv("DISPLAY"));
 
-//    display.remove(QRegExp(QStringLiteral("\\.[0-9]+$")));
-//    int i;
-//    while( (i = display.indexOf(QLatin1Char(':'))) >= 0)
-//         display[i] = '_';
-//    while( (i = display.indexOf(QLatin1Char('/'))) >= 0)
-//         display[i] = '_';
+    display.remove(QRegExp(QStringLiteral("\\.[0-9]+$")));
+    int i;
+    while( (i = display.indexOf(QLatin1Char(':'))) >= 0)
+         display[i] = '_';
+    while( (i = display.indexOf(QLatin1Char('/'))) >= 0)
+         display[i] = '_';
 
-//    fName += '_'+display.toLocal8Bit();
-//    ::unlink(fName.data());
+    fName += '_'+display.toLocal8Bit();
+    ::unlink(fName.data());
 
-//    FreeAuthenticationData(numTransports, authDataEntries);
-//    signal(SIGTERM, SIG_DFL);
-//    signal(SIGINT, SIG_DFL);
+    FreeAuthenticationData(numTransports, authDataEntries);
 }
 
 void UKUISMServer::newConnection(int socket)

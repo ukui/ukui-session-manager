@@ -27,7 +27,7 @@
 
 UkuiPower::UkuiPower(QObject *parent) : QObject(parent)
 {
-    mProviders.append(new SystemdProvider(this));
+//    mProviders.append(new SystemdProvider(this));
     mProviders.append(new UKUIProvider(this));
 }
 

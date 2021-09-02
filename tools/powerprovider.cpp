@@ -421,6 +421,7 @@ bool UKUIProvider::doAction(UkuiPower::Action action)
         return false;
     }
 
+    qDebug() << "ukuipowerprovider call D-Bus session";
     return dbusCall(QLatin1String(UKUI_SERVICE), QLatin1String(UKUI_PATH),
                     QLatin1String(UKUI_INTERFACE), QDBusConnection::sessionBus(), command);
 }
