@@ -82,16 +82,17 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 
 void screenScaleJudgment(QGSettings   *settings)
 {
+    qreal        scaling = qApp->devicePixelRatio();
     double       scale;
     scale = settings->get(SCALING_KEY).toDouble();
     if(scale > 1.25){
         bool state = false;
         for(QScreen *screen : QGuiApplication::screens()){
-            if (screen->geometry().width() < 1920 &&  screen->geometry().height() < 1080){
+            if (screen->geometry().width() * scaling < 1920 &&  screen->geometry().height() * scaling< 1080){
                 state = true;
-            } else if (screen->geometry().width() == 1920 &&  screen->geometry().height() == 1080 && scale > 1.5){
-	        state = true;
-	    }
+            } else if (screen->geometry().width() * scaling == 1920 &&  screen->geometry().height() * scaling == 1080 && scale > 1.5){
+                state = true;
+            }
         }
         if (state){
             QGSettings   *mGsettings;
@@ -165,8 +166,8 @@ void Set4KScreenScale()
         return;
     }
     QScreen *screen = QApplication::screens().at(0);
-    int height = screen->size().height();
-    int width = screen->size().width();
+    int height = screen->size().height() * qApp->devicePixelRatio();
+    int width = screen->size().width() * qApp->devicePixelRatio();
     if (height > 1500 && width > 2560){
         bool res;
         QString homePath = getenv("HOME");
