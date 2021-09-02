@@ -186,13 +186,17 @@ int main(int argc, char **argv)
 {
     qInstallMessageHandler(myMessageOutput);
 //    initUkuiLog4qt("ukui-session");
-    qDebug() << "UKUI session manager start.";
+    qDebug() << "===============================UKUI session manager start.======================================";
 
     SessionApplication app(argc, argv);
 
     Set4KScreenScale();
 
     app.setQuitOnLastWindowClosed(false);
+    UKUISMServer *server = new UKUISMServer;
+    server->restoreSession(QStringLiteral("saved at previous logout"));
+
+    qDebug() << "begin event loop";
     return app.exec();
 
 //    QApplication a(argc, argv);

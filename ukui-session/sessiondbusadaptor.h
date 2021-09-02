@@ -24,6 +24,9 @@
 #include "../tools/ukuipower.h"
 #include "modulemanager.h"
 #include "usminhibit.h"
+#include "ukuismserver.h"
+
+extern UKUISMServer *the_server;
 
 class SessionDBusAdaptor : public QDBusAbstractAdaptor
 {
@@ -87,8 +90,10 @@ public slots:
     Q_NOREPLY void powerOff()
     {
         if(mPower->canAction(UkuiPower::PowerShutdown)){
-            mManager->logout(false);
-            mPower->doAction(UkuiPower::PowerShutdown);
+            //在此处保存会话信息
+            the_server->performLogout();
+//            mManager->logout(false);
+//            mPower->doAction(UkuiPower::PowerShutdown);
         }
         //QCoreApplication::exit(0);
     }
