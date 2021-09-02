@@ -373,7 +373,7 @@ void ModuleManager::startup()
 
     connect(this, &ModuleManager::panelfinished, [=](){ tpanel->stop(); isPanelStarted = true; startCompsite(); });
     connect(this, &ModuleManager::desktopfinished, [=](){ tdesktop->stop(); isDesktopStarted = true; startCompsite(); });
-    connect(this, &ModuleManager::wmfinished, [=](){ tdesktop->stop(); isWMStarted = true; startCompsite(); });
+//    connect(this, &ModuleManager::wmfinished, [=](){ tdesktop->stop(); isWMStarted = true; startCompsite(); });
 
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
     if(xdg_session_type == "wayland"){
@@ -386,7 +386,7 @@ void ModuleManager::startup()
     }
     start_module_Timer(tusd,3);
 
-    startProcess(mWindowManager, true);
+//    startProcess(mWindowManager, true);
     // start_module_Timer(twm, 3);
     startProcess(mPanel, true);
     start_module_Timer(tpanel, 3);

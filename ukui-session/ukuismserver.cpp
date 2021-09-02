@@ -57,9 +57,9 @@ static Bool HostBasedAuthProc(char *hostname)
 
 Status RegisterClientProc(SmsConn smsConn, SmPointer managerData, char *previousId)
 {
-    qDebug() << "new client in";
     UKUISMClient *client = (UKUISMClient*)managerData;
     client->registerClient(previousId);
+    qDebug() << "client " << client->program() << " registered.";
     return 1;
 }
 
@@ -343,7 +343,7 @@ void UKUISMWatchProc(IceConn iceConn, IcePointer client_data, Bool opening, IceP
 
 UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QStringLiteral("org.ukui.KWin"), QStringLiteral("/Session"), QDBusConnection::sessionBus(), this))
                              , m_state(Idle), m_saveSession(false), m_wmPhase1WaitingCount(0), m_clientInteracting(nullptr), m_sessionGroup(QStringLiteral(""))
-                             , m_wm(QStringLiteral("ukui-kwin_x11"))/*, m_wmCommands(QStringList({m_wm}))*/
+                             , m_wm(QStringLiteral("ukui-kwin_x11"))
 {
     m_wmCommands = QStringList({m_wm});
     the_server = this;
@@ -393,7 +393,7 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
         char *session_manager = IceComposeNetworkIdList(numTransports, listenObjs);
         fprintf(f, "%s\n%i\n", session_manager, getpid());
         fclose(f);
-        int res = setenv("SESSION_MANAGER", session_manager, true);
+        setenv("SESSION_MANAGER", session_manager, true);
 
         //这里要将session_manager变量传递给其他需要的进程
 
@@ -423,7 +423,7 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
 //    connect(qApp, &QApplication::aboutToQuit, this, &UKUISMServer::cleanUp);
     connect(&m_restoreTimer, &QTimer::timeout, this, &UKUISMServer::tryRestoreNext);
 
-
+    qDebug() << "finish construct ukuismserver";
 }
 
 UKUISMServer::~UKUISMServer()
@@ -956,7 +956,7 @@ KProcess *UKUISMServer::startApplication(const QStringList &command, bool wm)
         }
 
         QProcess appProcess;
-//        appProcess.start(app, argList);
+        appProcess.start(app, argList);
         return nullptr;
     }
 }
@@ -993,6 +993,7 @@ void UKUISMServer::launchWM(const QList<QStringList> &wmStartCommands)
     assert(m_state == LaunchingWM);
 
     if (!(qEnvironmentVariableIsSet("WAYLAND_DISPLAY") || qEnvironmentVariableIsSet("WAYLAND_SOCKET"))) {
+        qDebug() << "smserver launch wm";
         m_wmProcess = startApplication(wmStartCommands[0], true);
         connect(m_wmProcess, SIGNAL(error(QProcess::ProcessError)), SLOT(wmProcessChange()));
         connect(m_wmProcess, SIGNAL(finished(int,QProcess::ExitStatus)), SLOT(wmProcessChange()));
