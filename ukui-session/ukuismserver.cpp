@@ -442,6 +442,7 @@ UKUISMClient *UKUISMServer::newClient(SmsConn conn)
 
 void UKUISMServer::deleteClient(UKUISMClient *client)
 {
+    qDebug() << "remove client " << client->program() << " " << client->clientId();
     m_clients.removeAll(client);
 
     if (client == m_clientInteracting) {
@@ -630,9 +631,11 @@ void UKUISMServer::performLogout()
 
         }
     } else {
-        foreach (UKUISMClient *c, m_clients)
+        foreach (UKUISMClient *c, m_clients) {
             qDebug() << "sending saveourself to client " << c->program() << " " << c->clientId();
             SmsSaveYourself(c->connection(), m_saveType, true, SmInteractStyleAny, false);
+        }
+
     }
 
     if (m_clients.isEmpty())

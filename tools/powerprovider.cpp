@@ -402,6 +402,8 @@ bool UKUIProvider::canAction(UkuiPower::Action action) const
         return dbusCall(QLatin1String(UKUI_SERVICE), QLatin1String(UKUI_PATH),
                         QLatin1String(UKUI_INTERFACE), QDBusConnection::sessionBus(), command);
     }
+
+    return isinhibited;
 }
 
 bool UKUIProvider::doAction(UkuiPower::Action action)

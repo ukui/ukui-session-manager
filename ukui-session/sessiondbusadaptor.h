@@ -91,7 +91,8 @@ public slots:
     {
         if(mPower->canAction(UkuiPower::PowerShutdown)){
             //在此处保存会话信息
-            the_server->performLogout();
+            qDebug() << "xsmpserver save session";
+            the_server->shutdown();
 //            mManager->logout(false);
 //            mPower->doAction(UkuiPower::PowerShutdown);
         }
