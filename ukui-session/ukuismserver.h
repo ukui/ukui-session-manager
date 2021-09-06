@@ -37,6 +37,7 @@ public:
     void removeConnection(UKUISMConnection *conn );
     void restoreSession();
     void restoreSession(const QString &sessionName);
+    void startDefaultSession();
 
     void clientRegistered(const char *previousId);
     void shutdown();

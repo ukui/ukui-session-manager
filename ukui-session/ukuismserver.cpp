@@ -587,6 +587,15 @@ void UKUISMServer::restoreSession(const QString &sessionName)
     launchWM(wmStartCommands);
 }
 
+void UKUISMServer::startDefaultSession()
+{
+    if(m_state != Idle ) return;
+    m_state = LaunchingWM;
+
+    m_sessionGroup = QString();
+    launchWM(QList<QStringList>() << m_wmCommands);
+}
+
 void UKUISMServer::clientRegistered(const char *previousId)
 {
     if (previousId && m_lastIdRestore == QString::fromLocal8Bit(previousId)) {

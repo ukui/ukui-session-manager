@@ -186,7 +186,7 @@ int main(int argc, char **argv)
 {
     qInstallMessageHandler(myMessageOutput);
 //    initUkuiLog4qt("ukui-session");
-    qDebug() << "===================================================UKUI session manager start.===================================================";
+    qDebug() << "===================================================    UKUI session manager start.    ===================================================";
 
     SessionApplication app(argc, argv);
 
@@ -194,7 +194,8 @@ int main(int argc, char **argv)
 
     app.setQuitOnLastWindowClosed(false);
     UKUISMServer *server = new UKUISMServer;
-    server->restoreSession(QStringLiteral("saved at previous logout"));
+//    server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
+    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
 
     //测试是否能够实现退出保存
 //    QTimer::singleShot(20000, [server](){
