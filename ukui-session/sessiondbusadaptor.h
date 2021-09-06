@@ -89,13 +89,15 @@ public slots:
 
     Q_NOREPLY void powerOff()
     {
-        if(mPower->canAction(UkuiPower::PowerShutdown)){
+        qDebug() << "poweroff D-Bus method begin called";
+        //此处造成死循环，因为调用点就已经判断过了，或者调用点就不判断canAction
+//        if(mPower->canAction(UkuiPower::PowerShutdown)){
             //在此处保存会话信息
             qDebug() << "xsmpserver save session";
             the_server->shutdown();
 //            mManager->logout(false);
 //            mPower->doAction(UkuiPower::PowerShutdown);
-        }
+//        }
         //QCoreApplication::exit(0);
     }
 

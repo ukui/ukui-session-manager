@@ -399,8 +399,8 @@ bool UKUIProvider::canAction(UkuiPower::Action action) const
     }
 
     if (isinhibited == false) {
-        return dbusCall(QLatin1String(UKUI_SERVICE), QLatin1String(UKUI_PATH),
-                        QLatin1String(UKUI_INTERFACE), QDBusConnection::sessionBus(), command);
+//        return dbusCall(QLatin1String(UKUI_SERVICE), QLatin1String(UKUI_PATH),
+//                        QLatin1String(UKUI_INTERFACE), QDBusConnection::sessionBus(), command);
     }
 
     return isinhibited;

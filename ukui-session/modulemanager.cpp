@@ -317,7 +317,7 @@ void ModuleManager::timeup(){
 
 void ModuleManager::startCompsite(){
     qDebug() << "Enter:: startCompsite";
-    if(!isPanelStarted || !isDesktopStarted || !isWMStarted) return;
+    if(!isPanelStarted || !isDesktopStarted) return;// || !isWMStarted
 
     if(isCompsiteStarted) return;
     isCompsiteStarted = true;
@@ -332,6 +332,7 @@ void ModuleManager::startCompsite(){
     qDebug() << "Start composite";
     dbus.call("resume");
 
+    qDebug() << "call timerUpdate";
     timerUpdate();
 }
 
@@ -373,7 +374,7 @@ void ModuleManager::startup()
 
     connect(this, &ModuleManager::panelfinished, [=](){ tpanel->stop(); isPanelStarted = true; startCompsite(); });
     connect(this, &ModuleManager::desktopfinished, [=](){ tdesktop->stop(); isDesktopStarted = true; startCompsite(); });
-//    connect(this, &ModuleManager::wmfinished, [=](){ tdesktop->stop(); isWMStarted = true; startCompsite(); });
+//    connect(this, &ModuleManager::wmfinished, [=](){ tdesktop->stop(); isWMStarted = true; startCompsite(); });//改为在server中最先启动窗管
 
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
     if(xdg_session_type == "wayland"){

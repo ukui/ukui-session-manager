@@ -186,7 +186,7 @@ int main(int argc, char **argv)
 {
     qInstallMessageHandler(myMessageOutput);
 //    initUkuiLog4qt("ukui-session");
-    qDebug() << "=============================UKUI session manager start.=============================";
+    qDebug() << "===================================================UKUI session manager start.===================================================";
 
     SessionApplication app(argc, argv);
 
@@ -195,6 +195,11 @@ int main(int argc, char **argv)
     app.setQuitOnLastWindowClosed(false);
     UKUISMServer *server = new UKUISMServer;
     server->restoreSession(QStringLiteral("saved at previous logout"));
+
+    //测试是否能够实现退出保存
+//    QTimer::singleShot(20000, [server](){
+//        server->shutdown();
+//    });
 
     qDebug() << "begin event loop";
     return app.exec();

@@ -59,7 +59,7 @@ Status RegisterClientProc(SmsConn smsConn, SmPointer managerData, char *previous
 {
     UKUISMClient *client = (UKUISMClient*)managerData;
     client->registerClient(previousId);
-    qDebug() << "client " << client->program() << " registered.";
+    qDebug() << "client " << client->program() << " " << client->clientId() << " registered.";
     return 1;
 }
 
@@ -442,8 +442,8 @@ UKUISMClient *UKUISMServer::newClient(SmsConn conn)
 
 void UKUISMServer::deleteClient(UKUISMClient *client)
 {
-    qDebug() << "remove client " << client->program() << " " << client->clientId();
     m_clients.removeAll(client);
+    qDebug() << "m_clients remove client " << client->clientId();
 
     if (client == m_clientInteracting) {
         m_clientInteracting = nullptr;
@@ -464,12 +464,16 @@ void UKUISMServer::deleteClient(UKUISMClient *client)
 
 void UKUISMServer::interactRequest(UKUISMClient *client, int dialogType)
 {
+    qDebug() << client->clientId() << "ask for interact";
+
     //如果是关机阶段，该客户端的请求就要暂时挂起
     if (m_state == Shutdown) {
         //将pendingInteraction属性设置为true,以便在handlePendingInteractions中处理
+        qDebug() << "pending client " << client->clientId();
         client->m_pendingInteraction = true;
     } else {
         //非关机阶段，则直接授予客户端交互权限
+        qDebug() << "sending save yourself to client " << client->clientId();
         SmsInteract(client->connection());
     }
     //处理被挂起的客户端请求
@@ -482,6 +486,7 @@ void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
     if (client != m_clientInteracting)
         return;
     //重置m_clientInteraciton，以便处理下一个挂起的客户端
+    qDebug() << m_clientInteracting->clientId() << "interact done";
     m_clientInteracting = nullptr;
     //如果客户端取消关机，则向所有客户端发送取消关机信号
     if (cancelShutdown_) {
@@ -494,6 +499,7 @@ void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
 
 void UKUISMServer::phase2Request(UKUISMClient *client)
 {
+    qDebug() << "wm ask for phase2";
     //这两个成员变量对于窗管才有用
     client->m_waitForPhase2 = true;
     client->m_wasPhase2 = true;
@@ -503,11 +509,12 @@ void UKUISMServer::phase2Request(UKUISMClient *client)
         --m_wmPhase1WaitingCount;
         //窗管完成phase1保存，请求phase2，服务器先向所有其他客户端发送保存命令
         if(m_wmPhase1WaitingCount == 0) {
-            foreach (UKUISMClient* c, m_clients) {
+            foreach (UKUISMClient *c, m_clients) {
                 if (!isWM(c)) {
-                    SmsSaveYourself( c->connection(), m_saveType, m_saveType != SmSaveLocal,
+                    qDebug() << "wm done phase1, sending saveyourself to " << c->clientId();
+                    SmsSaveYourself(c->connection(), m_saveType, m_saveType != SmSaveLocal,
                         m_saveType != SmSaveLocal ? SmInteractStyleAny : SmInteractStyleNone,
-                        false );
+                        false);
                 }
             }
         }
@@ -524,9 +531,11 @@ void UKUISMServer::saveYourselfDone(UKUISMClient *client, bool success)
     }
 
     if (success) {
+        qDebug() << client->clientId() << "done save";
         client->m_saveYourselfDone = true;
         completeShutdownOrCheckpoint();
     } else {
+        //即使保存不成功也要按照成功的方式进行下一步，否则无法保存下一个客户端
         client->m_saveYourselfDone = true;
         completeShutdownOrCheckpoint();
     }
@@ -589,6 +598,7 @@ void UKUISMServer::shutdown()
 {
     //保存关机
     //是否需要设置m_state?
+    qDebug() << "begin performlogout";
     performLogout();
 }
 
@@ -599,9 +609,10 @@ void UKUISMServer::performLogout()
         return;
     }
 
-    if (m_state != Idle) {
-        QTimer::singleShot(1000, this, &UKUISMServer::performLogout);
-    }
+    //暂时注释此处
+//    if (m_state != Idle) {
+//        QTimer::singleShot(1000, this, &UKUISMServer::performLogout);
+//    }
 
     m_kwinInterface->setState(KWinSessionState::Saving);
     m_state = Shutdown;
@@ -611,9 +622,9 @@ void UKUISMServer::performLogout()
         m_sessionGroup = QStringLiteral("Session: ") + QString::fromLocal8Bit(SESSION_PREVIOUS_LOGOUT);
 
     //将桌面背景设置为黑色
-    QPalette palette;
-    palette.setColor(QApplication::desktop()->backgroundRole(), Qt::black);
-    QApplication::setPalette(palette);
+//    QPalette palette;
+//    palette.setColor(QApplication::desktop()->backgroundRole(), Qt::black);
+//    QApplication::setPalette(palette);
     m_wmPhase1WaitingCount = 0;
     m_saveType = SmSaveBoth;
 
@@ -626,6 +637,7 @@ void UKUISMServer::performLogout()
         foreach (UKUISMClient *c, m_clients) {
             //先向窗管发送保存自身的信号
             if(isWM(c)) {
+                qDebug() << "sending save signal to wm first";
                 SmsSaveYourself(c->connection(), m_saveType, true, SmInteractStyleAny, false);
             }
 
@@ -697,6 +709,7 @@ void UKUISMServer::processData(int socket)
     IceConn iceConn = ((UKUISMConnection*)sender())->iceConn;
     IceProcessMessagesStatus status = IceProcessMessages(iceConn, nullptr, nullptr);
     if (status == IceProcessMessagesIOError) {
+        qDebug() << "processData called and status is IOError";
         IceSetShutdownNegotiation(iceConn, False);
         QList<UKUISMClient*>::iterator it = m_clients.begin();
         QList<UKUISMClient*>::iterator const itEnd = m_clients.end();
@@ -759,6 +772,7 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     //此处判断除窗管之外的客户端是否全部完成保存，没有的话就返回
     foreach(UKUISMClient *c, pendingClients ) {
         if (!c->m_saveYourselfDone && !c->m_waitForPhase2)
+            qDebug() << "there are none-wm client haven't save";
             return;
     }
     //窗管正在等待phase2阶段的保存，则向其发送保存phase2的信号
@@ -766,6 +780,7 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     foreach(UKUISMClient *c, pendingClients) {
         if (!c->m_saveYourselfDone && c->m_waitForPhase2) {
             c->m_waitForPhase2 = false;
+            qDebug() << "sending saveyourselfphase2 to " << c->clientId();
             SmsSaveYourselfPhase2(c->connection());
             waitForPhase2 = true;
         }
@@ -774,12 +789,16 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     if (waitForPhase2)
         return;
     //运行到这里说明窗管和普通客户端都完成了保存，开始保存会话信息到磁盘中
-    if (m_saveSession)
+    if (m_saveSession) {
+        qDebug() << "store session informantion in rcfile";
         storeSession();
+    }
+
     //会话信息保存完毕后开始退出，杀死客户端
     if (m_state == Shutdown) {
         m_state = WaitingForKNotify;
         if (m_state == WaitingForKNotify) {
+            qDebug() << "begin killint client";
             startKilling();
         }
     }
@@ -878,7 +897,7 @@ void UKUISMServer::startKilling()
     foreach(UKUISMClient *c, m_clients) {
         if(isWM(c))//最后再杀死窗管
             continue;
-
+        qDebug() << c->clientId() << "kill connection";
         SmsDie(c->connection());
     }
 
@@ -896,6 +915,7 @@ void UKUISMServer::killWM()
     foreach(UKUISMClient *c, m_clients) {
         if (isWM(c)) {
             iswm = true;
+            qDebug() << "wm kill connection";
             SmsDie(c->connection());
         }
     }
@@ -920,6 +940,7 @@ void UKUISMServer::completeKillingWM()
 
 void UKUISMServer::killingCompleted()
 {
+    qDebug() << "done killing, exit";
     qApp->quit();
 }
 
@@ -987,6 +1008,7 @@ void UKUISMServer::handlePendingInteractions()
     }
     //向m_clientInteracting授予交互权限
     if (m_clientInteracting) {
+        qDebug() << "sending interact to " << m_clientInteracting->clientId();
         SmsInteract(m_clientInteracting->connection());
     }
 }
