@@ -975,6 +975,7 @@ KProcess *UKUISMServer::startApplication(const QStringList &command, bool wm)
 {
     if (wm) {
         KProcess *process = new KProcess(this);
+        qDebug() << "the wm start command is " << command;
         *process << command;
         connect(process, static_cast<void (KProcess::*)(QProcess::ProcessError)>(&KProcess::error), process, &KProcess::deleteLater);
         connect(process, static_cast<void (KProcess::*)(int, QProcess::ExitStatus)>(&KProcess::finished), process, &KProcess::deleteLater);

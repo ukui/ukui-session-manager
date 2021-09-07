@@ -317,7 +317,7 @@ void ModuleManager::timeup(){
 
 void ModuleManager::startCompsite(){
     qDebug() << "Enter:: startCompsite";
-    if(!isPanelStarted || !isDesktopStarted) return;// || !isWMStarted
+    if(!isPanelStarted || !isDesktopStarted || !isWMStarted) return;//
 
     if(isCompsiteStarted) return;
     isCompsiteStarted = true;

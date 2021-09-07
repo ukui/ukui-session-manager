@@ -47,7 +47,7 @@ extern "C" {
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    QString logPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session.log";
+    QString logPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session-xsmp.log";
     if (!QFile::exists(logPath)) {
         return;
     }
@@ -194,6 +194,7 @@ int main(int argc, char **argv)
 
     app.setQuitOnLastWindowClosed(false);
     UKUISMServer *server = new UKUISMServer;
+    qDebug() << "global server is " << server;
 //    server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
     server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
 
@@ -211,7 +212,7 @@ int main(int argc, char **argv)
 //    QByteArray sessionmanager = qgetenv("SESSION_MANAGER");
 
 //    QProcess pluma;
-//    pluma.start(QStringLiteral("/usr/bin/pluma"));
+//    pluma.startDetached(QStringLiteral("/usr/bin/pluma"));
 
 //    QTimer::singleShot(6000, [server](){
 //        server->performLogout();
