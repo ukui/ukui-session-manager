@@ -548,6 +548,10 @@ void UKUISMServer::clientSetProgram(UKUISMClient *client)
     }
 }
 
+void UKUISMServer::ioError(IceConn iceConn)
+{
+}
+
 void *UKUISMServer::watchConnection(IceConn iceConn)
 {
     UKUISMConnection* conn = new UKUISMConnection(iceConn);

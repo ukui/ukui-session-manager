@@ -32,6 +32,9 @@ public:
     void saveYourselfDone(UKUISMClient *client, bool success);
 
     void clientSetProgram(UKUISMClient *client);
+
+    // error handling
+    void ioError(IceConn iceConn);
 public:
     void* watchConnection(IceConn iceConn );
     void removeConnection(UKUISMConnection *conn );

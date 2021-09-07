@@ -45,6 +45,13 @@ extern "C" {
 #define CURSOR_SIZE         "cursor-size"
 #define CURSOR_THEME        "cursor-theme"
 
+extern UKUISMServer *the_server;
+
+void IoErrorHandler(IceConn iceConn)
+{
+    the_server->ioError(iceConn);
+}
+
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QString logPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session-xsmp.log";
@@ -194,6 +201,8 @@ int main(int argc, char **argv)
 
     app.setQuitOnLastWindowClosed(false);
     UKUISMServer *server = new UKUISMServer;
+    IceSetIOErrorHandler(IoErrorHandler);
+
     qDebug() << "global server is " << server;
 //    server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
     server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
@@ -209,14 +218,15 @@ int main(int argc, char **argv)
 //    QApplication a(argc, argv);
 
 //    UKUISMServer *server = new UKUISMServer;
+//    IceSetIOErrorHandler(IoErrorHandler);
 //    QByteArray sessionmanager = qgetenv("SESSION_MANAGER");
 
 //    QProcess pluma;
 //    pluma.startDetached(QStringLiteral("/usr/bin/pluma"));
 
-//    QTimer::singleShot(6000, [server](){
-//        server->performLogout();
-//    });
+////    QTimer::singleShot(6000, [server](){
+////        server->performLogout();
+////    });
 
 //    return a.exec();
 }
