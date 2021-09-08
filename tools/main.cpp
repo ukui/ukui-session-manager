@@ -391,9 +391,9 @@ int main(int argc, char *argv[])
         a.setStyleSheet(qss.readAll());
         qss.close();
 
-//        w->showFullScreen();
-        w->show();
+        w->showFullScreen();
         QObject::connect(w, &MainWindow::signalTostart, [&]() {
+            w->hide();
             playShutdownMusic(powermanager, w->defaultnum, cc, up_to_time, soundplayer);
         });
     }

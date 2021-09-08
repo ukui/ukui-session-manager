@@ -403,7 +403,7 @@ bool UKUIProvider::canAction(UkuiPower::Action action) const
 //                        QLatin1String(UKUI_INTERFACE), QDBusConnection::sessionBus(), command);
     }
 
-    return isinhibited;
+    return !isinhibited;
 }
 
 bool UKUIProvider::doAction(UkuiPower::Action action)

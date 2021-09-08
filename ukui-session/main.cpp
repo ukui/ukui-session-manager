@@ -204,29 +204,8 @@ int main(int argc, char **argv)
     IceSetIOErrorHandler(IoErrorHandler);
 
     qDebug() << "global server is " << server;
-//    server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
-    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
+    server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
+//    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
 
-    //测试是否能够实现退出保存
-//    QTimer::singleShot(20000, [server](){
-//        server->shutdown();
-//    });
-
-    qDebug() << "begin event loop";
     return app.exec();
-
-//    QApplication a(argc, argv);
-
-//    UKUISMServer *server = new UKUISMServer;
-//    IceSetIOErrorHandler(IoErrorHandler);
-//    QByteArray sessionmanager = qgetenv("SESSION_MANAGER");
-
-//    QProcess pluma;
-//    pluma.startDetached(QStringLiteral("/usr/bin/pluma"));
-
-////    QTimer::singleShot(6000, [server](){
-////        server->performLogout();
-////    });
-
-//    return a.exec();
 }

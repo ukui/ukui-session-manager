@@ -420,7 +420,7 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
     }
 
 
-//    connect(qApp, &QApplication::aboutToQuit, this, &UKUISMServer::cleanUp);
+    connect(qApp, &QApplication::aboutToQuit, this, &UKUISMServer::cleanUp);
     connect(&m_restoreTimer, &QTimer::timeout, this, &UKUISMServer::tryRestoreNext);
 
     qDebug() << "finish construct ukuismserver";
@@ -550,11 +550,12 @@ void UKUISMServer::clientSetProgram(UKUISMClient *client)
 
 void UKUISMServer::ioError(IceConn iceConn)
 {
+    //找出iceConn包含的信息，为什么一定需要这个
 }
 
 void *UKUISMServer::watchConnection(IceConn iceConn)
 {
-    UKUISMConnection* conn = new UKUISMConnection(iceConn);
+    UKUISMConnection *conn = new UKUISMConnection(iceConn);
     connect(conn, &UKUISMConnection::activated, this, &UKUISMServer::processData);
     return (void*)conn;
 }
@@ -612,6 +613,7 @@ void UKUISMServer::shutdown()
     //保存关机
     //是否需要设置m_state?
     qDebug() << "begin performlogout";
+//    storeSession();
     performLogout();
 }
 
@@ -650,14 +652,14 @@ void UKUISMServer::performLogout()
         foreach (UKUISMClient *c, m_clients) {
             //先向窗管发送保存自身的信号
             if(isWM(c)) {
-                qDebug() << "sending save signal to wm first";
+                qDebug() << "sending saveyourself to wm first";
                 SmsSaveYourself(c->connection(), m_saveType, true, SmInteractStyleAny, false);
             }
 
         }
     } else {
         foreach (UKUISMClient *c, m_clients) {
-            qDebug() << "sending saveourself to client " << c->program() << " " << c->clientId();
+            qDebug() << "sending saveourself to client " << " " << c->clientId();
             SmsSaveYourself(c->connection(), m_saveType, true, SmInteractStyleAny, false);
         }
 
@@ -784,9 +786,10 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     pendingClients = m_clients;
     //此处判断除窗管之外的客户端是否全部完成保存，没有的话就返回
     foreach(UKUISMClient *c, pendingClients ) {
-        if (!c->m_saveYourselfDone && !c->m_waitForPhase2)
+        if (!c->m_saveYourselfDone && !c->m_waitForPhase2) {
             qDebug() << "there are none-wm client haven't save";
             return;
+        }
     }
     //窗管正在等待phase2阶段的保存，则向其发送保存phase2的信号
     bool waitForPhase2 = false;

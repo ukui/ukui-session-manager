@@ -69,10 +69,8 @@ private:
     void killingCompleted();
     void cancelShutdown(UKUISMClient *c);
 
-
-
     KProcess* startApplication(const QStringList &command, bool wm = false);
-    void executeCommand( const QStringList& command );
+    void executeCommand(const QStringList& command);
     void handlePendingInteractions();
 
     void launchWM(const QList<QStringList> &wmStartCommands);
