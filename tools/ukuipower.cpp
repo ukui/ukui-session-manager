@@ -22,13 +22,17 @@
  *
  * END_COMMON_COPYRIGHT_HEADER */
 #include "ukuipower.h"
-#include "powerprovider.h"
+//#include "powerprovider.h"
 #include <QDebug>
+#include <QDBusInterface>
+#include <QDBusReply>
 
 UkuiPower::UkuiPower(QObject *parent) : QObject(parent)
 {
 //    mProviders.append(new SystemdProvider(this));
-    mProviders.append(new UKUIProvider(this));
+//    mProviders.append(new UKUIProvider(this));
+//    m_systemdProvider = new SystemdProvider(this);
+//    m_ukuiProvider = new UKUIProvider(this);
 }
 
 UkuiPower::~UkuiPower()
@@ -37,28 +41,103 @@ UkuiPower::~UkuiPower()
 
 bool UkuiPower::canAction(UkuiPower::Action action) const
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
-    foreach(const PowerProvider *provider, mProviders) {
-#else
-    for (const PowerProvider *provider : qAsConst(mProviders)) {
-#endif
-        if (provider->canAction(action))
-            return true;
+//#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
+//    foreach(const PowerProvider *provider, mProviders) {
+//#else
+//    for (const PowerProvider *provider : qAsConst(mProviders)) {
+//#endif
+//        if (provider->canAction(action))
+//            return true;
+//    }
+
+//    return false;
+
+    //以下为代码结构调整
+    QString command;
+    switch (action) {
+    case PowerSwitchUser:
+        command = QLatin1String("canSwitch");
+        break;
+    case PowerHibernate:
+        command = QLatin1String("canHibernate");
+        break;
+    case PowerSuspend:
+        command = QLatin1String("canSuspend");
+        break;
+    case PowerLogout:
+        command = QLatin1String("canLogout");
+        break;
+    case PowerReboot:
+        command = QLatin1String("canReboot");
+        break;
+    case PowerShutdown:
+        command = QLatin1String("canPowerOff");
+        break;
+    default:
+        break;
     }
 
-    return false;
+    QDBusInterface *sessionInterface = new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
+                                                   "org.gnome.SessionManager", QDBusConnection::sessionBus());
+
+    if (!sessionInterface->isValid()) {
+        qWarning() << "dbusCall: Session QDBusInterface is invalid";
+        return false;
+    }
+
+    QDBusReply<bool> reply = sessionInterface->call(command);
+    if(!reply.isValid()) {
+        return false;
+    }
+
+    return reply.value();
 }
 
 bool UkuiPower::doAction(UkuiPower::Action action)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
-    foreach(PowerProvider *provider, mProviders) {
-#else
-    for (PowerProvider *provider : qAsConst(mProviders)) {
-#endif
-        if (provider->canAction(action) && provider->doAction(action))
-            return true;
+//#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
+//    foreach(PowerProvider *provider, mProviders) {
+//#else
+//    for (PowerProvider *provider : qAsConst(mProviders)) {
+//#endif
+//        if (provider->canAction(action) && provider->doAction(action))
+//            return true;
+//    }
+
+//    return false;
+    QString command;
+    switch (action) {
+    case PowerSwitchUser:
+        command = QLatin1String("switchUser");
+        break;
+    case PowerHibernate:
+        command = QLatin1String("hibernate");
+        break;
+    case PowerSuspend:
+        command = QLatin1String("suspend");
+        break;
+    case PowerLogout:
+        command = QLatin1String("logout");
+        break;
+    case PowerReboot:
+        command = QLatin1String("reboot");
+        break;
+    case PowerShutdown:
+        command = QLatin1String("powerOff");
+        break;
+    default:
+        break;
     }
 
-    return false;
+    QDBusInterface *sessionInterface = new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
+                                                          "org.gnome.SessionManager", QDBusConnection::sessionBus());
+
+    if (!sessionInterface->isValid()) {
+        qWarning() << "dbusCall: Session QDBusInterface is invalid";
+        return false;
+    }
+
+    sessionInterface->call(command);
+
+    return true;
 }

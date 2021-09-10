@@ -587,7 +587,7 @@ void ModuleManager::logout(bool doExit)
 //            p->kill();
 //        }
 //    }
-    //winman->terminate();
+//    winman->terminate();
 
     if (doExit) {
         face.call("Terminate");

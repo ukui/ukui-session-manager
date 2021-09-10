@@ -637,9 +637,10 @@ void UKUISMServer::performLogout()
         m_sessionGroup = QStringLiteral("Session: ") + QString::fromLocal8Bit(SESSION_PREVIOUS_LOGOUT);
 
     //将桌面背景设置为黑色
-//    QPalette palette;
-//    palette.setColor(QApplication::desktop()->backgroundRole(), Qt::black);
-//    QApplication::setPalette(palette);
+    QPalette palette;
+    palette.setColor(QApplication::desktop()->backgroundRole(), Qt::black);
+    QApplication::setPalette(palette);
+
     m_wmPhase1WaitingCount = 0;
     m_saveType = SmSaveBoth;
 
@@ -957,6 +958,7 @@ void UKUISMServer::completeKillingWM()
 void UKUISMServer::killingCompleted()
 {
     qDebug() << "done killing, exit";
+    emit logoutFinished();
     qApp->quit();
 }
 

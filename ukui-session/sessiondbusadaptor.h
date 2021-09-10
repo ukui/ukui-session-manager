@@ -22,6 +22,7 @@
 
 #include <QtDBus>
 #include "../tools/ukuipower.h"
+#include "../tools/powerprovider.h"
 #include "modulemanager.h"
 #include "usminhibit.h"
 #include "ukuismserver.h"
@@ -37,8 +38,10 @@ public:
     SessionDBusAdaptor(ModuleManager *manager)
         : QDBusAbstractAdaptor(manager),
           mManager(manager),
-          mPower(new UkuiPower()),
-          minhibit(new usminhibit())
+//          mPower(new UkuiPower()),
+          minhibit(new usminhibit()),
+          m_systemdProvider(new SystemdProvider()),
+          m_ukuiProvider(new UKUIProvider())
     {
         connect(mManager, &ModuleManager::moduleStateChanged, this , &SessionDBusAdaptor::moduleStateChanged);
         connect(mManager, &ModuleManager::finished,this,&SessionDBusAdaptor::emitPrepareForPhase2);
@@ -58,6 +61,23 @@ public slots:
         return mManager->startupfinished(appName,string);
     }
 
+    bool canSwitch()
+    {
+        //判断能否切换用户只需要用到systemdProvide的功能。
+        return m_systemdProvider->canAction(UkuiPower::PowerSwitchUser);
+    }
+
+    bool canHibernate()
+    {
+        return m_systemdProvider->canAction(UkuiPower::PowerHibernate);
+    }
+
+    bool canSuspend()
+    {
+        //睡眠通过systemd判断
+        return m_systemdProvider->canAction(UkuiPower::PowerSuspend);
+    }
+
     bool canLogout()
     {
         return true;
@@ -65,39 +85,49 @@ public slots:
 
     bool canReboot()
     {
-        return mPower->canAction(UkuiPower::PowerReboot);
+        return m_systemdProvider->canAction(UkuiPower::PowerReboot) && m_ukuiProvider->canAction(UkuiPower::PowerReboot);
     }
 
     bool canPowerOff()
     {
-        return mPower->canAction(UkuiPower::PowerShutdown);
+        return m_systemdProvider->canAction(UkuiPower::PowerShutdown) && m_ukuiProvider->canAction(UkuiPower::PowerShutdown);
+    }
+
+    Q_NOREPLY void switchUser()
+    {
+        m_systemdProvider->doAction(UkuiPower::PowerSwitchUser);
+    }
+
+    Q_NOREPLY void suspend()
+    {
+        m_systemdProvider->doAction(UkuiPower::PowerSuspend);
     }
 
     Q_NOREPLY void logout()
     {
+        //xsmp协议的退出保存机制
         the_server->performLogout();
 //        mManager->logout(true);
     }
 
     Q_NOREPLY void reboot()
     {
-        if(mPower->canAction(UkuiPower::PowerReboot)){
-            mManager->logout(false);
-            mPower->doAction(UkuiPower::PowerReboot);
-        }
+//        if(mPower->canAction(UkuiPower::PowerReboot)){
+//            mManager->logout(false);
+//            mPower->doAction(UkuiPower::PowerReboot);
+//        }
         //QCoreApplication::exit(0);
+        m_systemdProvider->doAction(UkuiPower::PowerReboot);
     }
 
     Q_NOREPLY void powerOff()
     {
-        //此处造成死循环，因为调用点就已经判断过了，或者调用点就不判断canAction
 //        if(mPower->canAction(UkuiPower::PowerShutdown)){
-            //在此处保存会话信息
-//            the_server->shutdown();
-            mManager->logout(false);
-            mPower->doAction(UkuiPower::PowerShutdown);
+//            mManager->logout(false);
+//            mPower->doAction(UkuiPower::PowerShutdown);
 //        }
         //QCoreApplication::exit(0);
+        m_systemdProvider->doAction(UkuiPower::PowerShutdown);
     }
 
 //    QDBusVariant listModules()
@@ -171,8 +201,10 @@ public slots:
 
 private:
     ModuleManager *mManager;
-    UkuiPower *mPower;
+//    UkuiPower *mPower;
     usminhibit *minhibit;
+    PowerProvider *m_systemdProvider;
+    PowerProvider *m_ukuiProvider;
 };
 
 #endif // SESSIONDBUSADAPTOR_H

@@ -47,6 +47,9 @@ public:
 
     void performLogout();
 
+Q_SIGNALS:
+    void logoutFinished();
+
 public Q_SLOTS:
 
     void cleanUp();//smserver析构前的清理工作
