@@ -44,7 +44,7 @@ public:
           m_ukuiProvider(new UKUIProvider())
     {
         connect(mManager, &ModuleManager::moduleStateChanged, this , &SessionDBusAdaptor::moduleStateChanged);
-        connect(mManager, &ModuleManager::finished,this,&SessionDBusAdaptor::emitPrepareForPhase2);
+        connect(mManager, &ModuleManager::finished, this, &SessionDBusAdaptor::emitPrepareForPhase2);
     }
 
 Q_SIGNALS:
@@ -117,7 +117,11 @@ public slots:
 //            mPower->doAction(UkuiPower::PowerReboot);
 //        }
         //QCoreApplication::exit(0);
-        m_systemdProvider->doAction(UkuiPower::PowerReboot);
+        the_server->performLogout();
+        connect(the_server, UKUISMServer::logoutFinished, [this](){
+            this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
+        });
+
     }
 
     Q_NOREPLY void powerOff()
@@ -127,7 +131,10 @@ public slots:
 //            mPower->doAction(UkuiPower::PowerShutdown);
 //        }
         //QCoreApplication::exit(0);
-        m_systemdProvider->doAction(UkuiPower::PowerShutdown);
+        the_server->performLogout();
+        connect(the_server, UKUISMServer::logoutFinished, [this](){
+            this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
+        });
     }
 
 //    QDBusVariant listModules()
