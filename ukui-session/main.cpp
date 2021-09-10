@@ -204,8 +204,9 @@ int main(int argc, char **argv)
     IceSetIOErrorHandler(IoErrorHandler);
 
     qDebug() << "global server is " << server;
-    server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
+//    server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
 //    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
 
+    
     return app.exec();
 }

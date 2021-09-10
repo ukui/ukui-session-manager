@@ -40,7 +40,8 @@
 #define FONT_REENDERING_PATH "/org/ukui/desktop/font-rendering/"
 #define DPI_KEY "dpi"
 
-QByteArray typeConver(int i){
+QByteArray typeConver(int i)
+{
     QString str = QString::number(i);
     QByteArray byte;
     byte.append(str);
@@ -139,7 +140,7 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
     const QByteArray id(SESSION_DEFAULT_SETTINGS);
     if (QGSettings::isSchemaInstalled(id)) {
         gsettings_usable = true;
-        gs = new QGSettings(SESSION_DEFAULT_SETTINGS,SESSION_DEFAULT_SETTINGS_PATH,this);
+        gs = new QGSettings(SESSION_DEFAULT_SETTINGS, SESSION_DEFAULT_SETTINGS_PATH, this);
 
     } else {
         qWarning() << "Failed to get default value from gsettings, set gsettings_usable to false!";

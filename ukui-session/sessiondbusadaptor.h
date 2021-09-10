@@ -118,7 +118,7 @@ public slots:
 //        }
         //QCoreApplication::exit(0);
         the_server->performLogout();
-        connect(the_server, UKUISMServer::logoutFinished, [this](){
+        connect(the_server, &UKUISMServer::logoutFinished, [this](){
             this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
         });
 
@@ -132,7 +132,7 @@ public slots:
 //        }
         //QCoreApplication::exit(0);
         the_server->performLogout();
-        connect(the_server, UKUISMServer::logoutFinished, [this](){
+        connect(the_server, &UKUISMServer::logoutFinished, [this](){
             this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
         });
     }

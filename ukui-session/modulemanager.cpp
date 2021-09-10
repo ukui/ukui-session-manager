@@ -317,7 +317,7 @@ void ModuleManager::timeup(){
 
 void ModuleManager::startCompsite(){
     qDebug() << "Enter:: startCompsite";
-    if(!isPanelStarted || !isDesktopStarted) return;// || !isWMStarted
+    if(!isPanelStarted || !isDesktopStarted || !isWMStarted) return;//
 
     if(isCompsiteStarted) return;
     isCompsiteStarted = true;
@@ -374,7 +374,7 @@ void ModuleManager::startup()
 
     connect(this, &ModuleManager::panelfinished, [=](){ tpanel->stop(); isPanelStarted = true; startCompsite(); });
     connect(this, &ModuleManager::desktopfinished, [=](){ tdesktop->stop(); isDesktopStarted = true; startCompsite(); });
-//    connect(this, &ModuleManager::wmfinished, [=](){ tdesktop->stop(); isWMStarted = true; startCompsite(); });//改为在server中最先启动窗管
+    connect(this, &ModuleManager::wmfinished, [=](){ tdesktop->stop(); isWMStarted = true; startCompsite(); });//改为在server中最先启动窗管
 
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
     if(xdg_session_type == "wayland"){
@@ -387,7 +387,7 @@ void ModuleManager::startup()
     }
     start_module_Timer(tusd,3);
 
-//    startProcess(mWindowManager, true);
+    startProcess(mWindowManager, true);
     // start_module_Timer(twm, 3);
     startProcess(mPanel, true);
     start_module_Timer(tpanel, 3);
@@ -532,6 +532,7 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
         return;
     }
 
+    //需要做出修改
     if (proc->restartNum > 10) {
         mNameMap.remove(proc->fileName);
         disconnect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), nullptr, nullptr);

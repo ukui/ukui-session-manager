@@ -49,17 +49,18 @@ extern "C" int _IceTransNoListen(const char *protocol);
 
 static Bool HostBasedAuthProc(char *hostname)
 {
-    if (only_local)
+    if (only_local) {
         return true;
-    else
+    } else {
         return false;
+    }
 }
 
 Status RegisterClientProc(SmsConn smsConn, SmPointer managerData, char *previousId)
 {
-    UKUISMClient *client = (UKUISMClient*)managerData;
+    UKUISMClient *client = static_cast<UKUISMClient*>(managerData);
     client->registerClient(previousId);
-    qDebug() << "client " << client->program() << " " << client->clientId() << " registered.";
+    qDebug() << "client " << client->clientId() << " registered.";
     return 1;
 }
 
@@ -155,7 +156,7 @@ static Status NewClientProc(SmsConn conn, SmPointer manager_data, unsigned long 
     //根据XSMP协议的要求，出错时，这个函数应该返回状态0,并且错误原因要包含在failure_reason_ret中
     *failure_reason_ret = nullptr;
 
-    void* client = ((UKUISMServer*)manager_data)->newClient(conn);
+    void *client = ((UKUISMServer*)manager_data)->newClient(conn);
 
     cb->register_client.callback = RegisterClientProc;
     cb->register_client.manager_data = client;
@@ -462,6 +463,13 @@ void UKUISMServer::deleteClient(UKUISMClient *client)
         completeKillingWM();
 }
 
+void UKUISMServer::clientRegistered(const char *previousId)
+{
+    if (previousId && m_lastIdRestore == QString::fromLocal8Bit(previousId)) {
+        tryRestoreNext();
+    }
+}
+
 void UKUISMServer::interactRequest(UKUISMClient *client, int dialogType)
 {
     qDebug() << client->clientId() << "ask for interact";
@@ -490,6 +498,7 @@ void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
     m_clientInteracting = nullptr;
     //如果客户端取消关机，则向所有客户端发送取消关机信号
     if (cancelShutdown_) {
+        qDebug() << client->clientId() << "cancel shutdown";
         cancelShutdown(client);
     } else {
         //处理下一个挂起的客户端
@@ -510,11 +519,11 @@ void UKUISMServer::phase2Request(UKUISMClient *client)
         //窗管完成phase1保存，请求phase2，服务器先向所有其他客户端发送保存命令
         if(m_wmPhase1WaitingCount == 0) {
             foreach (UKUISMClient *c, m_clients) {
+                //将pluma和wps的保存放到最前？
                 if (!isWM(c)) {
                     qDebug() << "wm done phase1, sending saveyourself to " << c->clientId();
                     SmsSaveYourself(c->connection(), m_saveType, m_saveType != SmSaveLocal,
-                        m_saveType != SmSaveLocal ? SmInteractStyleAny : SmInteractStyleNone,
-                        false);
+                                    m_saveType != SmSaveLocal ? SmInteractStyleAny : SmInteractStyleNone, false);
                 }
             }
         }
@@ -599,13 +608,6 @@ void UKUISMServer::startDefaultSession()
 
     m_sessionGroup = QString();
     launchWM(QList<QStringList>() << m_wmCommands);
-}
-
-void UKUISMServer::clientRegistered(const char *previousId)
-{
-    if (previousId && m_lastIdRestore == QString::fromLocal8Bit(previousId)) {
-        tryRestoreNext();
-    }
 }
 
 void UKUISMServer::shutdown()
@@ -967,11 +969,14 @@ void UKUISMServer::cancelShutdown(UKUISMClient *c)
     m_clientInteracting = nullptr;
 
     foreach(UKUISMClient *c, m_clients) {
+        qDebug() << "sending cancel shutdown to client " << c->clientId();
         SmsShutdownCancelled(c->connection());
         if(c->m_saveYourselfDone) {
+            qDebug() << c->clientId() << "discard saveing state";
             QStringList discard = c->discardCommand();
+            qDebug() << c->clientId() << "'s discardCommand is " << discard;
             if(!discard.isEmpty())
-                executeCommand( discard );
+                executeCommand(discard);
         }
     }
 

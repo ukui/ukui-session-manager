@@ -24,13 +24,12 @@ public:
     UKUISMClient* newClient(SmsConn conn);
     void  deleteClient(UKUISMClient *client);
 
-
     //callback
+    void clientRegistered(const char *previousId);
     void interactRequest(UKUISMClient *client, int dialogType);
     void interactDone(UKUISMClient *client, bool cancelShutdown_);
     void phase2Request(UKUISMClient *client);
     void saveYourselfDone(UKUISMClient *client, bool success);
-
     void clientSetProgram(UKUISMClient *client);
 
     // error handling
@@ -42,16 +41,13 @@ public:
     void restoreSession(const QString &sessionName);
     void startDefaultSession();
 
-    void clientRegistered(const char *previousId);
     void shutdown();
-
     void performLogout();
 
 Q_SIGNALS:
     void logoutFinished();
 
 public Q_SLOTS:
-
     void cleanUp();//smserver析构前的清理工作
 
 private Q_SLOTS:
@@ -60,7 +56,6 @@ private Q_SLOTS:
     void wmProcessChange();
     void timeoutQuit();
     void timeoutWMQuit();
-
 
 private:
     void completeShutdownOrCheckpoint();
@@ -97,7 +92,7 @@ private:
     int m_appRestored;
     int m_saveType;
 
-    KProcess* m_wmProcess;
+    KProcess *m_wmProcess;
     OrgKdeKWinSessionInterface *m_kwinInterface;
     UKUISMClient *m_clientInteracting;
 
