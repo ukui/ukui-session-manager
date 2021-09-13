@@ -343,8 +343,7 @@ void UKUISMWatchProc(IceConn iceConn, IcePointer client_data, Bool opening, IceP
 
     if (opening) {
         *watch_data = (IcePointer)ds->watchConnection(iceConn);
-    }
-    else  {
+    } else  {
         ds->removeConnection((UKUISMConnection*)*watch_data);
     }
 }
@@ -526,8 +525,9 @@ void UKUISMServer::phase2Request(UKUISMClient *client)
         --m_wmPhase1WaitingCount;
         //窗管完成phase1保存，请求phase2，服务器先向所有其他客户端发送保存命令
         if(m_wmPhase1WaitingCount == 0) {
+            //将pluma/wps/qtcreator放到客户端队列的最前方
+            changeClientOrder();
             foreach (UKUISMClient *c, m_clients) {
-                //将pluma和wps的保存放到最前？
                 if (!isWM(c)) {
                     qDebug() << "wm done phase1, sending saveyourself to " << c->clientId();
                     SmsSaveYourself(c->connection(), m_saveType, m_saveType != SmSaveLocal,
@@ -686,6 +686,11 @@ void UKUISMServer::performLogout()
     if (m_clients.isEmpty()) {
         completeShutdownOrCheckpoint();
     }
+}
+
+void UKUISMServer::justStoreSession()
+{
+    storeSession();
 }
 
 void UKUISMServer::cleanUp()
@@ -1060,7 +1065,7 @@ void UKUISMServer::handlePendingInteractions()
         return;
     }
     //遍历客户端，找到第一个正在挂起的客户端，将其初始化为m_clientInteracting
-    foreach(UKUISMClient *c, m_clients) {
+    foreach (UKUISMClient *c, m_clients) {
         if (c->m_pendingInteraction) {
             m_clientInteracting = c;
             c->m_pendingInteraction = false;
@@ -1149,6 +1154,25 @@ bool UKUISMServer::isWM(const QString &program) const
     QString wmName = m_wm.mid(m_wm.lastIndexOf(QDir::separator()) + 1);
     QString programName = program.mid(program.lastIndexOf(QDir::separator()) + 1);
     return programName == wmName;
+}
+
+void UKUISMServer::changeClientOrder()
+{
+    //这只是一个暂时解决的方法，应该由desktop和panel做出修改，在收到服务器的退出信号后才退出进程
+    foreach (UKUISMClient *c, m_clients) {
+        QString programPath = c->program();
+        QString programName = programPath.mid(programPath.lastIndexOf(QDir::separator()) + 1);
+        if(programName == QLatin1String("pluma")) {
+            m_clients.removeAll(c);
+            m_clients.prepend(c);
+        } else if (programName == QLatin1String("qtcreator")) {
+            m_clients.removeAll(c);
+            m_clients.prepend(c);
+        } else if (programName == QLatin1String("wps")) {
+            m_clients.removeAll(c);
+            m_clients.prepend(c);
+        }
+    }
 }
 
 void UKUISMServer::removeConnection(UKUISMConnection *conn)

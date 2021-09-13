@@ -44,6 +44,9 @@ public:
     void shutdown();
     void performLogout();
 
+    //这个接口是为了调试和查看日志方便
+    void justStoreSession();
+
 Q_SIGNALS:
     void logoutFinished();
 
@@ -76,6 +79,8 @@ private:
     void tryRestoreNext();
     bool isWM(const UKUISMClient *client) const;
     bool isWM(const QString &program) const;
+
+    void changeClientOrder();
 
 private:
     enum State {
