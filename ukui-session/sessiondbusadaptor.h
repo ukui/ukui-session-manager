@@ -27,7 +27,7 @@
 #include "usminhibit.h"
 #include "ukuismserver.h"
 
-extern UKUISMServer *the_server;
+extern UKUISMServer *theServer;
 
 class SessionDBusAdaptor : public QDBusAbstractAdaptor
 {
@@ -106,7 +106,7 @@ public slots:
     Q_NOREPLY void logout()
     {
         //xsmp协议的退出保存机制
-        the_server->performLogout();
+        theServer->performLogout();
 //        mManager->logout(true);
     }
 
@@ -117,8 +117,8 @@ public slots:
 //            mPower->doAction(UkuiPower::PowerReboot);
 //        }
         //QCoreApplication::exit(0);
-        the_server->performLogout();
-        connect(the_server, &UKUISMServer::logoutFinished, [this](){
+        theServer->performLogout();
+        connect(theServer, &UKUISMServer::logoutFinished, [this](){
             this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
         });
 
@@ -131,8 +131,8 @@ public slots:
 //            mPower->doAction(UkuiPower::PowerShutdown);
 //        }
         //QCoreApplication::exit(0);
-        the_server->performLogout();
-        connect(the_server, &UKUISMServer::logoutFinished, [this](){
+        theServer->performLogout();
+        connect(theServer, &UKUISMServer::logoutFinished, [this](){
             this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
         });
     }

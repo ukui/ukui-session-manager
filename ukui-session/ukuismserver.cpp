@@ -35,7 +35,7 @@ enum KWinSessionState {
     Quitting = 2
 };
 
-UKUISMServer *the_server = nullptr;
+UKUISMServer *theServer = nullptr;
 
 IceAuthDataEntry *authDataEntries = nullptr;
 
@@ -43,13 +43,13 @@ static QTemporaryFile *remTempFile = nullptr;
 
 static IceListenObj *listenObjs = nullptr;
 int numTransports = 0;
-static bool only_local = false;
+static bool onlyLocal = false;
 
 extern "C" int _IceTransNoListen(const char *protocol);
 
 static Bool HostBasedAuthProc(char *hostname)
 {
-    if (only_local) {
+    if (onlyLocal) {
         return true;
     } else {
         return false;
@@ -66,19 +66,19 @@ Status RegisterClientProc(SmsConn smsConn, SmPointer managerData, char *previous
 
 void InteractRequestProc(SmsConn smsConn, SmPointer managerData, int dialogType)
 {
-    the_server->interactRequest((UKUISMClient*)managerData, dialogType );
+    theServer->interactRequest(static_cast<UKUISMClient*>(managerData), dialogType );
 }
 
 void InteractDoneProc(SmsConn smsConn, SmPointer managerData, Bool cancelShutdown)
 {
-    the_server->interactDone((UKUISMClient*)managerData, cancelShutdown);
+    theServer->interactDone(static_cast<UKUISMClient*>(managerData), cancelShutdown);
 }
 
 void SaveYourselfRequestProc(SmsConn smsConn, SmPointer managerData, int saveType, Bool shutdown, int interactStyle, Bool fast, Bool global)
 {
     //如果shutdown为true,则执行关机流程
     if (shutdown) {
-        the_server->shutdown();
+        theServer->shutdown();
     } else if (!global) {
         //如果global为false,则只向发送请求的客户端发送save yourself
         SmsSaveYourself(smsConn, saveType, false, interactStyle, fast);
@@ -88,19 +88,20 @@ void SaveYourselfRequestProc(SmsConn smsConn, SmPointer managerData, int saveTyp
 
 void KSMSaveYourselfPhase2RequestProc(SmsConn smsConn, SmPointer managerData)
 {
-    the_server->phase2Request((UKUISMClient*)managerData);
+    theServer->phase2Request(static_cast<UKUISMClient*>(managerData));
 }
 
 void KSMSaveYourselfDoneProc(SmsConn smsConn, SmPointer managerData, Bool success)
 {
-    the_server->saveYourselfDone((UKUISMClient*)managerData, success);
+    theServer->saveYourselfDone(static_cast<UKUISMClient*>(managerData), success);
 }
 
 void KSMCloseConnectionProc(SmsConn smsConn, SmPointer managerData, int count, char **reasonMsgs)
 {
-    the_server->deleteClient((UKUISMClient*)managerData);
-    if (count)
+    theServer->deleteClient(static_cast<UKUISMClient*>(managerData));
+    if (count) {
         SmFreeReasons(count, reasonMsgs);
+    }
 
     IceConn iceConn = SmsGetIceConnection(smsConn);
     SmsCleanUp(smsConn);
@@ -110,7 +111,7 @@ void KSMCloseConnectionProc(SmsConn smsConn, SmPointer managerData, int count, c
 
 void KSMSetPropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, SmProp **props)
 {
-    UKUISMClient *client = (UKUISMClient*)managerData;
+    UKUISMClient *client = static_cast<UKUISMClient*>(managerData);
     for (int i = 0; i < numProps; i++) {
         SmProp *p = client->property(props[i]->name);
         if (p) {
@@ -118,18 +119,20 @@ void KSMSetPropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, 
             SmFreeProperty(p);
         }
         client->m_properties.append(props[i]);
-        if (!qstrcmp(props[i]->name, SmProgram))
-            the_server->clientSetProgram(client);
+        if (!qstrcmp(props[i]->name, SmProgram)) {
+            theServer->clientSetProgram(client);
+        }
     }
 
-    if (numProps)
+    if (numProps) {
         free(props);
+    }
 
 }
 
 void KSMDeletePropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, char **propNames)
 {
-    UKUISMClient *client = (UKUISMClient*)managerData;
+    UKUISMClient *client = static_cast<UKUISMClient*>(managerData);
     for (int i = 0; i < numProps; i++) {
         SmProp *p = client->property(propNames[i]);
         if (p) {
@@ -141,12 +144,12 @@ void KSMDeletePropertiesProc(SmsConn smsConn, SmPointer managerData, int numProp
 
 void KSMGetPropertiesProc(SmsConn smsConn, SmPointer managerData)
 {
-    UKUISMClient *client = (UKUISMClient*)managerData;
-    SmProp** props = new SmProp*[client->m_properties.count()];
+    UKUISMClient *client = static_cast<UKUISMClient*>(managerData);
+    SmProp **props = new SmProp*[client->m_properties.count()];
     int i = 0;
-    foreach(SmProp *prop, client->m_properties)
+    foreach (SmProp *prop, client->m_properties) {
         props[i++] = prop;
-
+    }
     SmsReturnProperties(smsConn, i, props);
     delete[] props;
 }
@@ -156,7 +159,7 @@ static Status NewClientProc(SmsConn conn, SmPointer manager_data, unsigned long 
     //根据XSMP协议的要求，出错时，这个函数应该返回状态0,并且错误原因要包含在failure_reason_ret中
     *failure_reason_ret = nullptr;
 
-    void *client = ((UKUISMServer*)manager_data)->newClient(conn);
+    void *client = (static_cast<UKUISMServer*>(manager_data))->newClient(conn);
 
     cb->register_client.callback = RegisterClientProc;
     cb->register_client.manager_data = client;
@@ -208,13 +211,13 @@ static void write_iceauth(FILE *addfp, FILE *removefp, IceAuthDataEntry *entry)
 {
     fprintf(addfp, "add %s \"\" %s %s ", entry->protocol_name, entry->network_id, entry->auth_name);
     fprintfhex(addfp, entry->auth_data_length, entry->auth_data);
-    fprintf (addfp, "\n");
+    fprintf(addfp, "\n");
 
-    fprintf (removefp,
-             "remove protoname=%s protodata=\"\" netid=%s authname=%s\n",
-             entry->protocol_name,
-             entry->network_id,
-             entry->auth_name);
+    fprintf(removefp,
+            "remove protoname=%s protodata=\"\" netid=%s authname=%s\n",
+            entry->protocol_name,
+            entry->network_id,
+            entry->auth_name);
 }
 
 #define COOKIE_LEN 16
@@ -227,6 +230,7 @@ Status SetAuthentication_local (int count, IceListenObj *listenObjs)
         if (!prot) continue;
         char *host = strchr(prot, '/');
         char *sock = nullptr;
+
         if (host) {
             *host=0;
             host++;
@@ -236,9 +240,11 @@ Status SetAuthentication_local (int count, IceListenObj *listenObjs)
                 sock++;
             }
         }
+
         if (sock && !strcmp(prot, "local")) {
             chmod(sock, 0700);
         }
+
         IceSetHostBasedAuthProc(listenObjs[i], HostBasedAuthProc);
         free(prot);
     }
@@ -277,10 +283,11 @@ Status SetAuthentication (int count, IceListenObj *listenObjs, IceAuthDataEntry 
         write_iceauth(addAuthFile, remAuthFile, &(*authDataEntries)[i]);
         write_iceauth(addAuthFile, remAuthFile, &(*authDataEntries)[i+1]);
 
-        IceSetPaAuthData (2, &(*authDataEntries)[i]);
+        IceSetPaAuthData(2, &(*authDataEntries)[i]);
 
         IceSetHostBasedAuthProc(listenObjs[i/2], HostBasedAuthProc);
     }
+
     fclose(addAuthFile);
     fclose(remAuthFile);
 
@@ -301,8 +308,9 @@ Status SetAuthentication (int count, IceListenObj *listenObjs, IceAuthDataEntry 
 void FreeAuthenticationData(int count, IceAuthDataEntry *authDataEntries)
 {
     /* Each transport has entries for ICE and XSMP */
-    if (only_local)
+    if (onlyLocal) {
         return;
+    }
 
     for (int i = 0; i < count * 2; i++) {
         free(authDataEntries[i].network_id);
@@ -331,7 +339,7 @@ void FreeAuthenticationData(int count, IceAuthDataEntry *authDataEntries)
 
 void UKUISMWatchProc(IceConn iceConn, IcePointer client_data, Bool opening, IcePointer *watch_data)
 {
-    UKUISMServer *ds = (UKUISMServer*)client_data;
+    UKUISMServer *ds = static_cast<UKUISMServer*>(client_data);
 
     if (opening) {
         *watch_data = (IcePointer)ds->watchConnection(iceConn);
@@ -347,11 +355,10 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
                              , m_wm(QStringLiteral("ukui-kwin_x11"))
 {
     m_wmCommands = QStringList({m_wm});
-    the_server = this;
+    theServer = this;
 
-    only_local = true;
-
-    if (only_local) {
+    onlyLocal = true;
+    if (onlyLocal) {
         _IceTransNoListen("tcp");//这个函数到底是哪个库里面的？还是需要自己定义？
     }
 
@@ -401,12 +408,14 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
         free(session_manager);
     }
 
-    if (only_local) {
-        if (!SetAuthentication_local(numTransports, listenObjs))
+    if (onlyLocal) {
+        if (!SetAuthentication_local(numTransports, listenObjs)) {
             qFatal("ukuismserver : authentication setup failed.");
+        }
     } else {
-        if (!SetAuthentication(numTransports, listenObjs, &authDataEntries))
+        if (!SetAuthentication(numTransports, listenObjs, &authDataEntries)) {
             qFatal("ukuismserver : authentication setup failed.");
+        }
     }
 
 
@@ -430,7 +439,7 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
 UKUISMServer::~UKUISMServer()
 {
     qDeleteAll(m_listener);
-    the_server = nullptr;
+    theServer = nullptr;
     cleanUp();
 }
 
@@ -491,8 +500,7 @@ void UKUISMServer::interactRequest(UKUISMClient *client, int dialogType)
 void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
 {
     //如果交互完成的客户端与服务器保存的m_clientInteraction信息不一致，则返回，一般不会发生，因为退出时的交互对话框是模态的
-    if (client != m_clientInteracting)
-        return;
+    if (client != m_clientInteracting) return;
     //重置m_clientInteraciton，以便处理下一个挂起的客户端
     qDebug() << m_clientInteracting->clientId() << "interact done";
     m_clientInteracting = nullptr;
@@ -534,8 +542,11 @@ void UKUISMServer::saveYourselfDone(UKUISMClient *client, bool success)
 {
     if (m_state == Idle) {
         QStringList discard = client->discardCommand();
-        if( !discard.isEmpty())
+
+        if(!discard.isEmpty()) {
             executeCommand( discard );
+        }
+
         return;
     }
 
@@ -552,7 +563,7 @@ void UKUISMServer::saveYourselfDone(UKUISMClient *client, bool success)
 
 void UKUISMServer::clientSetProgram(UKUISMClient *client)
 {
-    if(isWM(client)) {
+    if (isWM(client)) {
         qDebug() << "windowManager loaded";
     }
 }
@@ -571,8 +582,7 @@ void *UKUISMServer::watchConnection(IceConn iceConn)
 
 void UKUISMServer::restoreSession(const QString &sessionName)
 {
-    if(m_state != Idle)
-        return;
+    if(m_state != Idle) return;
 
     m_state = LaunchingWM;
 
@@ -603,7 +613,10 @@ void UKUISMServer::restoreSession(const QString &sessionName)
 
 void UKUISMServer::startDefaultSession()
 {
-    if(m_state != Idle ) return;
+    if(m_state != Idle ) {
+        return;
+    }
+
     m_state = LaunchingWM;
 
     m_sessionGroup = QString();
@@ -615,7 +628,6 @@ void UKUISMServer::shutdown()
     //保存关机
     //是否需要设置m_state?
     qDebug() << "begin performlogout";
-//    storeSession();
     performLogout();
 }
 
@@ -635,8 +647,9 @@ void UKUISMServer::performLogout()
     m_state = Shutdown;
     m_saveSession = true;
 
-    if (m_saveSession)
+    if (m_saveSession) {
         m_sessionGroup = QStringLiteral("Session: ") + QString::fromLocal8Bit(SESSION_PREVIOUS_LOGOUT);
+    }
 
     //将桌面背景设置为黑色
     QPalette palette;
@@ -648,9 +661,11 @@ void UKUISMServer::performLogout()
 
     foreach (UKUISMClient *c, m_clients) {
         c->resetState();
-        if(isWM(c))
+        if(isWM(c)) {
             ++m_wmPhase1WaitingCount;
+        }
     }
+
     if (m_wmPhase1WaitingCount > 0) {
         foreach (UKUISMClient *c, m_clients) {
             //先向窗管发送保存自身的信号
@@ -668,15 +683,19 @@ void UKUISMServer::performLogout()
 
     }
 
-    if (m_clients.isEmpty())
+    if (m_clients.isEmpty()) {
         completeShutdownOrCheckpoint();
+    }
 }
 
 void UKUISMServer::cleanUp()
 {
-    if (clean) return;
+    if (clean) {
+        return;
+    }
+
     clean = true;
-    IceFreeListenObjs (numTransports, listenObjs);
+    IceFreeListenObjs(numTransports, listenObjs);
 
 
     QByteArray fName = QFile::encodeName(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QLatin1Char('/') + QStringLiteral("KSMserver"));
@@ -684,12 +703,14 @@ void UKUISMServer::cleanUp()
 
     display.remove(QRegExp(QStringLiteral("\\.[0-9]+$")));
     int i;
-    while( (i = display.indexOf(QLatin1Char(':'))) >= 0)
+    while ((i = display.indexOf(QLatin1Char(':'))) >= 0) {
          display[i] = '_';
-    while( (i = display.indexOf(QLatin1Char('/'))) >= 0)
+    }
+    while ((i = display.indexOf(QLatin1Char('/'))) >= 0) {
          display[i] = '_';
+    }
 
-    fName += '_'+display.toLocal8Bit();
+    fName += '_' + display.toLocal8Bit();
     ::unlink(fName.data());
 
     FreeAuthenticationData(numTransports, authDataEntries);
@@ -699,8 +720,7 @@ void UKUISMServer::newConnection(int socket)
 {
     IceAcceptStatus status;
     IceConn iceConn = IceAcceptConnection(((UKUISMListener*)sender())->listenObj, &status);
-    if(iceConn == nullptr)
-        return;
+    if(iceConn == nullptr) return;
     IceSetShutdownNegotiation(iceConn, False);
     IceConnectStatus cstatus;
     while ((cstatus = IceConnectionStatus(iceConn)) == IceConnectPending) {
@@ -755,8 +775,9 @@ void UKUISMServer::wmProcessChange()
 
     if(m_wmProcess->state() == QProcess::NotRunning)
     {
-        if(m_wm == QLatin1String("ukui-kwin_x11") )
+        if (m_wm == QLatin1String("ukui-kwin_x11")) {
             return;
+        }
 
         m_wm = QStringLiteral("ukui-kwin_x11");
         m_wmCommands = (QStringList() << QStringLiteral("ukui-kwin_x11"));
@@ -805,8 +826,9 @@ void UKUISMServer::completeShutdownOrCheckpoint()
         }
     }
 
-    if (waitForPhase2)
+    if (waitForPhase2) {
         return;
+    }
     //运行到这里说明窗管和普通客户端都完成了保存，开始保存会话信息到磁盘中
     if (m_saveSession) {
         qDebug() << "store session informantion in rcfile";
@@ -833,17 +855,20 @@ void UKUISMServer::storeSession()
     for (int i = 1; i <= count; i++) {
         //读取discardcommand
         QStringList discardCommand = configSessionGroup.readPathEntry(QLatin1String("discardCommand") + QString::number(i), QStringList());
-        if (discardCommand.isEmpty())
+        if (discardCommand.isEmpty()) {
             continue;
+        }
 
         //这一步的目的是寻找是否有重复的discardcommand， 如果没有就直接执行discardcommand
         QList<UKUISMClient*>::iterator it = m_clients.begin();
         QList<UKUISMClient*>::iterator const itEnd = m_clients.end();
-        while ((it != itEnd) && *it && (discardCommand != (*it)->discardCommand()))
+        while ((it != itEnd) && *it && (discardCommand != (*it)->discardCommand())) {
             ++it;
+        }
 
-        if ((it != itEnd)&& *it)
+        if ((it != itEnd)&& *it) {
             continue;
+        }
 
         executeCommand(discardCommand);
     }
@@ -852,23 +877,26 @@ void UKUISMServer::storeSession()
     KConfigGroup cg(config, m_sessionGroup);
     count =  0;
     //将wm移动到客户端列表的第一个
-    foreach (UKUISMClient *c, m_clients)
+    foreach (UKUISMClient *c, m_clients) {
         if (isWM(c)) {
             m_clients.removeAll(c);
             m_clients.prepend(c);
             break;
         }
+    }
 
     //遍历每一个客户端，存储客户端的信息到文件中
     foreach (UKUISMClient *c, m_clients) {
         int restartHint = c->restartStyleHint();
-        if (restartHint == SmRestartNever)
+        if (restartHint == SmRestartNever) {
             continue;
+        }
 
         QString program = c->program();
         QStringList restartCommand = c->restartCommand();
-        if (program.isEmpty() && restartCommand.isEmpty())
+        if (program.isEmpty() && restartCommand.isEmpty()) {
            continue;
+        }
 
         count++;
         QString n = QString::number(count);
@@ -890,14 +918,16 @@ void UKUISMServer::completeKilling()
     if (m_state == Killing) {
         //这一段的含义是只要客户端列表中还有非窗管的客户端存在，则等待，直到客户端中只有一个窗管，则开始杀死窗管
         bool wait = false;
-        foreach(UKUISMClient *c, m_clients) {
-            if(isWM(c))
+        foreach (UKUISMClient *c, m_clients) {
+            if(isWM(c)) {
                 continue;
+            }
             wait = true;
         }
 
-        if(wait)
+        if(wait) {
             return;
+        }
 
         killWM();
     }
@@ -914,8 +944,9 @@ void UKUISMServer::startKilling()
     m_kwinInterface->setState(KWinSessionState::Quitting);
 
     foreach(UKUISMClient *c, m_clients) {
-        if(isWM(c))//最后再杀死窗管
+        if(isWM(c)) {//最后再杀死窗管
             continue;
+        }
         qDebug() << c->clientId() << "kill connection";
         SmsDie(c->connection());
     }
@@ -926,8 +957,9 @@ void UKUISMServer::startKilling()
 
 void UKUISMServer::killWM()
 {
-    if(m_state != Killing )
+    if(m_state != Killing) {
         return;
+    }
 
     m_state = KillingWM;
     bool iswm = false;
@@ -952,8 +984,9 @@ void UKUISMServer::killWM()
 void UKUISMServer::completeKillingWM()
 {
     if(m_state == KillingWM) {
-        if(m_clients.isEmpty())
+        if(m_clients.isEmpty()) {
             killingCompleted();
+        }
     }
 }
 
@@ -975,8 +1008,10 @@ void UKUISMServer::cancelShutdown(UKUISMClient *c)
             qDebug() << c->clientId() << "discard saveing state";
             QStringList discard = c->discardCommand();
             qDebug() << c->clientId() << "'s discardCommand is " << discard;
-            if(!discard.isEmpty())
+
+            if(!discard.isEmpty()) {
                 executeCommand(discard);
+            }
         }
     }
 
@@ -1011,8 +1046,9 @@ KProcess *UKUISMServer::startApplication(const QStringList &command, bool wm)
 
 void UKUISMServer::executeCommand(const QStringList &command)
 {
-    if (command.isEmpty())
+    if (command.isEmpty()) {
         return;
+    }
 
     KProcess::execute(command);
 }
@@ -1020,8 +1056,9 @@ void UKUISMServer::executeCommand(const QStringList &command)
 void UKUISMServer::handlePendingInteractions()
 {
     //该函数在保存退出阶段，第一次进入该函数时，clientInteracting一定是nullptr
-    if (m_clientInteracting)
+    if (m_clientInteracting) {
         return;
+    }
     //遍历客户端，找到第一个正在挂起的客户端，将其初始化为m_clientInteracting
     foreach(UKUISMClient *c, m_clients) {
         if (c->m_pendingInteraction) {
@@ -1051,8 +1088,9 @@ void UKUISMServer::launchWM(const QList<QStringList> &wmStartCommands)
 
 void UKUISMServer::tryRestoreNext()
 {
-    if(m_state != Restoring)
+    if(m_state != Restoring) {
         return;
+    }
 
     m_restoreTimer.stop();
     KConfigGroup config(KSharedConfig::openConfig(), m_sessionGroup);
@@ -1069,8 +1107,9 @@ void UKUISMServer::tryRestoreNext()
             }
         }
 
-        if (alreadyStarted)
+        if (alreadyStarted) {
             continue;
+        }
 
         QStringList restartCommand = config.readEntry(QLatin1String("restartCommand") + n, QStringList());
 
@@ -1078,11 +1117,12 @@ void UKUISMServer::tryRestoreNext()
             continue;
         }
 
-        if (isWM(config.readEntry( QStringLiteral("program") + n, QString())))
+        if (isWM(config.readEntry( QStringLiteral("program") + n, QString()))) {
             continue;
-        if (config.readEntry(QStringLiteral("wasWm") + n, false))
+        }
+        if (config.readEntry(QStringLiteral("wasWm") + n, false)) {
             continue;
-
+        }
         startApplication(restartCommand);
 
         m_lastIdRestore = clientId;

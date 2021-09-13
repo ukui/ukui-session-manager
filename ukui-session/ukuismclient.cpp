@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 
-extern UKUISMServer *the_server;//全局server指针
+extern UKUISMServer *theServer;//全局server指针
 
 /*用于生成客户端的唯一ID*/
 Q_GLOBAL_STATIC(QString, my_addr)
@@ -32,7 +32,7 @@ char * safeSmsGenerateClientID(SmsConn c)
            }
        }
 
-       ret = (char *)malloc(1 + my_addr->length() + 13 + 10 + 4 + 1 + 0);
+       ret = (char*)malloc(1 + my_addr->length() + 13 + 10 + 4 + 1 + 0);
        static int sequence = 0;
        if (ret == nullptr) {
            return nullptr;
@@ -71,14 +71,15 @@ void UKUISMClient::registerClient(const char *previousId)
     SmsRegisterClientReply(m_smsConn, (char*)m_id);
     SmsSaveYourself(m_smsConn, SmSaveLocal, false, SmInteractStyleNone, false);
     SmsSaveComplete(m_smsConn);
-    the_server->clientRegistered(previousId);
+    theServer->clientRegistered(previousId);
 }
 
 QString UKUISMClient::program() const
 {
     SmProp *p = property(SmProgram);
-    if (!p || qstrcmp(p->type, SmARRAY8) || p->num_vals < 1)
+    if (!p || qstrcmp(p->type, SmARRAY8) || p->num_vals < 1) {
         return QString();
+    }
 
     return QLatin1String((const char*)p->vals[0].value);
 }
@@ -87,11 +88,13 @@ QStringList UKUISMClient::restartCommand() const
 {
     QStringList result;
     SmProp *p = property(SmRestartCommand);
-    if (!p || qstrcmp(p->type, SmLISTofARRAY8) || p->num_vals < 1)
+    if (!p || qstrcmp(p->type, SmLISTofARRAY8) || p->num_vals < 1) {
         return result;
+    }
 
-    for (int i = 0; i < p->num_vals; i++)
+    for (int i = 0; i < p->num_vals; i++) {
         result += QLatin1String((const char*)p->vals[i].value);
+    }
 
     return result;
 }
@@ -100,11 +103,13 @@ QStringList UKUISMClient::discardCommand() const
 {
     QStringList result;
     SmProp *p = property(SmDiscardCommand);
-    if (!p || qstrcmp(p->type, SmLISTofARRAY8) || p->num_vals < 1)
+    if (!p || qstrcmp(p->type, SmLISTofARRAY8) || p->num_vals < 1) {
         return result;
+    }
 
-    for (int i = 0; i < p->num_vals; i++)
+    for (int i = 0; i < p->num_vals; i++) {
         result += QLatin1String((const char*)p->vals[i].value);
+    }
 
     return result;
 }
@@ -112,8 +117,9 @@ QStringList UKUISMClient::discardCommand() const
 int UKUISMClient::restartStyleHint() const
 {
     SmProp *p = property(SmRestartStyleHint);
-    if (!p || qstrcmp(p->type, SmCARD8) || p->num_vals < 1)
+    if (!p || qstrcmp(p->type, SmCARD8) || p->num_vals < 1) {
         return SmRestartIfRunning;
+    }
 
     return *((unsigned char*)p->vals[0].value);
 }
@@ -121,8 +127,9 @@ int UKUISMClient::restartStyleHint() const
 SmProp *UKUISMClient::property(const char *name) const
 {
     foreach (SmProp *prop, m_properties) {
-        if (!qstrcmp(prop->name, name))
+        if (!qstrcmp(prop->name, name)) {
             return prop;
+        }
     }
     return nullptr;
 }
@@ -131,8 +138,9 @@ QString UKUISMClient::userId() const
 {
     SmProp *p = property(SmUserID);
 
-    if (!p || qstrcmp(p->type, SmARRAY8) || p->num_vals < 1)
+    if (!p || qstrcmp(p->type, SmARRAY8) || p->num_vals < 1) {
         return QString();
+    }
 
     return QLatin1String((const char*)p->vals[0].value);
 }

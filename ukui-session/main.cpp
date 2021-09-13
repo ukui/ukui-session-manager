@@ -45,11 +45,11 @@ extern "C" {
 #define CURSOR_SIZE         "cursor-size"
 #define CURSOR_THEME        "cursor-theme"
 
-extern UKUISMServer *the_server;
+extern UKUISMServer *theServer;
 
 void IoErrorHandler(IceConn iceConn)
 {
-    the_server->ioError(iceConn);
+    theServer->ioError(iceConn);
 }
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -207,6 +207,9 @@ int main(int argc, char **argv)
 //    server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
 //    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
 
+    QTimer::singleShot(200000, [theServer](){
+        theServer->storeSession();
+    });
     
     return app.exec();
 }
