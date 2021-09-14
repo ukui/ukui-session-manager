@@ -20,6 +20,7 @@ set(ukui-session_SRCS
     usminhibit.h
     ../tools/ukuipower.cpp
     ../tools/powerprovider.cpp
+    musicplayer.cpp
 )
 
 #find_package(QT5XDG )
