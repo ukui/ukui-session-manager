@@ -20,6 +20,7 @@
 #include "modulemanager.h"
 #include "ukuimodule.h"
 #include "idlewatcher.h"
+#include "musicplayer.h"
 
 #include <QCoreApplication>
 #include "xdgautostart.h"
@@ -54,22 +55,40 @@ void ModuleManager::playBootMusic(bool arg){
             free(gset);
             return;
         }
-        player = new QMediaPlayer;
-        connect(player,SIGNAL(stateChanged(QMediaPlayer::State)),this,SLOT(stateChanged(QMediaPlayer::State)));
-        player->setVolume(40);
-        if(arg){
-            play_music = gset->get("startup-music").toBool();
-            if (play_music) {
-                player->setMedia(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/startup.wav"));
-                player->play();
+//        player = new QMediaPlayer;
+//        connect(player,SIGNAL(stateChanged(QMediaPlayer::State)),this,SLOT(stateChanged(QMediaPlayer::State)));
+//        player->setVolume(40);
+//        if(arg){
+//            play_music = gset->get("startup-music").toBool();
+//            if (play_music) {
+//                player->setMedia(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/startup.wav"));
+//                player->play();
+//            }
+//        }else{
+//            play_music = gset->get("weakup-music").toBool();
+//            if (play_music) {
+//                player->setMedia(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/weakup.wav"));
+//                player->play();
+//            }
+//        }
+        play_music = gset->get("startup-music").toBool();
+        if (play_music) {
+            if (arg) {
+                musicplayer *player = new musicplayer;
+                player->setVolumn(40);
+                player->setSource(QLatin1String("/usr/share/ukui/ukui-session-manager/startup.wav"));
+                connect(player, &musicplayer::playFinished, player, &QObject::deleteLater);
+                player->start();
+            } else {
+                musicplayer *player = new musicplayer;
+                player->setVolumn(40);
+                player->setSource(QLatin1String("/usr/share/ukui/ukui-session-manager/weakup.wav"));
+                connect(player, &musicplayer::playFinished, player, &QObject::deleteLater);
+                player->start();
             }
-        }else{
-            play_music = gset->get("weakup-music").toBool();
-            if (play_music) {
-                player->setMedia(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/weakup.wav"));
-                player->play();
-            }
+
         }
+
     }
 }
 

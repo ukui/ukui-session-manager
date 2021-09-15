@@ -25,6 +25,8 @@ set(ukui-session_SRCS
     ukuismclient.h
     ukuismclient.cpp
     ukuismconnection.h
+    musicplayer.cpp
+    musicplayer.h
 )
 
 qt5_add_dbus_interface(ukui-session_SRCS org.ukui.KWin.Session.xml ukuikwinsession_interface)
