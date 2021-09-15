@@ -27,10 +27,9 @@
 #include <QDebug>
 #include <QDBusReply>
 
-IdleWatcher::IdleWatcher(int idle, int power ,QObject *parent) :
+IdleWatcher::IdleWatcher(int idle ,QObject *parent) :
     QObject(parent),
-    mSecsidle(idle),
-    mSecspower(power)
+    mSecsidle(idle)
 {
     connect(KIdleTime::instance(),
             &KIdleTime::resumingFromIdle,
@@ -60,7 +59,6 @@ IdleWatcher::~IdleWatcher()
 void IdleWatcher::setup()
 {
     KIdleTime::instance()->addIdleTimeout(1000 * mSecsidle);
-    KIdleTime::instance()->addIdleTimeout(1000 * mSecspower);
 }
 
 void IdleWatcher::timeoutReached(int identifier , int timeout)
@@ -87,10 +85,6 @@ void IdleWatcher::timeoutReached(int identifier , int timeout)
             qDebug() << "idle Timeout Reached, emit StatusChanged 3 signal!";
             emit StatusChanged(3);
         }
-        if(timeout == 1000 * mSecspower){
-            qDebug() << "power Timeout Reached, emit StatusChanged 5 signal!";
-            emit StatusChanged(5);
-        }
     }
 }
 
@@ -99,12 +93,11 @@ void IdleWatcher::resumingFromIdle(){
     emit StatusChanged(0);
 }
 
-void IdleWatcher::reset(int idle , int power)
+void IdleWatcher::reset(int idle )
 {
-    qDebug() << "Idle timeout reset to " << idle << " ,Power timeout reset to "<<power;
+    qDebug() << "Idle timeout reset to " << idle;
     KIdleTime::instance()->removeAllIdleTimeouts();
     mSecsidle = idle;
-    mSecspower = power;
     setup();
 }
 

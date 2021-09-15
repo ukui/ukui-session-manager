@@ -34,10 +34,10 @@ class IdleWatcher : public QObject
 {
     Q_OBJECT
 public:
-    explicit IdleWatcher(int idle, int power, QObject *parent = nullptr);
+    explicit IdleWatcher(int idle, QObject *parent = nullptr);
     virtual ~IdleWatcher();
 
-    void reset(int idle, int power);
+    void reset(int idle);
     QDBusInterface *interface;
 
 private slots:
@@ -50,7 +50,6 @@ Q_SIGNALS:
 
 private:
     int mSecsidle;
-    int mSecspower;
 };
 
 #endif // IDLEWATCHER_H

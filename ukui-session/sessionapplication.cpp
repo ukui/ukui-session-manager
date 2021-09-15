@@ -61,6 +61,7 @@ void SessionApplication::InitialEnvironment()
         //造成大部分热键和组合键失效
         //所以在登录进来时恢复默认值
         gs->reset("win-key-release");
+        gs->reset("idle-delay");
     }
 
     //检查qt主题是否安装
@@ -87,8 +88,10 @@ void SessionApplication::InitialEnvironment()
 void SessionApplication::updateIdleDelay(){
     if (gsettings_usable) {
         const int idle = gs->get("idle-delay").toInt() * 60;
-        const int power = gs->get("power-delay").toInt() * 60;
-        mIdleWatcher->reset(idle,power);
+        if (lastIdleTime == idle ){
+            return;
+        }
+        mIdleWatcher->reset(idle);
     }
 }
 
@@ -114,16 +117,14 @@ void SessionApplication::registerDBus()
                     << "/org/gnome/SessionManager";
     }
 
-    int idle = 5 * 60;
-    int power = 5 * 60;
+    lastIdleTime = 1 * 60;
 
     if (gsettings_usable) {
-        idle = gs->get("idle-delay").toInt() * 60;
-        power = gs->get("power-delay").toInt() * 60;
+        lastIdleTime = gs->get("idle-delay").toInt() * 60;
         connect(gs, &QGSettings::changed, this, &SessionApplication::updateIdleDelay);
     }
 
-    mIdleWatcher = new IdleWatcher(idle,power);
+    mIdleWatcher = new IdleWatcher(lastIdleTime);
     new IdleDBusAdaptor(mIdleWatcher);
     if (!dbus.registerObject("/org/gnome/SessionManager/Presence", mIdleWatcher)) {
         qCritical() << "Cant' register object, there is already an object registered at "
