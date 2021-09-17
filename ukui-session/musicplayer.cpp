@@ -32,8 +32,38 @@ void musicplayer::stateChanged(QMediaPlayer::State state)
     qDebug() << "Player state: " << state;
     if (state == QMediaPlayer::StoppedState) {
         qDebug() << "the address of m_player is " << m_player;
-//        delete m_player;
-//        qDebug() << "delete player";
+        emit playFinished();
+    }
+}
+
+Worker::Worker(int volumn, QString source)
+{
+    m_player = new QMediaPlayer;
+    m_player->setVolume(volumn);
+    m_player->setMedia(QUrl::fromLocalFile(source));
+    connect(m_player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
+    qDebug() << "the address of m_player is " << m_player;
+
+}
+
+Worker::~Worker()
+{
+    if (m_player) {
+        delete m_player;
+    }
+
+}
+
+void Worker::doWork()
+{
+    m_player->play();
+}
+
+void Worker::stateChanged(QMediaPlayer::State state)
+{
+    qDebug() << "Player state: " << state;
+    if (state == QMediaPlayer::StoppedState) {
+        qDebug() << "the address of m_player is " << m_player;
         emit playFinished();
     }
 }

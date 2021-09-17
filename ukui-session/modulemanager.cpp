@@ -55,22 +55,7 @@ void ModuleManager::playBootMusic(bool arg){
             free(gset);
             return;
         }
-//        player = new QMediaPlayer;
-//        connect(player,SIGNAL(stateChanged(QMediaPlayer::State)),this,SLOT(stateChanged(QMediaPlayer::State)));
-//        player->setVolume(40);
-//        if(arg){
-//            play_music = gset->get("startup-music").toBool();
-//            if (play_music) {
-//                player->setMedia(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/startup.wav"));
-//                player->play();
-//            }
-//        }else{
-//            play_music = gset->get("weakup-music").toBool();
-//            if (play_music) {
-//                player->setMedia(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/weakup.wav"));
-//                player->play();
-//            }
-//        }
+
         play_music = gset->get("startup-music").toBool();
         if (play_music) {
             if (arg) {
