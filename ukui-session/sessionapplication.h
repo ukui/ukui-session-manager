@@ -48,7 +48,7 @@ private Q_SLOTS:
     void updateIdleDelay();
 
 private:
-    void InitialEnvironment();
+    void initialEnvironment();
 
     bool gsettings_usable;
     QGSettings * gs;

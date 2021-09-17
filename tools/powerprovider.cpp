@@ -98,7 +98,7 @@
 //    return m_loginedUser;
 //}
 
-bool messageboxcheck()
+bool messageBoxCheck()
 {
     QMessageBox msgBox;
     //    msgBox.setWindowTitle(QObject::tr("conform"));
@@ -145,7 +145,7 @@ static bool dbusCall(const QString &service, const QString &path, const QString 
     }
 
     return msg.arguments().isEmpty() || msg.arguments().constFirst().isNull()
-        || msg.arguments().constFirst().toBool();
+                                     || msg.arguments().constFirst().toBool();
 }
 
 static bool dbusCallSystemd(const QString &service, const QString &path, const QString &interface,
@@ -305,11 +305,10 @@ bool SystemdProvider::canAction(UkuiPower::Action action) const
 bool SystemdProvider::doSwitchUser()
 {
     bool            isinhibited = false;
-    QDBusInterface *interface =
-        new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
-                           "org.gnome.SessionManager", QDBusConnection::sessionBus());
-    quint32          inhibit_switchuser = 2;
-    QDBusReply<bool> reply              = interface->call("IsInhibited", inhibit_switchuser);
+    QDBusInterface *interface = new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
+                                                   "org.gnome.SessionManager", QDBusConnection::sessionBus());
+    quint32         inhibit_switchuser = 2;
+    QDBusReply<bool> reply = interface->call("IsInhibited", inhibit_switchuser);
     if (reply.isValid()) {
         // use the returned value
         qDebug() << "Is inhibit by someone: " << reply.value();
@@ -319,7 +318,7 @@ bool SystemdProvider::doSwitchUser()
     }
 
     if (isinhibited == true) {
-        isinhibited = !messageboxcheck();
+        isinhibited = !messageBoxCheck();
     }
 
     if (isinhibited == false) {
@@ -395,7 +394,7 @@ bool UKUIProvider::canAction(UkuiPower::Action action) const
     }
 
     if (isinhibited == true) {
-        isinhibited = !messageboxcheck();
+        isinhibited = !messageBoxCheck();
     }
 
     if (isinhibited == false) {

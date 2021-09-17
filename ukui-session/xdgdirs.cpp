@@ -89,8 +89,7 @@ QString createDirectory(const QString &dir)
 void cleanAndAddPostfix(QStringList &dirs, const QString& postfix)
 {
     const int N = dirs.count();
-    for(int i = 0; i < N; ++i)
-    {
+    for (int i = 0; i < N; ++i) {
         fixBashShortcuts(dirs[i]);
         removeEndingSlash(dirs[i]);
         dirs[i].append(postfix);
@@ -103,12 +102,13 @@ QString userDirFallback(XdgDirs::UserDirectory dir)
     QString fallback;
     const QString home = QFile::decodeName(qgetenv("HOME"));
 
-    if (home.isEmpty())
+    if (home.isEmpty()) {
         return QString::fromLatin1("/tmp");
-    else if (dir == XdgDirs::Desktop)
+    } else if (dir == XdgDirs::Desktop) {
         fallback = QString::fromLatin1("%1/%2").arg(home, QLatin1String("Desktop"));
-    else
+    } else {
         fallback = home;
+    }
 
     return fallback;
 }
@@ -147,11 +147,9 @@ QString XdgDirs::userDir(XdgDirs::UserDirectory dir)
     QString userDirVar(QLatin1String("XDG_") + folderName.toUpper() + QLatin1String("_DIR"));
     QTextStream in(&configFile);
     QString line;
-    while (!in.atEnd())
-    {
+    while (!in.atEnd()) {
         line = in.readLine();
-        if (line.contains(userDirVar))
-        {
+        if (line.contains(userDirVar)) {
             configFile.close();
 
             // get path between quotes
@@ -196,18 +194,14 @@ bool XdgDirs::setUserDir(XdgDirs::UserDirectory dir, const QString& value, bool 
     QVector<QString> lines;
     QString line;
     bool foundVar = false;
-    while (!stream.atEnd())
-    {
+    while (!stream.atEnd()) {
         line = stream.readLine();
-        if (line.indexOf(QLatin1String("XDG_") + folderName.toUpper() + QLatin1String("_DIR")) == 0)
-        {
+        if (line.indexOf(QLatin1String("XDG_") + folderName.toUpper() + QLatin1String("_DIR")) == 0) {
             foundVar = true;
             QString path = line.section(QLatin1Char('"'), 1, 1);
             line.replace(path, value);
             lines.append(line);
-        }
-        else if (line.indexOf(QLatin1String("XDG_")) == 0)
-        {
+        } else if (line.indexOf(QLatin1String("XDG_")) == 0) {
             lines.append(line);
         }
     }
@@ -284,10 +278,11 @@ QStringList XdgDirs::configDirs(const QString &postfix)
 {
     QStringList dirs;
     const QString env = QFile::decodeName(qgetenv("XDG_CONFIG_DIRS"));
-    if (env.isEmpty())
+    if (env.isEmpty()) {
         dirs.append(QString::fromLatin1("/etc/xdg"));
-    else
+    } else {
         dirs = env.split(QLatin1Char(':'), QString::SkipEmptyParts);
+    }
 
     cleanAndAddPostfix(dirs, postfix);
     return dirs;

@@ -96,16 +96,15 @@ QString getUserName(QFile *a)
     return user;
 }
 
-MainWindow::MainWindow(bool a, bool b, QWidget *parent)
-    : QMainWindow(parent),
-      ui(new Ui::MainWindow),
-      m_power(new UkuiPower(this)),
-      timer(new QTimer()),
-      xEventMonitor(new XEventMonitor(this))
+MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
+                                                        , ui(new Ui::MainWindow)
+                                                        , m_power(new UkuiPower(this))
+                                                        , timer(new QTimer())
+                                                        , xEventMonitor(new XEventMonitor(this))
 {
     const QByteArray bid(BACKGROUND_SETTINGS);
     if (QGSettings::isSchemaInstalled(bid)) {
-        QGSettings *gset    = new QGSettings(BACKGROUND_SETTINGS, "", this);
+        QGSettings    *gset = new QGSettings(BACKGROUND_SETTINGS, "", this);
         QString     fullstr = gset->get("picture-filename").toString();
         qDebug() << "picture path = " << fullstr;
         QFileInfo fileInfo(fullstr);
@@ -254,11 +253,10 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
     setFixedSize(QApplication::primaryScreen()->virtualSize());
     move(0, 0);   //设置初始位置的值
-    ResizeEvent();
+    resizeEvent();
 
     //设置窗体无边框，不可拖动拖拽拉伸;为顶层窗口，无法被切屏;不使用窗口管理器
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint
-                   | Qt::X11BypassWindowManagerHint);   //| Qt::X11BypassWindowManagerHint
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
     // setAttribute(Qt::WA_TranslucentBackground, true);//设定该窗口透明显示
 
     /*捕获键盘，如果捕获失败，那么模拟一次esc按键来退出菜单，如果仍捕获失败，则放弃捕获*/
@@ -287,7 +285,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
 
     //设置字体跟随主题
     const QByteArray id("org.ukui.style");
-    QFont            font = QFont("Noto Sans CJK SC");
+    QFont font = QFont("Noto Sans CJK SC");
     if (QGSettings::isSchemaInstalled(id)) {
         QGSettings *fontSetting = new QGSettings(id, QByteArray(), this);
         font                    = QFont(fontSetting->get("systemFont").toString());
@@ -333,13 +331,12 @@ int MainWindow::getCachedUsers()
     QDBusObjectPath path;
     dbusArgs.beginArray();
     int userNum = 0;
-    while (!dbusArgs.atEnd())
-    {
+    while (!dbusArgs.atEnd()) {
         dbusArgs >> path;
         userNum++;
     }
     dbusArgs.endArray();
-    qDebug()<<userNum;
+    qDebug() << userNum;
 
     return userNum;
 }
@@ -391,7 +388,7 @@ QStringList MainWindow::getLoginedUsers()
     return m_loginedUser;
 }
 
-void MainWindow::ResizeEvent()
+void MainWindow::resizeEvent()
 {
     int xx = m_screen.x();
     int yy = m_screen.y();   //取得当前鼠标所在屏幕的最左，上坐标
@@ -479,37 +476,37 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     if (obj->objectName() == "switchuser") {
         changePoint(ui->switchuser, event, 0);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("switchuser", 0);
+            doEvent("switchuser", 0);
         }
     } else if (obj->objectName() == "hibernate") {
         changePoint(ui->hibernate, event, 1);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("hibernate", 1);
+            doEvent("hibernate", 1);
         }
     } else if (obj->objectName() == "suspend") {
         changePoint(ui->suspend, event, 2);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("suspend", 2);
+            doEvent("suspend", 2);
         }
     } else if (obj->objectName() == "lockscreen") {
         changePoint(ui->lockscreen, event, 3);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("screensaver", 3);
+            doEvent("screensaver", 3);
         }
     } else if (obj->objectName() == "logout") {
         changePoint(ui->logout, event, 4);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("logout", 4);
+            doEvent("logout", 4);
         }
     } else if (obj->objectName() == "reboot") {
         changePoint(ui->reboot, event, 5);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("reboot", 5);
+            doEvent("reboot", 5);
         }
     } else if (obj->objectName() == "shutdown") {
         changePoint(ui->shutdown, event, 6);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("shutdown", 6);
+            doEvent("shutdown", 6);
         }
     }
     return QWidget::eventFilter(obj, event);
@@ -528,7 +525,7 @@ void MainWindow::changePoint(QWidget *widget, QEvent *event, int i)
     }
 }
 
-void MainWindow::doevent(QString test, int i)
+void MainWindow::doEvent(QString test, int i)
 {
     defaultnum = i;
     if (close_system_needed_to_confirm && (i == 5 || i == 6)) {
@@ -711,25 +708,25 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
         qDebug() << map[tableNum]->objectName() << "";
         switch (tableNum) {
         case 0:
-            doevent("switchuser", 0);
+            doEvent("switchuser", 0);
             break;
         case 1:
-            doevent("hibernate", 1);
+            doEvent("hibernate", 1);
             break;
         case 2:
-            doevent("suspend", 2);
+            doEvent("suspend", 2);
             break;
         case 3:
-            doevent("screensaver", 3);
+            doEvent("screensaver", 3);
             break;
         case 4:
-            doevent("logout", 4);
+            doEvent("logout", 4);
             break;
         case 5:
-            doevent("reboot", 5);
+            doEvent("reboot", 5);
             break;
         case 6:
-            doevent("shutdown", 6);
+            doEvent("shutdown", 6);
             break;
         }
         // this->hide();
