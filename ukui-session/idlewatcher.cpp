@@ -32,24 +32,21 @@ IdleWatcher::IdleWatcher(int idle, int power ,QObject *parent) :
     mSecsidle(idle),
     mSecspower(power)
 {
-    connect(KIdleTime::instance(),
-            &KIdleTime::resumingFromIdle,
-            this,
-            &IdleWatcher::resumingFromIdle);
+    connect(KIdleTime::instance(), &KIdleTime::resumingFromIdle,
+            this, &IdleWatcher::resumingFromIdle);
 //    connect(KIdleTime::instance(),
 //            static_cast<void (KIdleTime::*)(int)>(&KIdleTime::timeoutReached),
 //            this,
 //            &IdleWatcher::timeoutReached);
-    connect(KIdleTime::instance(), SIGNAL(timeoutReached(int,int)),
-            this, SLOT(timeoutReached(int,int)));
+    connect(KIdleTime::instance(), SIGNAL(timeoutReached(int, int)),
+            this, SLOT(timeoutReached(int, int)));
 
     setup();
 
-    interface = new QDBusInterface(
-                "org.gnome.SessionManager",
-                "/org/gnome/SessionManager",
-                "org.gnome.SessionManager",
-                QDBusConnection::sessionBus());
+    interface = new QDBusInterface("org.gnome.SessionManager",
+                                   "/org/gnome/SessionManager",
+                                   "org.gnome.SessionManager",
+                                   QDBusConnection::sessionBus());
 }
 
 IdleWatcher::~IdleWatcher()
@@ -67,27 +64,26 @@ void IdleWatcher::timeoutReached(int identifier , int timeout)
 {
     quint32 inhibit_idle = 8;
     bool isinhibited = false;
-    QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_idle);
-    if (reply.isValid()){
+    QDBusReply<bool> reply = interface->call("IsInhibited", inhibit_idle);
+    if (reply.isValid()) {
         // use the returned value
-        qDebug()<<"Is inhibit by someone: "<<reply.value();
+        qDebug() << "Is inhibit by someone: " << reply.value();
         isinhibited = reply.value();
-    }
-    else{
-        qDebug()<<reply.value();
+    } else {
+        qDebug() << reply.value();
     }
 
-    if(isinhibited == true){
-        qDebug() <<"some applications inhibit idle.";
+    if (isinhibited == true) {
+        qDebug() << "some applications inhibit idle.";
         return;
     }
-    if(isinhibited == false){
+    if (isinhibited == false) {
         KIdleTime::instance()->catchNextResumeEvent();
-        if(timeout == 1000 * mSecsidle){
+        if (timeout == 1000 * mSecsidle) {
             qDebug() << "idle Timeout Reached, emit StatusChanged 3 signal!";
             emit StatusChanged(3);
         }
-        if(timeout == 1000 * mSecspower){
+        if (timeout == 1000 * mSecspower) {
             qDebug() << "power Timeout Reached, emit StatusChanged 5 signal!";
             emit StatusChanged(5);
         }
@@ -101,7 +97,7 @@ void IdleWatcher::resumingFromIdle(){
 
 void IdleWatcher::reset(int idle , int power)
 {
-    qDebug() << "Idle timeout reset to " << idle << " ,Power timeout reset to "<<power;
+    qDebug() << "Idle timeout reset to " << idle << " ,Power timeout reset to " << power;
     KIdleTime::instance()->removeAllIdleTimeouts();
     mSecsidle = idle;
     mSecspower = power;

@@ -67,8 +67,7 @@ static inline QByteArray detectDesktopEnvironment()
 
 // A list of executables that can't be run with QProcess::startDetached(). They
 // will be run with QProcess::start()
-static const QStringList nonDetachExecs = QStringList()
-    << QLatin1String("pkexec");
+static const QStringList nonDetachExecs = QStringList() << QLatin1String("pkexec");
 
 static const QLatin1String onlyShowInKey("OnlyShowIn");
 static const QLatin1String notShowInKey("NotShowIn");

@@ -35,13 +35,11 @@ class SessionDBusAdaptor : public QDBusAbstractAdaptor
     Q_CLASSINFO("D-Bus Interface", "org.gnome.SessionManager")
 
 public:
-    SessionDBusAdaptor(ModuleManager *manager)
-        : QDBusAbstractAdaptor(manager),
-          mManager(manager),
-//          mPower(new UkuiPower()),
-          minhibit(new usminhibit()),
-          m_systemdProvider(new SystemdProvider()),
-          m_ukuiProvider(new UKUIProvider())
+    SessionDBusAdaptor(ModuleManager *manager) : QDBusAbstractAdaptor(manager)
+                                               , mManager(manager)
+                                               , minhibit(new usminhibit())
+                                               , m_systemdProvider(new SystemdProvider())
+                                               , m_ukuiProvider(new UKUIProvider())
     {
         connect(mManager, &ModuleManager::moduleStateChanged, this , &SessionDBusAdaptor::moduleStateChanged);
         connect(mManager, &ModuleManager::finished, this, &SessionDBusAdaptor::emitPrepareForPhase2);
@@ -56,9 +54,9 @@ Q_SIGNALS:
     void PrepareForPhase2();
 
 public slots:
-    void startupfinished(const QString& appName ,const QString& string)
+    void startupfinished(const QString &appName ,const QString &string)
     {
-        return mManager->startupfinished(appName,string);
+        return mManager->startupfinished(appName, string);
     }
 
     bool canSwitch()
@@ -154,7 +152,7 @@ public slots:
 
     uint Inhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
     {
-        uint result = minhibit->addinhibit(app_id,toplevel_xid,reason,flags);
+        uint result = minhibit->addInhibit(app_id,toplevel_xid,reason,flags);
         if(result < 0){
             return 0;
         }
@@ -163,14 +161,14 @@ public slots:
     }
 
     Q_NOREPLY void Uninhibit(uint cookie){
-        uint result = minhibit->uninhibit(cookie);
+        uint result = minhibit->unInhibit(cookie);
         if(result > 0){
             emit inhibitremove(result);
         }
     }
 
     QStringList GetInhibitors(){
-        return minhibit->getinhibitor();
+        return minhibit->getInhibitor();
     }
 
     bool IsSessionRunning(){
@@ -188,7 +186,7 @@ public slots:
     }
 
     bool IsInhibited(quint32 flags){
-        return minhibit->IsInhibited(flags);
+        return minhibit->isInhibited(flags);
     }
 
     Q_NOREPLY void emitStartLogout(){

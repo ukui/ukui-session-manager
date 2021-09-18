@@ -39,39 +39,21 @@ class MainWindow : public QMainWindow//,public QAbstractNativeEventFilter
 
 public:
     MainWindow(bool a , bool b ,QWidget *parent = nullptr);
-    QRect m_screen;
     ~MainWindow();
-    void doevent(QString test2,int i);
+
+    void doEvent(QString test2,int i);
     void changePoint(QWidget *widget ,QEvent *event ,int i);
     //void closeEvent(QCloseEvent *event);
     //virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
 
-    QTimer *timer;
-    int defaultnum = 0;
     void judgeboxShow();
     QStringList getLoginedUsers();
     int getCachedUsers();
 
 private:
-    QGSettings *gs;
-    Ui::MainWindow *ui;
-    UkuiPower *m_power;
-    XEventMonitor *xEventMonitor;
     void ResizeEvent();
-    bool flag = false;
-    QWidget *lastWidget;
-    int tableNum;
-    QHash<int , QWidget*> map;
     void refreshBlur(QWidget *last , QWidget *now);
-    bool isSwitchuserHide = true;
-    bool isHibernateHide = true;
-    QPixmap pix;
 
-    bool lockfile = false;
-    bool lockuser = false;
-    bool click_blank_space_need_to_exit = true;
-    bool close_system_needed_to_confirm = false;
-    QString user;
 
 Q_SIGNALS:
     void signalTostart();
@@ -86,5 +68,30 @@ protected:
     void paintEvent(QPaintEvent *e);
     bool eventFilter(QObject *, QEvent *);
     void mousePressEvent(QMouseEvent *event);
+
+public:
+    QRect m_screen;
+    QTimer *timer;
+    int defaultnum = 0;
+
+private:
+    QGSettings *gs;
+    Ui::MainWindow *ui;
+    UkuiPower *m_power;
+    XEventMonitor *xEventMonitor;
+    QString user;
+    QWidget *lastWidget;
+    QHash<int , QWidget*> map;
+    QPixmap pix;
+    int tableNum;
+    bool flag = false;
+    bool lockfile = false;
+    bool lockuser = false;
+    bool isSwitchuserHide = true;
+    bool isHibernateHide = true;
+    bool click_blank_space_need_to_exit = true;
+    bool close_system_needed_to_confirm = false;
+
+
 };
 #endif // MAINWINDOW_H

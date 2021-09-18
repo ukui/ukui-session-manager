@@ -20,6 +20,7 @@
  * END_COMMON_COPYRIGHT_HEADER */
 #include "sessionapplication.h"
 #include "ukuismserver.h"
+#include "ukuisessiondebug.h"
 
 #include <QStandardPaths>
 #include <QFile>
@@ -132,11 +133,11 @@ void setXresources(int dpi)
 bool isFileExist(QString XresourcesFile)
 {
     QFileInfo fileInfo(XresourcesFile);
-    if(fileInfo.isFile()){
-        qDebug()<<"file is true";
+    if (fileInfo.isFile()) {
+        qCDebug(UKUI_SESSION) << "file is true";
         return true;
     }
-    qDebug()<<"file is false";
+    qCDebug(UKUI_SESSION) << "file is false";
     return false;
 }
 /* 写配置文件并设置DPI和鼠标大小*/
@@ -178,7 +179,7 @@ void Set4KScreenScale()
     if (height > 1500 && width > 2560){
         bool res;
         QString homePath = getenv("HOME");
-        QString XresourcesFile = homePath+"/.config/xresources";
+        QString XresourcesFile = homePath + "/.config/xresources";
         res = isFileExist(XresourcesFile);
         if(!res){
             WriteXresourcesFile(XresourcesFile, settings);
@@ -189,11 +190,17 @@ void Set4KScreenScale()
     delete settings;
 }
 
+void openDubug()
+{
+    UKUI_SESSION().setFilterRules(QLatin1Literal("org.ukui.ukuisession=true"));
+    qInstallMessageHandler(myMessageOutput);
+    qCDebug(UKUI_SESSION) << "===================================================    UKUI session manager start.    ===================================================";
+}
+
 int main(int argc, char **argv)
 {
-    qInstallMessageHandler(myMessageOutput);
 //    initUkuiLog4qt("ukui-session");
-    qDebug() << "===================================================    UKUI session manager start.    ===================================================";
+    openDubug();
 
     SessionApplication app(argc, argv);
 
@@ -203,7 +210,6 @@ int main(int argc, char **argv)
     UKUISMServer *server = new UKUISMServer;
     IceSetIOErrorHandler(IoErrorHandler);
 
-    qDebug() << "global server is " << server;
     server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
 //    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
 

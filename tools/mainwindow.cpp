@@ -96,12 +96,11 @@ QString getUserName(QFile *a)
     return user;
 }
 
-MainWindow::MainWindow(bool a, bool b, QWidget *parent)
-    : QMainWindow(parent),
-      ui(new Ui::MainWindow),
-      m_power(new UkuiPower(this)),
-      timer(new QTimer()),
-      xEventMonitor(new XEventMonitor(this))
+MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
+                                                        , ui(new Ui::MainWindow)
+                                                        , m_power(new UkuiPower(this))
+                                                        , timer(new QTimer())
+                                                        , xEventMonitor(new XEventMonitor(this))
 {
     const QByteArray bid(BACKGROUND_SETTINGS);
     if (QGSettings::isSchemaInstalled(bid)) {
@@ -183,8 +182,10 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
         if (lockuser) {
             lable2_text = b1;
             ui->logout->removeEventFilter(this);
-        } else
+        } else {
             lable2_text = b2;
+        }
+
         ui->message_label1->setText(user + lable1_text);
         ui->message_label2->setText(lable2_text);
         ui->shutdown->removeEventFilter(this);
@@ -204,8 +205,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     map.insert(5, ui->reboot);
     map.insert(6, ui->shutdown);
 
-    if (m_power->canAction(
-            UkuiPower::PowerHibernate)) {   // m_power->canAction(UkuiPower::PowerHibernate)
+    if (m_power->canAction(UkuiPower::PowerHibernate)) {   // m_power->canAction(UkuiPower::PowerHibernate)
         isHibernateHide = false;
     }
 
@@ -229,19 +229,23 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
         QGSettings *controlSetting = new QGSettings(id_control, QByteArray(), this);
         QString     formate_a      = controlSetting->get("date").toString();
         QString     formate_b      = controlSetting->get("hoursystem").toString();
-        if (formate_a == "en")
-            current_date = current_date_time.toString("yyyy-MM-dd ddd");
-        else if (formate_a == "cn")
-            current_date = current_date_time.toString("yyyy/MM/dd ddd");
-        else
-            current_date = current_date_time.toString("yyyy-MM-dd ddd");
 
-        if (formate_b == "12")
+        if (formate_a == "en") {
+            current_date = current_date_time.toString("yyyy-MM-dd ddd");
+        } else if (formate_a == "cn") {
+            current_date = current_date_time.toString("yyyy/MM/dd ddd");
+        } else {
+            current_date = current_date_time.toString("yyyy-MM-dd ddd");
+        }
+
+        if (formate_b == "12") {
             current_time = current_date_time.toString("A hh:mm");
-        else if (formate_b == "24")
+        } else if (formate_b == "24") {
             current_time = current_date_time.toString("hh:mm");
-        else
+        } else {
             current_time = current_date_time.toString("hh:mm");
+        }
+
     } else {
         current_date = current_date_time.toString("yyyy-MM-dd ddd");
         current_time = current_date_time.toString("hh:mm");
@@ -287,10 +291,12 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent)
     //设置字体跟随主题
     const QByteArray id("org.ukui.style");
     QFont            font = QFont("Noto Sans CJK SC");
+
     if (QGSettings::isSchemaInstalled(id)) {
         QGSettings *fontSetting = new QGSettings(id, QByteArray(), this);
         font                    = QFont(fontSetting->get("systemFont").toString());
     }
+
     for (auto widget: qApp->allWidgets()) {
         font.setWordSpacing(2);
         widget->setFont(font);
@@ -332,13 +338,12 @@ int MainWindow::getCachedUsers()
     QDBusObjectPath path;
     dbusArgs.beginArray();
     int userNum = 0;
-    while (!dbusArgs.atEnd())
-    {
+    while (!dbusArgs.atEnd()) {
         dbusArgs >> path;
         userNum++;
     }
     dbusArgs.endArray();
-    qDebug()<<userNum;
+    qDebug() << userNum;
 
     return userNum;
 }
@@ -466,8 +471,7 @@ void MainWindow::paintEvent(QPaintEvent *e)
 // lock screen
 void doLockscreen()
 {
-    QDBusInterface *interface =
-        new QDBusInterface("org.ukui.ScreenSaver", "/", "org.ukui.ScreenSaver");
+    QDBusInterface *interface = new QDBusInterface("org.ukui.ScreenSaver", "/", "org.ukui.ScreenSaver");
     QDBusMessage msg = interface->call("Lock");
     exit(0);
 }
@@ -478,37 +482,37 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     if (obj->objectName() == "switchuser") {
         changePoint(ui->switchuser, event, 0);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("switchuser", 0);
+            doEvent("switchuser", 0);
         }
     } else if (obj->objectName() == "hibernate") {
         changePoint(ui->hibernate, event, 1);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("hibernate", 1);
+            doEvent("hibernate", 1);
         }
     } else if (obj->objectName() == "suspend") {
         changePoint(ui->suspend, event, 2);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("suspend", 2);
+            doEvent("suspend", 2);
         }
     } else if (obj->objectName() == "lockscreen") {
         changePoint(ui->lockscreen, event, 3);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("screensaver", 3);
+            doEvent("screensaver", 3);
         }
     } else if (obj->objectName() == "logout") {
         changePoint(ui->logout, event, 4);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("logout", 4);
+            doEvent("logout", 4);
         }
     } else if (obj->objectName() == "reboot") {
         changePoint(ui->reboot, event, 5);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("reboot", 5);
+            doEvent("reboot", 5);
         }
     } else if (obj->objectName() == "shutdown") {
         changePoint(ui->shutdown, event, 6);
         if (event->type() == QEvent::MouseButtonRelease) {
-            doevent("shutdown", 6);
+            doEvent("shutdown", 6);
         }
     }
     return QWidget::eventFilter(obj, event);
@@ -527,7 +531,7 @@ void MainWindow::changePoint(QWidget *widget, QEvent *event, int i)
     }
 }
 
-void MainWindow::doevent(QString test, int i)
+void MainWindow::doEvent(QString test, int i)
 {
     defaultnum = i;
     if (close_system_needed_to_confirm && (i == 5 || i == 6)) {
@@ -596,7 +600,9 @@ bool MainWindow::exitt()
     exit(0);
 }
 
-void MainWindow::onGlobalKeyPress(const QString &key) {}
+void MainWindow::onGlobalKeyPress(const QString &key)
+{
+}
 
 // handle "Esc","Left","Right","Enter" keyPress event
 void MainWindow::onGlobalkeyRelease(const QString &key)
@@ -675,13 +681,15 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
                     if (isHibernateHide && tableNum == 2) {
                         if (isSwitchuserHide) {
                             tableNum = 6;
-                        } else
+                        } else {
                             tableNum = 0;
+                        }
                     } else {
                         if (isSwitchuserHide && tableNum == 1) {
                             tableNum = 6;
-                        } else
+                        } else {
                             tableNum = tableNum - 1;
+                        }
                     }
                 }
             }
@@ -710,25 +718,25 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
         qDebug() << map[tableNum]->objectName() << "";
         switch (tableNum) {
         case 0:
-            doevent("switchuser", 0);
+            doEvent("switchuser", 0);
             break;
         case 1:
-            doevent("hibernate", 1);
+            doEvent("hibernate", 1);
             break;
         case 2:
-            doevent("suspend", 2);
+            doEvent("suspend", 2);
             break;
         case 3:
-            doevent("screensaver", 3);
+            doEvent("screensaver", 3);
             break;
         case 4:
-            doevent("logout", 4);
+            doEvent("logout", 4);
             break;
         case 5:
-            doevent("reboot", 5);
+            doEvent("reboot", 5);
             break;
         case 6:
-            doevent("shutdown", 6);
+            doEvent("shutdown", 6);
             break;
         }
         // this->hide();

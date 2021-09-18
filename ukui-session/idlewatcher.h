@@ -38,7 +38,6 @@ public:
     virtual ~IdleWatcher();
 
     void reset(int idle, int power);
-    QDBusInterface *interface;
 
 private slots:
     void resumingFromIdle();
@@ -47,6 +46,9 @@ private slots:
 
 Q_SIGNALS:
     void StatusChanged(uint status);
+
+public:
+    QDBusInterface *interface;
 
 private:
     int mSecsidle;

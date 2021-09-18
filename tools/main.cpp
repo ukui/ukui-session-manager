@@ -121,7 +121,7 @@ void messagecheck()
     msgBox.exec();
 }
 
-int check_lock()
+int checkLock()
 {
     bool lockfile = false;
     bool lockuser = false;
@@ -252,7 +252,7 @@ bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_t
     return false;
 }
 
-bool require_dbus_session()
+bool requireDbusSession()
 {
     QString env_dbus = qgetenv("DBUS_SESSION_BUS_ADDRESS");
     if (!env_dbus.isEmpty())
@@ -276,11 +276,11 @@ int main(int argc, char *argv[])
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-    require_dbus_session();
+    requireDbusSession();
 
     QApplication a(argc, argv);
 
-    int cc = check_lock();
+    int cc = checkLock();
     qDebug() << cc << "   cc";
 
     // Load ts files
