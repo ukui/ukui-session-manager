@@ -47,14 +47,14 @@ QByteArray typeConver(int i){
     return byte;
 }
 
-void SessionApplication::InitialEnvironment()
+void SessionApplication::initialEnvironment()
 {
     UkuiPower *upower = new UkuiPower();
-    if(gsettings_usable){
-        if(upower->canAction(UkuiPower::PowerHibernate))
-            gs->set("canhibernate",true);
+    if (gsettings_usable) {
+        if (upower->canAction(UkuiPower::PowerHibernate))
+            gs->set("canhibernate", true);
         else
-            gs->set("canhibernate",false);
+            gs->set("canhibernate", false);
 
         //在打开关机管理界面后通过物理按键的方式关机/重启
         //将导致win-key-release键值为true
@@ -73,8 +73,8 @@ void SessionApplication::InitialEnvironment()
         QT_QPA_PLATFORMTHEME = "gtk2";
     }
 
-    qputenv("XDG_CURRENT_DESKTOP","UKUI");
-    qputenv("QT_QPA_PLATFORMTHEME",QT_QPA_PLATFORMTHEME);
+    qputenv("XDG_CURRENT_DESKTOP", "UKUI");
+    qputenv("QT_QPA_PLATFORMTHEME", QT_QPA_PLATFORMTHEME);
     qputenv("QT_QPA_PLATFORM", "xcb");
 
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
@@ -85,7 +85,8 @@ void SessionApplication::InitialEnvironment()
     //QProcess::startDetached("systemctl", QStringList() << "--user" << "restart" << "gvfs-daemon.service");
 }
 
-void SessionApplication::updateIdleDelay(){
+void SessionApplication::updateIdleDelay()
+{
     if (gsettings_usable) {
         const int idle = gs->get("idle-delay").toInt() * 60;
         if (lastIdleTime == idle ){
@@ -99,8 +100,8 @@ void SessionApplication::registerDBus()
 {
     new SessionDBusAdaptor(modman);
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    if(!dbus.isConnected()){
-        qDebug()<<"Fatal DBus Error";
+    if (!dbus.isConnected()) {
+        qDebug() << "Fatal DBus Error";
         QProcess a;
         a.setProcessChannelMode(QProcess::ForwardedChannels);
         a.start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
@@ -147,7 +148,7 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
         gsettings_usable = false;
     }
 
-    InitialEnvironment();
+    initialEnvironment();
 
     modman = new ModuleManager();
 

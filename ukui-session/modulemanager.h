@@ -55,7 +55,7 @@ public:
 
     void doStart();
 
-    void dostartwm();
+    void doStartWM();
 
     void startupfinished(const QString& appName ,const QString& string);
 
@@ -83,7 +83,7 @@ private:
     QTimer *twm = new QTimer();
     QTimer *tpanel = new QTimer();
     QTimer *tdesktop = new QTimer();
-    bool start_module_Timer(QTimer *timer,int i);
+    bool startModuleTimer(QTimer *timer,int i);
     bool isPanelStarted, isDesktopStarted, isWMStarted ,isCompsiteStarted;
 
     QMediaPlayer *player;

@@ -41,7 +41,7 @@ public:
     MainWindow(bool a , bool b ,QWidget *parent = nullptr);
     QRect m_screen;
     ~MainWindow();
-    void doevent(QString test2,int i);
+    void doEvent(QString test2,int i);
     void changePoint(QWidget *widget ,QEvent *event ,int i);
     //void closeEvent(QCloseEvent *event);
     //virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
@@ -57,7 +57,7 @@ private:
     Ui::MainWindow *ui;
     UkuiPower *m_power;
     XEventMonitor *xEventMonitor;
-    void ResizeEvent();
+    void resizeEvent();
     bool flag = false;
     QWidget *lastWidget;
     int tableNum;

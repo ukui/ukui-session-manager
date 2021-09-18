@@ -27,9 +27,8 @@
 #include <QDebug>
 #include <QDBusReply>
 
-IdleWatcher::IdleWatcher(int idle ,QObject *parent) :
-    QObject(parent),
-    mSecsidle(idle)
+IdleWatcher::IdleWatcher(int idle, QObject *parent) : QObject(parent)
+                                                    , mSecsidle(idle)
 {
     connect(KIdleTime::instance(),
             &KIdleTime::resumingFromIdle,
@@ -66,29 +65,29 @@ void IdleWatcher::timeoutReached(int identifier , int timeout)
     quint32 inhibit_idle = 8;
     bool isinhibited = false;
     QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_idle);
-    if (reply.isValid()){
+    if (reply.isValid()) {
         // use the returned value
-        qDebug()<<"Is inhibit by someone: "<<reply.value();
+        qDebug() << "Is inhibit by someone: " << reply.value();
         isinhibited = reply.value();
-    }
-    else{
-        qDebug()<<reply.value();
+    } else {
+        qDebug() << reply.value();
     }
 
-    if(isinhibited == true){
-        qDebug() <<"some applications inhibit idle.";
+    if (isinhibited == true) {
+        qDebug() << "some applications inhibit idle.";
         return;
     }
-    if(isinhibited == false){
+    if (isinhibited == false) {
         KIdleTime::instance()->catchNextResumeEvent();
-        if(timeout == 1000 * mSecsidle){
+        if (timeout == 1000 * mSecsidle) {
             qDebug() << "idle Timeout Reached, emit StatusChanged 3 signal!";
             emit StatusChanged(3);
         }
     }
 }
 
-void IdleWatcher::resumingFromIdle(){
+void IdleWatcher::resumingFromIdle()
+{
     qDebug() << "Somethings happened, emit StatusChanged 0 signal!";
     emit StatusChanged(0);
 }

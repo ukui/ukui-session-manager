@@ -80,22 +80,22 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     logFile.close();
 }
 
-void screenScaleJudgment(QGSettings   *settings)
+void screenScaleJudgment(QGSettings *settings)
 {
     qreal        scaling = qApp->devicePixelRatio();
     double       scale;
     scale = settings->get(SCALING_KEY).toDouble();
-    if(scale > 1.25){
+    if (scale > 1.25) {
         bool state = false;
-        for(QScreen *screen : QGuiApplication::screens()){
-            if (screen->geometry().width() * scaling < 1920 &&  screen->geometry().height() * scaling< 1080){
+        for (QScreen *screen : QGuiApplication::screens()) {
+            if (screen->geometry().width() * scaling < 1920 &&  screen->geometry().height() * scaling < 1080) {
                 state = true;
-            } else if (screen->geometry().width() * scaling == 1920 &&  screen->geometry().height() * scaling == 1080 && scale > 1.5){
+            } else if (screen->geometry().width() * scaling == 1920 &&  screen->geometry().height() * scaling == 1080 && scale > 1.5) {
                 state = true;
             }
         }
-        if (state){
-            QGSettings   *mGsettings;
+        if (state) {
+            QGSettings *mGsettings;
             mGsettings = new QGSettings(MOUSE_SCHEMA);
             mGsettings->set(CURSOR_SIZE, 24);
             settings->set(SCALING_KEY, 1.0);
@@ -113,27 +113,27 @@ void setXresources(int dpi)
             .arg(mouse_settings->get(CURSOR_SIZE).toInt())
             .arg(mouse_settings->get(CURSOR_THEME).toString());
 
-    dpy = XOpenDisplay (NULL);
-    XChangeProperty(dpy, RootWindow (dpy, 0),
+    dpy = XOpenDisplay(NULL);
+    XChangeProperty(dpy, RootWindow(dpy, 0),
                     XA_RESOURCE_MANAGER, XA_STRING, 8, PropModeReplace, (unsigned char *) str.toLatin1().data(), str.length());
 
     delete mouse_settings;
-    XCloseDisplay (dpy);
+    XCloseDisplay(dpy);
 }
 
 /* 判断文件是否存在 */
 bool isFileExist(QString XresourcesFile)
 {
     QFileInfo fileInfo(XresourcesFile);
-    if(fileInfo.isFile()){
-        qDebug()<<"file is true";
+    if (fileInfo.isFile()) {
+        qDebug() << "file is true";
         return true;
     }
-    qDebug()<<"file is false";
+    qDebug() << "file is false";
     return false;
 }
 /* 写配置文件并设置DPI和鼠标大小*/
-void WriteXresourcesFile(QString XresourcesFile, QGSettings *settings)
+void writeXresourcesFile(QString XresourcesFile, QGSettings *settings)
 {
     QFile file(XresourcesFile);
     QString content = "Xft.dpi:192\nXcursor.size:48";
@@ -143,7 +143,7 @@ void WriteXresourcesFile(QString XresourcesFile, QGSettings *settings)
     file.close();
     QGSettings *gs = new QGSettings("org.ukui.font-rendering");
     QGSettings *mouse_settings = new QGSettings(MOUSE_SCHEMA);
-    gs->set("dpi",96.0);
+    gs->set("dpi", 96.0);
     settings->set(SCALING_KEY, 2.0);
     mouse_settings->set(CURSOR_SIZE, 48);
     delete gs;
@@ -151,7 +151,7 @@ void WriteXresourcesFile(QString XresourcesFile, QGSettings *settings)
 }
 
 /* 配置新装系统、新建用户第一次登陆时，4K缩放功能*/
-void Set4KScreenScale()
+void set4KScreenScale()
 {
     QGSettings *settings;
     int ScreenNum = QApplication::screens().length();
@@ -160,7 +160,7 @@ void Set4KScreenScale()
     /* 过滤单双屏下小分辨率大缩放值 */
     screenScaleJudgment(settings);
     double dpi = settings->get(SCALING_KEY).toDouble() * 96;
-    if (ScreenNum > 1){
+    if (ScreenNum > 1) {
         setXresources(dpi);
         delete settings;
         return;
@@ -168,13 +168,13 @@ void Set4KScreenScale()
     QScreen *screen = QApplication::screens().at(0);
     int height = screen->size().height() * qApp->devicePixelRatio();
     int width = screen->size().width() * qApp->devicePixelRatio();
-    if (height > 1500 && width > 2560){
+    if (height > 1500 && width > 2560) {
         bool res;
         QString homePath = getenv("HOME");
         QString XresourcesFile = homePath+"/.config/xresources";
         res = isFileExist(XresourcesFile);
-        if(!res){
-            WriteXresourcesFile(XresourcesFile, settings);
+        if (!res) {
+            writeXresourcesFile(XresourcesFile, settings);
         }
     }
     double Dpi = settings->get(SCALING_KEY).toDouble() * 96.0;
@@ -189,7 +189,7 @@ int main(int argc, char **argv)
     qDebug() << "UKUI session manager start.";
     SessionApplication app(argc, argv);
 
-    Set4KScreenScale();
+    set4KScreenScale();
 
     app.setQuitOnLastWindowClosed(false);
     return app.exec();

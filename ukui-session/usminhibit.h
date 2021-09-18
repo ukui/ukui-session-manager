@@ -32,7 +32,7 @@ public:
 
     int inhibitor_serial;
     ~usminhibit();
-    uint generate_cookie();
+    uint generateCookie();
     QHash<quint32 , inhibit> hash;
 
     quint32 addinhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags);

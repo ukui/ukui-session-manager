@@ -139,7 +139,7 @@ void XEventMonitorPrivate::run()
 
 void XEventMonitorPrivate::callback(XPointer ptr, XRecordInterceptData* data)
 {
-    ((XEventMonitorPrivate *) ptr)->handleRecordEvent(data);
+    ((XEventMonitorPrivate*)ptr)->handleRecordEvent(data);
 }
 
 void XEventMonitorPrivate::handleRecordEvent(XRecordInterceptData* data)
