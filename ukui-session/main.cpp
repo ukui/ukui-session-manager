@@ -117,13 +117,13 @@ void setXresources(int dpi)
     Display    *dpy;
     QGSettings *mouse_settings = new QGSettings(MOUSE_SCHEMA);
     QString str = QString("Xft.dpi:\t%1\nXcursor.size:\t%2\nXcursor.theme:\t%3\n")
-            .arg(dpi)
-            .arg(mouse_settings->get(CURSOR_SIZE).toInt())
-            .arg(mouse_settings->get(CURSOR_THEME).toString());
+                         .arg(dpi)
+                         .arg(mouse_settings->get(CURSOR_SIZE).toInt())
+                         .arg(mouse_settings->get(CURSOR_THEME).toString());
 
-    dpy = XOpenDisplay (NULL);
-    XChangeProperty(dpy, RootWindow (dpy, 0),
-                    XA_RESOURCE_MANAGER, XA_STRING, 8, PropModeReplace, (unsigned char *) str.toLatin1().data(), str.length());
+    dpy = XOpenDisplay(NULL);
+    XChangeProperty(dpy, RootWindow (dpy, 0), XA_RESOURCE_MANAGER, XA_STRING, 8,
+                    PropModeReplace, (unsigned char *) str.toLatin1().data(), str.length());
 
     delete mouse_settings;
     XCloseDisplay (dpy);

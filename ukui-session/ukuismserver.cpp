@@ -689,11 +689,6 @@ void UKUISMServer::performLogout()
     }
 }
 
-void UKUISMServer::justStoreSession()
-{
-    storeSession();
-}
-
 void UKUISMServer::cleanUp()
 {
     if (clean) {

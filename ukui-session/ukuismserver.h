@@ -44,9 +44,6 @@ public:
     void shutdown();
     void performLogout();
 
-    //这个接口是为了调试和查看日志方便
-    void justStoreSession();
-
 Q_SIGNALS:
     void logoutFinished();
 
