@@ -77,6 +77,7 @@ private:
     bool isWM(const UKUISMClient *client) const;
     bool isWM(const QString &program) const;
 
+    //改变客户端的顺序
     void changeClientOrder();
 
 private:

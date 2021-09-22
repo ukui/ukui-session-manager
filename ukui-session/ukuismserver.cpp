@@ -545,14 +545,14 @@ void UKUISMServer::saveYourselfDone(UKUISMClient *client, bool success)
         QStringList discard = client->discardCommand();
 
         if(!discard.isEmpty()) {
-            executeCommand( discard );
+            executeCommand(discard);
         }
 
         return;
     }
 
     if (success) {
-        qCDebug(UKUI_SESSION) << client->clientId() << "done save";
+        qCDebug(UKUI_SESSION) << client->program() << " " << client->clientId() << "done save";
         client->m_saveYourselfDone = true;
         completeShutdownOrCheckpoint();
     } else {
@@ -652,7 +652,7 @@ void UKUISMServer::performLogout()
         m_sessionGroup = QStringLiteral("Session: ") + QString::fromLocal8Bit(SESSION_PREVIOUS_LOGOUT);
     }
 
-    //将桌面背景设置为黑色
+    //将桌面背景设置为黑色,似乎无效
     QPalette palette;
     palette.setColor(QApplication::desktop()->backgroundRole(), Qt::black);
     QApplication::setPalette(palette);

@@ -110,11 +110,6 @@ public slots:
 
     Q_NOREPLY void reboot()
     {
-//        if(mPower->canAction(UkuiPower::PowerReboot)){
-//            mManager->logout(false);
-//            mPower->doAction(UkuiPower::PowerReboot);
-//        }
-        //QCoreApplication::exit(0);
         theServer->performLogout();
         connect(theServer, &UKUISMServer::logoutFinished, [this](){
             this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
@@ -124,21 +119,11 @@ public slots:
 
     Q_NOREPLY void powerOff()
     {
-//        if(mPower->canAction(UkuiPower::PowerShutdown)){
-//            mManager->logout(false);
-//            mPower->doAction(UkuiPower::PowerShutdown);
-//        }
-        //QCoreApplication::exit(0);
         theServer->performLogout();
         connect(theServer, &UKUISMServer::logoutFinished, [this](){
             this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
         });
     }
-
-//    QDBusVariant listModules()
-//    {
-//        return QDBusVariant(mManager->listModules());
-//    }
 
     Q_NOREPLY void startModule(const QString& name)
     {

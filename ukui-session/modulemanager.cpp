@@ -568,35 +568,9 @@ void ModuleManager::logout(bool doExit)
                         "/org/freedesktop/login1/session/self",\
                         "org.freedesktop.login1.Session",\
                         QDBusConnection::systemBus());
-//    ModulesMapIterator i(mNameMap);
-//    UkuiModule *winman;
-//    while (i.hasNext()) {
-//        i.next();
-//        qDebug() << "Module logout" << i.key();
-//        UkuiModule *p = i.value();
-////        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
-////            winman = p;
-////            continue;
-////        }
-//        p->terminate();
-//    }
-//    i.toFront();
-//    while (i.hasNext()) {
-//        i.next();
-//        UkuiModule *p = i.value();
-////        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
-////            continue;
-////        }
-//        if (p->state() != QProcess::NotRunning && !p->waitForFinished(100)) {
-//            qWarning() << "Module " << qPrintable(i.key()) << " won't termiante .. killing.";
-//            p->kill();
-//        }
-//    }
-//    winman->terminate();
 
     if (doExit) {
         face.call("Terminate");
-        //QCoreApplication::exit(0);
         exit(0);
     }
 }

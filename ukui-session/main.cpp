@@ -91,7 +91,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 
 void screenScaleJudgment(QGSettings   *settings)
 {
-    double       scale;
+    double  scale;
     scale = settings->get(SCALING_KEY).toDouble();
     if(scale > 1.25){
         bool state = false;
@@ -218,7 +218,7 @@ int main(int argc, char **argv)
     server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
 //    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
 
-//    QTimer::singleShot(200000, [theServer](){
+//    QTimer::singleShot(20000, [theServer](){
 //        theServer->justStoreSession();
 //    });
     
