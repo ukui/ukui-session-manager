@@ -98,7 +98,7 @@ void SessionApplication::registerDBus()
     new SessionDBusAdaptor(modman);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     if(!dbus.isConnected()){
-        qDebug()<<"Fatal DBus Error";
+        qDebug() << "Fatal DBus Error";
         QProcess a;
         a.setProcessChannelMode(QProcess::ForwardedChannels);
         a.start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");

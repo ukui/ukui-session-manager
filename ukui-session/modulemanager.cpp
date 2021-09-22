@@ -51,7 +51,7 @@ void ModuleManager::playBootMusic(bool arg){
     if (QGSettings::isSchemaInstalled("org.ukui.session")){
         QGSettings *gset = new QGSettings("org.ukui.session","/org/ukui/desktop/session/",this);
         if(gset == NULL){
-            qDebug()<<"QGSettings init error";
+            qDebug() << "QGSettings init error";
             free(gset);
             return;
         }
@@ -78,10 +78,10 @@ void ModuleManager::playBootMusic(bool arg){
 }
 
 void ModuleManager::stateChanged(QMediaPlayer::State state){
-    qDebug()<<"Player state: "<<state;
+    qDebug() << "Player state: " << state;
     if(state == QMediaPlayer::StoppedState){
         player->deleteLater();
-        qDebug()<<"delete player";
+        qDebug() << "delete player";
     }
 }
 
@@ -108,10 +108,10 @@ ModuleManager::ModuleManager( QObject* parent)
 
 void ModuleManager::weakup(bool arg){
     if(arg){
-        qDebug()<<"准备执行睡眠休眠";
+        qDebug() << "准备执行睡眠休眠";
     }
     else{
-        qDebug()<<"从睡眠休眠中唤醒";
+        qDebug() << "从睡眠休眠中唤醒";
         playBootMusic(false);
     }
 }
@@ -141,7 +141,7 @@ void ModuleManager::constructStartupList()
     if (QGSettings::isSchemaInstalled(id)) {
         const QGSettings* gs = new QGSettings(SESSION_REQUIRED_COMPONENTS,SESSION_REQUIRED_COMPONENTS_PATH,this);
         if(gs == NULL){
-            qDebug()<<"QGSettings init error";
+            qDebug() << "QGSettings init error";
             return;
         }
         window_manager = gs->get("windowmanager").toString() + ".desktop";
@@ -298,22 +298,22 @@ void ModuleManager::startupfinished(const QString& appName , const QString& stri
 void ModuleManager::timeup(){
     QTimer *time_out = qobject_cast<QTimer*>(sender());
     if(time_out == tusd){
-        qDebug() <<"usd超时";
+        qDebug() << "usd超时";
         //emit usdfinished();
         return;
     }
     if(time_out == twm){
-        qDebug() <<"wm超时";
+        qDebug() << "wm超时";
         //emit wmfinished();
         return;
     }
     if(time_out == tpanel){
-        qDebug() <<"panel超时";
+        qDebug() << "panel超时";
         //emit panelfinished();
         return;
     }
     if(time_out == tdesktop){
-        qDebug() <<"peony-qt-desktop超时";
+        qDebug() << "peony-qt-desktop超时";
         //emit desktopfinished();
         return;
     }

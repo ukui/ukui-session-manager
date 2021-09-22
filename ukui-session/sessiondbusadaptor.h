@@ -195,12 +195,12 @@ public slots:
     }
 
     Q_NOREPLY void emitPrepareForSwitchuser(){
-        qDebug()<<"emit  PrepareForSwitchuser";
+        qDebug() << "emit  PrepareForSwitchuser";
         emit PrepareForSwitchuser();
     }
 
     Q_NOREPLY void emitPrepareForPhase2(){
-        qDebug()<<"emit  PrepareForPhase2";
+        qDebug() << "emit  PrepareForPhase2";
         emit PrepareForPhase2();
     }
 

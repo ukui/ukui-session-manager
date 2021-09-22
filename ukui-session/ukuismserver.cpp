@@ -1,6 +1,7 @@
 #include "ukuismserver.h"
 #include "ukuismclient.h"
 #include "ukuismconnection.h"
+#include "ukuisessiondebug.h"
 #include "ukuikwinsession_interface.h"
 
 //#include <X11/ICE/ICElib.h>
@@ -60,7 +61,7 @@ Status RegisterClientProc(SmsConn smsConn, SmPointer managerData, char *previous
 {
     UKUISMClient *client = static_cast<UKUISMClient*>(managerData);
     client->registerClient(previousId);
-    qDebug() << "client " << client->clientId() << " registered.";
+    qCDebug(UKUI_SESSION) << "client " << client->clientId() << " registered.";
     return 1;
 }
 
@@ -294,7 +295,7 @@ Status SetAuthentication (int count, IceListenObj *listenObjs, IceAuthDataEntry 
     QString iceAuth = QStandardPaths::findExecutable(QStringLiteral("iceauth"));
     if (iceAuth.isEmpty())
     {
-        qDebug() << "KSMServer: could not find iceauth";
+        qCDebug(UKUI_SESSION) << "KSMServer: could not find iceauth";
         return 0;
     }
 
@@ -322,7 +323,7 @@ void FreeAuthenticationData(int count, IceAuthDataEntry *authDataEntries)
     QString iceAuth = QStandardPaths::findExecutable(QStringLiteral("iceauth"));
     if (iceAuth.isEmpty())
     {
-        qDebug() << "KSMServer: could not find iceauth";
+        qCDebug(UKUI_SESSION) << "KSMServer: could not find iceauth";
         return;
     }
 
@@ -363,12 +364,12 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
 
     char errormsg[256];
     if (!SmsInitialize((char*)VendorString, (char*)ReleaseString, NewClientProc, (SmPointer) this, HostBasedAuthProc, 256, errormsg)) {
-        qDebug() << "xsmpserver: could not register XSM protocol";
+        qCDebug(UKUI_SESSION) << "xsmpserver: could not register XSM protocol";
     }
 
     if (!IceListenForConnections(&numTransports, &listenObjs, 256, errormsg)) {
-        qDebug() << "KSMServer: Error listening for connections: " << errormsg;
-        qDebug() << "KSMServer: Aborting.";
+        qCDebug(UKUI_SESSION) << "KSMServer: Error listening for connections: " << errormsg;
+        qCDebug(UKUI_SESSION) << "KSMServer: Aborting.";
         exit(1);
     }
 
@@ -393,8 +394,8 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
         f = ::fopen(fName.data(), "w+");
         if (!f) {
             QString str = QString(QStringLiteral("UKUISMServer: cannot open %s: %s")).arg(fName.data()).arg(strerror(errno));
-            qDebug() << str;
-            qDebug() << "UKUISMServer: Aborting.";
+            qCDebug(UKUI_SESSION) << str;
+            qCDebug(UKUI_SESSION) << "UKUISMServer: Aborting.";
             exit(1);
         }
         char *session_manager = IceComposeNetworkIdList(numTransports, listenObjs);
@@ -432,7 +433,7 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
     connect(qApp, &QApplication::aboutToQuit, this, &UKUISMServer::cleanUp);
     connect(&m_restoreTimer, &QTimer::timeout, this, &UKUISMServer::tryRestoreNext);
 
-    qDebug() << "finish construct ukuismserver";
+    qCDebug(UKUI_SESSION) << "finish construct ukuismserver";
 }
 
 UKUISMServer::~UKUISMServer()
@@ -452,7 +453,7 @@ UKUISMClient *UKUISMServer::newClient(SmsConn conn)
 void UKUISMServer::deleteClient(UKUISMClient *client)
 {
     m_clients.removeAll(client);
-    qDebug() << "m_clients remove client " << client->clientId();
+    qCDebug(UKUI_SESSION) << "m_clients remove client " << client->clientId();
 
     if (client == m_clientInteracting) {
         m_clientInteracting = nullptr;
@@ -480,16 +481,16 @@ void UKUISMServer::clientRegistered(const char *previousId)
 
 void UKUISMServer::interactRequest(UKUISMClient *client, int dialogType)
 {
-    qDebug() << client->clientId() << "ask for interact";
+    qCDebug(UKUI_SESSION) << client->clientId() << "ask for interact";
 
     //如果是关机阶段，该客户端的请求就要暂时挂起
     if (m_state == Shutdown) {
         //将pendingInteraction属性设置为true,以便在handlePendingInteractions中处理
-        qDebug() << "pending client " << client->clientId();
+        qCDebug(UKUI_SESSION) << "pending client " << client->clientId();
         client->m_pendingInteraction = true;
     } else {
         //非关机阶段，则直接授予客户端交互权限
-        qDebug() << "sending save yourself to client " << client->clientId();
+        qCDebug(UKUI_SESSION) << "sending save yourself to client " << client->clientId();
         SmsInteract(client->connection());
     }
     //处理被挂起的客户端请求
@@ -501,11 +502,11 @@ void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
     //如果交互完成的客户端与服务器保存的m_clientInteraction信息不一致，则返回，一般不会发生，因为退出时的交互对话框是模态的
     if (client != m_clientInteracting) return;
     //重置m_clientInteraciton，以便处理下一个挂起的客户端
-    qDebug() << m_clientInteracting->clientId() << "interact done";
+    qCDebug(UKUI_SESSION) << m_clientInteracting->clientId() << "interact done";
     m_clientInteracting = nullptr;
     //如果客户端取消关机，则向所有客户端发送取消关机信号
     if (cancelShutdown_) {
-        qDebug() << client->clientId() << "cancel shutdown";
+        qCDebug(UKUI_SESSION) << client->clientId() << "cancel shutdown";
         cancelShutdown(client);
     } else {
         //处理下一个挂起的客户端
@@ -515,7 +516,7 @@ void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
 
 void UKUISMServer::phase2Request(UKUISMClient *client)
 {
-    qDebug() << "wm ask for phase2";
+    qCDebug(UKUI_SESSION) << "wm ask for phase2";
     //这两个成员变量对于窗管才有用
     client->m_waitForPhase2 = true;
     client->m_wasPhase2 = true;
@@ -529,7 +530,7 @@ void UKUISMServer::phase2Request(UKUISMClient *client)
             changeClientOrder();
             foreach (UKUISMClient *c, m_clients) {
                 if (!isWM(c)) {
-                    qDebug() << "wm done phase1, sending saveyourself to " << c->clientId();
+                    qCDebug(UKUI_SESSION) << "wm done phase1, sending saveyourself to " << c->clientId();
                     SmsSaveYourself(c->connection(), m_saveType, m_saveType != SmSaveLocal,
                                     m_saveType != SmSaveLocal ? SmInteractStyleAny : SmInteractStyleNone, false);
                 }
@@ -551,7 +552,7 @@ void UKUISMServer::saveYourselfDone(UKUISMClient *client, bool success)
     }
 
     if (success) {
-        qDebug() << client->clientId() << "done save";
+        qCDebug(UKUI_SESSION) << client->clientId() << "done save";
         client->m_saveYourselfDone = true;
         completeShutdownOrCheckpoint();
     } else {
@@ -564,7 +565,7 @@ void UKUISMServer::saveYourselfDone(UKUISMClient *client, bool success)
 void UKUISMServer::clientSetProgram(UKUISMClient *client)
 {
     if (isWM(client)) {
-        qDebug() << "windowManager loaded";
+        qCDebug(UKUI_SESSION) << "windowManager loaded";
     }
 }
 
@@ -627,7 +628,7 @@ void UKUISMServer::shutdown()
 {
     //保存关机
     //是否需要设置m_state?
-    qDebug() << "begin performlogout";
+    qCDebug(UKUI_SESSION) << "begin performlogout";
     performLogout();
 }
 
@@ -670,14 +671,14 @@ void UKUISMServer::performLogout()
         foreach (UKUISMClient *c, m_clients) {
             //先向窗管发送保存自身的信号
             if(isWM(c)) {
-                qDebug() << "sending saveyourself to wm first";
+                qCDebug(UKUI_SESSION) << "sending saveyourself to wm first";
                 SmsSaveYourself(c->connection(), m_saveType, true, SmInteractStyleAny, false);
             }
 
         }
     } else {
         foreach (UKUISMClient *c, m_clients) {
-            qDebug() << "sending saveourself to client " << " " << c->clientId();
+            qCDebug(UKUI_SESSION) << "sending saveourself to client " << " " << c->clientId();
             SmsSaveYourself(c->connection(), m_saveType, true, SmInteractStyleAny, false);
         }
 
@@ -734,10 +735,10 @@ void UKUISMServer::newConnection(int socket)
 
     if (cstatus != IceConnectAccepted) {
         if (cstatus == IceConnectIOError) {
-            qDebug() << "IO error opening ICE Connection!";
+            qCDebug(UKUI_SESSION) << "IO error opening ICE Connection!";
         }
         else {
-            qDebug() << "ICE Connection rejected!";
+            qCDebug(UKUI_SESSION) << "ICE Connection rejected!";
         }
 
         (void)IceCloseConnection(iceConn);
@@ -752,7 +753,7 @@ void UKUISMServer::processData(int socket)
     IceConn iceConn = ((UKUISMConnection*)sender())->iceConn;
     IceProcessMessagesStatus status = IceProcessMessages(iceConn, nullptr, nullptr);
     if (status == IceProcessMessagesIOError) {
-        qDebug() << "processData called and status is IOError";
+        qCDebug(UKUI_SESSION) << "processData called and status is IOError";
         IceSetShutdownNegotiation(iceConn, False);
         QList<UKUISMClient*>::iterator it = m_clients.begin();
         QList<UKUISMClient*>::iterator const itEnd = m_clients.end();
@@ -800,7 +801,7 @@ void UKUISMServer::timeoutQuit()
 void UKUISMServer::timeoutWMQuit()
 {
     if (m_state == KillingWM) {
-        qDebug() << "SmsDie WM timeout";
+        qCDebug(UKUI_SESSION) << "SmsDie WM timeout";
     }
     killingCompleted();
 }
@@ -816,7 +817,7 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     //此处判断除窗管之外的客户端是否全部完成保存，没有的话就返回
     foreach(UKUISMClient *c, pendingClients ) {
         if (!c->m_saveYourselfDone && !c->m_waitForPhase2) {
-            qDebug() << "there are none-wm client haven't save";
+            qCDebug(UKUI_SESSION) << "there are none-wm client haven't save";
             return;
         }
     }
@@ -825,7 +826,7 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     foreach(UKUISMClient *c, pendingClients) {
         if (!c->m_saveYourselfDone && c->m_waitForPhase2) {
             c->m_waitForPhase2 = false;
-            qDebug() << "sending saveyourselfphase2 to " << c->clientId();
+            qCDebug(UKUI_SESSION) << "sending saveyourselfphase2 to " << c->clientId();
             SmsSaveYourselfPhase2(c->connection());
             waitForPhase2 = true;
         }
@@ -836,7 +837,7 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     }
     //运行到这里说明窗管和普通客户端都完成了保存，开始保存会话信息到磁盘中
     if (m_saveSession) {
-        qDebug() << "store session informantion in rcfile";
+        qCDebug(UKUI_SESSION) << "store session informantion in rcfile";
         storeSession();
     }
 
@@ -844,7 +845,7 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     if (m_state == Shutdown) {
         m_state = WaitingForKNotify;
         if (m_state == WaitingForKNotify) {
-            qDebug() << "begin killint client";
+            qCDebug(UKUI_SESSION) << "begin killint client";
             startKilling();
         }
     }
@@ -952,7 +953,7 @@ void UKUISMServer::startKilling()
         if(isWM(c)) {//最后再杀死窗管
             continue;
         }
-        qDebug() << c->clientId() << "kill connection";
+        qCDebug(UKUI_SESSION) << c->clientId() << "kill connection";
         SmsDie(c->connection());
     }
 
@@ -971,7 +972,7 @@ void UKUISMServer::killWM()
     foreach(UKUISMClient *c, m_clients) {
         if (isWM(c)) {
             iswm = true;
-            qDebug() << "wm kill connection";
+            qCDebug(UKUI_SESSION) << "wm kill connection";
             SmsDie(c->connection());
         }
     }
@@ -997,7 +998,7 @@ void UKUISMServer::completeKillingWM()
 
 void UKUISMServer::killingCompleted()
 {
-    qDebug() << "done killing, exit";
+    qCDebug(UKUI_SESSION) << "done killing, exit";
     emit logoutFinished();
     qApp->quit();
 }
@@ -1007,12 +1008,12 @@ void UKUISMServer::cancelShutdown(UKUISMClient *c)
     m_clientInteracting = nullptr;
 
     foreach(UKUISMClient *c, m_clients) {
-        qDebug() << "sending cancel shutdown to client " << c->clientId();
+        qCDebug(UKUI_SESSION) << "sending cancel shutdown to client " << c->clientId();
         SmsShutdownCancelled(c->connection());
         if(c->m_saveYourselfDone) {
-            qDebug() << c->clientId() << "discard saveing state";
+            qCDebug(UKUI_SESSION) << c->clientId() << "discard saveing state";
             QStringList discard = c->discardCommand();
-            qDebug() << c->clientId() << "'s discardCommand is " << discard;
+            qCDebug(UKUI_SESSION) << c->clientId() << "'s discardCommand is " << discard;
 
             if(!discard.isEmpty()) {
                 executeCommand(discard);
@@ -1029,7 +1030,7 @@ KProcess *UKUISMServer::startApplication(const QStringList &command, bool wm)
 {
     if (wm) {
         KProcess *process = new KProcess(this);
-        qDebug() << "the wm start command is " << command;
+        qCDebug(UKUI_SESSION) << "the wm start command is " << command;
         *process << command;
         connect(process, static_cast<void (KProcess::*)(QProcess::ProcessError)>(&KProcess::error), process, &KProcess::deleteLater);
         connect(process, static_cast<void (KProcess::*)(int, QProcess::ExitStatus)>(&KProcess::finished), process, &KProcess::deleteLater);
@@ -1074,7 +1075,7 @@ void UKUISMServer::handlePendingInteractions()
     }
     //向m_clientInteracting授予交互权限
     if (m_clientInteracting) {
-        qDebug() << "sending interact to " << m_clientInteracting->clientId();
+        qCDebug(UKUI_SESSION) << "sending interact to " << m_clientInteracting->clientId();
         SmsInteract(m_clientInteracting->connection());
     }
 }
@@ -1084,7 +1085,7 @@ void UKUISMServer::launchWM(const QList<QStringList> &wmStartCommands)
     assert(m_state == LaunchingWM);
 
     if (!(qEnvironmentVariableIsSet("WAYLAND_DISPLAY") || qEnvironmentVariableIsSet("WAYLAND_SOCKET"))) {
-        qDebug() << "smserver launch wm";
+        qCDebug(UKUI_SESSION) << "smserver launch wm";
         m_wmProcess = startApplication(wmStartCommands[0], true);
         connect(m_wmProcess, SIGNAL(error(QProcess::ProcessError)), SLOT(wmProcessChange()));
         connect(m_wmProcess, SIGNAL(finished(int,QProcess::ExitStatus)), SLOT(wmProcessChange()));

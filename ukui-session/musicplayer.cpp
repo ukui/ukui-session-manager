@@ -1,4 +1,5 @@
 #include "musicplayer.h"
+#include "ukuisessiondebug.h"
 
 void musicplayer::run()
 {
@@ -9,7 +10,7 @@ musicplayer::musicplayer()
 {
     m_player = new QMediaPlayer;
     connect(m_player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
-    qDebug() << "the address of m_player is " << m_player;
+    qCDebug(UKUI_SESSION) << "the address of m_player is " << m_player;
 }
 
 musicplayer::~musicplayer()
@@ -29,9 +30,9 @@ void musicplayer::setSource(QString source)
 
 void musicplayer::stateChanged(QMediaPlayer::State state)
 {
-    qDebug() << "Player state: " << state;
+    qCDebug(UKUI_SESSION) << "Player state: " << state;
     if (state == QMediaPlayer::StoppedState) {
-        qDebug() << "the address of m_player is " << m_player;
+        qCDebug(UKUI_SESSION) << "the address of m_player is " << m_player;
         emit playFinished();
     }
 }
@@ -42,7 +43,7 @@ Worker::Worker(int volumn, QString source)
     m_player->setVolume(volumn);
     m_player->setMedia(QUrl::fromLocalFile(source));
     connect(m_player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
-    qDebug() << "the address of m_player is " << m_player;
+    qCDebug(UKUI_SESSION) << "the address of m_player is " << m_player;
 
 }
 
@@ -61,9 +62,9 @@ void Worker::doWork()
 
 void Worker::stateChanged(QMediaPlayer::State state)
 {
-    qDebug() << "Player state: " << state;
+    qCDebug(UKUI_SESSION) << "Player state: " << state;
     if (state == QMediaPlayer::StoppedState) {
-        qDebug() << "the address of m_player is " << m_player;
+        qCDebug(UKUI_SESSION) << "the address of m_player is " << m_player;
         emit playFinished();
     }
 }

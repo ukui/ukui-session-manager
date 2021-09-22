@@ -192,6 +192,11 @@ void Set4KScreenScale()
 
 void openDubug()
 {
+//#ifdef QT_NO_DEBUG
+//    UKUI_SESSION().setFilterRules(QLatin1Literal("org.ukui.ukuisession=false"));
+//#else
+//    UKUI_SESSION().setFilterRules(QLatin1Literal("org.ukui.ukuisession=true"));
+//#endif
     UKUI_SESSION().setFilterRules(QLatin1Literal("org.ukui.ukuisession=true"));
     qInstallMessageHandler(myMessageOutput);
     qCDebug(UKUI_SESSION) << "===================================================    UKUI session manager start.    ===================================================";
