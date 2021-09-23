@@ -253,7 +253,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
     setFixedSize(QApplication::primaryScreen()->virtualSize());
     move(0, 0);   //设置初始位置的值
-    resizeEvent();
+    moveWidget();
 
     //设置窗体无边框，不可拖动拖拽拉伸;为顶层窗口，无法被切屏;不使用窗口管理器
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
@@ -388,7 +388,7 @@ QStringList MainWindow::getLoginedUsers()
     return m_loginedUser;
 }
 
-void MainWindow::resizeEvent()
+void MainWindow::moveWidget()
 {
     int xx = m_screen.x();
     int yy = m_screen.y();   //取得当前鼠标所在屏幕的最左，上坐标

@@ -80,7 +80,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     logFile.close();
 }
 
-void screenScaleJudgment(QGSettings *settings)
+void screenScaleJudgement(QGSettings *settings)
 {
     qreal        scaling = qApp->devicePixelRatio();
     double       scale;
@@ -158,7 +158,7 @@ void set4KScreenScale()
     settings = new QGSettings(XSETTINGS_SCHEMA);
 
     /* 过滤单双屏下小分辨率大缩放值 */
-    screenScaleJudgment(settings);
+    screenScaleJudgement(settings);
     double dpi = settings->get(SCALING_KEY).toDouble() * 96;
     if (ScreenNum > 1) {
         setXresources(dpi);
