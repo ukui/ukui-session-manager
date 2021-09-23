@@ -95,8 +95,9 @@ bool messageboxCheck()
     } else if (msgBox.clickedButton() == confirmButton) {
         qDebug() << "confirm!";
         return true;
-    } else
+    } else {
         return false;
+    }
 }
 
 void messagecheck()
@@ -105,8 +106,7 @@ void messagecheck()
     msgBox.setWindowTitle(QObject::tr("notice"));
     QString t1 = QObject::tr("System update or package installation in progress,this function is "
                              "temporarily unavailable.");
-    QString t2 = QObject::tr(
-        "System backup or restore in progress,this function is temporarily unavailable.");
+    QString t2 = QObject::tr("System backup or restore in progress,this function is temporarily unavailable.");
 
     QFile file_update("/tmp/lock/kylin-update.lock");
     QFile file_backup("/tmp/lock/kylin-backup.lock");
@@ -375,13 +375,14 @@ int main(int argc, char *argv[])
     }
     if (parser.isSet(shutdownOption)) {
         if (w->getLoginedUsers().count() > 1) {
-            if (messageboxCheck())
+            if (messageboxCheck()) {
                 flag = playShutdownMusic(powermanager, 6, cc, up_to_time, soundplayer);
-            else {
+            } else {
                 return 0;
             }
-        } else
+        } else {
             flag = playShutdownMusic(powermanager, 6, cc, up_to_time, soundplayer);
+        }
     }
     if (parser.isSet(windowOption)) {
         flag        = false;

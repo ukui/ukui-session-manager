@@ -57,7 +57,7 @@ bool establishGrab()
 
     Q_UNUSED(xserverGraber);
 
-    if(!grabKeyboard()) {
+    if (!grabKeyboard()) {
         return false;
     }
 

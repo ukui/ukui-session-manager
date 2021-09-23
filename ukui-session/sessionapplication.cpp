@@ -51,8 +51,8 @@ QByteArray typeConver(int i)
 void SessionApplication::InitialEnvironment()
 {
     UkuiPower *upower = new UkuiPower();
-    if(gsettings_usable){
-        if(upower->canAction(UkuiPower::PowerHibernate))
+    if (gsettings_usable) {
+        if (upower->canAction(UkuiPower::PowerHibernate))
             gs->set("canhibernate",true);
         else
             gs->set("canhibernate",false);
@@ -78,7 +78,7 @@ void SessionApplication::InitialEnvironment()
     qputenv("QT_QPA_PLATFORM", "xcb");
 
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
-    if (xdg_session_type == "wayland"){
+    if (xdg_session_type == "wayland") {
         QProcess::startDetached("dbus-update-activation-environment", QStringList() << "--systemd" << "DISPLAY"<<"QT_QPA_PLATFORM");
     }
     //restart user's gvfs-daemon.service
@@ -97,7 +97,7 @@ void SessionApplication::registerDBus()
 {
     new SessionDBusAdaptor(modman);
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    if(!dbus.isConnected()){
+    if (!dbus.isConnected()) {
         qDebug() << "Fatal DBus Error";
         QProcess a;
         a.setProcessChannelMode(QProcess::ForwardedChannels);

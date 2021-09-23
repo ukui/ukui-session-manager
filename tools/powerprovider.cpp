@@ -124,8 +124,9 @@ bool messageboxcheck()
     } else if (msgBox.clickedButton() == giveupButton) {
         qDebug() << "give up";
         return false;
-    } else
+    } else {
         return false;
+    }
 }
 
 static bool dbusCall(const QString &service, const QString &path, const QString &interface,
@@ -145,7 +146,7 @@ static bool dbusCall(const QString &service, const QString &path, const QString 
     }
 
     return msg.arguments().isEmpty() || msg.arguments().constFirst().isNull()
-        || msg.arguments().constFirst().toBool();
+                                     || msg.arguments().constFirst().toBool();
 }
 
 static bool dbusCallSystemd(const QString &service, const QString &path, const QString &interface,
@@ -165,8 +166,9 @@ static bool dbusCallSystemd(const QString &service, const QString &path, const Q
         qWarning() << "Debus error: " << msg;
     }
 
-    if (msg.arguments().isEmpty() || msg.arguments().constFirst().isNull())
+    if (msg.arguments().isEmpty() || msg.arguments().constFirst().isNull()) {
         return true;
+    }
 
     QString response = msg.arguments().constFirst().toString();
     qDebug() << "systemd:" << method << "=" << response;

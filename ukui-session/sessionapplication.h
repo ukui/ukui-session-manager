@@ -49,12 +49,14 @@ private Q_SLOTS:
 
 private:
     void InitialEnvironment();
+    void playBootMusic();
 
+private:
     bool gsettings_usable;
     QGSettings * gs;
     ModuleManager* modman;
     IdleWatcher* mIdleWatcher;
-    void playBootMusic();
+
 };
 
 #endif // SESSIONAPPLICATION_H

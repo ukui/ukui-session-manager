@@ -23,11 +23,10 @@
 #include <QFileInfo>
 #include <QDebug>
 
-UkuiModule::UkuiModule(const XdgDesktopFile& file, QObject* parent) :
-    QProcess(parent),
-    file(file),
-    fileName(QFileInfo(file.fileName()).fileName()),
-    mIsTerminating(false)
+UkuiModule::UkuiModule(const XdgDesktopFile& file, QObject* parent) : QProcess(parent)
+                                                                    , file(file)
+                                                                    , fileName(QFileInfo(file.fileName()).fileName())
+                                                                    , mIsTerminating(false)
 {
     restartNum = 0;
     QProcess::setProcessChannelMode(QProcess::ForwardedChannels);

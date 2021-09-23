@@ -93,16 +93,16 @@ void screenScaleJudgment(QGSettings   *settings)
 {
     double  scale;
     scale = settings->get(SCALING_KEY).toDouble();
-    if(scale > 1.25){
+    if (scale > 1.25) {
         bool state = false;
-        for(QScreen *screen : QGuiApplication::screens()){
-            if (screen->geometry().width() < 1920 &&  screen->geometry().height() < 1080){
+        for (QScreen *screen : QGuiApplication::screens()) {
+            if (screen->geometry().width() < 1920 &&  screen->geometry().height() < 1080) {
                 state = true;
-            } else if (screen->geometry().width() == 1920 &&  screen->geometry().height() == 1080 && scale > 1.5){
+            } else if (screen->geometry().width() == 1920 &&  screen->geometry().height() == 1080 && scale > 1.5) {
 	        state = true;
 	    }
         }
-        if (state){
+        if (state) {
             QGSettings   *mGsettings;
             mGsettings = new QGSettings(MOUSE_SCHEMA);
             mGsettings->set(CURSOR_SIZE, 24);
@@ -122,11 +122,11 @@ void setXresources(int dpi)
                          .arg(mouse_settings->get(CURSOR_THEME).toString());
 
     dpy = XOpenDisplay(NULL);
-    XChangeProperty(dpy, RootWindow (dpy, 0), XA_RESOURCE_MANAGER, XA_STRING, 8,
+    XChangeProperty(dpy, RootWindow(dpy, 0), XA_RESOURCE_MANAGER, XA_STRING, 8,
                     PropModeReplace, (unsigned char *) str.toLatin1().data(), str.length());
 
     delete mouse_settings;
-    XCloseDisplay (dpy);
+    XCloseDisplay(dpy);
 }
 
 /* 判断文件是否存在 */
@@ -168,7 +168,7 @@ void Set4KScreenScale()
     /* 过滤单双屏下小分辨率大缩放值 */
     screenScaleJudgment(settings);
     double dpi = settings->get(SCALING_KEY).toDouble() * 96;
-    if (ScreenNum > 1){
+    if (ScreenNum > 1) {
         setXresources(dpi);
         delete settings;
         return;
@@ -176,12 +176,12 @@ void Set4KScreenScale()
     QScreen *screen = QApplication::screens().at(0);
     int height = screen->size().height();
     int width = screen->size().width();
-    if (height > 1500 && width > 2560){
+    if (height > 1500 && width > 2560) {
         bool res;
         QString homePath = getenv("HOME");
         QString XresourcesFile = homePath + "/.config/xresources";
         res = isFileExist(XresourcesFile);
-        if(!res){
+        if (!res) {
             WriteXresourcesFile(XresourcesFile, settings);
         }
     }

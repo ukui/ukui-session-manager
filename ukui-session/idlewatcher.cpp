@@ -27,10 +27,9 @@
 #include <QDebug>
 #include <QDBusReply>
 
-IdleWatcher::IdleWatcher(int idle, int power ,QObject *parent) :
-    QObject(parent),
-    mSecsidle(idle),
-    mSecspower(power)
+IdleWatcher::IdleWatcher(int idle, int power ,QObject *parent) : QObject(parent)
+                                                               , mSecsidle(idle)
+                                                               , mSecspower(power)
 {
     connect(KIdleTime::instance(), &KIdleTime::resumingFromIdle,
             this, &IdleWatcher::resumingFromIdle);
