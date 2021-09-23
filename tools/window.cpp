@@ -23,12 +23,13 @@ window::window()
     if (QGSettings::isSchemaInstalled(id)) {
         QGSettings *gset = new QGSettings(BACKGROUND_SETTINGS, "", this);
         fullstr          = gset->get("picture-filename").toString();
-    } else
+    } else {
         fullstr = "/usr/share/backgrounds/default.jpg";
+    }
     qDebug() << "picture file is " << fullstr;
     pix.load(fullstr);
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint
-                   | Qt::X11BypassWindowManagerHint);
+                                           | Qt::X11BypassWindowManagerHint);
     setFixedSize(QApplication::primaryScreen()->virtualSize());
 }
 

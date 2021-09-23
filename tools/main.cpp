@@ -365,13 +365,14 @@ int main(int argc, char *argv[])
     }
     if (parser.isSet(rebootOption)) {
         if (w->getLoginedUsers().count() > 1) {
-            if (messageboxCheck())
+            if (messageboxCheck()) {
                 flag = playShutdownMusic(powermanager, 5, cc, up_to_time, soundplayer);
-            else {
+            } else {
                 return 0;
             }
-        } else
+        } else {
             flag = playShutdownMusic(powermanager, 5, cc, up_to_time, soundplayer);
+        }
     }
     if (parser.isSet(shutdownOption)) {
         if (w->getLoginedUsers().count() > 1) {

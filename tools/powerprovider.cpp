@@ -279,15 +279,19 @@ bool SystemdProvider::canAction(UkuiPower::Action action) const
     case UkuiPower::PowerReboot:
         command = QLatin1String("CanReboot");
         break;
+
     case UkuiPower::PowerShutdown:
         command = QLatin1String("CanPowerOff");
         break;
+
     case UkuiPower::PowerSuspend:
         command = QLatin1String("CanSuspend");
         break;
+
     case UkuiPower::PowerHibernate:
         command = QLatin1String("CanHibernate");
         break;
+
     default:
         return false;
     }
@@ -305,8 +309,8 @@ bool SystemdProvider::doSwitchUser()
     bool            isinhibited = false;
     QDBusInterface *interface = new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
                                                    "org.gnome.SessionManager", QDBusConnection::sessionBus());
-    quint32          inhibit_switchuser = 2;
-    QDBusReply<bool> reply              = interface->call("IsInhibited", inhibit_switchuser);
+    quint32         inhibit_switchuser = 2;
+    QDBusReply<bool> reply = interface->call("IsInhibited", inhibit_switchuser);
     if (reply.isValid()) {
         // use the returned value
         qDebug() << "Is inhibit by someone: " << reply.value();

@@ -55,7 +55,7 @@ public:
 
     void doStart();
 
-    void dostartwm();
+    void doStartWM();
 
     void startupfinished(const QString& appName ,const QString& string);
 

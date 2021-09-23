@@ -48,10 +48,11 @@ private Q_SLOTS:
     void updateIdleDelay();
 
 private:
-    void InitialEnvironment();
+    void initialEnvironment();
     void playBootMusic();
 
 private:
+    int lastIdleTime;
     bool gsettings_usable;
     QGSettings * gs;
     ModuleManager* modman;

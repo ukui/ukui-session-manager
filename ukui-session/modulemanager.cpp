@@ -45,11 +45,12 @@
 #define SESSION_REQUIRED_COMPONENTS "org.ukui.session.required-components"
 #define SESSION_REQUIRED_COMPONENTS_PATH "/org/ukui/desktop/session/required-components/"
 
-void ModuleManager::playBootMusic(bool arg) {
+void ModuleManager::playBootMusic(bool arg)
+{
     //set default value of whether boot-music is opened
     bool play_music = true;
     if (QGSettings::isSchemaInstalled("org.ukui.session")) {
-        QGSettings *gset = new QGSettings("org.ukui.session", "/org/ukui/desktop/session/", this);
+        QGSettings *gset = new QGSettings("org.ukui.session","/org/ukui/desktop/session/", this);
         if (gset == NULL) {
             qDebug() << "QGSettings init error";
             free(gset);
@@ -58,28 +59,23 @@ void ModuleManager::playBootMusic(bool arg) {
 
         play_music = gset->get("startup-music").toBool();
         if (play_music) {
+            musicplayer *player = new musicplayer;
+            connect(player, &musicplayer::playFinished, player, &QObject::deleteLater);
+            player->setVolumn(40);
             if (arg) {
-                musicplayer *player = new musicplayer;
-                player->setVolumn(40);
                 player->setSource(QLatin1String("/usr/share/ukui/ukui-session-manager/startup.wav"));
-                connect(player, &musicplayer::playFinished, player, &QObject::deleteLater);
-                player->start();
             } else {
-                musicplayer *player = new musicplayer;
-                player->setVolumn(40);
                 player->setSource(QLatin1String("/usr/share/ukui/ukui-session-manager/weakup.wav"));
-                connect(player, &musicplayer::playFinished, player, &QObject::deleteLater);
-                player->start();
             }
-
+            player->start();
         }
-
     }
 }
 
-void ModuleManager::stateChanged(QMediaPlayer::State state){
+void ModuleManager::stateChanged(QMediaPlayer::State state)
+{
     qDebug() << "Player state: " << state;
-    if(state == QMediaPlayer::StoppedState){
+    if (state == QMediaPlayer::StoppedState) {
         player->deleteLater();
         qDebug() << "delete player";
     }
@@ -105,7 +101,8 @@ ModuleManager::ModuleManager( QObject* parent) : QObject(parent)
     constructStartupList();
 }
 
-void ModuleManager::weakup(bool arg){
+void ModuleManager::weakup(bool arg)
+{
     if (arg) {
         qDebug() << "准备执行睡眠休眠";
     } else {
@@ -255,7 +252,7 @@ void ModuleManager::constructStartupList()
  *
  */
 
-bool ModuleManager::startModuleTimer(QTimer *timer,int i)
+bool ModuleManager::startModuleTimer(QTimer *timer, int i)
 {
     timer->setSingleShot(true);
     connect(timer, SIGNAL(timeout()), this, SLOT(timeup()));
@@ -263,7 +260,8 @@ bool ModuleManager::startModuleTimer(QTimer *timer,int i)
     return true;
 }
 
-void ModuleManager::startupfinished(const QString& appName , const QString& string ){
+void ModuleManager::startupfinished(const QString &appName, const QString &string)
+{
     qDebug() << "moudle :" + appName + " startup finished, and it want to say " + string;
     if (appName == "ukui-settings-daemon") {
         if (runUsd == false)
@@ -291,7 +289,8 @@ void ModuleManager::startupfinished(const QString& appName , const QString& stri
     }
 }
 
-void ModuleManager::timeup(){
+void ModuleManager::timeup()
+{
     QTimer *time_out = qobject_cast<QTimer*>(sender());
     if (time_out == tusd) {
         qDebug() << "usd超时";
@@ -333,7 +332,6 @@ void ModuleManager::startCompsite()
     qDebug() << "Start composite";
     dbus.call("resume");
 
-    qDebug() << "call timerUpdate";
     timerUpdate();
 }
 
@@ -343,14 +341,14 @@ void ModuleManager::doStart()
     qDebug() << "Start panel: " << mPanel.name();
     connect(this, &ModuleManager::panelfinished, [&](){
         tpanel->stop();
-        if(runPanel == false)
+        if (runPanel == false)
             return;
         runPanel = false;
 
         qDebug() << "Start file manager: " << mFileManager.name();
         connect(this, &ModuleManager::desktopfinished, [&](){
             tdesktop->stop();
-            if(runDesktop == false)
+            if (runDesktop == false)
                 return;
             runDesktop = false;
             timerUpdate();
@@ -401,24 +399,24 @@ void ModuleManager::startup()
     }
 }
 
-void ModuleManager::dostartwm(){
+void ModuleManager::doStartWM(){
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
-    if (xdg_session_type != "wayland"){
+    if (xdg_session_type != "wayland") {
         QTimer::singleShot(0, this, [&]()
         {
             qDebug() << "Start window manager: " << mWindowManager.name();
-            if(mWindowManager.name() == "UKUI-KWin"){
+            if (mWindowManager.name() == "UKUI-KWin") {
                 connect(this, &ModuleManager::wmfinished, [&]()
                 {
                     twm->stop();
-                    if(runWm == false)
+                    if (runWm == false)
                         return;
                     runWm = false;
                     doStart();
                 });
                 startProcess(mWindowManager, true);
-                startModuleTimer(twm, 18);
-            }else{
+                startModuleTimer(twm,18);
+            } else {
                 startProcess(mWindowManager, true);
                 QTimer::singleShot(1000, this, [&]()
                 {
@@ -426,7 +424,7 @@ void ModuleManager::dostartwm(){
                 });
             }
         });
-    }else{
+    } else {
         doStart();
     }
 }
@@ -459,9 +457,9 @@ void ModuleManager::timerUpdate(){
 
     qDebug() << "Start force application: ";
     const QString ws = "ukui-window-switch";
-    XdgDesktopFile ukui_ws= XdgDesktopFile(XdgDesktopFile::ApplicationType, "ukui-window-switch", ws);
+    XdgDesktopFile ukui_ws = XdgDesktopFile(XdgDesktopFile::ApplicationType, "ukui-window-switch", ws);
     startProcess(ukui_ws, true);
-    for (XdgDesktopFileList::const_iterator i = mForceApplication.constBegin(); i != mForceApplication.constEnd(); ++i){
+    for (XdgDesktopFileList::const_iterator i = mForceApplication.constBegin(); i != mForceApplication.constEnd(); ++i) {
         startProcess(*i, true);
     }
 }

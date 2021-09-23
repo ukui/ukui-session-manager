@@ -104,7 +104,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
 {
     const QByteArray bid(BACKGROUND_SETTINGS);
     if (QGSettings::isSchemaInstalled(bid)) {
-        QGSettings *gset    = new QGSettings(BACKGROUND_SETTINGS, "", this);
+        QGSettings    *gset = new QGSettings(BACKGROUND_SETTINGS, "", this);
         QString     fullstr = gset->get("picture-filename").toString();
         qDebug() << "picture path = " << fullstr;
         QFileInfo fileInfo(fullstr);
@@ -258,7 +258,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
     setFixedSize(QApplication::primaryScreen()->virtualSize());
     move(0, 0);   //设置初始位置的值
-    ResizeEvent();
+    moveWidget();
 
     //设置窗体无边框，不可拖动拖拽拉伸;为顶层窗口，无法被切屏;不使用窗口管理器
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
@@ -290,8 +290,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
 
     //设置字体跟随主题
     const QByteArray id("org.ukui.style");
-    QFont            font = QFont("Noto Sans CJK SC");
-
+    QFont font = QFont("Noto Sans CJK SC");
     if (QGSettings::isSchemaInstalled(id)) {
         QGSettings *fontSetting = new QGSettings(id, QByteArray(), this);
         font                    = QFont(fontSetting->get("systemFont").toString());
@@ -395,7 +394,7 @@ QStringList MainWindow::getLoginedUsers()
     return m_loginedUser;
 }
 
-void MainWindow::ResizeEvent()
+void MainWindow::moveWidget()
 {
     int xx = m_screen.x();
     int yy = m_screen.y();   //取得当前鼠标所在屏幕的最左，上坐标

@@ -48,20 +48,21 @@ QByteArray typeConver(int i)
     return byte;
 }
 
-void SessionApplication::InitialEnvironment()
+void SessionApplication::initialEnvironment()
 {
     UkuiPower *upower = new UkuiPower();
     if (gsettings_usable) {
         if (upower->canAction(UkuiPower::PowerHibernate))
-            gs->set("canhibernate",true);
+            gs->set("canhibernate", true);
         else
-            gs->set("canhibernate",false);
+            gs->set("canhibernate", false);
 
         //在打开关机管理界面后通过物理按键的方式关机/重启
         //将导致win-key-release键值为true
         //造成大部分热键和组合键失效
         //所以在登录进来时恢复默认值
         gs->reset("win-key-release");
+        gs->reset("idle-delay");
     }
 
     //检查qt主题是否安装
@@ -73,8 +74,8 @@ void SessionApplication::InitialEnvironment()
         QT_QPA_PLATFORMTHEME = "gtk2";
     }
 
-    qputenv("XDG_CURRENT_DESKTOP","UKUI");
-    qputenv("QT_QPA_PLATFORMTHEME",QT_QPA_PLATFORMTHEME);
+    qputenv("XDG_CURRENT_DESKTOP", "UKUI");
+    qputenv("QT_QPA_PLATFORMTHEME", QT_QPA_PLATFORMTHEME);
     qputenv("QT_QPA_PLATFORM", "xcb");
 
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
@@ -85,11 +86,14 @@ void SessionApplication::InitialEnvironment()
     //QProcess::startDetached("systemctl", QStringList() << "--user" << "restart" << "gvfs-daemon.service");
 }
 
-void SessionApplication::updateIdleDelay(){
+void SessionApplication::updateIdleDelay()
+{
     if (gsettings_usable) {
         const int idle = gs->get("idle-delay").toInt() * 60;
-        const int power = gs->get("power-delay").toInt() * 60;
-        mIdleWatcher->reset(idle,power);
+        if (lastIdleTime == idle ){
+            return;
+        }
+        mIdleWatcher->reset(idle);
     }
 }
 
@@ -115,16 +119,14 @@ void SessionApplication::registerDBus()
                     << "/org/gnome/SessionManager";
     }
 
-    int idle = 5 * 60;
-    int power = 5 * 60;
+    lastIdleTime = 1 * 60;
 
     if (gsettings_usable) {
-        idle = gs->get("idle-delay").toInt() * 60;
-        power = gs->get("power-delay").toInt() * 60;
+        lastIdleTime = gs->get("idle-delay").toInt() * 60;
         connect(gs, &QGSettings::changed, this, &SessionApplication::updateIdleDelay);
     }
 
-    mIdleWatcher = new IdleWatcher(idle,power);
+    mIdleWatcher = new IdleWatcher(lastIdleTime);
     new IdleDBusAdaptor(mIdleWatcher);
     if (!dbus.registerObject("/org/gnome/SessionManager/Presence", mIdleWatcher)) {
         qCritical() << "Cant' register object, there is already an object registered at "
@@ -147,7 +149,7 @@ SessionApplication::SessionApplication(int& argc, char** argv) :
         gsettings_usable = false;
     }
 
-    InitialEnvironment();
+    initialEnvironment();
 
     modman = new ModuleManager();
 
