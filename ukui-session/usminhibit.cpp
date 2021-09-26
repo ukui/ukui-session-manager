@@ -50,7 +50,8 @@ usminhibit::usminhibit()
     inhibit_idle_num = 0;
 }
 
-bool usminhibit::isInhibited(quint32 flags){
+bool usminhibit::isInhibited(quint32 flags)
+{
     bool isinhib = false;
     if ((flags & GSM_INHIBITOR_FLAG_LOGOUT) == GSM_INHIBITOR_FLAG_LOGOUT) {
         if (inhibit_logout_num > 0) {
@@ -75,7 +76,8 @@ bool usminhibit::isInhibited(quint32 flags){
     return isinhib;
 }
 
-quint32 usminhibit::addInhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags){
+quint32 usminhibit::addInhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
+{
     if (app_id.isEmpty()) {
         return -1;
     }
@@ -112,18 +114,21 @@ quint32 usminhibit::addInhibit(QString app_id, quint32 toplevel_xid, QString rea
     inhibit a(app_id, toplevel_xid, reason, flags, cookie, inhibitorName);
     hash.insert(cookie, a);
     qDebug() << "app_id=" << app_id << "; toplevel_xid=" << QString::number(toplevel_xid) << "; reason=" << reason << "; flag=" << QString::number(flags);
+    qDebug() << "cookie is" << cookie;
     return cookie;
 }
 
-uint usminhibit::generateCookie(){
+uint usminhibit::generateCookie()
+{
     quint32 cookie;
     do {
-        cookie = QRandomGenerator::global()->bounded(1, 4294967295);//std::numeric_limits<quint32>::max()
+        cookie = QRandomGenerator::global()->bounded(INT_MAX);//std::numeric_limits<quint32>::max()
     } while (hash.contains(cookie)) ;
     return cookie;
 }
 
-uint usminhibit::unInhibit(quint32 cookie){
+uint usminhibit::unInhibit(quint32 cookie)
+{
     uint flags = 0;
     QHash<quint32, inhibit>::iterator i = hash.find(cookie);
     while (i != hash.end() && i.key() == cookie) {
@@ -148,7 +153,8 @@ uint usminhibit::unInhibit(quint32 cookie){
     return flags;
 }
 
-QStringList usminhibit::getInhibitor(){
+QStringList usminhibit::getInhibitor()
+{
     //do not show inhibitorName to user
     //in case we dont know who is inhibiting
     QHashIterator<quint32, inhibit> i(hash);

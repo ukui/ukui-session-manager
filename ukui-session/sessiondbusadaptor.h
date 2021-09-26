@@ -137,61 +137,69 @@ public slots:
 
     uint Inhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
     {
-        uint result = minhibit->addInhibit(app_id,toplevel_xid,reason,flags);
-        if(result < 0){
+        uint result = minhibit->addInhibit(app_id, toplevel_xid, reason, flags);
+        if (result < 0) {
             return 0;
         }
         emit inhibitadded(flags);
         return result;
     }
 
-    Q_NOREPLY void Uninhibit(uint cookie){
+    Q_NOREPLY void Uninhibit(uint cookie)
+    {
         uint result = minhibit->unInhibit(cookie);
-        if(result > 0){
+        if (result > 0) {
             emit inhibitremove(result);
         }
     }
 
-    QStringList GetInhibitors(){
+    QStringList GetInhibitors()
+    {
         return minhibit->getInhibitor();
     }
 
     bool IsSessionRunning(){
         QString xdg_session_desktop = qgetenv("XDG_SESSION_DESKTOP").toLower();
-        if(xdg_session_desktop == "ukui")
+        if (xdg_session_desktop == "ukui") {
             return true;
+        }
         return false;
     }
 
-    QString GetSessionName(){
+    QString GetSessionName()
+    {
         QString xdg_session_desktop = qgetenv("XDG_SESSION_DESKTOP").toLower();
-        if(xdg_session_desktop == "ukui")
+        if (xdg_session_desktop == "ukui") {
             return "ukui-session";
+        }
         return "error";
     }
 
-    bool IsInhibited(quint32 flags){
+    bool IsInhibited(quint32 flags)
+    {
         return minhibit->isInhibited(flags);
     }
 
-    Q_NOREPLY void emitStartLogout(){
+    Q_NOREPLY void emitStartLogout()
+    {
         qDebug() << "emit  StartLogout";
         emit StartLogout();
     }
 
-    Q_NOREPLY void emitPrepareForSwitchuser(){
+    Q_NOREPLY void emitPrepareForSwitchuser()
+    {
         qDebug() << "emit  PrepareForSwitchuser";
         emit PrepareForSwitchuser();
     }
 
-    Q_NOREPLY void emitPrepareForPhase2(){
+    Q_NOREPLY void emitPrepareForPhase2()
+    {
         qDebug() << "emit  PrepareForPhase2";
         emit PrepareForPhase2();
     }
 
 private:
     ModuleManager *mManager;
-//    UkuiPower *mPower;
     usminhibit *minhibit;
     PowerProvider *m_systemdProvider;
     PowerProvider *m_ukuiProvider;

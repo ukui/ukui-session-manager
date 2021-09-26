@@ -215,13 +215,8 @@ int main(int argc, char **argv)
     app.setQuitOnLastWindowClosed(false);
     UKUISMServer *server = new UKUISMServer;
     IceSetIOErrorHandler(IoErrorHandler);
-
     server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
 //    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
-
-//    QTimer::singleShot(20000, [theServer](){
-//        theServer->justStoreSession();
-//    });
     
     return app.exec();
 }

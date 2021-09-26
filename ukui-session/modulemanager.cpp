@@ -62,6 +62,7 @@ void ModuleManager::playBootMusic(bool arg)
             musicplayer *player = new musicplayer;
             connect(player, &musicplayer::playFinished, player, &QObject::deleteLater);
             player->setVolumn(40);
+            //多个线程访问同一个资源会不会出现race condition
             if (arg) {
                 player->setSource(QLatin1String("/usr/share/ukui/ukui-session-manager/startup.wav"));
             } else {
