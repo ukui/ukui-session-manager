@@ -15,5 +15,5 @@ endif
 
 override_dh_auto_configure:
 	dh_auto_configure -- \
-		-DCMAKE_BUILD_TYPE=Debug \
+		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		$(CMAKE_ARGS)

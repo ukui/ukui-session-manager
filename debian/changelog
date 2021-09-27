@@ -1,8 +1,20 @@
-ukui-session-manager (2.0.9-5) v101; urgency=medium
+ukui-session-manager (2.0.9-7) v101; urgency=medium
 
-  * XSMP版本
+  * Session Manager添加XSMP协议支持
 
- -- zxf <zxf@zxf-ThinkPad-T14-Gen-1>  Thu, 16 Sep 2021 08:56:58 +0800
+ -- zxf <zhouxiaofeng@kylinos.cn>  Mon, 27 Sep 2021 08:56:59 +0800
+
+ukui-session-manager (2.0.9-6) v101; urgency=medium
+
+  * BUG FIX: #77756 #77011 
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 02 Sep 2021 16:35:35 +0800
+
+ukui-session-manager (2.0.9-3) v101; urgency=medium
+
+  * BUG FIX: #75676 #73738
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 24 Aug 2021 17:09:01 +0800
 
 ukui-session-manager (2.0.9-1) v101; urgency=medium
 
