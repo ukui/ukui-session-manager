@@ -121,7 +121,7 @@ void messagecheck()
     msgBox.exec();
 }
 
-int check_lock()
+int checkLock()
 {
     bool lockfile = false;
     bool lockuser = false;
@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
 
-    int cc = check_lock();
+    int cc = checkLock();
     qDebug() << cc << "   cc";
 
     // Load ts files
@@ -361,23 +361,25 @@ int main(int argc, char *argv[])
     }
     if (parser.isSet(rebootOption)) {
         if (w->getLoginedUsers().count() > 1) {
-            if (messageboxCheck())
+            if (messageboxCheck()) {
                 flag = playShutdownMusic(powermanager, 5, cc, up_to_time, soundplayer);
-            else {
+            } else {
                 return 0;
             }
-        } else
+        } else {
             flag = playShutdownMusic(powermanager, 5, cc, up_to_time, soundplayer);
+        }
     }
     if (parser.isSet(shutdownOption)) {
         if (w->getLoginedUsers().count() > 1) {
-            if (messageboxCheck())
+            if (messageboxCheck()) {
                 flag = playShutdownMusic(powermanager, 6, cc, up_to_time, soundplayer);
-            else {
+            } else {
                 return 0;
             }
-        } else
+        } else {
             flag = playShutdownMusic(powermanager, 6, cc, up_to_time, soundplayer);
+        }
     }
     if (parser.isSet(windowOption)) {
         flag        = false;
@@ -392,7 +394,6 @@ int main(int argc, char *argv[])
         qss.close();
 
         w->showFullScreen();
-        w->repaint();
         QObject::connect(w, &MainWindow::signalTostart, [&]() {
             playShutdownMusic(powermanager, w->defaultnum, cc, up_to_time, soundplayer);
         });
