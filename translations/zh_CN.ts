@@ -161,7 +161,7 @@
     </message>
     <message>
         <location filename="../tools/powerprovider.cpp" line="107"/>
-        <source>some applications are running and they dont want you to do this.</source>
+        <source>some applications are running and they don't want you to do this.</source>
         <translation>一些程序正在运行，而且它不希望你继续该操作。</translation>
     </message>
     <message>

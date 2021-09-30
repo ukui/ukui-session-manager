@@ -105,7 +105,7 @@ bool messageboxcheck()
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
     //    msgBox.setModal(false);
-    msgBox.setText(QObject::tr("some applications are running and they dont want you to do this."));
+    msgBox.setText(QObject::tr("some applications are running and they don't want you to do this."));
     QPushButton *stillButton =
         msgBox.addButton(QObject::tr("Still to do!"), QMessageBox::ActionRole);
     QPushButton *giveupButton = msgBox.addButton(QObject::tr("give up"), QMessageBox::RejectRole);
