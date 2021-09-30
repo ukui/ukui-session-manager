@@ -86,7 +86,8 @@ ModuleManager::ModuleManager( QObject* parent)
       isPanelStarted(false),
       isDesktopStarted(false),
       isWMStarted(false),
-      isCompsiteStarted(false)
+      isCompsiteStarted(false),
+      m_ukuiKwinExisted(false)
 {
     /*const QFile file_installer("/etc/xdg/autostart/kylin-os-installer.desktop");
     if(file_installer.exists()){
@@ -135,16 +136,17 @@ void ModuleManager::constructStartupList()
     QString file_manager;
     QString wm_notfound;
     if (QGSettings::isSchemaInstalled(id)) {
-        const QGSettings* gs = new QGSettings(SESSION_REQUIRED_COMPONENTS,SESSION_REQUIRED_COMPONENTS_PATH,this);
+        const QGSettings *gs = new QGSettings(SESSION_REQUIRED_COMPONENTS,SESSION_REQUIRED_COMPONENTS_PATH,this);
         if(gs == NULL){
             qDebug()<<"QGSettings init error";
-            free(&gs);
             return;
         }
         window_manager = gs->get("windowmanager").toString() + ".desktop";
         panel = gs->get("panel").toString() + ".desktop";
         file_manager = gs->get("filemanager").toString() + ".desktop";
         wm_notfound = gs->get("windowmanager").toString();
+
+        delete gs;
     } else {
         //gsetting安装失败，或无法获取，设置默认值
         qDebug() << "从gsettings 中或取值失败，设置默认值";
@@ -193,14 +195,33 @@ void ModuleManager::constructStartupList()
     if (wm_found == false) {
         QFileInfo check_ukwm("/usr/share/applications/ukwm.desktop");
         QFileInfo check_ukuikwin("/usr/share/applications/ukui-kwin.desktop");
-        if(check_ukwm.exists()) {
-            window_manager = "ukwm.desktop";
-            mWindowManager.load("/usr/share/applications/ukwm.desktop");
-        }else if(check_ukuikwin.exists()) {
+        if (check_ukuikwin.exists()) {
             window_manager = "ukui-kwin.desktop";
             mWindowManager.load("/usr/share/applications/ukui-kwin.desktop");
+        } else if (check_ukwm.exists()) {
+            window_manager = "ukwm.desktop";
+            mWindowManager.load("/usr/share/applications/ukwm.desktop");
+        } else {
+            qDebug() << "No WindowManager founded.";
+            return;
         }
         wm_found = true;
+    }
+
+    QString wmFilePath = mWindowManager.fileName();
+    if (!wmFilePath.isEmpty()) {
+        int pos = wmFilePath.lastIndexOf ("/");
+        QString fileName = wmFilePath.right(wmFilePath.length() - pos - 1);
+        if (fileName == "ukui-kwin.desktop") {
+            qDebug() << "ukuikwin exist on this machine";
+            m_ukuiKwinExisted = true;
+        } else {
+            qDebug() << "ukwm exist on this machine";
+            m_ukuiKwinExisted = false;
+        }
+    } else if (wmFilePath.isEmpty()) {
+        qDebug() << "No WindowManager loaded.";
+        return;
     }
 
     //配置文件所给的窗口管理器找不到.desktop文件时，将所给QString设为可执行命令，创建一个desktop文件赋给mWindowManager
@@ -318,20 +339,23 @@ void ModuleManager::timeup(){
 
 void ModuleManager::startCompsite(){
     qDebug() << "Enter:: startCompsite";
-    if(!isPanelStarted || !isDesktopStarted || !isWMStarted) return;
 
-    if(isCompsiteStarted) return;
-    isCompsiteStarted = true;
+    if (m_ukuiKwinExisted) {
+        if (!isPanelStarted || !isDesktopStarted || !isWMStarted) return;
 
-    // start composite
-    QDBusInterface dbus("org.ukui.KWin", "/Compositor", "org.ukui.kwin.Compositing", QDBusConnection::sessionBus());
+        if (isCompsiteStarted) return;
+        isCompsiteStarted = true;
 
-    if (!dbus.isValid()) {
-        qWarning() << "dbusCall: QDBusInterface is invalid";
-        return;
+        // start composite
+        QDBusInterface dbus("org.ukui.KWin", "/Compositor", "org.ukui.kwin.Compositing", QDBusConnection::sessionBus());
+
+        if (!dbus.isValid()) {
+            qWarning() << "dbusCall: QDBusInterface is invalid";
+            return;
+        }
+        qDebug() << "Start composite";
+        dbus.call("resume");
     }
-    qDebug() << "Start composite";
-    dbus.call("resume");
 
     timerUpdate();
 }
