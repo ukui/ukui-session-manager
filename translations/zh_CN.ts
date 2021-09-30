@@ -160,9 +160,9 @@
         <translation>正在进行系统备份或还原，这个功能暂时不可用</translation>
     </message>
     <message>
-        <location filename="../tools/powerprovider.cpp" line="108"/>
-        <source>some applications are running and they dont want you to do this.</source>
-        <translation>一些程序正在进行并且他们不希望你继续执行该操作</translation>
+        <location filename="../tools/powerprovider.cpp" line="107"/>
+        <source>some applications are running and they don't want you to do this.</source>
+        <translation>一些程序正在运行，而且它不希望你继续该操作。</translation>
     </message>
     <message>
         <location filename="../tools/powerprovider.cpp" line="110"/>

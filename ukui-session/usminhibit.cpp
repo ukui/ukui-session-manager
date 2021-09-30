@@ -146,7 +146,7 @@ uint usminhibit::uninhibit(quint32 cookie)
 QStringList usminhibit::getinhibitor()
 {
     //do not show inhibitorName to user
-    //in case we dont know who is inhibiting
+    //in case we don't know who is inhibiting
     QHashIterator<quint32, inhibit> i(hash);
     QStringList inhibitors;
     while (i.hasNext()) {

@@ -141,7 +141,7 @@ int checkLock()
         }
         file_backup.close();
         if (flock(fd_backup, LOCK_UN) == 0) {
-            qDebug() << "unlock sucess.";
+            qDebug() << "unlock success.";
         } else {
             qDebug() << "unlock fail.";
         }
@@ -159,7 +159,7 @@ int checkLock()
         }
         file_backup.close();
         if (flock(fd_update, LOCK_UN) == 0) {
-            qDebug() << "unlock sucess.";
+            qDebug() << "unlock success.";
         } else {
             qDebug() << "unlock fail.";
         }
