@@ -1,3 +1,9 @@
+ukui-session-manager (3.0.5-1) unstable; urgency=medium
+
+  * New upstream bugfix release. (LP: #1945570)
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Thu, 30 Sep 2021 15:16:58 +0800
+
 ukui-session-manager (3.0.4-1) unstable; urgency=medium
 
   * New upstream release.
