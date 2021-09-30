@@ -105,6 +105,7 @@ private:
 
     bool mWmStarted;
     bool mTrayStarted;
+    bool m_ukuiKwinExisted;
     QEventLoop* mWaitLoop;
 
     XdgDesktopFileList mInitialization;

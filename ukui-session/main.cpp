@@ -185,7 +185,7 @@ int main(int argc, char **argv)
 {
     qInstallMessageHandler(myMessageOutput);
     //initUkuiLog4qt("ukui-session");
-    qDebug() << "UKUI session manager start.";
+    qDebug() << "---------------------------------------------------------UKUI session manager start.---------------------------------------------------------";
     SessionApplication app(argc, argv);
 
     Set4KScreenScale();
