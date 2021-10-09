@@ -1,4 +1,16 @@
-ukui-session-manager (2.0.9-6) v101; urgency=medium
+ukui-session-manager (2.0.10-2) v101; urgency=medium
+
+  * Bug Fix: #83029
+
+ -- liuliang <liuliang@kylinos.cn>  Sat, 09 Oct 2021 17:41:49 +0800
+
+ukui-session-manager (2.0.10-1) v101; urgency=medium
+
+  * Bug Fix: #78831
+
+ -- liuliang <liuliang@kylinos.cn>  Wed, 29 Sep 2021 15:48:30 +0800
+
+ukui-session-manager (2.0.9-7) v101; urgency=medium
 
   * BUG FIX: #77756 #77011 
 

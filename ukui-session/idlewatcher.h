@@ -26,7 +26,7 @@
 
 #include <QObject>
 #include <QDBusInterface>
-
+#include <QList>
 
 //class ScreenSaver;
 
@@ -50,6 +50,7 @@ Q_SIGNALS:
 
 private:
     int mSecsidle;
+    QList<QVariant> args;
 };
 
 #endif // IDLEWATCHER_H

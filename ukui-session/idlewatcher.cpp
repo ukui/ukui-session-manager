@@ -27,6 +27,11 @@
 #include <QDebug>
 #include <QDBusReply>
 
+#define SYSTEMD_SERVICE   "org.freedesktop.login1"
+#define SYSTEMD_PATH      "/org/freedesktop/login1/session/auto"
+#define SYSTEMD_INTERFACE "org.freedesktop.login1.Session"
+#define PROPERTY          "Active"
+
 IdleWatcher::IdleWatcher(int idle, QObject *parent) : QObject(parent)
                                                     , mSecsidle(idle)
 {
@@ -48,6 +53,9 @@ IdleWatcher::IdleWatcher(int idle, QObject *parent) : QObject(parent)
                 "/org/gnome/SessionManager",
                 "org.gnome.SessionManager",
                 QDBusConnection::sessionBus());
+
+    args.append(QVariant(SYSTEMD_INTERFACE));
+    args.append(QVariant(PROPERTY));
 }
 
 IdleWatcher::~IdleWatcher()
@@ -78,6 +86,17 @@ void IdleWatcher::timeoutReached(int identifier , int timeout)
         return;
     }
     if (isinhibited == false) {
+        //Inactive user do not send StatusChanged signal.
+        QDBusMessage mesg = QDBusMessage::createMethodCall(SYSTEMD_SERVICE,SYSTEMD_PATH,"org.freedesktop.DBus.Properties","Get");
+        mesg.setArguments(args);
+        QDBusMessage ret = QDBusConnection::systemBus().call(mesg);
+        if (ret.type() == QDBusMessage::ErrorMessage) {
+            qDebug() << "Error getting property value.";
+            return;
+        }
+        bool value = ret.arguments()[0].value<QDBusVariant>().variant().value<bool>();
+        if (!value) return;
+
         KIdleTime::instance()->catchNextResumeEvent();
         if (timeout == 1000 * mSecsidle) {
             qDebug() << "idle Timeout Reached, emit StatusChanged 3 signal!";
