@@ -24,6 +24,7 @@
 
 #include <QStandardPaths>
 #include <QFile>
+#include <QDir>
 #include <QTextStream>
 #include <QDateTime>
 #include <QDebug>
@@ -55,10 +56,13 @@ void IoErrorHandler(IceConn iceConn)
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    QString logPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session-xsmp.log";
-    if (!QFile::exists(logPath)) {
+    QDir dir;
+    QString logFilePath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session";
+    //先创建目录
+    if (!dir.mkpath(logFilePath)) {
         return;
     }
+
     QByteArray localMsg = msg.toLocal8Bit();
     QDateTime dateTime = QDateTime::currentDateTime();
     QByteArray time = QString("[%1] ").arg(dateTime.toString("MM-dd hh:mm:ss.zzz")).toLocal8Bit();
@@ -81,7 +85,17 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         break;
     }
 
-    QFile logFile(logPath);
+    //clear file content when it is too large
+    logFilePath = logFilePath + "/ukui-session-xsmp.log";
+    QFile file(logFilePath);
+    qint64 fileSize = file.size();
+    if (fileSize >= 1024 * 1024 * 10) {
+        file.open(QFile::WriteOnly | QFile::Truncate);
+        file.flush();
+        file.close();
+    }
+
+    QFile logFile(logFilePath);
     logFile.open(QIODevice::WriteOnly | QIODevice::Append);
     QTextStream ts(&logFile);
     ts << logMsg << endl;
