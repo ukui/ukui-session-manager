@@ -432,6 +432,7 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
 
     connect(qApp, &QApplication::aboutToQuit, this, &UKUISMServer::cleanUp);
     connect(&m_restoreTimer, &QTimer::timeout, this, &UKUISMServer::tryRestoreNext);
+    connect(&m_protectionTimer, &QTimer::timeout, this, &UKUISMServer::protectionTimeout);
 
     qCDebug(UKUI_SESSION) << "finish construct ukuismserver";
 }
@@ -560,6 +561,7 @@ void UKUISMServer::saveYourselfDone(UKUISMClient *client, bool success)
         client->m_saveYourselfDone = true;
         completeShutdownOrCheckpoint();
     }
+    startProtection();
 }
 
 void UKUISMServer::clientSetProgram(UKUISMClient *client)
@@ -653,13 +655,14 @@ void UKUISMServer::performLogout()
     }
 
     //将桌面背景设置为黑色,似乎无效
-    QPalette palette;
-    palette.setColor(QApplication::desktop()->backgroundRole(), Qt::black);
-    QApplication::setPalette(palette);
+//    QPalette palette;
+//    palette.setColor(QApplication::desktop()->backgroundRole(), Qt::black);
+//    QApplication::setPalette(palette);
 
     m_wmPhase1WaitingCount = 0;
     m_saveType = SmSaveBoth;
 
+    startProtection();
     foreach (UKUISMClient *c, m_clients) {
         c->resetState();
         if(isWM(c)) {
@@ -786,6 +789,26 @@ void UKUISMServer::wmProcessChange()
         launchWM(QList<QStringList>() << m_wmCommands);
         return;
     }
+}
+
+void UKUISMServer::protectionTimeout()
+{
+    qCDebug(UKUI_SESSION) << "enter protectionTimeout";
+    if ((m_state != Shutdown) || m_clientInteracting) {//如果状态不是三者中的任何一个，或者clientInteracing有值，则条件成立
+        qCDebug(UKUI_SESSION) << "state is " << m_state << "clientInteracting is " << m_clientInteracting << "protectionTimeout returned";
+        //如果是有一个客户端正在interact,而这里已经超时了，则会直接return，之后过了15秒没有其他动作，然后processData被调用，杀死其他等待的客户端，可能15秒就会自动断开连接？
+        //KDE关机界面上的30秒计时是指，如果30秒后用户不点击界面上的任何按钮，则会自动开始一个完整的注销流程。
+        return;
+    }
+
+    foreach (UKUISMClient *c, m_clients) {
+        if (!c->m_saveYourselfDone && !c->m_waitForPhase2) {//非窗管这类客户端且没有完成保存自身
+            qCDebug(UKUI_SESSION) << "protectionTimeout: client " << c->program() << "(" << c->clientId() << ")";
+            c->m_saveYourselfDone = true;
+        }
+    }
+    completeShutdownOrCheckpoint();
+    startProtection();
 }
 
 void UKUISMServer::timeoutQuit()
@@ -1078,9 +1101,24 @@ void UKUISMServer::handlePendingInteractions()
     }
     //向m_clientInteracting授予交互权限
     if (m_clientInteracting) {
+        endProtection();
         qCDebug(UKUI_SESSION) << "sending interact to " << m_clientInteracting->clientId();
         SmsInteract(m_clientInteracting->connection());
+    } else {
+        startProtection();
     }
+}
+
+void UKUISMServer::startProtection()
+{
+    m_protectionTimer.setSingleShot(true);
+    m_protectionTimer.start(15000);
+    qCDebug(UKUI_SESSION) << "start protectionTimer";
+}
+
+void UKUISMServer::endProtection()
+{
+    m_protectionTimer.stop();
 }
 
 void UKUISMServer::launchWM(const QList<QStringList> &wmStartCommands)

@@ -50,10 +50,12 @@ Q_SIGNALS:
 public Q_SLOTS:
     void cleanUp();//smserver析构前的清理工作
 
+
 private Q_SLOTS:
     void newConnection(int socket);
     void processData(int socket);
     void wmProcessChange();
+    void protectionTimeout();
     void timeoutQuit();
     void timeoutWMQuit();
 
@@ -70,6 +72,9 @@ private:
     KProcess* startApplication(const QStringList &command, bool wm = false);
     void executeCommand(const QStringList& command);
     void handlePendingInteractions();
+
+    void startProtection();
+    void endProtection();
 
     void launchWM(const QList<QStringList> &wmStartCommands);
 
@@ -103,6 +108,7 @@ private:
     QList<UKUISMClient*> m_clients;
     QStringList m_wmCommands;
     QTimer m_restoreTimer;
+    QTimer m_protectionTimer;
     QString m_wm;
     QString m_lastIdRestore;
     QString m_sessionGroup;
