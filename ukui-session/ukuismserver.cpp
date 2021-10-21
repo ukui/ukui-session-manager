@@ -842,6 +842,14 @@ void UKUISMServer::completeShutdownOrCheckpoint()
         if (m_state == WaitingForKNotify) {
             qCDebug(UKUI_SESSION) << "begin killint client";
             startKilling();
+            //调用systemd的接口直接注销
+//            QDBusInterface face("org.freedesktop.login1",\
+//                                "/org/freedesktop/login1/session/self",\
+//                                "org.freedesktop.login1.Session",\
+//                                QDBusConnection::systemBus());
+
+//            face.call("Terminate");
+//            exit(0);
         }
     }
 }
@@ -1155,18 +1163,21 @@ bool UKUISMServer::isWM(const QString &program) const
 void UKUISMServer::changeClientOrder()
 {
     //这只是一个暂时解决的方法，应该由desktop和panel做出修改，在收到服务器的退出信号后才退出进程
+    //经过测试，即使将桌面和任务栏放到最后杀死，任然会出现桌面和任务栏先消失，应用还在的情况，要防止这种情况
+    //要么在storeSession后直接调用systemd的注销接口，要么让桌面和任务栏按照xsmp规范修改。
+    //软件商店在下载的时候进行注销，注销进程进行到软件商店的时候卡住，需要增加一个超时机制，不让某个应用的阻塞影响到整个注销流程
     foreach (UKUISMClient *c, m_clients) {
         QString programPath = c->program();
         QString programName = programPath.mid(programPath.lastIndexOf(QDir::separator()) + 1);
-        if(programName == QLatin1String("pluma")) {
+        if(programName == QLatin1String("ukui-panel")) {
             m_clients.removeAll(c);
-            m_clients.prepend(c);
-        } else if (programName == QLatin1String("qtcreator")) {
+            m_clients.append(c);
+        } else if (programName == QLatin1String("peony-qt-desktop")) {
             m_clients.removeAll(c);
-            m_clients.prepend(c);
-        } else if (programName == QLatin1String("wps")) {
+            m_clients.append(c);
+        } else if (programName == QLatin1String("ukui-menu")) {
             m_clients.removeAll(c);
-            m_clients.prepend(c);
+            m_clients.append(c);
         }
     }
 }
