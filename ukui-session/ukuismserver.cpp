@@ -751,7 +751,9 @@ void UKUISMServer::processData(int socket)
     IceConn iceConn = ((UKUISMConnection*)sender())->iceConn;
     IceProcessMessagesStatus status = IceProcessMessages(iceConn, nullptr, nullptr);
     if (status == IceProcessMessagesIOError) {
-        qCDebug(UKUI_SESSION) << "processData called and status is IOError";
+        if (m_state == Shutdown) {
+            qCDebug(UKUI_SESSION) << "processData called and status is IOError";
+        }
         IceSetShutdownNegotiation(iceConn, False);
         QList<UKUISMClient*>::iterator it = m_clients.begin();
         QList<UKUISMClient*>::iterator const itEnd = m_clients.end();
