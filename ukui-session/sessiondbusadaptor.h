@@ -78,11 +78,13 @@ public slots:
 
     bool canLogout()
     {
+        //暂时都返回true
         return true;
     }
 
     bool canReboot()
     {
+        //判断systemd和ukui-session的inhibitor
         return m_systemdProvider->canAction(UkuiPower::PowerReboot) && m_ukuiProvider->canAction(UkuiPower::PowerReboot);
     }
 
@@ -107,8 +109,13 @@ public slots:
         theServer->performLogout();
         //保证一定会退出
         QTimer::singleShot(20000, [](){
-            qApp->exit(0);
-        })
+            QDBusInterface face("org.freedesktop.login1",\
+                                "/org/freedesktop/login1/session/self",\
+                                "org.freedesktop.login1.Session",\
+                                QDBusConnection::systemBus());
+
+            face.call("Terminate");
+        });
 //        mManager->logout(true);
     }
 
