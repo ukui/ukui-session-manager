@@ -1150,11 +1150,17 @@ void UKUISMServer::tryRestoreNext()
     while (m_appRestored < m_appsToStart) {
         QString n = QString::number(++m_appRestored);
         QString clientId = config.readEntry(QLatin1String("clientId") + n, QString());
+        QString clientName = config.readEntry(QLatin1String("program") + n, QString());
 
         bool alreadyStarted = false;
         foreach (UKUISMClient *c, m_clients) {
             if (QString::fromLocal8Bit(c->clientId()) == clientId) {
                 qDebug(UKUI_SESSION) << c->program() << " is already started";
+                alreadyStarted = true;
+                break;
+            }
+            if (QString::fromLocal8Bit(c->program()) == clientName) {
+                qDebug(UKUI_SESSION) << c->program() << " already started";
                 alreadyStarted = true;
                 break;
             }
