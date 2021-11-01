@@ -22,6 +22,7 @@
 #include "idlewatcher.h"
 #include "musicplayer.h"
 #include "ukuismserver.h"
+#include "ukuisessiondebug.h"
 
 #include <QCoreApplication>
 #include "xdgautostart.h"
@@ -468,6 +469,7 @@ void ModuleManager::timerUpdate(){
     }
 
     //加上恢复会话的部分
+    qDebug(UKUI_SESSION) << "began restore session";
     theServer->restoreSession();
 }
 
