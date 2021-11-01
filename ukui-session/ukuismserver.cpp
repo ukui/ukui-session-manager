@@ -1065,6 +1065,7 @@ KProcess *UKUISMServer::startApplication(const QStringList &command, bool wm)
         process->start();
         return process;
     } else {
+        qDebug(UKUI_SESSION) << "The Restart Command is :" << command;
         int n = command.count();
         QString app = command[0];
         QStringList argList;
@@ -1072,8 +1073,8 @@ KProcess *UKUISMServer::startApplication(const QStringList &command, bool wm)
             argList.append(command[i]);
         }
 
-        QProcess appProcess;
-        appProcess.start(app, argList);
+        QProcess *appProcess = new QProcess(this);
+        appProcess->start(app, argList);
         return nullptr;
     }
 }
@@ -1137,6 +1138,8 @@ void UKUISMServer::launchWM(const QList<QStringList> &wmStartCommands)
 
 void UKUISMServer::tryRestoreNext()
 {
+    qDebug() << "Enter tryRestoreNext";
+
     if(m_state != Restoring) {
         return;
     }
@@ -1147,10 +1150,19 @@ void UKUISMServer::tryRestoreNext()
     while (m_appRestored < m_appsToStart) {
         QString n = QString::number(++m_appRestored);
         QString clientId = config.readEntry(QLatin1String("clientId") + n, QString());
+        QString clientName = config.readEntry(QLatin1String("program") + n, QString());
 
         bool alreadyStarted = false;
         foreach (UKUISMClient *c, m_clients) {
             if (QString::fromLocal8Bit(c->clientId()) == clientId) {
+                qDebug(UKUI_SESSION) << c->program() << " is already started";
+                alreadyStarted = true;
+                break;
+            } else if (c->program() == clientName) {
+                qDebug(UKUI_SESSION) << c->program() << " already started";
+                alreadyStarted = true;
+                break;
+            } else if (clientName == QString("/usr/bin/ukui-menu")) {
                 alreadyStarted = true;
                 break;
             }
