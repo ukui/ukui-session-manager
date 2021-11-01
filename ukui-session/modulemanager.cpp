@@ -21,6 +21,7 @@
 #include "ukuimodule.h"
 #include "idlewatcher.h"
 #include "musicplayer.h"
+#include "ukuismserver.h"
 
 #include <QCoreApplication>
 #include "xdgautostart.h"
@@ -44,6 +45,8 @@
 
 #define SESSION_REQUIRED_COMPONENTS "org.ukui.session.required-components"
 #define SESSION_REQUIRED_COMPONENTS_PATH "/org/ukui/desktop/session/required-components/"
+
+extern UKUISMServer *theServer;
 
 void ModuleManager::playBootMusic(bool arg)
 {
@@ -463,6 +466,9 @@ void ModuleManager::timerUpdate(){
     for (XdgDesktopFileList::const_iterator i = mForceApplication.constBegin(); i != mForceApplication.constEnd(); ++i) {
         startProcess(*i, true);
     }
+
+    //加上恢复会话的部分
+    theServer->restoreSession();
 }
 
 void ModuleManager::startProcess(const XdgDesktopFile &file, bool required)
