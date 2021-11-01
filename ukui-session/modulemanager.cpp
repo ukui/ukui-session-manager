@@ -473,7 +473,6 @@ void ModuleManager::timerUpdate(){
     QTimer::singleShot(500, [](){
         theServer->restoreSession();
     });
-
 }
 
 void ModuleManager::startProcess(const XdgDesktopFile &file, bool required)
