@@ -20,6 +20,7 @@ extern "C" {
 #include <QApplication>
 #include <QPalette>
 #include <QDesktopWidget>
+#include <QDBusInterface>
 
 #include <KProcess>
 #include <KSharedConfig>
@@ -1036,12 +1037,17 @@ void UKUISMServer::killingCompleted()
 
 //    face.call("Terminate");
 
-    QDBusInterface face("org.freedesktop.login1",
-                        "/org/freedesktop/login1/user/self",
-                        "org.freedesktop.login1.User",
-                        QDBusConnection::systemBus());
+    //可能因为是由ukui-session调用Kill,所以ukui-session也会接收到kill信号
+    //而这个接口的调用是由ukui-session发起的，因此造成了问题
+//    if (fork() == 0) {
+//        setsid();
+        QDBusInterface face("org.freedesktop.login1",
+                            "/org/freedesktop/login1/user/self",
+                            "org.freedesktop.login1.User",
+                            QDBusConnection::systemBus());
 
-    face.call("Terminate", 9);
+        face.call("Kill", 9);
+//    }
 }
 
 void UKUISMServer::cancelShutdown(UKUISMClient *c)
@@ -1176,6 +1182,18 @@ void UKUISMServer::tryRestoreNext()
                 alreadyStarted = true;
                 break;
             } else if (clientName == QString("/usr/bin/ukui-menu")) {
+                alreadyStarted = true;
+                break;
+            } else if (clientName == QString("/usr/bin/kylin-nm")) {
+                alreadyStarted = true;
+                break;
+            } else if (clientName == QString("/usr/bin/indicator-china-weather")) {
+                alreadyStarted = true;
+                break;
+            } else if (clientName == QString("/usr/bin/kylin-printer")) {
+                alreadyStarted = true;
+                break;
+            } else if (clientName == QString("/usr/bin/ukui-search")) {
                 alreadyStarted = true;
                 break;
             }
