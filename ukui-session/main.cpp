@@ -22,7 +22,10 @@
 #include "ukuismserver.h"
 #include "ukuisessiondebug.h"
 
+#include <signal.h>
+
 #include <QStandardPaths>
+#include <QDBusInterface>
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
@@ -205,6 +208,16 @@ void set4KScreenScale()
     delete settings;
 }
 
+void signalHandler(int sig)
+{
+    QDBusInterface face("org.freedesktop.login1",
+                        "/org/freedesktop/login1/user/self",
+                        "org.freedesktop.login1.User",
+                        QDBusConnection::systemBus());
+
+    face.call("Kill", 9);
+}
+
 void openDubug()
 {
 //#ifdef QT_NO_DEBUG
@@ -220,6 +233,9 @@ void openDubug()
 int main(int argc, char **argv)
 {
 //    initUkuiLog4qt("ukui-session");
+    //加上这个处理会在终端一直输出信息，原因不明
+//    signal(SIGTERM, signalHandler);
+
     openDubug();
 
     SessionApplication app(argc, argv);

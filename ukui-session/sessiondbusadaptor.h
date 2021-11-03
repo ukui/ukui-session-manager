@@ -109,12 +109,12 @@ public slots:
         theServer->performLogout();
         //保证一定会退出
         QTimer::singleShot(20000, [](){
-            QDBusInterface face("org.freedesktop.login1",\
-                                "/org/freedesktop/login1/session/self",\
-                                "org.freedesktop.login1.Session",\
+            QDBusInterface face("org.freedesktop.login1",
+                                "/org/freedesktop/login1/user/self",
+                                "org.freedesktop.login1.User",
                                 QDBusConnection::systemBus());
 
-            face.call("Terminate");
+            face.call("Kill", 15);
         });
 //        mManager->logout(true);
     }

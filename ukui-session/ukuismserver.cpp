@@ -1044,7 +1044,7 @@ void UKUISMServer::killingCompleted()
                             "org.freedesktop.login1.User",
                             QDBusConnection::systemBus());
 
-        face.call("Kill", 9);
+        face.call("Kill", 15);
 //    }
 }
 
