@@ -1030,6 +1030,7 @@ void UKUISMServer::killingCompleted()
     qCDebug(UKUI_SESSION) << "done killing, exit";
     emit logoutFinished();
 //    qApp->quit();
+//    qCDebug(UKUI_SESSION) << "call systemd Terminate";
 //    QDBusInterface face("org.freedesktop.login1",
 //                        "/org/freedesktop/login1/session/self",
 //                        "org.freedesktop.login1.Session",
@@ -1037,15 +1038,12 @@ void UKUISMServer::killingCompleted()
 
 //    face.call("Terminate");
 
-//    if (fork() == 0) {
-//        setsid();
         QDBusInterface face("org.freedesktop.login1",
                             "/org/freedesktop/login1/user/self",
                             "org.freedesktop.login1.User",
                             QDBusConnection::systemBus());
 
         face.call("Kill", 15);
-//    }
 }
 
 void UKUISMServer::cancelShutdown(UKUISMClient *c)
