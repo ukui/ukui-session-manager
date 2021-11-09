@@ -381,7 +381,7 @@ void ModuleManager::startup()
 //    connect(this, &ModuleManager::wmfinished, [=](){ tdesktop->stop(); isWMStarted = true; startCompsite(); });//改为在server中最先启动窗管
 
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
-    if(xdg_session_type == "wayland"){
+    if (xdg_session_type == "wayland") {
         startProcess("hwaudioservice", true);
     }
 

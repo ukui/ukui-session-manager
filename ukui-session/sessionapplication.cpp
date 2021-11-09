@@ -90,7 +90,7 @@ void SessionApplication::updateIdleDelay()
 {
     if (gsettings_usable) {
         const int idle = gs->get("idle-delay").toInt() * 60;
-        if (lastIdleTime == idle ){
+        if (lastIdleTime == idle){
             return;
         }
         mIdleWatcher->reset(idle);
