@@ -237,6 +237,16 @@ bool SystemdProvider::doSwitchUser()
     }
 
     if (isinhibited == false) {
+
+        QDBusInterface dbus("org.ukui.KWin", "/Compositor", "org.ukui.kwin.Compositing", QDBusConnection::sessionBus());
+
+        if (!dbus.isValid()) {
+            qWarning() << "dbusCall: QDBusInterface is invalid";
+            return false;
+        }
+
+        dbus.call("suspend");
+
         QString command       = "SwitchToGreeter";
         QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
         return dbusCall(QLatin1String(LIGHTDM_SERVICE), xdg_seat_path,
