@@ -704,7 +704,7 @@ void UKUISMServer::cleanUp()
 
 
     QByteArray fName = QFile::encodeName(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QLatin1Char('/') + QStringLiteral("KSMserver"));
-    QString display  = QString::fromLocal8Bit(::getenv("DISPLAY"));
+    QString  display = QString::fromLocal8Bit(::getenv("DISPLAY"));
 
     display.remove(QRegExp(QStringLiteral("\\.[0-9]+$")));
     int i;
