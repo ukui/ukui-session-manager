@@ -107,16 +107,16 @@ public slots:
     {
         //xsmp协议的退出保存机制
         theServer->performLogout();
-        //保证一定会退出
-        QTimer::singleShot(20000, [](){
-            QDBusInterface face("org.freedesktop.login1",
-                                "/org/freedesktop/login1/user/self",
-                                "org.freedesktop.login1.User",
-                                QDBusConnection::systemBus());
+        //保证一定会退出，会影响到取消注销功能，暂时注释
+//        QTimer::singleShot(20000, [](){
+//            qDebug() << "calling force logout";
+//            QDBusInterface face("org.freedesktop.login1",
+//                                "/org/freedesktop/login1/user/self",
+//                                "org.freedesktop.login1.User",
+//                                QDBusConnection::systemBus());
 
-            face.call("Kill", 15);
-        });
-//        mManager->logout(true);
+//            face.call("Kill", 15);
+//        });
     }
 
     Q_NOREPLY void reboot()

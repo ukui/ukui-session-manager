@@ -50,12 +50,28 @@ QByteArray typeConver(int i)
 
 void SessionApplication::initialEnvironment()
 {
-    UkuiPower *upower = new UkuiPower();
+//    UkuiPower *upower = new UkuiPower();
+//    if (gsettings_usable) {
+//        if (upower->canAction(UkuiPower::PowerHibernate))
+//            gs->set("canhibernate", true);
+//        else
+//            gs->set("canhibernate", false);
+
+//        //在打开关机管理界面后通过物理按键的方式关机/重启
+//        //将导致win-key-release键值为true
+//        //造成大部分热键和组合键失效
+//        //所以在登录进来时恢复默认值
+//        gs->reset("win-key-release");
+//        gs->reset("idle-delay");
+//    }
+
+    SystemdProvider *sysProvider = new SystemdProvider();
     if (gsettings_usable) {
-        if (upower->canAction(UkuiPower::PowerHibernate))
+        if (sysProvider->canAction(UkuiPower::PowerHibernate)) {
             gs->set("canhibernate", true);
-        else
+        } else {
             gs->set("canhibernate", false);
+        }
 
         //在打开关机管理界面后通过物理按键的方式关机/重启
         //将导致win-key-release键值为true
@@ -103,12 +119,12 @@ void SessionApplication::registerDBus()
     QDBusConnection dbus = QDBusConnection::sessionBus();
     if (!dbus.isConnected()) {
         qDebug() << "Fatal DBus Error";
-        QProcess a;
-        a.setProcessChannelMode(QProcess::ForwardedChannels);
-        a.start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
-        a.waitForFinished(-1);
-        if (a.exitCode()) {
-            qWarning() <<  "exited with code" << a.exitCode();
+        QProcess *a = new QProcess(this);
+        a->setProcessChannelMode(QProcess::ForwardedChannels);
+        a->start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
+        a->waitForFinished(-1);
+        if (a->exitCode()) {
+            qWarning() <<  "exited with code" << a->exitCode();
         }
     }
     if (!dbus.registerService(QStringLiteral("org.gnome.SessionManager"))) {

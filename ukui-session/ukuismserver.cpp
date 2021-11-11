@@ -799,8 +799,8 @@ void UKUISMServer::protectionTimeout()
     qCDebug(UKUI_SESSION) << "enter protectionTimeout";
     if ((m_state != Shutdown) || m_clientInteracting) {//如果状态不是三者中的任何一个，或者clientInteracing有值，则条件成立
         qCDebug(UKUI_SESSION) << "state is " << m_state << "clientInteracting is " << m_clientInteracting << "protectionTimeout returned";
-        //如果是有一个客户端正在interact,而这里已经超时了，则会直接return，之后过了15秒没有其他动作，然后processData被调用，杀死其他等待的客户端，可能15秒就会自动断开连接？
-        //KDE关机界面上的30秒计时是指，如果30秒后用户不点击界面上的任何按钮，则会自动开始一个完整的注销流程。
+        //如果有一个客户端正在interact,而这里已经超时了，则会直接return，protectiontimer不能作用于正在interect的客户端。
+        //KDE关机界面上的30秒计时是指，如果30秒后用户不点击界面上的任何按钮，则会自动调用KDE的D-Bus注销接口
         return;
     }
 
@@ -1018,7 +1018,7 @@ void UKUISMServer::killWM()
 
 void UKUISMServer::completeKillingWM()
 {
-    if(m_state == KillingWM) {
+    if (m_state == KillingWM) {
         if(m_clients.isEmpty()) {
             killingCompleted();
         }
@@ -1038,12 +1038,13 @@ void UKUISMServer::killingCompleted()
 
 //    face.call("Terminate");
 
-        QDBusInterface face("org.freedesktop.login1",
-                            "/org/freedesktop/login1/user/self",
-                            "org.freedesktop.login1.User",
-                            QDBusConnection::systemBus());
+    qCDebug(UKUI_SESSION) << "call systemd kill";
+    QDBusInterface face("org.freedesktop.login1",
+                        "/org/freedesktop/login1/user/self",
+                        "org.freedesktop.login1.User",
+                        QDBusConnection::systemBus());
 
-        face.call("Kill", 15);
+    face.call("Kill", 15);
 }
 
 void UKUISMServer::cancelShutdown(UKUISMClient *c)
