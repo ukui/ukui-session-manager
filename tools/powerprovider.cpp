@@ -37,18 +37,18 @@
 #include <QDBusReply>
 //#include "loginedusers.h"
 
-#define LIGHTDM_SERVICE   "org.freedesktop.DisplayManager"
-#define LIGTHDM_INTERFACE "org.freedesktop.DisplayManager.Seat"
+#define LIGHTDM_SERVICE     "org.freedesktop.DisplayManager"
+#define LIGTHDM_INTERFACE   "org.freedesktop.DisplayManager.Seat"
 
-#define SYSTEMD_SERVICE   "org.freedesktop.login1"
-#define SYSTEMD_PATH      "/org/freedesktop/login1"
-#define SYSTEMD_INTERFACE "org.freedesktop.login1.Manager"
+#define SYSTEMD_SERVICE     "org.freedesktop.login1"
+#define SYSTEMD_PATH        "/org/freedesktop/login1"
+#define SYSTEMD_INTERFACE   "org.freedesktop.login1.Manager"
 
-#define UKUI_SERVICE   "org.gnome.SessionManager"
-#define UKUI_PATH      "/org/gnome/SessionManager"
-#define UKUI_INTERFACE "org.gnome.SessionManager"
+#define UKUI_SERVICE        "org.gnome.SessionManager"
+#define UKUI_PATH           "/org/gnome/SessionManager"
+#define UKUI_INTERFACE      "org.gnome.SessionManager"
 
-#define PROPERTIES_INTERFACE "org.freedesktop.DBus.Properties"
+#define PROPERTIES_INTERFACE    "org.freedesktop.DBus.Properties"
 
 // QStringList getLoginedUsers() {
 //    QStringList m_loginedUser;
@@ -87,8 +87,8 @@
 //                                          "org.freedesktop.DBus.Properties",
 //                                          QDBusConnection::systemBus());
 
-//        QDBusReply<QVariant> reply = userPertyInterface.call("Get", "org.freedesktop.login1.User",
-//        "State"); if (reply.isValid()) {
+//        QDBusReply<QVariant> reply = userPertyInterface.call("Get", "org.freedesktop.login1.User", "State");
+//        if (reply.isValid()) {
 //            QString status = reply.value().toString();
 //            if ("closing" != status) {
 //                m_loginedUser.append(user.userName);
@@ -128,8 +128,11 @@ bool messageBoxCheck()
         return false;
 }
 
-static bool dbusCall(const QString &service, const QString &path, const QString &interface,
-                     const QDBusConnection &connection, const QString &method)
+static bool dbusCall(const QString &service,
+                     const QString &path,
+                     const QString &interface,
+                     const QDBusConnection &connection,
+                     const QString &method)
 {
     QDBusInterface dbus(service, path, interface, connection);
     if (!dbus.isValid()) {
@@ -148,8 +151,11 @@ static bool dbusCall(const QString &service, const QString &path, const QString 
                                      || msg.arguments().constFirst().toBool();
 }
 
-static bool dbusCallSystemd(const QString &service, const QString &path, const QString &interface,
-                            const QDBusConnection &connection, const QString &method,
+static bool dbusCallSystemd(const QString &service,
+                            const QString &path,
+                            const QString &interface,
+                            const QDBusConnection &connection,
+                            const QString &method,
                             bool needBoolArg)
 {
     QDBusInterface dbus(service, path, interface, connection);
@@ -179,8 +185,11 @@ static bool dbusCallSystemd(const QString &service, const QString &path, const Q
     return response == QLatin1String("yes");   //|| response == QLatin1String("challenge");
 }
 
-bool dbusGetProperty(const QString &service, const QString &path, const QString &interface,
-                     const QDBusConnection &connection, const QString &property)
+bool dbusGetProperty(const QString &service,
+                     const QString &path,
+                     const QString &interface,
+                     const QDBusConnection &connection,
+                     const QString &property)
 {
     QDBusInterface dbus(service, path, interface, connection);
     if (!dbus.isValid()) {
@@ -189,8 +198,7 @@ bool dbusGetProperty(const QString &service, const QString &path, const QString 
         return false;
     }
 
-    //    QDBusMessage msg = dbus.call("SwitchToGreeter");//QLatin1String("Get"),
-    //    dbus.interface(),property
+//    QDBusMessage msg = dbus.call("SwitchToGreeter");//QLatin1String("Get"), dbus.interface(),property
 
     //    if (!msg.errorName().isEmpty()) {
     //        qWarning() << "Dbus error: " << msg;
@@ -204,9 +212,13 @@ bool dbusGetProperty(const QString &service, const QString &path, const QString 
     return canswitch.toBool();
 }
 
-PowerProvider::PowerProvider(QObject *parent) : QObject(parent) {}
+PowerProvider::PowerProvider(QObject *parent) : QObject(parent) 
+{
+}
 
-PowerProvider::~PowerProvider() {}
+PowerProvider::~PowerProvider()
+{
+}
 
 /************************************************
   SystemdProvider
@@ -214,9 +226,15 @@ PowerProvider::~PowerProvider() {}
   http://www.freedesktop.org/wiki/Software/systemd/logind
  ************************************************/
 
-SystemdProvider::SystemdProvider(QObject *parent) : PowerProvider(parent) {}
+SystemdProvider::SystemdProvider(QObject *parent): PowerProvider(parent)
+{
+}
 
-SystemdProvider::~SystemdProvider() {}
+
+SystemdProvider::~SystemdProvider()
+{
+}
+
 
 bool SystemdProvider::canSwitchUser() const
 {
@@ -260,8 +278,10 @@ bool SystemdProvider::canSwitchUser() const
 
     QString property      = "CanSwitch";
     QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
-    return dbusGetProperty(QLatin1String(LIGHTDM_SERVICE), xdg_seat_path,
-                           QLatin1String(LIGTHDM_INTERFACE), QDBusConnection::systemBus(),
+    return dbusGetProperty(QLatin1String(LIGHTDM_SERVICE),
+                           xdg_seat_path,
+                           QLatin1String(LIGTHDM_INTERFACE),
+                           QDBusConnection::systemBus(),
                            property);
 
     //    return messageboxcheck();
@@ -297,19 +317,26 @@ bool SystemdProvider::canAction(UkuiPower::Action action) const
     // canAction should be always silent because it can freeze
     // g_main_context_iteration Qt event loop in QMessageBox
     // on panel startup if there is no DBUS running.
-    return dbusCallSystemd(QLatin1String(SYSTEMD_SERVICE), QLatin1String(SYSTEMD_PATH),
-                           QLatin1String(SYSTEMD_INTERFACE), QDBusConnection::systemBus(), command,
+    return dbusCallSystemd(QLatin1String(SYSTEMD_SERVICE),
+                           QLatin1String(SYSTEMD_PATH),
+                           QLatin1String(SYSTEMD_INTERFACE),
+                           QDBusConnection::systemBus(),
+                           command,
                            false);
 }
 
+
 bool SystemdProvider::doSwitchUser()
 {
-    bool            isinhibited = false;
-    QDBusInterface *interface = new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
-                                                   "org.gnome.SessionManager", QDBusConnection::sessionBus());
-    quint32         inhibit_switchuser = 2;
-    QDBusReply<bool> reply = interface->call("IsInhibited", inhibit_switchuser);
-    if (reply.isValid()) {
+    bool isinhibited =false;
+    QDBusInterface *interface = new QDBusInterface(
+                "org.gnome.SessionManager",
+                "/org/gnome/SessionManager",
+                "org.gnome.SessionManager",
+                QDBusConnection::sessionBus());
+    quint32 inhibit_switchuser = 2;
+    QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_switchuser);
+    if (reply.isValid()){
         // use the returned value
         qDebug() << "Is inhibit by someone: " << reply.value();
         isinhibited = reply.value();
@@ -324,8 +351,11 @@ bool SystemdProvider::doSwitchUser()
     if (isinhibited == false) {
         QString command       = "SwitchToGreeter";
         QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
-        return dbusCall(QLatin1String(LIGHTDM_SERVICE), xdg_seat_path,
-                        QLatin1String(LIGTHDM_INTERFACE), QDBusConnection::systemBus(), command);
+        return dbusCall(QLatin1String(LIGHTDM_SERVICE),
+                        xdg_seat_path,
+                        QLatin1String(LIGTHDM_INTERFACE),
+                        QDBusConnection::systemBus(),
+                        command);
     }
     return false;
 }
@@ -353,14 +383,21 @@ bool SystemdProvider::doAction(UkuiPower::Action action)
         return false;
     }
 
-    return dbusCallSystemd(QLatin1String(SYSTEMD_SERVICE), QLatin1String(SYSTEMD_PATH),
-                           QLatin1String(SYSTEMD_INTERFACE), QDBusConnection::systemBus(), command,
+    return dbusCallSystemd(QLatin1String(SYSTEMD_SERVICE),
+                           QLatin1String(SYSTEMD_PATH),
+                           QLatin1String(SYSTEMD_INTERFACE),
+                           QDBusConnection::systemBus(),
+                           command,
                            true);
 }
 
-UKUIProvider::UKUIProvider(QObject *parent) : PowerProvider(parent) {}
 
-UKUIProvider::~UKUIProvider() {}
+UKUIProvider::UKUIProvider(QObject *parent): PowerProvider (parent)
+{
+}
+
+UKUIProvider::~UKUIProvider()
+{}
 
 bool UKUIProvider::canAction(UkuiPower::Action action) const
 {
@@ -379,13 +416,15 @@ bool UKUIProvider::canAction(UkuiPower::Action action) const
         return false;
     }
 
-    bool            isinhibited = false;
-    QDBusInterface *interface =
-        new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
-                           "org.gnome.SessionManager", QDBusConnection::sessionBus());
-    quint32          inhibit_logout = 1;
-    QDBusReply<bool> reply          = interface->call("IsInhibited", inhibit_logout);
-    if (reply.isValid()) {
+    bool isinhibited =false;
+    QDBusInterface *interface = new QDBusInterface(
+                "org.gnome.SessionManager",
+                "/org/gnome/SessionManager",
+                "org.gnome.SessionManager",
+                QDBusConnection::sessionBus());
+    quint32 inhibit_logout = 1;
+    QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_logout);
+    if (reply.isValid()){
         // use the returned value
         qDebug() << "Is inhibit by someone: " << reply.value();
         isinhibited = reply.value();
@@ -393,13 +432,16 @@ bool UKUIProvider::canAction(UkuiPower::Action action) const
         qDebug() << reply.value();
     }
 
-    if (isinhibited == true) {
+    if(isinhibited == true){
         isinhibited = !messageBoxCheck();
     }
 
     if (isinhibited == false) {
-        return dbusCall(QLatin1String(UKUI_SERVICE), QLatin1String(UKUI_PATH),
-                        QLatin1String(UKUI_INTERFACE), QDBusConnection::sessionBus(), command);
+        return dbusCall(QLatin1String(UKUI_SERVICE),
+                        QLatin1String(UKUI_PATH),
+                        QLatin1String(UKUI_INTERFACE),
+                        QDBusConnection::sessionBus(),
+                        command);
     }
 }
 
@@ -420,6 +462,11 @@ bool UKUIProvider::doAction(UkuiPower::Action action)
         return false;
     }
 
-    return dbusCall(QLatin1String(UKUI_SERVICE), QLatin1String(UKUI_PATH),
-                    QLatin1String(UKUI_INTERFACE), QDBusConnection::sessionBus(), command);
+    return dbusCall(QLatin1String(UKUI_SERVICE),
+             QLatin1String(UKUI_PATH),
+             QLatin1String(UKUI_INTERFACE),
+             QDBusConnection::sessionBus(),
+             command);
 }
+
+

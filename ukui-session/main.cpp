@@ -22,6 +22,7 @@
 
 #include <QStandardPaths>
 #include <QFile>
+#include <QDir>
 #include <QTextStream>
 #include <QDateTime>
 #include <QDebug>
@@ -46,29 +47,69 @@ extern "C" {
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    QString logPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session.log";
+    QString logPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
+        + "/ukui-session/ukui-session.log";
+    if (!QFile::exists(logPath)) {
+        QString logDir = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session";
+        QDir dir(logDir);
+        if(!dir.exists(logDir)){
+            if(!dir.mkdir(logDir)){
+                return;
+            }
+        }
+        QFile file(logPath);
+        if(!file.open(QIODevice::WriteOnly)){
+            return;
+        }
+        file.close();
+    }
     if (!QFile::exists(logPath)) {
         return;
     }
     QByteArray localMsg = msg.toLocal8Bit();
-    QDateTime dateTime = QDateTime::currentDateTime();
+    QDateTime  dateTime = QDateTime::currentDateTime();
     QByteArray time = QString("[%1] ").arg(dateTime.toString("MM-dd hh:mm:ss.zzz")).toLocal8Bit();
-    QString logMsg;
+    QString    logMsg;
     switch (type) {
     case QtDebugMsg:
-        logMsg = QString("%1 Debug: %2 (%3:%4, %5)\n").arg(time.constData()).arg(localMsg.constData()).arg(context.file).arg(context.line).arg(context.function);
+        logMsg = QString("%1 Debug: %2 (%3:%4, %5)\n")
+                     .arg(time.constData())
+                     .arg(localMsg.constData())
+                     .arg(context.file)
+                     .arg(context.line)
+                     .arg(context.function);
         break;
     case QtInfoMsg:
-        logMsg = QString("%1 Info: %2 (%3:%4, %5)\n").arg(time.constData()).arg(localMsg.constData()).arg(context.file).arg(context.line).arg(context.function);
+        logMsg = QString("%1 Info: %2 (%3:%4, %5)\n")
+                     .arg(time.constData())
+                     .arg(localMsg.constData())
+                     .arg(context.file)
+                     .arg(context.line)
+                     .arg(context.function);
         break;
     case QtWarningMsg:
-        logMsg = QString("%1 Warning: %2 (%3:%4, %5)\n").arg(time.constData()).arg(localMsg.constData()).arg(context.file).arg(context.line).arg(context.function);
+        logMsg = QString("%1 Warning: %2 (%3:%4, %5)\n")
+                     .arg(time.constData())
+                     .arg(localMsg.constData())
+                     .arg(context.file)
+                     .arg(context.line)
+                     .arg(context.function);
         break;
     case QtCriticalMsg:
-        logMsg = QString("%1 Critical: %2 (%3:%4, %5)\n").arg(time.constData()).arg(localMsg.constData()).arg(context.file).arg(context.line).arg(context.function);
+        logMsg = QString("%1 Critical: %2 (%3:%4, %5)\n")
+                     .arg(time.constData())
+                     .arg(localMsg.constData())
+                     .arg(context.file)
+                     .arg(context.line)
+                     .arg(context.function);
         break;
     case QtFatalMsg:
-        logMsg = QString("%1 Fatal: %2 (%3:%4, %5)\n").arg(time.constData()).arg(localMsg.constData()).arg(context.file).arg(context.line).arg(context.function);
+        logMsg = QString("%1 Fatal: %2 (%3:%4, %5)\n")
+                     .arg(time.constData())
+                     .arg(localMsg.constData())
+                     .arg(context.file)
+                     .arg(context.line)
+                     .arg(context.function);
         break;
     }
 
@@ -80,6 +121,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     logFile.close();
 }
 
+/* 过滤低分辨率高缩放比情况 */
 void screenScaleJudgement(QGSettings *settings)
 {
     qreal        scaling = qApp->devicePixelRatio();
@@ -88,9 +130,13 @@ void screenScaleJudgement(QGSettings *settings)
     if (scale > 1.25) {
         bool state = false;
         for (QScreen *screen : QGuiApplication::screens()) {
-            if (screen->geometry().width() * scaling < 1920 &&  screen->geometry().height() * scaling < 1080) {
+            int width  = screen->geometry().width() * scaling;
+            int height = screen->geometry().height() * scaling;
+
+            if (width < 1920 && height < 1080) {
                 state = true;
-            } else if (screen->geometry().width() * scaling == 1920 &&  screen->geometry().height() * scaling == 1080 && scale > 1.5) {
+            }
+            else if (width == 1920 && height == 1080 && scale > 1.5) {
                 state = true;
             }
         }
@@ -104,6 +150,7 @@ void screenScaleJudgement(QGSettings *settings)
     }
 }
 
+/* 设置DPI环境变量 */
 void setXresources(int dpi)
 {
     Display    *dpy;
@@ -116,9 +163,11 @@ void setXresources(int dpi)
     dpy = XOpenDisplay(NULL);
     XChangeProperty(dpy, RootWindow(dpy, 0),
                     XA_RESOURCE_MANAGER, XA_STRING, 8, PropModeReplace, (unsigned char *) str.toLatin1().data(), str.length());
+    XCloseDisplay(dpy);
+
+    qDebug()<<"setXresources："<<str;
 
     delete mouse_settings;
-    XCloseDisplay(dpy);
 }
 
 /* 判断文件是否存在 */
@@ -126,70 +175,140 @@ bool isFileExist(QString XresourcesFile)
 {
     QFileInfo fileInfo(XresourcesFile);
     if (fileInfo.isFile()) {
-        qDebug() << "file is true";
+        qDebug() << "File exists";
         return true;
     }
-    qDebug() << "file is false";
+
+    qDebug() << "File does not exis";
+
     return false;
 }
-/* 写配置文件并设置DPI和鼠标大小*/
-void writeXresourcesFile(QString XresourcesFile, QGSettings *settings)
+
+/* 编写判断标志文件，更改 鼠标/DPI 配置大小*/
+void writeXresourcesFile(QString XresourcesFile, QGSettings *settings, double scaling)
 {
     QFile file(XresourcesFile);
-    QString content = "Xft.dpi:192\nXcursor.size:48";
-    file.open(QIODevice::ReadWrite | QIODevice::Text);
+    QString content = QString("Xft.dpi:%1\nXcursor.size:%2").arg(96.0 * scaling).arg(24.0 * scaling);
     QByteArray str = content.toLatin1().data();
+
+    file.open(QIODevice::ReadWrite | QIODevice::Text);
     file.write(str);
     file.close();
-    QGSettings *gs = new QGSettings("org.ukui.font-rendering");
+
+    QGSettings *Font = new QGSettings("org.ukui.font-rendering");
     QGSettings *mouse_settings = new QGSettings(MOUSE_SCHEMA);
-    gs->set("dpi", 96.0);
-    settings->set(SCALING_KEY, 2.0);
-    mouse_settings->set(CURSOR_SIZE, 48);
-    delete gs;
+
+    Font->set("dpi", 96.0);
+    settings->set(SCALING_KEY, scaling);
+    mouse_settings->set(CURSOR_SIZE, scaling * 24.0);
+
+    qDebug()<<" writeXresourcesFile: content = "<<content
+            << " scalings = "<<settings->get(SCALING_KEY).toDouble()
+            << "cursor size = "<< mouse_settings->get(CURSOR_SIZE).toInt();
+    delete Font;
     delete mouse_settings;
 }
 
+/* 判断是否为首次登陆 */
+bool isTheFirstLogin(QGSettings *settings)
+{
+    QString homePath       = getenv("HOME");
+    QString XresourcesFile = homePath+"/.config/xresources";
+    qreal   scaling        = qApp->devicePixelRatio();
+    bool    zoom1 = false, zoom2 = false, zoom3 = false;
+    double  mScaling;
+    bool res;
+
+    res = isFileExist(XresourcesFile); //判断标志文件是否存在
+    if (res)
+        return false;
+
+    for (QScreen *screen : QGuiApplication::screens()) {
+        int width  = screen->geometry().width() * scaling;
+        int height = screen->geometry().height() * scaling;
+        if (width <= 1920 && height <=1080){
+            zoom1 = true;
+        }
+        else if (width > 1920 && height > 1080 && width <= 2560 && height <=1500) {
+            zoom2 = true;
+        }
+        else if (width > 2560 && height > 1440) {
+            zoom3 = true;
+        }
+    }
+
+    if (zoom1){
+        mScaling = 1.0;
+    }
+    else if (!zoom1 && zoom2) {
+        mScaling = 1.5;
+    }
+    else if (!zoom1 && !zoom2 && zoom3){
+        mScaling = 2.0;
+    }
+
+    writeXresourcesFile(XresourcesFile, settings, mScaling);
+
+    return true;
+}
+
 /* 配置新装系统、新建用户第一次登陆时，4K缩放功能*/
-void set4KScreenScale()
+void setHightResolutionScreenZoom()
 {
     QGSettings *settings;
-    int ScreenNum = QApplication::screens().length();
+    double      dpi;
+    int         ScreenNum = QApplication::screens().length();
     settings = new QGSettings(XSETTINGS_SCHEMA);
 
+    if (isTheFirstLogin(settings)) {
+        qDebug()<<"Set the default zoom value when logging in for the first time.";
+        goto end;
+    }
     /* 过滤单双屏下小分辨率大缩放值 */
     screenScaleJudgement(settings);
-    double dpi = settings->get(SCALING_KEY).toDouble() * 96;
+    dpi = settings->get(SCALING_KEY).toDouble() * 96;
     if (ScreenNum > 1) {
         setXresources(dpi);
         delete settings;
         return;
     }
-    QScreen *screen = QApplication::screens().at(0);
-    int height = screen->size().height() * qApp->devicePixelRatio();
-    int width = screen->size().width() * qApp->devicePixelRatio();
-    if (height > 1500 && width > 2560) {
-        bool res;
-        QString homePath = getenv("HOME");
-        QString XresourcesFile = homePath+"/.config/xresources";
-        res = isFileExist(XresourcesFile);
-        if (!res) {
-            writeXresourcesFile(XresourcesFile, settings);
-        }
-    }
-    double Dpi = settings->get(SCALING_KEY).toDouble() * 96.0;
-    setXresources(Dpi);
+
+end:
+    dpi = 0.0;
+    dpi = settings->get(SCALING_KEY).toDouble() * 96.0;
+    setXresources(dpi);
     delete settings;
+}
+
+bool require_dbus_session(){
+    QString env_dbus = qgetenv("DBUS_SESSION_BUS_ADDRESS");
+    if(!env_dbus.isEmpty())
+        return true;
+    qDebug()<<"Fatal DBus Error";
+    QProcess a;
+    a.setProcessChannelMode(QProcess::ForwardedChannels);
+    a.start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
+    a.waitForFinished(-1);
+    if (a.exitCode()) {
+        qWarning() <<  "exited with code" << a.exitCode();
+    }
+    return true;
 }
 
 int main(int argc, char **argv)
 {
     qInstallMessageHandler(myMessageOutput);
     //initUkuiLog4qt("ukui-session");
-    qDebug() << "UKUI session manager start.";
+
+    require_dbus_session();
+
+    qputenv("QT_QPA_PLATFORM", "xcb");
+
     SessionApplication app(argc, argv);
 
-    set4KScreenScale();
+    qDebug() << "UKUI session manager (" << QCoreApplication::applicationPid() <<") starting.";
+
+    setHightResolutionScreenZoom();
 
     app.setQuitOnLastWindowClosed(false);
     return app.exec();

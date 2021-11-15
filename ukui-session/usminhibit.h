@@ -17,9 +17,9 @@ public:
     QString inhibitorName;
 };
 
-class usminhibit
+class usminhibit : public QObject
 {
-    //Q_OBJECT
+    Q_OBJECT
 public:
 
     enum InhibitorFlag{
@@ -48,6 +48,10 @@ public:
 private:
     //QDBusInterface dbus;
     uint get_next_inhibitor_serial();
+
+Q_SIGNALS:
+    void inhibitAdd();
+    void inhibitRemove();
 };
 
 #endif // USMINHIBIT_H

@@ -46,6 +46,11 @@ IdleWatcher::IdleWatcher(int idle, QObject *parent) : QObject(parent)
     connect(KIdleTime::instance(), SIGNAL(timeoutReached(int,int)),
             this, SLOT(timeoutReached(int,int)));
 
+    QDBusConnection::systemBus().connect(QString("org.freedesktop.login1"),
+                                         QString("/org/freedesktop/login1"),
+                                         QString("org.freedesktop.login1.Manager"),
+                                         QString("PrepareForSleep"), this, SLOT(weakupFromSleep(bool)));
+
     setup();
 
     interface = new QDBusInterface(
@@ -66,6 +71,13 @@ IdleWatcher::~IdleWatcher()
 void IdleWatcher::setup()
 {
     KIdleTime::instance()->addIdleTimeout(1000 * mSecsidle);
+}
+
+void IdleWatcher::weakupFromSleep(bool a){
+    if(!a){
+        qDebug()<<"模拟用户操作";
+        KIdleTime::instance()->simulateUserActivity();
+    }
 }
 
 void IdleWatcher::timeoutReached(int identifier , int timeout)

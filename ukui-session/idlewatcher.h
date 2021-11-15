@@ -44,6 +44,7 @@ private slots:
     void resumingFromIdle();
     void timeoutReached(int identifier, int timeout);
     void setup();
+    void weakupFromSleep(bool a);
 
 Q_SIGNALS:
     void StatusChanged(uint status);

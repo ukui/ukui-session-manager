@@ -140,6 +140,7 @@ uint usminhibit::uninhibit(quint32 cookie)
     if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE) {
         inhibit_idle_num--;
     }
+    emit inhibitRemove();
     return flags;
 }
 
@@ -158,6 +159,7 @@ QStringList usminhibit::getinhibitor()
     }
     return inhibitors;
 }
+
 
 #include "usminhibit.moc"
 

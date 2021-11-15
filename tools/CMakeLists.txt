@@ -12,6 +12,11 @@ set(tools_SRCS
     window.cpp
     window.h
     loginedusers.h
+    lockchecker.h
+    lockchecker.cpp
+    loginedusers.cpp
+    ../ukui-session/xdgdirs.cpp
+    ../ukui-session/xdgdesktopfile.cpp
 )
 
 find_package(PkgConfig)

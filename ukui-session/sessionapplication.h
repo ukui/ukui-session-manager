@@ -41,6 +41,7 @@ class SessionApplication : public QApplication
 public:
     SessionApplication(int& argc, char** argv);
     ~SessionApplication();
+    QGSettings *mouseSettings = nullptr;
 
 private Q_SLOTS:
     bool startup();

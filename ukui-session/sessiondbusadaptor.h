@@ -24,6 +24,7 @@
 #include "../tools/ukuipower.h"
 #include "modulemanager.h"
 #include "usminhibit.h"
+#include <KIdleTime>
 
 class SessionDBusAdaptor : public QDBusAbstractAdaptor
 {
@@ -39,6 +40,8 @@ public:
     {
         connect(mManager, &ModuleManager::moduleStateChanged, this , &SessionDBusAdaptor::moduleStateChanged);
         connect(mManager, &ModuleManager::finished,this,&SessionDBusAdaptor::emitPrepareForPhase2);
+        connect(minhibit, &usminhibit::inhibitRemove,this,&SessionDBusAdaptor::simulateUserActivity);
+        connect(minhibit, &usminhibit::inhibitAdd,this,&SessionDBusAdaptor::simulateUserActivity);
     }
 
 Q_SIGNALS:
@@ -160,6 +163,11 @@ public slots:
     Q_NOREPLY void emitPrepareForPhase2(){
         qDebug()<<"emit  PrepareForPhase2";
         emit PrepareForPhase2();
+    }
+
+    Q_NOREPLY void simulateUserActivity(){
+        qDebug()<<"simulate User Activity";
+        KIdleTime::instance()->simulateUserActivity();
     }
 
 private:

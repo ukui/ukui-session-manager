@@ -53,8 +53,6 @@ public:
 
     void startup();
 
-    void doStart();
-
     void dostartwm();
 
     void startupfinished(const QString& appName ,const QString& string);
@@ -84,13 +82,14 @@ private:
     QTimer *tpanel = new QTimer();
     QTimer *tdesktop = new QTimer();
     bool start_module_Timer(QTimer *timer,int i);
-    bool isPanelStarted, isDesktopStarted, isWMStarted ,isCompsiteStarted;
+    bool isPanelStarted    = false;
+    bool isDesktopStarted  = false;
+    bool isWMStarted       = false;
+    bool isCompsiteStarted = false;
+
+    bool isWayland         = false;
 
     //QMediaPlayer *player;
-    bool runUsd = true;
-    bool runWm = true;
-    bool runPanel = true;
-    bool runDesktop = true;
     bool isDirectInstall = false;
     void playBootMusic(bool arg);
     void startProcess(const XdgDesktopFile &file, bool required);

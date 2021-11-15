@@ -14,10 +14,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301, USA.
- **/
+**/
+
 #include "mainwindow.h"
+#include "lockchecker.h"
 #include "./ui_mainwindow.h"
 #include "powerprovider.h"
+#include "../ukui-session/xdgdesktopfile.h"
+
+#include <QListView> //XTest.h/Xlib.h/XInput.h/X.h中定义了一个None,QStyleOption中也定义了None,会造成冲突，把QListView的头文件放到前面
+#include <QDir>
 #include <QPainter>
 #include <QPixmap>
 #include <QException>
@@ -38,21 +44,19 @@
 #include <QFileInfo>
 #include <QDBusInterface>
 #include <QTextStream>
-
+#include <QTextBrowser>
+#include <QStringListModel>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QDBusReply>
 #include "loginedusers.h"
 #include <QDBusMetaType>
+#include <QStandardItemModel>
 
 #include <sys/file.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <pwd.h>
-
-#define SYSTEMD_SERVICE   "org.freedesktop.login1"
-#define SYSTEMD_PATH      "/org/freedesktop/login1"
-#define SYSTEMD_INTERFACE "org.freedesktop.login1.Manager"
 
 QT_BEGIN_NAMESPACE
 extern void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly,
@@ -142,15 +146,30 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     ui->reboot->installEventFilter(this);
     ui->shutdown->installEventFilter(this);
 
-    QStringList userlist = getLoginedUsers();
+//    QStringList userlist = getLoginedUsers();
+    QStringList userlist = LockChecker::getLoginedUsers();
     if (userlist.count() > 1) {
         close_system_needed_to_confirm = true;
     }
     QString tips = QApplication::tr("Multiple users are logged in at the same time.Are you sure "
                                     "you want to close this system?");
     ui->label->setText(tips);
+
+    //获取mode为block的sleep和shutdown inhibitors
+    if(LockChecker::isSleepBlocked()) {
+        LockChecker::getSleepInhibitors(sleepInhibitors, sleepInhibitorsReason);
+        inhibitSleep = true;
+    }
+
+    if(LockChecker::isShutdownBlocked()) {
+        LockChecker::getShutdownInhibitors(shutdownInhibitors, shutdownInhibitorsReason);
+        inhibitShutdown = true;
+    }
+
     connect(ui->cancelButton, &QPushButton::clicked, this, &MainWindow::exitt);
-    connect(ui->confirmButton, &QPushButton::clicked, [&]() { emit confirmButtonclicked(); });
+    connect(ui->confirmButton, &QPushButton::clicked, [&](){
+        emit confirmButtonclicked();
+    });
     ui->judgeWidget->hide();
 
     user     = getenv("USER");
@@ -208,7 +227,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         isHibernateHide = false;
     }
 
-    if (getCachedUsers() > 1) {
+    if (LockChecker::getCachedUsers() > 1) {
         isSwitchuserHide = false;
     }
 
@@ -235,12 +254,13 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         else
             current_date = current_date_time.toString("yyyy-MM-dd ddd");
 
-        if (formate_b == "12")
+        if (formate_b == "12") {
             current_time = current_date_time.toString("A hh:mm");
-        else if (formate_b == "24")
+        } else if (formate_b == "24") {
+            current_time =current_date_time.toString("hh:mm");
+        } else {
             current_time = current_date_time.toString("hh:mm");
-        else
-            current_time = current_date_time.toString("hh:mm");
+        }
     } else {
         current_date = current_date_time.toString("yyyy-MM-dd ddd");
         current_time = current_date_time.toString("hh:mm");
@@ -250,10 +270,10 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     ui->date_label->setText(current_date);
 
     //根据屏幕分辨率与鼠标位置重设界面
-    m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
+    //m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
     setFixedSize(QApplication::primaryScreen()->virtualSize());
-    move(0, 0);   //设置初始位置的值
-    moveWidget();
+    move(0, 0);//设置初始位置的值
+    ResizeEvent();
 
     //设置窗体无边框，不可拖动拖拽拉伸;为顶层窗口，无法被切屏;不使用窗口管理器
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
@@ -290,7 +310,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         QGSettings *fontSetting = new QGSettings(id, QByteArray(), this);
         font                    = QFont(fontSetting->get("systemFont").toString());
     }
-    for (auto widget: qApp->allWidgets()) {
+    for (auto widget : qApp->allWidgets()) {
         font.setWordSpacing(2);
         widget->setFont(font);
     }
@@ -303,7 +323,14 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
 
     //    this->show();
 
-    // qApp->installNativeEventFilter(this);
+    //screencount changed
+    QDesktopWidget *desktop = QApplication::desktop();
+    connect(desktop, &QDesktopWidget::screenCountChanged, this, &MainWindow::screenCountChanged);
+    connect(desktop, &QDesktopWidget::resized, this, &MainWindow::screenCountChanged);
+    connect(desktop, &QDesktopWidget::workAreaResized, this, &MainWindow::screenCountChanged);
+    connect(desktop, &QDesktopWidget::primaryScreenChanged, this, &MainWindow::screenCountChanged);
+
+    qApp->installNativeEventFilter(this);
 }
 
 MainWindow::~MainWindow()
@@ -313,83 +340,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-int MainWindow::getCachedUsers()
-{
-    QDBusInterface loginInterface("org.freedesktop.Accounts",
-                                  "/org/freedesktop/Accounts",
-                                  "org.freedesktop.Accounts",
-                                  QDBusConnection::systemBus());
-
-    if (loginInterface.isValid()) {
-        qDebug() << "create interface success";
-    }
-
-    QDBusMessage ret = loginInterface.call("ListCachedUsers");
-    QList<QVariant> outArgs = ret.arguments();
-    QVariant first = outArgs.at(0);
-    const QDBusArgument &dbusArgs = first.value<QDBusArgument>();
-    QDBusObjectPath path;
-    dbusArgs.beginArray();
-    int userNum = 0;
-    while (!dbusArgs.atEnd()) {
-        dbusArgs >> path;
-        userNum++;
-    }
-    dbusArgs.endArray();
-    qDebug() << userNum;
-
-    return userNum;
+void MainWindow::screenCountChanged(){
+    QDesktopWidget *desktop = QApplication::desktop();
+    qDebug() << "inside screenCountChanged,screenCount = " << desktop->screenCount();
+    //setGeometry(desktop->geometry());
+    //updateGeometry();
+    //move(0,0);
+    setFixedSize(QApplication::primaryScreen()->virtualSize());
+    ResizeEvent();
+    update();
 }
 
-QStringList MainWindow::getLoginedUsers()
-{
-    QStringList m_loginedUser;
-    qRegisterMetaType<LoginedUsers>("LoginedUsers");
-    qDBusRegisterMetaType<LoginedUsers>();
-    QDBusInterface loginInterface(SYSTEMD_SERVICE, SYSTEMD_PATH, SYSTEMD_INTERFACE,
-                                  QDBusConnection::systemBus());
-
-    if (loginInterface.isValid()) {
-        qDebug() << "create interface success";
-    }
-
-    QDBusMessage         result   = loginInterface.call("ListUsers");
-    QList<QVariant>      outArgs  = result.arguments();
-    QVariant             first    = outArgs.at(0);
-    QDBusArgument        dbvFirst = first.value<QDBusArgument>();
-    QVariant             vFirst   = dbvFirst.asVariant();
-    const QDBusArgument &dbusArgs = vFirst.value<QDBusArgument>();
-
-    QVector<LoginedUsers> loginedUsers;
-
-    dbusArgs.beginArray();
-    while (!dbusArgs.atEnd()) {
-        LoginedUsers user;
-        dbusArgs >> user;
-        loginedUsers.push_back(user);
-    }
-    dbusArgs.endArray();
-
-    for (LoginedUsers user: loginedUsers) {
-
-        QDBusInterface userPertyInterface("org.freedesktop.login1", user.objpath.path(),
-                                          "org.freedesktop.DBus.Properties",
-                                          QDBusConnection::systemBus());
-
-        QDBusReply<QVariant> reply =
-            userPertyInterface.call("Get", "org.freedesktop.login1.User", "State");
-        if (reply.isValid()) {
-            QString status = reply.value().toString();
-            if ("closing" != status) {
-                m_loginedUser.append(user.userName);
-            }
-        }
-    }
-    return m_loginedUser;
-}
-
-void MainWindow::moveWidget()
-{
+void MainWindow::ResizeEvent(){
+    QRect m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
     int xx = m_screen.x();
     int yy = m_screen.y();   //取得当前鼠标所在屏幕的最左，上坐标
 
@@ -455,17 +418,18 @@ void MainWindow::paintEvent(QPaintEvent *e)
     for (QScreen *screen: QApplication::screens()) {
         // draw picture to every screen
         QRect rect = screen->geometry();
-        painter.drawPixmap(rect, pix);
-        painter.drawRect(rect);
+        painter.drawPixmap(rect, pix.scaled(screen->size()));
+        //painter.drawRect(rect);
     }
     QWidget::paintEvent(e);
 }
 
-// lock screen
-void doLockscreen()
-{
-    QDBusInterface *interface =
-        new QDBusInterface("org.ukui.ScreenSaver", "/", "org.ukui.ScreenSaver");
+//lock screen
+void doLockscreen(){
+    QDBusInterface *interface = new QDBusInterface("org.ukui.ScreenSaver",
+                                                   "/",
+                                                   "org.ukui.ScreenSaver"
+                                                   );
     QDBusMessage msg = interface->call("Lock");
     exit(0);
 }
@@ -528,8 +492,16 @@ void MainWindow::changePoint(QWidget *widget, QEvent *event, int i)
 void MainWindow::doEvent(QString test, int i)
 {
     defaultnum = i;
-    if (close_system_needed_to_confirm && (i == 5 || i == 6)) {
-        connect(this, &MainWindow::confirmButtonclicked, [&]() {
+    if (inhibitShutdown && (i ==5 || i ==6)) {
+        //显示禁止shutdown的提示信息
+        showInhibitWarning();
+
+    } else if (inhibitSleep && (i == 2 || i == 1)) {
+        //显示禁止sleep的提示信息
+        showInhibitWarning();
+
+    } else if (close_system_needed_to_confirm && (i == 5 || i == 6)) {
+        connect(this, &MainWindow::confirmButtonclicked, [&](){
             gs->set("win-key-release", false);
             qDebug() << "Start do action" << defaultnum;
             if (closeGrab()) {
@@ -678,8 +650,10 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
                     } else {
                         if (isSwitchuserHide && tableNum == 1) {
                             tableNum = 6;
-                        } else
+                        } else {
                             tableNum = tableNum - 1;
+                        }
+
                     }
                 }
             }
@@ -743,10 +717,185 @@ void MainWindow::refreshBlur(QWidget *last, QWidget *now)
     now->setStyleSheet(str);
 }
 
-void MainWindow::judgeboxShow()
-{
+void MainWindow::showInhibitWarning(){
+    QRect mainScreen;
+    QList<QScreen*> screens = QApplication::screens();
+    QPoint ptf(QCursor::pos());
+    for (QScreen *screen : screens) {
+        QRect rec = screen->geometry();
+        if (rec.contains(ptf)) {
+            mainScreen = rec;//获取鼠标所在屏幕
+        }
+    }
+
     click_blank_space_need_to_exit = false;
     for (int j = 0; j < 7; j++) {
+        map[j]->hide();//隐藏界面上原有的部件
+    }
+
+    drawWarningWindow(mainScreen);
+}
+
+void MainWindow::drawWarningWindow(QRect &rect){
+    int xx = rect.x();
+    int yy = rect.y();//用于设置相对位置
+
+    //area作为该界面所有组件的父指针，方便排版
+    QWidget *area = new QWidget(this);
+    area->setObjectName(QString::fromUtf8("area"));
+    area->setGeometry(0, 0, 714, 467);
+
+    //顶部提醒信息
+    QLabel *tips = new QLabel(area);
+    tips->setObjectName(QString::fromUtf8("tips"));
+    tips->setGeometry(0, 0, 714, 27);
+    QString str;
+    //defaultnum会在doevent中初始化为按钮的编号，结合defaultnum判断可以保证sleep和shutdown都被阻止时能够正确显示信息
+    if (inhibitSleep && (defaultnum == 2 || defaultnum == 1)) {
+        str = QObject::tr("The following program blocking system into sleep");
+    } else if (inhibitShutdown && (defaultnum ==5 || defaultnum ==6)) {
+        str = QObject::tr("The following program blocking system shutdown");
+    }
+    tips->setText(str);
+    tips->setAlignment(Qt::AlignCenter);
+    tips->setStyleSheet(QString::fromUtf8("color:white;font:14pt;"));
+
+    //数据模型
+    QStandardItemModel *model = new QStandardItemModel(this);
+    if (inhibitSleep && (defaultnum == 2 || defaultnum == 1)) {
+        for (int i = 0; i < sleepInhibitors.length(); ++i) {
+//            QIcon icon("/usr/share/icons/ukui-icon-theme-default/32x32/mimetypes/application-x-desktop.png");//默认图标
+            QIcon icon;
+            QString CNName;
+            QString iconName;
+            QString appName = sleepInhibitors.at(i);
+            QMap<QString, QString> nameAndIcon = findCNNameAndIcon(appName);
+            if (nameAndIcon.size() != 0) {
+                CNName = nameAndIcon.begin().key();
+                iconName = nameAndIcon.begin().value();
+            }
+
+            if (!iconName.isEmpty() && QIcon::hasThemeIcon(iconName)) {
+                icon = QIcon::fromTheme(iconName);
+            } else if (QIcon::hasThemeIcon("application-x-desktop")) {
+                //无法从desktop文件获取指定图标时使用默认的图标
+                icon = QIcon::fromTheme("application-x-desktop");
+            }
+
+            if (!CNName.isEmpty()) {
+                //中文名存在则换用中文名显示
+                CNName.swap(appName);
+            }
+
+            model->appendRow(new QStandardItem(icon, appName));
+        }
+    } else if (inhibitShutdown && (defaultnum ==5 || defaultnum ==6)) {
+        for (int i = 0; i < shutdownInhibitors.length(); ++i) {
+            QIcon icon;
+            QString CNName;
+            QString iconName;
+            QString appName = shutdownInhibitors.at(i);
+            QMap<QString, QString> nameAndIcon = findCNNameAndIcon(appName);
+            if (nameAndIcon.size() != 0) {
+                CNName = nameAndIcon.begin().key();
+                iconName = nameAndIcon.begin().value();
+            }
+
+
+            if (!iconName.isEmpty() && QIcon::hasThemeIcon(iconName)) {
+                icon = QIcon::fromTheme(iconName);
+            } else if (QIcon::hasThemeIcon("application-x-desktop")) {
+                icon = QIcon::fromTheme("application-x-desktop");
+            }
+
+            if (!CNName.isEmpty()) {
+                CNName.swap(appName);
+            }
+
+            model->appendRow(new QStandardItem(icon, appName));
+        }
+    }
+
+    //列表视图
+    QListView *applist = new QListView(area);
+    applist->setObjectName(QString::fromUtf8("applist"));
+    applist->setGeometry(97, 51, 520, 320);
+    applist->verticalScrollMode();
+    applist->setStyleSheet("font:10pt;color:white");
+    applist->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    applist->setIconSize(QSize(32,32));
+    applist->setModel(model);
+
+    //继续操作按钮
+    QPushButton *confirmBtn = new QPushButton(area);
+    confirmBtn->setObjectName(QString::fromUtf8("confirmBtn"));
+
+    if (inhibitSleep && (defaultnum == 2 || defaultnum == 1)) {
+        confirmBtn->setText(QObject::tr("Still Sleep"));
+    } else if (inhibitShutdown && (defaultnum ==5 || defaultnum ==6)) {
+        confirmBtn->setText(QObject::tr("Still Shutdown"));
+    }
+
+    confirmBtn->setGeometry(227, 419, 120, 48);
+    confirmBtn->setStyleSheet("font:12pt;color:white");
+    connect(confirmBtn, &QPushButton::clicked, [this]() {
+        gs->set("win-key-release", false);
+        qDebug() << "Start do action" << defaultnum;
+        if (closeGrab()) {
+            qDebug() << "success to close Grab";
+        } else {
+            qDebug() << "failure to close Grab";
+        }
+        this->signalTostart();
+    });
+
+    //取消按钮
+    QPushButton *cancelBtn = new QPushButton(area);
+    cancelBtn->setObjectName(QString::fromUtf8("cancelBtn"));
+    cancelBtn->setText(QObject::tr("cancel"));
+    cancelBtn->setGeometry(367, 419, 120, 48);
+    cancelBtn->setStyleSheet("font:12pt;color:white");
+    connect(cancelBtn, &QPushButton::clicked, this, &MainWindow::exitt);
+
+    //移动整个区域到指定的相对位置
+    area->move(xx + (rect.width() - 714) / 2, yy + 266);
+    area->show();
+}
+
+QMap<QString, QString> MainWindow::findCNNameAndIcon(QString &basename){
+    QMap<QString, QString> nameAndIcon;
+    QString value;
+    QString CNName;
+    QStringList desktop_paths;
+    desktop_paths << "/usr/share/applications";
+    desktop_paths << "/etc/xdg/autostart";
+
+    for (const QString &dirName : const_cast<const QStringList&>(desktop_paths)) {
+        QDir dir(dirName);
+        if (!dir.exists()) {
+            continue;
+        }
+
+        const QFileInfoList files = dir.entryInfoList(QStringList(QLatin1String("*.desktop")), QDir::Files | QDir::Readable);
+        for (const QFileInfo &fi : files) {
+            QString base = fi.baseName();
+            if (base == basename) {
+                XdgDesktopFile desktopFile;
+                desktopFile.load(fi.absoluteFilePath());
+                value = desktopFile.value("Icon").toString();
+                CNName = desktopFile.value("Name[zh_CN]").toString();
+                nameAndIcon[CNName] = value;
+            }
+        }
+    }
+
+    return nameAndIcon;
+}
+
+void MainWindow::judgeboxShow(){
+    QRect m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
+    click_blank_space_need_to_exit = false;
+    for(int j = 0; j < 7; j++) {
         map[j]->hide();
     }
 
@@ -759,7 +908,16 @@ void MainWindow::judgeboxShow()
     ui->judgeWidget->show();
 }
 
-// void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::keyPressEmulate(){
+    QTimer::singleShot(500, this, [&](){
+        qDebug()<<"Emulate press key A";
+        XTestFakeKeyEvent(QX11Info::display(), XKeysymToKeycode(QX11Info::display(),XK_A), True, 1);
+        XTestFakeKeyEvent(QX11Info::display(), XKeysymToKeycode(QX11Info::display(),XK_A), False, 1);
+        //XFlush(QX11Info::display());
+    });
+}
+
+//void MainWindow::closeEvent(QCloseEvent *event)
 //{
 //    qDebug()<<"MainWindow:: CloseEvent";
 //    if (closeGrab()) {
@@ -770,7 +928,7 @@ void MainWindow::judgeboxShow()
 //    return QWidget::closeEvent(event);
 //}
 
-/*
+
 bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
 {
     if (qstrcmp(eventType, "xcb_generic_event_t") != 0) {
@@ -796,4 +954,4 @@ bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, l
     }
     return false;
 }
-*/
+

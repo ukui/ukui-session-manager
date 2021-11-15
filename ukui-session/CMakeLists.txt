@@ -20,7 +20,6 @@ set(ukui-session_SRCS
     usminhibit.h
     ../tools/ukuipower.cpp
     ../tools/powerprovider.cpp
-    musicplayer.cpp
 )
 
 #find_package(QT5XDG )
@@ -28,7 +27,6 @@ find_package(PkgConfig)
 pkg_search_module(GSETTINGS_QT REQUIRED gsettings-qt)
 include_directories(${GSETTINGS_QT_INCLUDES})
 
-find_package(PkgConfig)
 pkg_search_module(X11 REQUIRED x11)
 include_directories(${X11_INCLUDES})
 
