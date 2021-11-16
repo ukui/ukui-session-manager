@@ -14,7 +14,9 @@ inhibit::inhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 f
     this->inhibitorName = inhibitorName;
 }
 
-inhibit::~inhibit(){}
+inhibit::~inhibit()
+{
+}
 
 
 uint usminhibit::get_next_inhibitor_serial()
@@ -28,6 +30,10 @@ uint usminhibit::get_next_inhibitor_serial()
     }
 
     return serial;
+}
+
+usminhibit::~usminhibit()
+{
 }
 
 usminhibit::usminhibit()
@@ -52,18 +58,22 @@ bool usminhibit::IsInhibited(quint32 flags)
     if ((flags & GSM_INHIBITOR_FLAG_LOGOUT) == GSM_INHIBITOR_FLAG_LOGOUT) {
         if(inhibit_logout_num > 0)
             isinhib = true;
+        }
     }
     if ((flags & GSM_INHIBITOR_FLAG_SWITCH_USER) == GSM_INHIBITOR_FLAG_SWITCH_USER) {
         if(inhibit_switchuser_num > 0)
             isinhib = true;
+        }
     }
     if ((flags & GSM_INHIBITOR_FLAG_SUSPEND) == GSM_INHIBITOR_FLAG_SUSPEND) {
         if(inhibit_suspend_num > 0)
             isinhib = true;
+        }
     }
     if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE) {
         if(inhibit_idle_num > 0)
             isinhib = true;
+        }
     }
     return isinhib;
 }
@@ -153,7 +163,7 @@ QStringList usminhibit::getinhibitor()
     while (i.hasNext()) {
         i.next();
         QString messagelist;
-        messagelist = i.value().app_id + "/" + QString::number(i.value().toplevel_xid)+ "/" \
+        messagelist = i.value().app_id + "/" + QString::number(i.value().toplevel_xid) + "/"
                     + i.value().reason + "/" + QString::number(i.value().flags) + "/" + QString::number(i.value().cookie);
         inhibitors << messagelist;
     }

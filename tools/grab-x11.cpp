@@ -57,8 +57,9 @@ bool establishGrab()
 
     Q_UNUSED(xserverGraber);
 
-    if(!grabKeyboard())
+    if (!grabKeyboard()) {
         return false;
+    }
 
     //不抢占鼠标事件
 //    if(!grabMouse()) {

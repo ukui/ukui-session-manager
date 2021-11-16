@@ -49,6 +49,9 @@ private slots:
 Q_SIGNALS:
     void StatusChanged(uint status);
 
+public:
+    QDBusInterface *interface;
+
 private:
     int mSecsidle;
     QList<QVariant> args;

@@ -51,6 +51,8 @@ private Q_SLOTS:
 private:
     void initialEnvironment();
 
+private:
+    int lastIdleTime;
     bool gsettings_usable;
     QGSettings * gs;
     ModuleManager* modman;

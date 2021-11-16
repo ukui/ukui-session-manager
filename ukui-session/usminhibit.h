@@ -29,22 +29,23 @@ public:
         GSM_INHIBITOR_FLAG_IDLE        = 1 << 3
     };
     usminhibit();
-
-    int inhibitor_serial;
     ~usminhibit();
     uint generateCookie();
     QHash<quint32 , inhibit> hash;
 
-    quint32 addinhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags);
-    uint uninhibit(quint32 cookie);
-    QStringList getinhibitor();
-    bool IsInhibited(quint32 flags);
+    uint generateCookie();
+    quint32 addInhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags);
+    uint unInhibit(quint32 cookie);
+    QStringList getInhibitor();
+    bool isInhibited(quint32 flags);
 
+public:
+    QHash<quint32 , inhibit> hash;
+    int inhibitor_serial;
     int inhibit_logout_num;
     int inhibit_switchuser_num;
     int inhibit_suspend_num;
     int inhibit_idle_num;
-
 private:
     //QDBusInterface dbus;
     uint get_next_inhibitor_serial();

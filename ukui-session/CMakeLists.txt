@@ -20,7 +20,18 @@ set(ukui-session_SRCS
     usminhibit.h
     ../tools/ukuipower.cpp
     ../tools/powerprovider.cpp
+    ukuismserver.h
+    ukuismserver.cpp
+    ukuismclient.h
+    ukuismclient.cpp
+    ukuismconnection.h
+    musicplayer.cpp
+    musicplayer.h
+    ukuisessiondebug.cpp
+    ukuisessiondebug.h
 )
+
+qt5_add_dbus_interface(ukui-session_SRCS org.ukui.KWin.Session.xml ukuikwinsession_interface)
 
 #find_package(QT5XDG )
 find_package(PkgConfig)
@@ -31,7 +42,18 @@ pkg_search_module(X11 REQUIRED x11)
 include_directories(${X11_INCLUDES})
 
 add_executable(ukui-session ${ukui-session_SRCS})
-target_link_libraries(ukui-session Qt5::Widgets Qt5::Core Qt5::DBus Qt5::Multimedia KF5::IdleTime -lukui-log4qt ${GSETTINGS_QT_LIBRARIES} ${X11_LIBRARIES})
+target_link_libraries(ukui-session
+    Qt5::Widgets
+    Qt5::Core
+    Qt5::DBus
+    Qt5::Multimedia
+    KF5::IdleTime
+    KF5::CoreAddons
+    KF5::ConfigCore
+    KF5::ConfigGui
+    KF5::WindowSystem
+    -lSM -lICE
+    -lukui-log4qt ${GSETTINGS_QT_LIBRARIES} ${X11_LIBRARIES})
 #${GSETTINGS_QT_LIBRARIES}
 
 install(TARGETS ukui-session DESTINATION bin)

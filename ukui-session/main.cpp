@@ -19,8 +19,13 @@
  *
  * END_COMMON_COPYRIGHT_HEADER */
 #include "sessionapplication.h"
+#include "ukuismserver.h"
+#include "ukuisessiondebug.h"
+
+#include <signal.h>
 
 #include <QStandardPaths>
+#include <QDBusInterface>
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
@@ -45,6 +50,13 @@ extern "C" {
 #define CURSOR_SIZE         "cursor-size"
 #define CURSOR_THEME        "cursor-theme"
 
+extern UKUISMServer *theServer;
+
+void IoErrorHandler(IceConn iceConn)
+{
+    theServer->ioError(iceConn);
+}
+
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QString logPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
@@ -66,6 +78,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     if (!QFile::exists(logPath)) {
         return;
     }
+
     QByteArray localMsg = msg.toLocal8Bit();
     QDateTime  dateTime = QDateTime::currentDateTime();
     QByteArray time = QString("[%1] ").arg(dateTime.toString("MM-dd hh:mm:ss.zzz")).toLocal8Bit();
@@ -113,7 +126,17 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         break;
     }
 
-    QFile logFile(logPath);
+    //clear file content when it is too large
+    logFilePath = logFilePath + "/ukui-session-xsmp.log";
+    QFile file(logFilePath);
+    qint64 fileSize = file.size();
+    if (fileSize >= 1024 * 1024 * 10) {
+        file.open(QFile::WriteOnly | QFile::Truncate);
+        file.flush();
+        file.close();
+    }
+
+    QFile logFile(logFilePath);
     logFile.open(QIODevice::WriteOnly | QIODevice::Append);
     QTextStream ts(&logFile);
     ts << logMsg << endl;
@@ -156,9 +179,9 @@ void setXresources(int dpi)
     Display    *dpy;
     QGSettings *mouse_settings = new QGSettings(MOUSE_SCHEMA);
     QString str = QString("Xft.dpi:\t%1\nXcursor.size:\t%2\nXcursor.theme:\t%3\n")
-            .arg(dpi)
-            .arg(mouse_settings->get(CURSOR_SIZE).toInt())
-            .arg(mouse_settings->get(CURSOR_THEME).toString());
+                         .arg(dpi)
+                         .arg(mouse_settings->get(CURSOR_SIZE).toInt())
+                         .arg(mouse_settings->get(CURSOR_THEME).toString());
 
     dpy = XOpenDisplay(NULL);
     XChangeProperty(dpy, RootWindow(dpy, 0),
@@ -297,6 +320,22 @@ bool require_dbus_session(){
 
 int main(int argc, char **argv)
 {
+    QDBusInterface face("org.freedesktop.login1",
+                        "/org/freedesktop/login1/user/self",
+                        "org.freedesktop.login1.User",
+                        QDBusConnection::systemBus());
+
+    face.call("Kill", 9);
+}
+
+void openDubug()
+{
+//#ifdef QT_NO_DEBUG
+//    UKUI_SESSION().setFilterRules(QLatin1Literal("org.ukui.ukuisession=false"));
+//#else
+//    UKUI_SESSION().setFilterRules(QLatin1Literal("org.ukui.ukuisession=true"));
+//#endif
+    UKUI_SESSION().setFilterRules(QLatin1Literal("org.ukui.ukuisession=true"));
     qInstallMessageHandler(myMessageOutput);
     //initUkuiLog4qt("ukui-session");
 
@@ -311,5 +350,10 @@ int main(int argc, char **argv)
     setHightResolutionScreenZoom();
 
     app.setQuitOnLastWindowClosed(false);
+    UKUISMServer *server = new UKUISMServer;
+    IceSetIOErrorHandler(IoErrorHandler);
+    server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
+//    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
+    
     return app.exec();
 }

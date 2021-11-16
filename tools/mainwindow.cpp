@@ -201,8 +201,10 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         if (lockuser) {
             lable2_text = b1;
             ui->logout->removeEventFilter(this);
-        } else
+        } else {
             lable2_text = b2;
+        }
+
         ui->message_label1->setText(user + lable1_text);
         ui->message_label2->setText(lable2_text);
         ui->shutdown->removeEventFilter(this);
@@ -222,8 +224,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     map.insert(5, ui->reboot);
     map.insert(6, ui->shutdown);
 
-    if (m_power->canAction(
-            UkuiPower::PowerHibernate)) {   // m_power->canAction(UkuiPower::PowerHibernate)
+    if (m_power->canAction(UkuiPower::PowerHibernate)) {   // m_power->canAction(UkuiPower::PowerHibernate)
         isHibernateHide = false;
     }
 
@@ -247,12 +248,14 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         QGSettings *controlSetting = new QGSettings(id_control, QByteArray(), this);
         QString     formate_a      = controlSetting->get("date").toString();
         QString     formate_b      = controlSetting->get("hoursystem").toString();
-        if (formate_a == "en")
+
+        if (formate_a == "en") {
             current_date = current_date_time.toString("yyyy-MM-dd ddd");
-        else if (formate_a == "cn")
+        } else if (formate_a == "cn") {
             current_date = current_date_time.toString("yyyy/MM/dd ddd");
-        else
+        } else {
             current_date = current_date_time.toString("yyyy-MM-dd ddd");
+        }
 
         if (formate_b == "12") {
             current_time = current_date_time.toString("A hh:mm");
@@ -566,7 +569,9 @@ bool MainWindow::exitt()
     exit(0);
 }
 
-void MainWindow::onGlobalKeyPress(const QString &key) {}
+void MainWindow::onGlobalKeyPress(const QString &key)
+{
+}
 
 // handle "Esc","Left","Right","Enter" keyPress event
 void MainWindow::onGlobalkeyRelease(const QString &key)
@@ -645,8 +650,9 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
                     if (isHibernateHide && tableNum == 2) {
                         if (isSwitchuserHide) {
                             tableNum = 6;
-                        } else
+                        } else {
                             tableNum = 0;
+                        }
                     } else {
                         if (isSwitchuserHide && tableNum == 1) {
                             tableNum = 6;

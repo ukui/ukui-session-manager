@@ -10,6 +10,8 @@ class window : public QMainWindow
     Q_OBJECT
 public:
     window();
+
+public:
     QPixmap pix;
 
 protected:
