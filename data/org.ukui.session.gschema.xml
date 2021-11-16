@@ -53,7 +53,7 @@
       <description>If logout prompt is enabled, this set the timeout in seconds before logout automatically. If 0, automatic logout is disabled.</description>
     </key>
     <key name="idle-delay" type="i">
-      <default>5</default>
+      <default>1</default>
       <summary>Time before session is considered idle</summary>
       <description>The number of minutes of inactivity before the session is considered idle.</description>
     </key>

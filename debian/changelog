@@ -1,38 +1,141 @@
-ukui-session-manager (2.0.9-7) v101; urgency=medium
+ukui-session-manager (2.0.11-1) v101; urgency=medium
 
-  * Session Manager添加XSMP协议支持
+  * CodeMerge: merge master's changelog to hw9x0
+  *
+  * Bug Fix: #83029 #78831 #77756 #77011 #75676 #73738
+  *          #62631 #74601 #65789 #65484 
+  *
+  * Others : 性能优化改动
 
- -- zxf <zhouxiaofeng@kylinos.cn>  Mon, 27 Sep 2021 08:56:59 +0800
+ -- liuliang <liuliang@kylinos.cn>  Mon, 15 Nov 2021 14:58:44 +0800
 
-ukui-session-manager (2.0.9-6) v101; urgency=medium
+ukui-session-manager (2.0.10-4) v101; urgency=medium
 
-  * BUG FIX: #77756 #77011 
+  * Bug fix: #77339 #77942 #80860
 
- -- liuliang <liuliang@kylinos.cn>  Thu, 02 Sep 2021 16:35:35 +0800
+ -- liuliang <liuliang@kylinos.cn>  Thu, 11 Nov 2021 20:47:27 +0800
 
-ukui-session-manager (2.0.9-3) v101; urgency=medium
+ukui-session-manager (2.0.9-5) v101.hw; urgency=medium
 
-  * BUG FIX: #75676 #73738
+  * BUG FIX: 75966
 
- -- liuliang <liuliang@kylinos.cn>  Tue, 24 Aug 2021 17:09:01 +0800
+ -- liuliang <liuliang@kylinos.cn>  Tue, 14 Sep 2021 14:30:16 +0800
 
-ukui-session-manager (2.0.9-1) v101; urgency=medium
+ukui-session-manager (2.0.9-2) v101.hw; urgency=medium
 
-  * 修改bug: 62631 #74601
+  * BUG FIX: 74896
 
- -- liuliang <liuliang@kylinos.cn>  Thu, 19 Aug 2021 17:37:17 +0800
+ -- liuliang <liuliang@kylinos.cn>  Fri, 20 Aug 2021 15:06:06 +0800
 
-ukui-session-manager (2.0.8-5) v101; urgency=medium
+ukui-session-manager (2.0.8-10hw) v101.hw; urgency=medium
 
-  * 修改bug：#65789 #65484
+  * 其他改动：调整开机音乐的音量大小.
 
- -- liuliang <liuliang@kylinos.cn>  Thu, 08 Jul 2021 17:06:11 +0800
+ -- liuliang <liuliang@kylinos.cn>  Mon, 09 Aug 2021 09:46:07 +0800
 
-ukui-session-manager (2.0.8-2) v101; urgency=medium
+ukui-session-manager (2.0.8-9hw) v101.hw; urgency=medium
 
-  * 性能优化改动
+  * BUG FIX: 62263
 
- -- liuliang <liuliang@kylinos.cn>  Sat, 03 Jul 2021 17:40:16 +0800
+ -- liuliang <liuliang@kylinos.cn>  Fri, 06 Aug 2021 10:27:21 +0800
+
+ukui-session-manager (2.0.8-8hw) v101.hw; urgency=medium
+
+  * Bug Fix: 63610.
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 05 Aug 2021 14:45:42 +0800
+
+ukui-session-manager (2.0.8-7hw) v101.hw; urgency=medium
+
+  * upgrade package version.
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 26 Jul 2021 10:10:12 +0800
+
+ukui-session-manager (2.0.7-10hw) v101.hw; urgency=medium
+
+  * Bug fix: 67475 67472 67470 67804 
+
+ -- liuliang <liuliang@kylinos.cn>  Fri, 23 Jul 2021 17:35:23 +0800
+
+ukui-session-manager (2.0.7-9) v101.hw; urgency=medium
+
+  * Bug fix: 62018
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 15 Jul 2021 14:17:48 +0800
+
+ukui-session-manager (2.0.7-8) v101; urgency=medium
+
+  * BUG FIX: 61678.
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 29 Jun 2021 20:38:18 +0800
+
+ukui-session-manager (2.0.7-5hw) v101.hw; urgency=medium
+
+  * Go back dpi settings.
+
+ -- liuliang <liuliang@kylinos.cn>  Sat, 19 Jun 2021 15:05:52 +0800
+
+ukui-session-manager (2.0.7-4hw) v101.hw; urgency=medium
+
+  * Bug Fixed:61678 60061 
+
+ -- liuliang <liuliang@kylinos.cn>  Wed, 16 Jun 2021 09:17:04 +0800
+
+ukui-session-manager (2.0.7-3hw) v101.hw; urgency=medium
+
+  * 解决bug:59649
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 10 Jun 2021 20:15:22 +0800
+
+ukui-session-manager (2.0.7-2hw) v101.hw; urgency=medium
+
+  * 解决bug: 无
+  * 完成任务号: 无
+  * 其他改动说明：日志模块使用自己的代码，屏蔽启动黑屏bug
+  *               将对鼠标的设置与监听环境变量的功能注释
+
+ -- liuliang <liuliang@kylinos.cn>  Wed, 09 Jun 2021 09:34:46 +0800
+
+ukui-session-manager (2.0.7-1hw) v101.hw; urgency=medium
+
+  * 解决bug：47409 46555
+  * 完成任务号：无
+  * 其他：添加支持非整数缩放属性的设置
+  *       将判断dbus总线地址是否初始化正确的函数从tools界面转移到ukui-sesison中
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 08 Jun 2021 11:04:25 +0800
+
+ukui-session-manager (2.0.6-9hw) v101.hw; urgency=medium
+
+  * 解决bug: zentao #47157
+  * 完成任务号: 无
+  * 其他改动说明：无
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 01 Jun 2021 17:51:13 +0800
+
+ukui-session-manager (2.0.6-8hw) v101.hw; urgency=medium
+
+  * 解决bug: 54743
+  * 完成任务号：无
+  * 其他改动说明：无
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 17 May 2021 14:54:26 +0800
+
+ukui-session-manager (2.0.6-7) v101.hw; urgency=medium
+
+  * 解决bug: 54691
+  * 完成任务号：无
+  * 其他改动说明：添加 切换用户信号
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 17 May 2021 08:42:19 +0800
+
+ukui-session-manager (2.0.6-6) v101.hw; urgency=medium
+
+  * 解决bug号：52312 37232
+  * 完成任务号：28200
+  * 其他改动说明：修改dbus中getInhibitos输出的返回值
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 04 May 2021 17:17:27 +0800
 
 ukui-session-manager (2.0.6-5) v101; urgency=medium
 

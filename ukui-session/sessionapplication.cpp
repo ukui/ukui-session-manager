@@ -90,9 +90,9 @@ void SessionApplication::initialEnvironment()
         QT_QPA_PLATFORMTHEME = "gtk2";
     }
 
-    qputenv("XDG_CURRENT_DESKTOP", "UKUI");
-    qputenv("QT_QPA_PLATFORMTHEME", QT_QPA_PLATFORMTHEME);
-    qputenv("QT_QPA_PLATFORM", "xcb");
+    qputenv("XDG_CURRENT_DESKTOP","UKUI");
+    qputenv("QT_QPA_PLATFORMTHEME",QT_QPA_PLATFORMTHEME);
+//    qputenv("QT_QPA_PLATFORM", "xcb");
 
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
     if (xdg_session_type == "wayland") {
@@ -106,7 +106,7 @@ void SessionApplication::updateIdleDelay()
 {
     if (gsettings_usable) {
         const int idle = gs->get("idle-delay").toInt() * 60;
-        if (lastIdleTime == idle){
+        if (lastIdleTime == idle ){
             return;
         }
         mIdleWatcher->reset(idle);

@@ -42,7 +42,9 @@ public:
                                                , m_ukuiProvider(new UKUIProvider())
     {
         connect(mManager, &ModuleManager::moduleStateChanged, this , &SessionDBusAdaptor::moduleStateChanged);
-        connect(mManager, &ModuleManager::finished, this, &SessionDBusAdaptor::emitPrepareForPhase2);
+        connect(mManager, &ModuleManager::finished,this,&SessionDBusAdaptor::emitPrepareForPhase2);
+        connect(minhibit, &usminhibit::inhibitRemove,this,&SessionDBusAdaptor::simulateUserActivity);
+        connect(minhibit, &usminhibit::inhibitAdd,this,&SessionDBusAdaptor::simulateUserActivity);
     }
 
 Q_SIGNALS:
@@ -208,6 +210,11 @@ public slots:
     {
         qDebug() << "emit  PrepareForPhase2";
         emit PrepareForPhase2();
+    }
+
+    Q_NOREPLY void simulateUserActivity(){
+        qDebug()<<"simulate User Activity";
+        KIdleTime::instance()->simulateUserActivity();
     }
 
 private:

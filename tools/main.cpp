@@ -1,22 +1,22 @@
 /*
- * Copyright (C) 2019 Tianjin KYLIN Information Technology Co., Ltd.
- *               2010-2016 LXQt team
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301, USA.
- **/
+* Copyright (C) 2019 Tianjin KYLIN Information Technology Co., Ltd.
+*               2010-2016 LXQt team
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2, or (at your option)
+* any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+* 02110-1301, USA.
+**/
 #include <QApplication>
 #include <QWidget>
 #include <QDebug>
@@ -37,6 +37,8 @@
 #include "ukuipower.h"
 #include "mainwindow.h"
 #include "window.h"
+#include "loginedusers.h"
+#include "lockchecker.h"
 #include <QPushButton>
 
 #include <sys/file.h>
@@ -49,42 +51,80 @@
 #undef signals
 #endif
 
-QString getName(QFile *a)
-{
-    QString user = getenv("USER");
-    if (a->exists()) {
-        a->open(QIODevice::ReadOnly | QIODevice::Text);
-        QTextStream fileStream(a);
-        int         k = 0;
-        while (!fileStream.atEnd()) {
-            QString line = fileStream.readLine();
-            if (k == 0) {
-                QString a = line;
-                qDebug() << "uid=" << a;
-                struct passwd *user1;
-                user1 = getpwuid(a.toInt());
-                qDebug() << "name=" << user1->pw_name << ",uid=" << user1->pw_uid;
-                if (user1->pw_name == NULL) {
-                    return user;
-                }
-                user = user1->pw_name;
-            }
-            k++;
-        }
-    }
-    return user;
-}
-
-bool messageboxCheck()
-{
+/*菜单栏调用睡眠且有inhibitor阻塞时调用此函数进行消息提示*/
+bool sleepInhibitorCheck(){
     QMessageBox msgBox;
-    //    msgBox.setWindowTitle(QObject::tr("conform"));
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
-    //    msgBox.setModal(false);
-    msgBox.setText(QObject::tr("Multiple users are logged in at the same time.Are you sure you "
-                               "want to close this system?"));
-    QPushButton *cancelButton  = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
+
+    QString message;
+    QStringList Inhibitors;
+    QStringList Reason;
+    LockChecker::getSleepInhibitors(Inhibitors, Reason);
+
+    for (int i = 0; i < Inhibitors.length(); ++i) {
+        QString num            = QString("%1").arg(Inhibitors.at(i));
+        QString reason         = QString("%1 \n").arg(Reason.at(i));
+        QString inhibitMessage = num + QObject::tr(" is block system into sleep for reason ") + reason;
+        message.append(std::move(inhibitMessage));
+    }
+    message.append(std::move(QObject::tr("Are you sure you want to get system into slepp?")));
+    msgBox.setText(message);
+    QPushButton *cancelButton = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
+    QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
+
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == cancelButton) {
+        return false;
+    } else if (msgBox.clickedButton() == confirmButton) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/*菜单栏调用重启或关机且有inhibitor阻塞时调用此函数进行消息提示*/
+bool shutdownInhibitorCheck(){
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
+
+    QString message;
+    QStringList Inhibitors;
+    QStringList Reason;
+    LockChecker::getShutdownInhibitors(Inhibitors, Reason);
+
+    for(int i = 0; i < Inhibitors.length(); ++i) {
+        QString num            = QString("%1").arg(Inhibitors.at(i));
+        QString reason         = QString("%1 \n").arg(Reason.at(i));
+        QString inhibitMessage = num + QObject::tr(" is block system into sleep for reason ") + reason;
+        message.append(std::move(inhibitMessage));
+    }
+    message.append(std::move(QObject::tr("Are you sure you want to shutdown?")));
+    msgBox.setText(message);
+    QPushButton *cancelButton = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
+    QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
+
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == cancelButton) {
+        return false;
+    } else if (msgBox.clickedButton() == confirmButton) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool messageboxCheck(){
+    QMessageBox msgBox;
+//    msgBox.setWindowTitle(QObject::tr("conform"));
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
+//    msgBox.setModal(false);
+    msgBox.setText(QObject::tr("Multiple users are logged in at the same time.Are you sure you want to close this system?"));
+    QPushButton *cancelButton = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
     QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
 
     msgBox.exec();
@@ -100,12 +140,10 @@ bool messageboxCheck()
     }
 }
 
-void messagecheck()
-{
+void messagecheck(){
     QMessageBox msgBox;
     msgBox.setWindowTitle(QObject::tr("notice"));
-    QString t1 = QObject::tr("System update or package installation in progress,this function is "
-                             "temporarily unavailable.");
+    QString t1 = QObject::tr("System update or package installation in progress,this function is temporarily unavailable.");
     QString t2 = QObject::tr("System backup or restore in progress,this function is temporarily unavailable.");
 
     QFile file_update("/tmp/lock/kylin-update.lock");
@@ -121,59 +159,7 @@ void messagecheck()
     msgBox.exec();
 }
 
-int checkLock()
-{
-    bool lockfile = false;
-    bool lockuser = false;
-
-    QFile file_backup("/tmp/lock/kylin-backup.lock");
-    QFile file_update("/tmp/lock/kylin-update.lock");
-    if (file_backup.exists()) {
-        int fd_backup = open(QString("/tmp/lock/kylin-backup.lock").toUtf8().data(), O_RDONLY);
-        int b         = flock(fd_backup, LOCK_EX | LOCK_NB);
-        qDebug() << "b" << b;
-        if (b < 0) {
-            lockfile          = true;
-            QString file_user = getName(&file_backup);
-            if (file_user == qgetenv("USER")) {
-                lockuser = true;
-            }
-        }
-        file_backup.close();
-        if (flock(fd_backup, LOCK_UN) == 0) {
-            qDebug() << "unlock sucess.";
-        } else {
-            qDebug() << "unlock fail.";
-        }
-    }
-    if (file_update.exists()) {
-        int fd_update = open(QString("/tmp/lock/kylin-update.lock").toUtf8().data(), O_RDONLY);
-        int c         = flock(fd_update, LOCK_EX | LOCK_NB);
-        qDebug() << "c" << c;
-        if (c < 0) {
-            lockfile          = true;
-            QString file_user = getName(&file_update);
-            if (file_user == qgetenv("USER")) {
-                lockuser = true;
-            }
-        }
-        file_backup.close();
-        if (flock(fd_update, LOCK_UN) == 0) {
-            qDebug() << "unlock sucess.";
-        } else {
-            qDebug() << "unlock fail.";
-        }
-    }
-    if (lockfile) {
-        if (lockuser)
-            return 2;
-        return 1;
-    }
-    return 0;
-}
-
-bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_time,
-                       QSoundEffect *soundplayer)
+bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_time)
 {
     if (cc == 1) {
         if (num == 1 || num == 5 || num == 6) {
@@ -211,11 +197,13 @@ bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_t
         }
 
         QDBusMessage msg;
-        if (num == 4)
+        if (num == 4) {
             msg = dbus.call("emitStartLogout");
+        }
 
-        if (num == 0)
+        if (num == 0) {
             msg = dbus.call("emitPrepareForSwitchuser");
+        }
 
         if (!msg.errorName().isEmpty()) {
             qWarning() << "Dbus error: " << msg;
@@ -226,22 +214,26 @@ bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_t
         // up_to_time and soundplayer can not be define out of this if().
         // otherwise run ukui-session-tools --suspend with segmente error.
         // because they will be delate at the end of the playShutdownMusic().
+        QObject::connect(up_to_time, &QTimer::timeout, [&]() {
+            powermanager.doAction(UkuiPower::Action(action));
+            exit(0);
+        });
+
+        QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
         if (num == 5 || num == 6) {
-            soundplayer->setSource(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/shutdown.wav"));
+            if (xdg_session_type == "wayland") {
+                QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/shutdown.wav");
+            } else
+                QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/shutdown.wav");
         } else if (num == 4) {
-            soundplayer->setSource(QUrl::fromLocalFile("/usr/share/ukui/ukui-session-manager/logout.wav"));
+            if (xdg_session_type == "wayland") {
+                QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/logout.wav");
+            } else
+                QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/logout.wav");
         } else {
             qDebug() << "error num";
             return false;
         }
-        // timeout set.
-        QObject::connect(up_to_time, &QTimer::timeout, [&]() {
-            if (powermanager.canAction(UkuiPower::Action(action))) {
-                powermanager.doAction(UkuiPower::Action(action));
-            }
-            exit(0);
-        });
-        soundplayer->play();
         up_to_time->start(1200);
     } else {
         if (powermanager.canAction(UkuiPower::Action(action))) {
@@ -252,36 +244,29 @@ bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_t
     return false;
 }
 
-bool requireDbusSession()
-{
-    QString env_dbus = qgetenv("DBUS_SESSION_BUS_ADDRESS");
-    if (!env_dbus.isEmpty())
-        return true;
-
-    qDebug() << "Fatal DBus error, DBUS_SESSION_BUS_ADDRESS is empty.";
-    QProcess a;
-    a.setProcessChannelMode(QProcess::ForwardedChannels);
-    a.start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
-    a.waitForFinished(-1);
-    if (a.exitCode()) {
-        qWarning() << "dbus-launch exited with code" << a.exitCode();
-    }
-    return true;
-}
-
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     initUkuiLog4qt("ukui-session-tools");
 
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 12, 0))
 
-    requireDbusSession();
+  QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+  QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+#endif
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+
+  QApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+
+#endif
 
     QApplication a(argc, argv);
 
-    int cc = checkLock();
-    qDebug() << cc << "   cc";
+//    int cc = check_lock();
+    int cc = LockChecker::checkLock();
+    qDebug() << cc <<"   cc";
 
     // Load ts files
     const QString locale = QLocale::system().name();
@@ -301,8 +286,6 @@ int main(int argc, char *argv[])
     // define in the main() avoid scope error.
     QTimer *up_to_time = new QTimer();
     up_to_time->setSingleShot(true);
-    QSoundEffect *soundplayer = new QSoundEffect();
-    soundplayer->setVolume(0.4);
 
     QGSettings *gs = new QGSettings("org.ukui.session", "/org/ukui/desktop/session/");
     gs->set("win-key-release", true);
@@ -316,7 +299,6 @@ int main(int argc, char *argv[])
         lock_file = true;
         lock_user = true;
     }
-    MainWindow *w = new MainWindow(lock_file, lock_user);
 
     QCommandLineParser parser;
     parser.setApplicationDescription(
@@ -352,38 +334,89 @@ int main(int argc, char *argv[])
     parser.process(a);
 
     if (parser.isSet(switchuserOption)) {
-        flag = playShutdownMusic(powermanager, 0, cc, up_to_time, soundplayer);
+        flag = playShutdownMusic(powermanager, 0, cc, up_to_time);
     }
     if (parser.isSet(hibernateOption)) {
-        flag = playShutdownMusic(powermanager, 1, cc, up_to_time, soundplayer);
+        if (LockChecker::isSleepBlocked()) {
+            if (sleepInhibitorCheck()) {
+                flag = playShutdownMusic(powermanager, 1, cc, up_to_time);
+            } else {
+                return 0;
+            }
+        } else {
+            flag = playShutdownMusic(powermanager, 1, cc, up_to_time);
+        }
     }
     if (parser.isSet(suspendOption)) {
-        flag = playShutdownMusic(powermanager, 2, cc, up_to_time, soundplayer);
+        if (LockChecker::isSleepBlocked()) {
+            if (sleepInhibitorCheck()) {
+                flag = playShutdownMusic(powermanager, 2, cc, up_to_time);
+            } else {
+                return 0;
+            }
+        } else {
+            flag = playShutdownMusic(powermanager, 2, cc, up_to_time);
+        }
     }
     if (parser.isSet(logoutOption)) {
-        flag = playShutdownMusic(powermanager, 4, cc, up_to_time, soundplayer);
+        flag = playShutdownMusic(powermanager, 4, cc, up_to_time);
     }
     if (parser.isSet(rebootOption)) {
-        if (w->getLoginedUsers().count() > 1) {
-            if (messageboxCheck()) {
-                flag = playShutdownMusic(powermanager, 5, cc, up_to_time, soundplayer);
+        if (LockChecker::isShutdownBlocked()) {//有inhibitor的情况下
+            if (shutdownInhibitorCheck()) {//先提醒inhibitor
+                if (LockChecker::getLoginedUsers().count() > 1) {//再提醒多个用户登录的情况
+                    if (messageboxCheck()) {
+                        flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
+                }
             } else {
                 return 0;
             }
-        } else {
-            flag = playShutdownMusic(powermanager, 5, cc, up_to_time, soundplayer);
+
+        } else {//没有inhibitor的情况下
+            if (LockChecker::getLoginedUsers().count() > 1) {//提醒多个用户登录的情况
+                if (messageboxCheck()) {
+                    flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
+                } else {
+                    return 0;
+                }
+            } else {
+                flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
+            }
         }
+
     }
     if (parser.isSet(shutdownOption)) {
-        if (w->getLoginedUsers().count() > 1) {
-            if (messageboxCheck()) {
-                flag = playShutdownMusic(powermanager, 6, cc, up_to_time, soundplayer);
+        if (LockChecker::isShutdownBlocked()) {
+            if (shutdownInhibitorCheck()) {
+                if (LockChecker::getLoginedUsers().count() > 1) {
+                    if (messageboxCheck()) {
+                        flag = playShutdownMusic(powermanager, 6, cc, up_to_time);
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    flag = playShutdownMusic(powermanager, 6, cc, up_to_time);
+                }
             } else {
                 return 0;
             }
         } else {
-            flag = playShutdownMusic(powermanager, 6, cc, up_to_time, soundplayer);
+            if (LockChecker::getLoginedUsers().count() > 1) {//提醒多个用户登录的情况
+                if (messageboxCheck()) {
+                    flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
+                } else {
+                    return 0;
+                }
+            } else {
+                flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
+            }
         }
+
     }
     if (parser.isSet(windowOption)) {
         flag        = false;
@@ -392,6 +425,7 @@ int main(int argc, char *argv[])
     }
     if (flag) {
         // Load qss file
+        MainWindow *w = new MainWindow(lock_file, lock_user);
         QFile qss(":/powerwin.qss");
         qss.open(QFile::ReadOnly);
         a.setStyleSheet(qss.readAll());
@@ -399,10 +433,15 @@ int main(int argc, char *argv[])
 
         w->showFullScreen();
         QObject::connect(w, &MainWindow::signalTostart, [&]() {
-            w->hide();
-            playShutdownMusic(powermanager, w->defaultnum, cc, up_to_time, soundplayer);
+            // 从界面点击 切换用户 按钮，则等待界面隐藏再执行命令
+            if (w->defaultnum == 0) {
+                w->hide();
+                QTimer::singleShot(500, [&]() {
+                    playShutdownMusic(powermanager, w->defaultnum, cc, up_to_time);
+                });
+            } else
+                playShutdownMusic(powermanager, w->defaultnum, cc, up_to_time);
         });
     }
-
     return a.exec();
 }

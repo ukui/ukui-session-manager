@@ -38,7 +38,6 @@ find_package(PkgConfig)
 pkg_search_module(GSETTINGS_QT REQUIRED gsettings-qt)
 include_directories(${GSETTINGS_QT_INCLUDES})
 
-find_package(PkgConfig)
 pkg_search_module(X11 REQUIRED x11)
 include_directories(${X11_INCLUDES})
 

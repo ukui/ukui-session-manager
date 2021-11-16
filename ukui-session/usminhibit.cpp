@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <QDebug>
 
-inhibit::inhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags, quint32 cookie, QString inhibitorName)
+inhibit::inhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags ,quint32 cookie ,QString inhibitorName)
 {
     this->app_id = app_id;
     this->toplevel_xid = toplevel_xid;
@@ -50,33 +50,35 @@ usminhibit::usminhibit()
     inhibit_idle_num = 0;
 }
 
-bool usminhibit::isInhibited(quint32 flags)
+usminhibit::~usminhibit(){}
+
+bool usminhibit::IsInhibited(quint32 flags)
 {
     bool isinhib = false;
     if ((flags & GSM_INHIBITOR_FLAG_LOGOUT) == GSM_INHIBITOR_FLAG_LOGOUT) {
-        if (inhibit_logout_num > 0) {
+        if(inhibit_logout_num > 0)
             isinhib = true;
         }
     }
     if ((flags & GSM_INHIBITOR_FLAG_SWITCH_USER) == GSM_INHIBITOR_FLAG_SWITCH_USER) {
-        if(inhibit_switchuser_num > 0) {
+        if(inhibit_switchuser_num > 0)
             isinhib = true;
         }
     }
-    if ((flags & GSM_INHIBITOR_FLAG_SUSPEND) == GSM_INHIBITOR_FLAG_SUSPEND){
-        if(inhibit_suspend_num > 0) {
+    if ((flags & GSM_INHIBITOR_FLAG_SUSPEND) == GSM_INHIBITOR_FLAG_SUSPEND) {
+        if(inhibit_suspend_num > 0)
             isinhib = true;
         }
     }
-    if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE){
-        if(inhibit_idle_num > 0) {
+    if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE) {
+        if(inhibit_idle_num > 0)
             isinhib = true;
         }
     }
     return isinhib;
 }
 
-quint32 usminhibit::addInhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
+quint32 usminhibit::addinhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
 {
     if (app_id.isEmpty()) {
         return -1;
@@ -114,20 +116,18 @@ quint32 usminhibit::addInhibit(QString app_id, quint32 toplevel_xid, QString rea
     inhibit a(app_id, toplevel_xid, reason, flags, cookie, inhibitorName);
     hash.insert(cookie, a);
     qDebug() << "app_id=" << app_id << "; toplevel_xid=" << QString::number(toplevel_xid) << "; reason=" << reason << "; flag=" << QString::number(flags);
-    qDebug() << "cookie is" << cookie;
     return cookie;
 }
 
-uint usminhibit::generateCookie()
-{
+uint usminhibit::generateCookie(){
     quint32 cookie;
     do {
-        cookie = QRandomGenerator::global()->bounded(INT_MAX);//std::numeric_limits<quint32>::max()
+        cookie = QRandomGenerator::global()->bounded(1, 4294967295);//std::numeric_limits<quint32>::max()
     } while (hash.contains(cookie)) ;
     return cookie;
 }
 
-uint usminhibit::unInhibit(quint32 cookie)
+uint usminhibit::uninhibit(quint32 cookie)
 {
     uint flags = 0;
     QHash<quint32, inhibit>::iterator i = hash.find(cookie);
@@ -138,25 +138,26 @@ uint usminhibit::unInhibit(quint32 cookie)
     if (flags == 0) {
         return flags;
     }
-    if ((flags & GSM_INHIBITOR_FLAG_LOGOUT) == GSM_INHIBITOR_FLAG_LOGOUT){
+    if ((flags & GSM_INHIBITOR_FLAG_LOGOUT) == GSM_INHIBITOR_FLAG_LOGOUT) {
         inhibit_logout_num--;
     }
-    if ((flags & GSM_INHIBITOR_FLAG_SWITCH_USER) == GSM_INHIBITOR_FLAG_SWITCH_USER){
+    if ((flags & GSM_INHIBITOR_FLAG_SWITCH_USER) == GSM_INHIBITOR_FLAG_SWITCH_USER) {
         inhibit_switchuser_num--;
     }
-    if ((flags & GSM_INHIBITOR_FLAG_SUSPEND) == GSM_INHIBITOR_FLAG_SUSPEND){
+    if ((flags & GSM_INHIBITOR_FLAG_SUSPEND) == GSM_INHIBITOR_FLAG_SUSPEND) {
         inhibit_suspend_num--;
     }
-    if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE){
+    if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE) {
         inhibit_idle_num--;
     }
+    emit inhibitRemove();
     return flags;
 }
 
-QStringList usminhibit::getInhibitor()
+QStringList usminhibit::getinhibitor()
 {
     //do not show inhibitorName to user
-    //in case we dont know who is inhibiting
+    //in case we don't know who is inhibiting
     QHashIterator<quint32, inhibit> i(hash);
     QStringList inhibitors;
     while (i.hasNext()) {
@@ -168,6 +169,7 @@ QStringList usminhibit::getInhibitor()
     }
     return inhibitors;
 }
+
 
 #include "usminhibit.moc"
 

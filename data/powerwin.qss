@@ -39,3 +39,27 @@ QLabel#lockscreen_icon{
     background:url(/usr/share/ukui/ukui-session-manager/images/lockscreen.png);
     background-repeat:no-repeat;
 }
+
+/*睡眠提示界面的继续执行按钮*/
+QPushButton#confirmBtn {
+    background-color: rgb(255,255,255,80);
+    border-style: outset;
+    border-width: 0px;
+    border-radius: 24px;
+}
+
+/*睡眠提示界面的取消按钮*/
+QPushButton#cancelBtn {
+    background-color: rgb(255,255,255,80);
+    border-style: outset;
+    border-width: 0px;
+    border-radius: 24px;
+}
+
+/*提示界面的应用列表*/
+QListView#applist {
+    background-color: rgb(255,255,255,80);
+    border-style: outset;
+    border-width: 0px;
+    border-radius: 4px;
+}

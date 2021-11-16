@@ -53,9 +53,7 @@ public:
 
     void startup();
 
-    void doStart();
-
-    void doStartWM();
+    void dostartwm();
 
     void startupfinished(const QString& appName ,const QString& string);
 
@@ -75,7 +73,7 @@ public slots:
     void timerUpdate();
     void timeup();
     void weakup(bool arg);
-    void stateChanged(QMediaPlayer::State state);
+    //void stateChanged(QMediaPlayer::State state);
 
 private slots:
     void restartModules(int exitCode, QProcess::ExitStatus exitStatus);
@@ -93,14 +91,15 @@ private:
     QTimer *twm = new QTimer();
     QTimer *tpanel = new QTimer();
     QTimer *tdesktop = new QTimer();
-    QMediaPlayer *player;
-    QList<QString> mAllAppList;
-    QEventLoop *mWaitLoop;
+    bool start_module_Timer(QTimer *timer,int i);
+    bool isPanelStarted    = false;
+    bool isDesktopStarted  = false;
+    bool isWMStarted       = false;
+    bool isCompsiteStarted = false;
 
-    bool runUsd = true;
-    bool runWm = true;
-    bool runPanel = true;
-    bool runDesktop = true;
+    bool isWayland         = false;
+
+    //QMediaPlayer *player;
     bool isDirectInstall = false;
     bool mWmStarted;
     bool mTrayStarted;

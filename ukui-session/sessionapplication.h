@@ -41,6 +41,7 @@ class SessionApplication : public QApplication
 public:
     SessionApplication(int& argc, char** argv);
     ~SessionApplication();
+    QGSettings *mouseSettings = nullptr;
 
 private Q_SLOTS:
     bool startup();
@@ -49,7 +50,6 @@ private Q_SLOTS:
 
 private:
     void initialEnvironment();
-    void playBootMusic();
 
 private:
     int lastIdleTime;
@@ -57,7 +57,8 @@ private:
     QGSettings * gs;
     ModuleManager* modman;
     IdleWatcher* mIdleWatcher;
-
+    int lastIdleTime;
+    void playBootMusic();
 };
 
 #endif // SESSIONAPPLICATION_H

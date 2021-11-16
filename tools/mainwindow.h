@@ -25,7 +25,7 @@
 #include <QPixmap>
 #include <QHash>
 #include <QGSettings/QGSettings>
-//#include <QAbstractNativeEventFilter>
+#include <QAbstractNativeEventFilter>
 
 class XEventMonitor;
 
@@ -33,50 +33,27 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow//,public QAbstractNativeEventFilter
+class MainWindow : public QMainWindow ,public QAbstractNativeEventFilter
 {
     Q_OBJECT
 
 public:
-    MainWindow(bool a, bool b, QWidget *parent = nullptr);
+    MainWindow(bool a , bool b ,QWidget *parent = nullptr);
     ~MainWindow();
-    void doEvent(QString test2, int i);
-    void changePoint(QWidget *widget, QEvent *event, int i);
-    //void closeEvent(QCloseEvent *event);
-    //virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
 
+    void doEvent(QString test2,int i);
+    void changePoint(QWidget *widget ,QEvent *event ,int i);
     void judgeboxShow();
-    QStringList getLoginedUsers();
-    int getCachedUsers();
+    void keyPressEmulate();
+    virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
+    //void closeEvent(QCloseEvent *event);
 
 private:
-    void moveWidget();
+    void ResizeEvent();
     void refreshBlur(QWidget *last , QWidget *now);
-
-public:
-    QRect m_screen;
-    QTimer *timer;
-    int defaultnum = 0;
-
-private:
-    QHash<int , QWidget*> map;
-    QGSettings *gs;
-    QWidget *lastWidget;
-    QPixmap pix;
-    QString user;
-    Ui::MainWindow *ui;
-    UkuiPower *m_power;
-    XEventMonitor *xEventMonitor;
-
-    int tableNum;
-    bool flag = false;
-    bool isSwitchuserHide = true;
-    bool isHibernateHide = true;
-    bool lockfile = false;
-    bool lockuser = false;
-    bool click_blank_space_need_to_exit = true;
-    bool close_system_needed_to_confirm = false;
-
+    void showInhibitWarning();//当有inhibitor存在时显示提醒界面
+    void drawWarningWindow(QRect &rect);//画出提醒界面
+    QMap<QString, QString> findCNNameAndIcon(QString &basename);//根据inhibitor的名称获取对应desktop文件中的中文名和icon路径
 
 Q_SIGNALS:
     void signalTostart();
@@ -86,11 +63,40 @@ private Q_SLOTS:
     bool exitt();
     void onGlobalKeyPress(const QString &key);
     void onGlobalkeyRelease(const QString &key);
+    void screenCountChanged();
 
 protected:
     void paintEvent(QPaintEvent *e);
     bool eventFilter(QObject *, QEvent *);
     void mousePressEvent(QMouseEvent *event);
 
+public:
+    //    QRect m_screen;
+    QTimer *timer;
+    int defaultnum = 0;
+
+private:
+    QString user;
+    QPixmap pix;
+    QGSettings *gs;
+    QWidget *lastWidget;
+    QHash<int, QWidget*> map;
+    QStringList shutdownInhibitors;//阻止shutdown的inhibitors
+    QStringList shutdownInhibitorsReason;//阻止shutdown的inhibitor对应的原因
+    QStringList sleepInhibitors;//阻止sleep的inhibitors
+    QStringList sleepInhibitorsReason;//阻止sleep的inhibitor对应的原因
+    Ui::MainWindow *ui;
+    UkuiPower *m_power;
+    XEventMonitor *xEventMonitor;
+    int tableNum;
+    bool flag = false;
+    bool isSwitchuserHide = true;
+    bool isHibernateHide = true;
+    bool lockfile = false;
+    bool lockuser = false;
+    bool click_blank_space_need_to_exit = true;
+    bool close_system_needed_to_confirm = false;
+    bool inhibitSleep = false;
+    bool inhibitShutdown = false;
 };
 #endif // MAINWINDOW_H

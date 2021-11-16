@@ -17,9 +17,9 @@ public:
     QString inhibitorName;
 };
 
-class usminhibit
+class usminhibit : public QObject
 {
-    //Q_OBJECT
+    Q_OBJECT
 public:
 
     enum InhibitorFlag{
@@ -30,6 +30,8 @@ public:
     };
     usminhibit();
     ~usminhibit();
+    uint generateCookie();
+    QHash<quint32 , inhibit> hash;
 
     uint generateCookie();
     quint32 addInhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags);
@@ -47,6 +49,10 @@ public:
 private:
     //QDBusInterface dbus;
     uint get_next_inhibitor_serial();
+
+Q_SIGNALS:
+    void inhibitAdd();
+    void inhibitRemove();
 };
 
 #endif // USMINHIBIT_H
