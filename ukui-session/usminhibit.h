@@ -33,14 +33,12 @@ public:
     uint generateCookie();
     QHash<quint32 , inhibit> hash;
 
-    uint generateCookie();
     quint32 addInhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags);
     uint unInhibit(quint32 cookie);
     QStringList getInhibitor();
     bool isInhibited(quint32 flags);
 
 public:
-    QHash<quint32 , inhibit> hash;
     int inhibitor_serial;
     int inhibit_logout_num;
     int inhibit_switchuser_num;

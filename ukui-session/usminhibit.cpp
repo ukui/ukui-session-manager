@@ -32,10 +32,6 @@ uint usminhibit::get_next_inhibitor_serial()
     return serial;
 }
 
-usminhibit::~usminhibit()
-{
-}
-
 usminhibit::usminhibit()
 {
 //    dbus = new QDBusInterface("org.gnome.SessionManager",
@@ -52,33 +48,29 @@ usminhibit::usminhibit()
 
 usminhibit::~usminhibit(){}
 
-bool usminhibit::IsInhibited(quint32 flags)
+bool usminhibit::isInhibited(quint32 flags)
 {
     bool isinhib = false;
     if ((flags & GSM_INHIBITOR_FLAG_LOGOUT) == GSM_INHIBITOR_FLAG_LOGOUT) {
         if(inhibit_logout_num > 0)
             isinhib = true;
-        }
     }
     if ((flags & GSM_INHIBITOR_FLAG_SWITCH_USER) == GSM_INHIBITOR_FLAG_SWITCH_USER) {
         if(inhibit_switchuser_num > 0)
             isinhib = true;
-        }
     }
     if ((flags & GSM_INHIBITOR_FLAG_SUSPEND) == GSM_INHIBITOR_FLAG_SUSPEND) {
         if(inhibit_suspend_num > 0)
             isinhib = true;
-        }
     }
     if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE) {
         if(inhibit_idle_num > 0)
             isinhib = true;
-        }
     }
     return isinhib;
 }
 
-quint32 usminhibit::addinhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
+quint32 usminhibit::addInhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
 {
     if (app_id.isEmpty()) {
         return -1;
@@ -127,7 +119,7 @@ uint usminhibit::generateCookie(){
     return cookie;
 }
 
-uint usminhibit::uninhibit(quint32 cookie)
+uint usminhibit::unInhibit(quint32 cookie)
 {
     uint flags = 0;
     QHash<quint32, inhibit>::iterator i = hash.find(cookie);
@@ -154,7 +146,7 @@ uint usminhibit::uninhibit(quint32 cookie)
     return flags;
 }
 
-QStringList usminhibit::getinhibitor()
+QStringList usminhibit::getInhibitor()
 {
     //do not show inhibitorName to user
     //in case we don't know who is inhibiting

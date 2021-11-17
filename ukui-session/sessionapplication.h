@@ -57,7 +57,6 @@ private:
     QGSettings * gs;
     ModuleManager* modman;
     IdleWatcher* mIdleWatcher;
-    int lastIdleTime;
     void playBootMusic();
 };
 

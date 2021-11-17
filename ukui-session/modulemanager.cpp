@@ -84,7 +84,7 @@ void ModuleManager::playBootMusic(bool arg)
 //                player->setMedia(QUrl("qrc:/weakup.wav"));
 //                player->play();
             }
-            player->start();
+//            player->start();
         }
     }
 }
@@ -279,12 +279,12 @@ void ModuleManager::startupfinished(const QString &appName, const QString &strin
         emit usdfinished();
         return;
     }
-    if(appName == "ukui-kwin"){
-        twm->stop();
-        isWMStarted = true;
-        emit wmfinished();
-        return;
-    }
+//    if(appName == "ukui-kwin"){
+//        twm->stop();
+//        isWMStarted = true;
+//        emit wmfinished();
+//        return;
+//    }
     if(appName == "ukui-panel"){
         tpanel->stop();
         isPanelStarted = true;
@@ -307,12 +307,12 @@ void ModuleManager::timeup()
         emit usdfinished();
         return;
     }
-    if(time_out == twm){
-        qDebug() <<"wm超时";
-        isWMStarted = true;
-        emit wmfinished();
-        return;
-    }
+//    if(time_out == twm){
+//        qDebug() <<"wm超时";
+//        isWMStarted = true;
+//        emit wmfinished();
+//        return;
+//    }
     if(time_out == tpanel){
         qDebug() <<"panel超时";
         isPanelStarted = true;
@@ -362,7 +362,7 @@ void ModuleManager::startup()
 
     if (!isWayland) {
         connect(this, &ModuleManager::panelfinished, [=](){ startCompsite(); });
-        connect(this, &ModuleManager::wmfinished, [=](){ startCompsite(); });
+//        connect(this, &ModuleManager::wmfinished, [=](){ startCompsite(); });
         connect(this, &ModuleManager::desktopfinished, [=](){ startCompsite(); });
 
         dostartwm();
@@ -374,13 +374,13 @@ void ModuleManager::startup()
     for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i) {
         startProcess(*i, true);
     }
-    start_module_Timer(tusd,5);
+    startModuleTimer(tusd,5);
 
     startProcess(mPanel, true);
-    start_module_Timer(tpanel,5);
+    startModuleTimer(tpanel,5);
 
     startProcess(mFileManager, true);
-    start_module_Timer(tdesktop,5);
+    startModuleTimer(tdesktop,5);
 
     qDebug() << "Start desktop: ";
     for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
@@ -389,13 +389,13 @@ void ModuleManager::startup()
 }
 
 void ModuleManager::dostartwm(){
-    qDebug() << "Start window manager: " << mWindowManager.name();
-    if(mWindowManager.name() == "UKUI-KWin"){
+    if(mWindowManager.name() != "UKUI-KWin"){
+        qDebug() << "Start window manager: " << mWindowManager.name();
         startProcess(mWindowManager, false);
-        start_module_Timer(twm,18);
-    }else{
-        startProcess(mWindowManager, false);
-        isWMStarted = true;
+//        startModuleTimer(twm,18);
+//    }else{
+//        startProcess(mWindowManager, false);
+//        isWMStarted = true;
     }
 }
 

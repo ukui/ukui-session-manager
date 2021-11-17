@@ -26,6 +26,7 @@
 #include "modulemanager.h"
 #include "usminhibit.h"
 #include "ukuismserver.h"
+#include <KIdleTime>
 
 extern UKUISMServer *theServer;
 

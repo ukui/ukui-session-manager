@@ -127,6 +127,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     }
 
     //clear file content when it is too large
+    QString logFilePath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session";
     logFilePath = logFilePath + "/ukui-session-xsmp.log";
     QFile file(logFilePath);
     qint64 fileSize = file.size();
@@ -318,7 +319,7 @@ bool require_dbus_session(){
     return true;
 }
 
-int main(int argc, char **argv)
+void signalHandler(int sig)
 {
     QDBusInterface face("org.freedesktop.login1",
                         "/org/freedesktop/login1/user/self",
@@ -337,15 +338,23 @@ void openDubug()
 //#endif
     UKUI_SESSION().setFilterRules(QLatin1Literal("org.ukui.ukuisession=true"));
     qInstallMessageHandler(myMessageOutput);
-    //initUkuiLog4qt("ukui-session");
+    qCDebug(UKUI_SESSION) << "===================================================    UKUI session manager start.    ===================================================";
+}
+
+
+int main(int argc, char **argv)
+{
+    //    initUkuiLog4qt("ukui-session");
+    //加上这个处理会在终端一直输出信息，原因不明
+    //    signal(SIGTERM, signalHandler);
+
+    openDubug();
 
     require_dbus_session();
 
     qputenv("QT_QPA_PLATFORM", "xcb");
 
     SessionApplication app(argc, argv);
-
-    qDebug() << "UKUI session manager (" << QCoreApplication::applicationPid() <<") starting.";
 
     setHightResolutionScreenZoom();
 

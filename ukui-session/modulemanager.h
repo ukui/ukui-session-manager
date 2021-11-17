@@ -91,7 +91,7 @@ private:
     QTimer *twm = new QTimer();
     QTimer *tpanel = new QTimer();
     QTimer *tdesktop = new QTimer();
-    bool start_module_Timer(QTimer *timer,int i);
+
     bool isPanelStarted    = false;
     bool isDesktopStarted  = false;
     bool isWMStarted       = false;
@@ -103,7 +103,6 @@ private:
     bool isDirectInstall = false;
     bool mWmStarted;
     bool mTrayStarted;
-    bool isPanelStarted, isDesktopStarted, isWMStarted ,isCompsiteStarted;
 
     ModulesMap mNameMap;
     XdgDesktopFileList mInitialization;
