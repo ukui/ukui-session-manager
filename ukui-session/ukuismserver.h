@@ -113,6 +113,9 @@ private:
     QString m_lastIdRestore;
     QString m_sessionGroup;
 
+public:
+    bool prepareForShutdown();
+
 };
 
 #endif // UKUISMSERVER_H

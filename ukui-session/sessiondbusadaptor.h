@@ -87,6 +87,7 @@ public slots:
 
     bool canReboot()
     {
+        //界面处已经判断过inhibitor,会有界面提示，此处有待优化
         //判断systemd和ukui-session的inhibitor
         return m_systemdProvider->canAction(UkuiPower::PowerReboot) && m_ukuiProvider->canAction(UkuiPower::PowerReboot);
     }

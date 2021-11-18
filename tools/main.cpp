@@ -215,7 +215,9 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_ti
         // otherwise run ukui-session-tools --suspend with segmente error.
         // because they will be delate at the end of the playShutdownMusic().
         QObject::connect(up_to_time, &QTimer::timeout, [&]() {
-            powermanager.doAction(UkuiPower::Action(action));
+            if (powermanager.canAction(UkuiPower::Action(action))) {
+                powermanager.doAction(UkuiPower::Action(action));
+            }
             exit(0);
         });
 

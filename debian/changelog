@@ -1,3 +1,9 @@
+ukui-session-manager (2.0.11-2) v101; urgency=medium
+
+  * Bug Fix: #86021 #68986 
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 18 Nov 2021 16:18:38 +0800
+
 ukui-session-manager (2.0.11-1) v101; urgency=medium
 
   * CodeMerge: merge master's changelog to hw9x0

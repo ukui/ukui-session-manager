@@ -326,48 +326,27 @@ UKUIProvider::~UKUIProvider()
 
 bool UKUIProvider::canAction(UkuiPower::Action action) const
 {
-    QString command;
-    switch (action) {
-    case UkuiPower::PowerLogout:
-        command = QLatin1String("canLogout");
-        break;
-    case UkuiPower::PowerReboot:
-        command = QLatin1String("canReboot");
-        break;
-    case UkuiPower::PowerShutdown:
-        command = QLatin1String("canPowerOff");
-        break;
-    default:
-        return false;
-    }
+    //这里是调用ukui-session注册的d-bus检测是否有inhibitor存在
+        bool isinhibited = false;
+        QDBusInterface *interface = new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
+                                                       "org.gnome.SessionManager", QDBusConnection::sessionBus());
+        quint32 inhibit_logout = 1;
+        QDBusReply<bool> reply = interface->call("IsInhibited", inhibit_logout);
+        if (reply.isValid()) {
+            // use the returned value
+            qDebug() << "Is inhibit by someone: " << reply.value();
+            isinhibited = reply.value();
+        } else {
+            qDebug() << reply.value();
+        }
 
-    bool isinhibited =false;
-    QDBusInterface *interface = new QDBusInterface(
-                "org.gnome.SessionManager",
-                "/org/gnome/SessionManager",
-                "org.gnome.SessionManager",
-                QDBusConnection::sessionBus());
-    quint32 inhibit_logout = 1;
-    QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_logout);
-    if (reply.isValid()){
-        // use the returned value
-        qDebug() << "Is inhibit by someone: " << reply.value();
-        isinhibited = reply.value();
-    } else {
-        qDebug() << reply.value();
-    }
+        if (isinhibited == true) {
+            isinhibited = !messageBoxCheck();
+            return isinhibited;
+        }
 
-    if(isinhibited == true){
-        isinhibited = !messageBoxCheck();
-    }
+        return !isinhibited;
 
-    if (isinhibited == false) {
-        return dbusCall(QLatin1String(UKUI_SERVICE),
-                        QLatin1String(UKUI_PATH),
-                        QLatin1String(UKUI_INTERFACE),
-                        QDBusConnection::sessionBus(),
-                        command);
-    }
 }
 
 bool UKUIProvider::doAction(UkuiPower::Action action)
@@ -387,11 +366,9 @@ bool UKUIProvider::doAction(UkuiPower::Action action)
         return false;
     }
 
-    return dbusCall(QLatin1String(UKUI_SERVICE),
-             QLatin1String(UKUI_PATH),
-             QLatin1String(UKUI_INTERFACE),
-             QDBusConnection::sessionBus(),
-             command);
+    qDebug() << "ukuipowerprovider call D-Bus session";
+    return dbusCall(QLatin1String(UKUI_SERVICE), QLatin1String(UKUI_PATH),
+                    QLatin1String(UKUI_INTERFACE), QDBusConnection::sessionBus(), command);
 }
 
 

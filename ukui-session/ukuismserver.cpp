@@ -612,7 +612,7 @@ void UKUISMServer::restoreSession(const QString &sessionName)
         wmStartCommands << m_wmCommands;
     }
 
-    launchWM(wmStartCommands);
+    //launchWM(wmStartCommands);
 }
 
 void UKUISMServer::startDefaultSession()
@@ -1030,21 +1030,21 @@ void UKUISMServer::killingCompleted()
     qCDebug(UKUI_SESSION) << "done killing, exit";
     emit logoutFinished();
 //    qApp->quit();
-//    qCDebug(UKUI_SESSION) << "call systemd Terminate";
-//    QDBusInterface face("org.freedesktop.login1",
-//                        "/org/freedesktop/login1/session/self",
-//                        "org.freedesktop.login1.Session",
-//                        QDBusConnection::systemBus());
-
-//    face.call("Terminate");
-
-    qCDebug(UKUI_SESSION) << "call systemd kill";
+    qCDebug(UKUI_SESSION) << "call systemd Terminate";
     QDBusInterface face("org.freedesktop.login1",
-                        "/org/freedesktop/login1/user/self",
-                        "org.freedesktop.login1.User",
+                        "/org/freedesktop/login1/session/self",
+                        "org.freedesktop.login1.Session",
                         QDBusConnection::systemBus());
 
-    face.call("Kill", 15);
+    face.call("Terminate");
+
+//    qCDebug(UKUI_SESSION) << "call systemd kill";
+//    QDBusInterface face("org.freedesktop.login1",
+//                        "/org/freedesktop/login1/user/self",
+//                        "org.freedesktop.login1.User",
+//                        QDBusConnection::systemBus());
+
+//    face.call("Kill", 15);
 }
 
 void UKUISMServer::cancelShutdown(UKUISMClient *c)
@@ -1275,3 +1275,13 @@ void UKUISMServer::restoreSession()
 
     tryRestoreNext();
 }
+
+bool UKUISMServer::prepareForShutdown()
+{
+    qDebug() << "m_state = " << m_state;
+    if (m_state >= Shutdown)
+        return true;
+    else
+        return false;
+}
+

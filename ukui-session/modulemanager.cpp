@@ -279,12 +279,12 @@ void ModuleManager::startupfinished(const QString &appName, const QString &strin
         emit usdfinished();
         return;
     }
-//    if(appName == "ukui-kwin"){
-//        twm->stop();
-//        isWMStarted = true;
-//        emit wmfinished();
-//        return;
-//    }
+    if(appName == "ukui-kwin"){
+        twm->stop();
+        isWMStarted = true;
+        emit wmfinished();
+        return;
+    }
     if(appName == "ukui-panel"){
         tpanel->stop();
         isPanelStarted = true;
@@ -307,12 +307,12 @@ void ModuleManager::timeup()
         emit usdfinished();
         return;
     }
-//    if(time_out == twm){
-//        qDebug() <<"wm超时";
-//        isWMStarted = true;
-//        emit wmfinished();
-//        return;
-//    }
+    if(time_out == twm){
+        qDebug() <<"wm超时";
+        isWMStarted = true;
+        emit wmfinished();
+        return;
+    }
     if(time_out == tpanel){
         qDebug() <<"panel超时";
         isPanelStarted = true;
@@ -331,7 +331,7 @@ void ModuleManager::startCompsite(){
     if (isWayland) return;
 
     qDebug() << "Enter:: startCompsite";
-    if (!isPanelStarted || !isDesktopStarted) return;//  || !isWMStarted
+    if (!isPanelStarted || !isDesktopStarted || !isWMStarted) return;//  || !isWMStarted
 
     if (isCompsiteStarted) return;
     isCompsiteStarted = true;
@@ -362,7 +362,7 @@ void ModuleManager::startup()
 
     if (!isWayland) {
         connect(this, &ModuleManager::panelfinished, [=](){ startCompsite(); });
-//        connect(this, &ModuleManager::wmfinished, [=](){ startCompsite(); });
+        connect(this, &ModuleManager::wmfinished, [=](){ startCompsite(); });
         connect(this, &ModuleManager::desktopfinished, [=](){ startCompsite(); });
 
         dostartwm();
@@ -392,10 +392,10 @@ void ModuleManager::dostartwm(){
     if(mWindowManager.name() != "UKUI-KWin"){
         qDebug() << "Start window manager: " << mWindowManager.name();
         startProcess(mWindowManager, false);
-//        startModuleTimer(twm,18);
-//    }else{
-//        startProcess(mWindowManager, false);
-//        isWMStarted = true;
+        startModuleTimer(twm,18);
+    }else{
+        startProcess(mWindowManager, false);
+        isWMStarted = true;
     }
 }
 
@@ -434,10 +434,10 @@ void ModuleManager::timerUpdate(){
     }
 
     //加上恢复会话的部分
-    qDebug(UKUI_SESSION) << "began restore session";
-    QTimer::singleShot(500, [](){
-        theServer->restoreSession();
-    });
+//    qDebug(UKUI_SESSION) << "began restore session";
+//    QTimer::singleShot(500, [](){
+//        theServer->restoreSession();
+//    });
 }
 
 void ModuleManager::startProcess(const XdgDesktopFile &file, bool required)
@@ -500,6 +500,11 @@ bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 
 void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitStatus)
 {
+    if (theServer->prepareForShutdown()) {
+        qDebug()<<"111111111111111111";
+        return;
+    }
+
     UkuiModule* proc = qobject_cast<UkuiModule*>(sender());
 
     if (nullptr == proc) {

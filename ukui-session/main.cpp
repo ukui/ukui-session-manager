@@ -309,12 +309,12 @@ bool require_dbus_session(){
     if(!env_dbus.isEmpty())
         return true;
     qDebug()<<"Fatal DBus Error";
-    QProcess a;
-    a.setProcessChannelMode(QProcess::ForwardedChannels);
-    a.start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
-    a.waitForFinished(-1);
-    if (a.exitCode()) {
-        qWarning() <<  "exited with code" << a.exitCode();
+    QProcess *a  = new QProcess;
+    a->setProcessChannelMode(QProcess::ForwardedChannels);
+    a->start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
+    a->waitForFinished(-1);
+    if (a->exitCode()) {
+        qWarning() <<  "exited with code" << a->exitCode();
     }
     return true;
 }
