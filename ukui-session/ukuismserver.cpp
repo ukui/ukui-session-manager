@@ -964,7 +964,9 @@ void UKUISMServer::completeKilling()
             return;
         }
 
-        killWM();
+//        killWM();
+        //修改为不杀死窗管，直接结束会话
+        killingCompleted();
     }
 }
 
@@ -1249,12 +1251,14 @@ void UKUISMServer::changeClientOrder()
     foreach (UKUISMClient *c, m_clients) {
         QString programPath = c->program();
         QString programName = programPath.mid(programPath.lastIndexOf(QDir::separator()) + 1);
-        if(programName == QLatin1String("ukui-panel")) {
+        if (programName == QLatin1String("ukui-panel")) {
             m_clients.removeAll(c);
-            m_clients.append(c);
+            //改为任务栏不退出
+//            m_clients.append(c);
         } else if (programName == QLatin1String("peony-qt-desktop")) {
             m_clients.removeAll(c);
-            m_clients.append(c);
+            //改为桌面不退出
+//            m_clients.append(c);
         } else if (programName == QLatin1String("ukui-menu")) {
             m_clients.removeAll(c);
             m_clients.append(c);
