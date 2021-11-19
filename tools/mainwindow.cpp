@@ -114,7 +114,14 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         QFileInfo fileInfo(fullstr);
         if (fileInfo.isFile()) {
             pix.load(fullstr);
-            pix = blurPixmap(pix);
+            //增加对pix的判断，有些图片格式qt不支持，无法读取，导致pix为null,引起程序崩溃 #bug75856
+            if (pix.isNull()) {
+                pix.load(":/images/background-ukui.png");
+                pix = blurPixmap(pix);
+            } else {
+                pix = blurPixmap(pix);
+            }
+
         } else {
             QString   imagefile = "/usr/share/backgrounds/warty-final-ubuntukylin.jpg";
             QFileInfo fileimage(imagefile);
