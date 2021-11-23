@@ -20,7 +20,6 @@
 #include "modulemanager.h"
 #include "ukuimodule.h"
 #include "idlewatcher.h"
-#include "musicplayer.h"
 #include "ukuismserver.h"
 #include "ukuisessiondebug.h"
 

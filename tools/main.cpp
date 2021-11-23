@@ -36,7 +36,6 @@
 
 #include "ukuipower.h"
 #include "mainwindow.h"
-#include "window.h"
 #include "loginedusers.h"
 #include "lockchecker.h"
 #include <QPushButton>
@@ -334,9 +333,6 @@ int main(int argc, char* argv[])
     QCommandLineOption shutdownOption(QStringLiteral("shutdown"),
                                       QApplication::tr("Shutdown this computer."));
     parser.addOption(shutdownOption);
-    QCommandLineOption windowOption(QStringLiteral("window"),
-                                    QApplication::tr("A window above the desktop."));
-    parser.addOption(windowOption);
 
     parser.process(a);
 
@@ -425,11 +421,7 @@ int main(int argc, char* argv[])
         }
 
     }
-    if (parser.isSet(windowOption)) {
-        flag        = false;
-        window *win = new window();
-        win->showFullScreen();
-    }
+
     if (flag) {
         // Load qss file
         MainWindow *w = new MainWindow(lock_file, lock_user);
