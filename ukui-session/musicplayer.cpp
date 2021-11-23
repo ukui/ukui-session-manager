@@ -52,7 +52,6 @@ Worker::~Worker()
     if (m_player) {
         delete m_player;
     }
-
 }
 
 void Worker::doWork()

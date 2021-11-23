@@ -52,7 +52,8 @@
 #endif
 
 /*菜单栏调用睡眠且有inhibitor阻塞时调用此函数进行消息提示*/
-bool sleepInhibitorCheck(){
+bool sleepInhibitorCheck()
+{
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
@@ -85,7 +86,8 @@ bool sleepInhibitorCheck(){
 }
 
 /*菜单栏调用重启或关机且有inhibitor阻塞时调用此函数进行消息提示*/
-bool shutdownInhibitorCheck(){
+bool shutdownInhibitorCheck()
+{
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
@@ -117,7 +119,8 @@ bool shutdownInhibitorCheck(){
     }
 }
 
-bool messageboxCheck(){
+bool messageboxCheck()
+{
     QMessageBox msgBox;
 //    msgBox.setWindowTitle(QObject::tr("conform"));
     msgBox.setIcon(QMessageBox::Warning);
@@ -140,7 +143,8 @@ bool messageboxCheck(){
     }
 }
 
-void messagecheck(){
+void messagecheck()
+{
     QMessageBox msgBox;
     msgBox.setWindowTitle(QObject::tr("notice"));
     QString t1 = QObject::tr("System update or package installation in progress,this function is temporarily unavailable.");
@@ -159,7 +163,7 @@ void messagecheck(){
     msgBox.exec();
 }
 
-bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_time)
+bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_time)
 {
     if (cc == 1) {
         if (num == 1 || num == 5 || num == 6) {
@@ -225,13 +229,15 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_ti
         if (num == 5 || num == 6) {
             if (xdg_session_type == "wayland") {
                 QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/shutdown.wav");
-            } else
+            } else {
                 QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/shutdown.wav");
+            }
         } else if (num == 4) {
             if (xdg_session_type == "wayland") {
                 QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/logout.wav");
-            } else
+            } else {
                 QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/logout.wav");
+            }
         } else {
             qDebug() << "error num";
             return false;
@@ -268,15 +274,14 @@ int main(int argc, char* argv[])
 
 //    int cc = check_lock();
     int cc = LockChecker::checkLock();
-    qDebug() << cc <<"   cc";
+    qDebug() << cc << "   cc";
 
     // Load ts files
     const QString locale = QLocale::system().name();
     QTranslator   translator;
     qDebug() << "local: " << locale;
     qDebug() << "path: " << QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager");
-    if (translator.load(locale,
-                        QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
+    if (translator.load(locale, QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
         a.installTranslator(&translator);
     } else {
         qDebug() << "Load translations file failed!";

@@ -152,14 +152,12 @@ void SessionApplication::registerDBus()
     modman->startup();
 }
 
-SessionApplication::SessionApplication(int& argc, char** argv) :
-    QApplication(argc, argv)
+SessionApplication::SessionApplication(int& argc, char** argv) : QApplication(argc, argv)
 {
     const QByteArray id(SESSION_DEFAULT_SETTINGS);
     if (QGSettings::isSchemaInstalled(id)) {
         gsettings_usable = true;
         gs = new QGSettings(SESSION_DEFAULT_SETTINGS, SESSION_DEFAULT_SETTINGS_PATH, this);
-
     } else {
         qWarning() << "Failed to get default value from gsettings, set gsettings_usable to false!";
         gsettings_usable = false;

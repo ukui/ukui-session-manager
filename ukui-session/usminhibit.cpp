@@ -52,19 +52,19 @@ bool usminhibit::isInhibited(quint32 flags)
 {
     bool isinhib = false;
     if ((flags & GSM_INHIBITOR_FLAG_LOGOUT) == GSM_INHIBITOR_FLAG_LOGOUT) {
-        if(inhibit_logout_num > 0)
+        if (inhibit_logout_num > 0)
             isinhib = true;
     }
     if ((flags & GSM_INHIBITOR_FLAG_SWITCH_USER) == GSM_INHIBITOR_FLAG_SWITCH_USER) {
-        if(inhibit_switchuser_num > 0)
+        if (inhibit_switchuser_num > 0)
             isinhib = true;
     }
     if ((flags & GSM_INHIBITOR_FLAG_SUSPEND) == GSM_INHIBITOR_FLAG_SUSPEND) {
-        if(inhibit_suspend_num > 0)
+        if (inhibit_suspend_num > 0)
             isinhib = true;
     }
     if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE) {
-        if(inhibit_idle_num > 0)
+        if (inhibit_idle_num > 0)
             isinhib = true;
     }
     return isinhib;

@@ -26,43 +26,43 @@ int LockChecker::checkLock(){
 
     QFile file_backup("/tmp/lock/kylin-backup.lock");
     QFile file_update("/tmp/lock/kylin-update.lock");
-    if(file_backup.exists()) {
+    if (file_backup.exists()) {
         int fd_backup = open(QString("/tmp/lock/kylin-backup.lock").toUtf8().data(), O_RDONLY);
         int b = flock(fd_backup, LOCK_EX|LOCK_NB);
         qDebug() << "b" << b;
-        if(b < 0){
+        if (b < 0) {
             lockfile = true;
             QString file_user = getName(&file_backup);
-            if(file_user == qgetenv("USER")){
+            if (file_user == qgetenv("USER")) {
                 lockuser = true;
             }
         }
         file_backup.close();
-        if(flock(fd_backup, LOCK_UN) == 0){
-            qDebug()<<"unlock sucess.";
-        }else{
-            qDebug()<<"unlock fail.";
-        }
-    }
-    if(file_update.exists()) {
-        int fd_update = open(QString("/tmp/lock/kylin-update.lock").toUtf8().data(), O_RDONLY);
-        int c = flock(fd_update, LOCK_EX|LOCK_NB);
-        qDebug() << "c" << c;
-        if(c < 0){
-            lockfile = true;
-            QString file_user = getName(&file_update);
-            if(file_user == qgetenv("USER")){
-                lockuser = true;
-            }
-        }
-        file_backup.close();
-        if(flock(fd_update, LOCK_UN) == 0){
+        if (flock(fd_backup, LOCK_UN) == 0) {
             qDebug() << "unlock sucess.";
-        }else{
+        } else {
             qDebug() << "unlock fail.";
         }
     }
-    if(lockfile) {
+    if (file_update.exists()) {
+        int fd_update = open(QString("/tmp/lock/kylin-update.lock").toUtf8().data(), O_RDONLY);
+        int c = flock(fd_update, LOCK_EX|LOCK_NB);
+        qDebug() << "c" << c;
+        if (c < 0) {
+            lockfile = true;
+            QString file_user = getName(&file_update);
+            if (file_user == qgetenv("USER")) {
+                lockuser = true;
+            }
+        }
+        file_backup.close();
+        if (flock(fd_update, LOCK_UN) == 0) {
+            qDebug() << "unlock sucess.";
+        } else {
+            qDebug() << "unlock fail.";
+        }
+    }
+    if (lockfile) {
         if(lockuser)
             return 2;
         return 1;
@@ -119,7 +119,8 @@ QStringList LockChecker::getLoginedUsers(){
 }
 
 /*只获取mode为block的inhibitors*/
-QVector<Inhibitor> LockChecker::getInhibitors(){
+QVector<Inhibitor> LockChecker::getInhibitors()
+{
     QVector<Inhibitor> inhibitors;
     qRegisterMetaType<Inhibitor>("Inhibitorss");
     qDBusRegisterMetaType<Inhibitor>();

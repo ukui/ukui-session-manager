@@ -64,13 +64,13 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     if (!QFile::exists(logPath)) {
         QString logDir = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session";
         QDir dir(logDir);
-        if(!dir.exists(logDir)){
-            if(!dir.mkdir(logDir)){
+        if (!dir.exists(logDir)) {
+            if (!dir.mkdir(logDir)) {
                 return;
             }
         }
         QFile file(logPath);
-        if(!file.open(QIODevice::WriteOnly)){
+        if (!file.open(QIODevice::WriteOnly)) {
             return;
         }
         file.close();
@@ -189,7 +189,7 @@ void setXresources(int dpi)
                     XA_RESOURCE_MANAGER, XA_STRING, 8, PropModeReplace, (unsigned char *) str.toLatin1().data(), str.length());
     XCloseDisplay(dpy);
 
-    qDebug()<<"setXresources："<<str;
+    qDebug() << "setXresources：" << str;
 
     delete mouse_settings;
 }
@@ -250,7 +250,7 @@ bool isTheFirstLogin(QGSettings *settings)
     for (QScreen *screen : QGuiApplication::screens()) {
         int width  = screen->geometry().width() * scaling;
         int height = screen->geometry().height() * scaling;
-        if (width <= 1920 && height <=1080){
+        if (width <= 1920 && height <=1080) {
             zoom1 = true;
         }
         else if (width > 1920 && height > 1080 && width <= 2560 && height <=1500) {
@@ -261,13 +261,11 @@ bool isTheFirstLogin(QGSettings *settings)
         }
     }
 
-    if (zoom1){
+    if (zoom1) {
         mScaling = 1.0;
-    }
-    else if (!zoom1 && zoom2) {
+    } else if (!zoom1 && zoom2) {
         mScaling = 1.5;
-    }
-    else if (!zoom1 && !zoom2 && zoom3){
+    } else if (!zoom1 && !zoom2 && zoom3) {
         mScaling = 2.0;
     }
 
@@ -304,11 +302,12 @@ end:
     delete settings;
 }
 
-bool require_dbus_session(){
+bool require_dbus_session()
+{
     QString env_dbus = qgetenv("DBUS_SESSION_BUS_ADDRESS");
-    if(!env_dbus.isEmpty())
+    if (!env_dbus.isEmpty())
         return true;
-    qDebug()<<"Fatal DBus Error";
+    qDebug() << "Fatal DBus Error";
     QProcess *a  = new QProcess;
     a->setProcessChannelMode(QProcess::ForwardedChannels);
     a->start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");

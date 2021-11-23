@@ -74,8 +74,8 @@ void IdleWatcher::setup()
 }
 
 void IdleWatcher::weakupFromSleep(bool a){
-    if(!a){
-        qDebug()<<"模拟用户操作";
+    if (!a) {
+        qDebug() << "模拟用户操作";
         KIdleTime::instance()->simulateUserActivity();
     }
 }
