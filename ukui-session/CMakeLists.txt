@@ -25,8 +25,6 @@ set(ukui-session_SRCS
     ukuismclient.h
     ukuismclient.cpp
     ukuismconnection.h
-    musicplayer.cpp
-    musicplayer.h
     ukuisessiondebug.cpp
     ukuisessiondebug.h
 )
