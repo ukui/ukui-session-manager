@@ -52,11 +52,11 @@ void SessionApplication::initialEnvironment()
 {
 //    UkuiPower *upower = new UkuiPower();
 //    if (gsettings_usable) {
-//        if (upower->canAction(UkuiPower::PowerHibernate))
+//        if (upower->canAction(UkuiPower::PowerHibernate)) {
 //            gs->set("canhibernate", true);
-//        else
+//        } else {
 //            gs->set("canhibernate", false);
-
+//        }
 //        //在打开关机管理界面后通过物理按键的方式关机/重启
 //        //将导致win-key-release键值为true
 //        //造成大部分热键和组合键失效
@@ -65,6 +65,7 @@ void SessionApplication::initialEnvironment()
 //        gs->reset("idle-delay");
 //    }
 
+    //这样更快？
     SystemdProvider *sysProvider = new SystemdProvider();
     if (gsettings_usable) {
         if (sysProvider->canAction(UkuiPower::PowerHibernate)) {
@@ -90,13 +91,13 @@ void SessionApplication::initialEnvironment()
         QT_QPA_PLATFORMTHEME = "gtk2";
     }
 
-    qputenv("XDG_CURRENT_DESKTOP","UKUI");
-    qputenv("QT_QPA_PLATFORMTHEME",QT_QPA_PLATFORMTHEME);
+    qputenv("XDG_CURRENT_DESKTOP", "UKUI");
+    qputenv("QT_QPA_PLATFORMTHEME", QT_QPA_PLATFORMTHEME);
 //    qputenv("QT_QPA_PLATFORM", "xcb");
 
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
     if (xdg_session_type == "wayland") {
-        QProcess::startDetached("dbus-update-activation-environment", QStringList() << "--systemd" << "DISPLAY"<<"QT_QPA_PLATFORM");
+        QProcess::startDetached("dbus-update-activation-environment", QStringList() << "--systemd" << "DISPLAY" << "QT_QPA_PLATFORM");
     }
     //restart user's gvfs-daemon.service
     //QProcess::startDetached("systemctl", QStringList() << "--user" << "restart" << "gvfs-daemon.service");

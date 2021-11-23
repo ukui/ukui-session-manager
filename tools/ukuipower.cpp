@@ -67,7 +67,7 @@ bool UkuiPower::canAction(UkuiPower::Action action) const
     }
 
     QDBusInterface *sessionInterface = new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
-                                                   "org.gnome.SessionManager", QDBusConnection::sessionBus());
+                                                          "org.gnome.SessionManager", QDBusConnection::sessionBus());
 
     if (!sessionInterface->isValid()) {
         qWarning() << "dbusCall: Session QDBusInterface is invalid";

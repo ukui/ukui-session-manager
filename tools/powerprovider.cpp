@@ -251,7 +251,7 @@ bool SystemdProvider::doSwitchUser()
                 QDBusConnection::sessionBus());
     quint32 inhibit_switchuser = 2;
     QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_switchuser);
-    if (reply.isValid()){
+    if (reply.isValid()) {
         // use the returned value
         qDebug() << "Is inhibit by someone: " << reply.value();
         isinhibited = reply.value();
@@ -322,7 +322,8 @@ UKUIProvider::UKUIProvider(QObject *parent): PowerProvider (parent)
 }
 
 UKUIProvider::~UKUIProvider()
-{}
+{
+}
 
 bool UKUIProvider::canAction(UkuiPower::Action action) const
 {

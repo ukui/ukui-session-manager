@@ -226,9 +226,9 @@ void writeXresourcesFile(QString XresourcesFile, QGSettings *settings, double sc
     settings->set(SCALING_KEY, scaling);
     mouse_settings->set(CURSOR_SIZE, scaling * 24.0);
 
-    qDebug()<<" writeXresourcesFile: content = "<<content
-            << " scalings = "<<settings->get(SCALING_KEY).toDouble()
-            << "cursor size = "<< mouse_settings->get(CURSOR_SIZE).toInt();
+    qDebug() << " writeXresourcesFile: content = " << content
+             << " scalings = " << settings->get(SCALING_KEY).toDouble()
+             << "cursor size = " << mouse_settings->get(CURSOR_SIZE).toInt();
     delete Font;
     delete mouse_settings;
 }
@@ -250,7 +250,7 @@ bool isTheFirstLogin(QGSettings *settings)
     for (QScreen *screen : QGuiApplication::screens()) {
         int width  = screen->geometry().width() * scaling;
         int height = screen->geometry().height() * scaling;
-        if (width <= 1920 && height <=1080) {
+        if (width <= 1920 && height <= 1080) {
             zoom1 = true;
         }
         else if (width > 1920 && height > 1080 && width <= 2560 && height <=1500) {

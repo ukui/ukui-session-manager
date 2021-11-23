@@ -60,9 +60,6 @@ void ModuleManager::playBootMusic(bool arg)
             free(gset);
             return;
         }
-//        player = new QMediaPlayer;
-//        connect(player,SIGNAL(stateChanged(QMediaPlayer::State)),this,SLOT(stateChanged(QMediaPlayer::State)));
-//        player->setVolume(40);
         QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
         if (arg) {
             play_music = gset->get("startup-music").toBool();
@@ -71,8 +68,6 @@ void ModuleManager::playBootMusic(bool arg)
                     QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/startup.wav");
                 } else {
                     QProcess::startDetached("aplay  /usr/share/ukui/ukui-session-manager/startup.wav");
-//                player->setMedia(QUrl("qrc:/startup.wav"));
-//                player->play();
                 }
             }
         } else {
@@ -82,22 +77,11 @@ void ModuleManager::playBootMusic(bool arg)
                     QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/weakup.wav");
                 } else {
                     QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/weakup.wav");
-//                player->setMedia(QUrl("qrc:/weakup.wav"));
-//                player->play();
                 }
             }
-//            player->start();
         }
     }
 }
-
-//void ModuleManager::stateChanged(QMediaPlayer::State state){
-//    qDebug()<<"Player state: "<<state;
-//    if(state == QMediaPlayer::StoppedState){
-//        player->deleteLater();
-//        qDebug()<<"delete player";
-//    }
-//}
 
 ModuleManager::ModuleManager( QObject* parent) : QObject(parent)
 {
@@ -229,7 +213,7 @@ void ModuleManager::constructStartupList()
         }
         const XdgDesktopFile file = *i;
         if (i->contains(desktop_phase)) {
-            QStringList s1 =file.value(desktop_phase).toString().split(QLatin1Char(';'));
+            QStringList s1 = file.value(desktop_phase).toString().split(QLatin1Char(';'));
             if (s1.contains("Initialization")) {
                 mInitialization << file;
             } else if (s1.contains("Desktop")) {
@@ -505,11 +489,11 @@ bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitStatus)
 {
     if (theServer->prepareForShutdown()) {
-        qDebug()<<"111111111111111111";
+        qDebug() << "111111111111111111";
         return;
     }
 
-    UkuiModule* proc = qobject_cast<UkuiModule*>(sender());
+    UkuiModule *proc = qobject_cast<UkuiModule*>(sender());
 
     if (nullptr == proc) {
         qWarning() << "Got an invalid (null) module to restart, Ignoring it";
@@ -528,9 +512,9 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
         //根据退出码来判断程序是否属于异常退出。
         QString procName = proc->file.name();
         if (proc->exitCode() == 0) {
-            qDebug() << "Process" << procName << "(" << proc << ") exited correctly. "<<"With the exitcode = "<<proc->exitCode()<<",exitStatus = "<<exitStatus;
+            qDebug() << "Process" << procName << "(" << proc << ") exited correctly. " << "With the exitcode = " << proc->exitCode() << ",exitStatus = " << exitStatus;
         } else {
-            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted. "<<"With the exitcode = "<<proc->exitCode()<<",exitStatus = "<<exitStatus;
+            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted. " << "With the exitcode = " << proc->exitCode() << ",exitStatus = " << exitStatus;
             proc->start();
             proc->restartNum++;
             return;
