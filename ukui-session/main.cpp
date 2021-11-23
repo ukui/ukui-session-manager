@@ -311,7 +311,7 @@ bool require_dbus_session()
     QProcess *a  = new QProcess;
     a->setProcessChannelMode(QProcess::ForwardedChannels);
     a->start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
-//    a->waitForFinished(-1);
+    a->waitForFinished(-1);
     if (a->exitCode()) {
         qWarning() <<  "exited with code" << a->exitCode();
     }
