@@ -20,7 +20,8 @@
 #include <X11/Xlib.h>
 #include <xcb/xcb.h>
 
-class XServerGraber{
+class XServerGraber
+{
 public:
     XServerGraber() {
         xcb_grab_server(QX11Info::connection());

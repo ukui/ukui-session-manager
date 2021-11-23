@@ -53,11 +53,10 @@ IdleWatcher::IdleWatcher(int idle, QObject *parent) : QObject(parent)
 
     setup();
 
-    interface = new QDBusInterface(
-                "org.gnome.SessionManager",
-                "/org/gnome/SessionManager",
-                "org.gnome.SessionManager",
-                QDBusConnection::sessionBus());
+    interface = new QDBusInterface("org.gnome.SessionManager",
+                                   "/org/gnome/SessionManager",
+                                   "org.gnome.SessionManager",
+                                   QDBusConnection::sessionBus());
 
     args.append(QVariant(SYSTEMD_INTERFACE));
     args.append(QVariant(PROPERTY));
@@ -74,8 +73,8 @@ void IdleWatcher::setup()
 }
 
 void IdleWatcher::weakupFromSleep(bool a){
-    if(!a){
-        qDebug()<<"模拟用户操作";
+    if (!a) {
+        qDebug() << "模拟用户操作";
         KIdleTime::instance()->simulateUserActivity();
     }
 }
