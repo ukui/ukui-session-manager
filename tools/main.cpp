@@ -334,9 +334,6 @@ int main(int argc, char* argv[])
     QCommandLineOption shutdownOption(QStringLiteral("shutdown"),
                                       QApplication::tr("Shutdown this computer."));
     parser.addOption(shutdownOption);
-    QCommandLineOption windowOption(QStringLiteral("window"),
-                                    QApplication::tr("A window above the desktop."));
-    parser.addOption(windowOption);
 
     parser.process(a);
 
