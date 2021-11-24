@@ -85,6 +85,8 @@ private:
     //改变客户端的顺序
     void changeClientOrder();
 
+    bool syncDBusEnvironment();
+
 private:
     enum State {
         Idle,
