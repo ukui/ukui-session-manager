@@ -382,11 +382,11 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
         QString display = QString::fromLocal8Bit(::getenv("DISPLAY"));
         display.remove(QRegExp(QStringLiteral("\\.[0-9]+$")));
         int i = 0;
-        while((i = display.indexOf(QLatin1Char(':'))) >= 0) {
+        while ((i = display.indexOf(QLatin1Char(':'))) >= 0) {
             display[i] = '_';
         }
 
-        while((i = display.indexOf(QLatin1Char('/'))) >= 0) {
+        while ((i = display.indexOf(QLatin1Char('/'))) >= 0) {
             display[i] = '_';
         }
 
@@ -405,6 +405,9 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
         setenv("SESSION_MANAGER", session_manager, true);
 
         //这里要将session_manager变量传递给其他需要的进程
+        //同步环境变量到D-Bus中
+        syncDBusEnvironment();
+
 
         free(session_manager);
     }
@@ -1264,6 +1267,33 @@ void UKUISMServer::changeClientOrder()
             m_clients.append(c);
         }
     }
+}
+
+bool UKUISMServer::syncDBusEnvironment()
+{
+    QString program;
+    QStringList args = {QStringLiteral("--systemd"), QStringLiteral("--all")};;
+    QStringList env;
+    QProcess p;
+
+    if (!QStandardPaths::findExecutable(QStringLiteral("dbus-update-activation-environment")).isEmpty()) {
+        program = "dbus-update-activation-environment";
+    }
+    p.setEnvironment(QProcess::systemEnvironment() << env);
+    p.setProcessChannelMode(QProcess::ForwardedChannels);
+
+    if (!program.isEmpty()) {
+        p.start(program, args);
+    } else {
+        qWarning() << "dbus-update-activation-environment don't exist";
+        return false;
+    }
+
+    p.waitForFinished(-1);//等待程序执行完成
+    if (p.exitCode()) {
+        qWarning() << program << args << "exited with code" << p.exitCode();
+    }
+    return p.exitCode() == 0;//QProcess::NormalExit	0   QProcess::CrashExit	1
 }
 
 void UKUISMServer::removeConnection(UKUISMConnection *conn)
