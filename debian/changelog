@@ -1,3 +1,16 @@
+ukui-session-manager (2.0.11-6) v101.hw; urgency=medium
+
+  * 其他改动：切换用户之后，kwin混成被关闭出现大黑款问题解决
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 25 Nov 2021 09:56:13 +0800
+
+ukui-session-manager (2.0.11-5) v101.hw; urgency=medium
+
+  * Bug Fix: #86021 【前线】【联想M630Z台式机】【电源】文档处于修改状态时，点击电源-关机，机器直接关机
+  *          #68986  【创新院】【WPS】正在编辑word，excel表格，演示文稿时， 进行关机，重启，注销时没有提示要保存文档，直接关机
+
+ -- liuliang <liuliang@kylinos.cn>  Fri, 19 Nov 2021 17:46:47 +0800
+
 ukui-session-manager (2.0.11-2) v101; urgency=medium
 
   * Bug Fix: #86021 #68986 
