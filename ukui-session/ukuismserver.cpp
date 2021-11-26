@@ -353,7 +353,7 @@ void UKUISMWatchProc(IceConn iceConn, IcePointer client_data, Bool opening, IceP
 
 UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QStringLiteral("org.ukui.KWin"), QStringLiteral("/Session"), QDBusConnection::sessionBus(), this))
                              , m_state(Idle), m_saveSession(false), m_wmPhase1WaitingCount(0), m_clientInteracting(nullptr), m_sessionGroup(QStringLiteral(""))
-                             , m_wm(QStringLiteral("ukui-kwin_x11"))
+                             , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false)
 {
     m_wmCommands = QStringList({m_wm});
     theServer = this;
@@ -512,6 +512,7 @@ void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
     //如果客户端取消关机，则向所有客户端发送取消关机信号
     if (cancelShutdown_) {
         qCDebug(UKUI_SESSION) << client->clientId() << "cancel shutdown";
+        m_isCancelLogout = true;
         cancelShutdown(client);
     } else {
         //处理下一个挂起的客户端
@@ -1294,6 +1295,16 @@ bool UKUISMServer::syncDBusEnvironment()
         qWarning() << program << args << "exited with code" << p.exitCode();
     }
     return p.exitCode() == 0;//QProcess::NormalExit	0   QProcess::CrashExit	1
+}
+
+void UKUISMServer::setIsCancelLogout(bool isCancelLogout)
+{
+    m_isCancelLogout = isCancelLogout;
+}
+
+bool UKUISMServer::isCancelLogout() const
+{
+    return m_isCancelLogout;
 }
 
 void UKUISMServer::removeConnection(UKUISMConnection *conn)
