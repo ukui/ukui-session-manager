@@ -951,16 +951,13 @@ bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, l
     const uint8_t responseType = event->response_type & ~0x80;
     if (responseType == XCB_CONFIGURE_NOTIFY) {
         xcb_configure_notify_event_t *xc = reinterpret_cast<xcb_configure_notify_event_t*>(event);
-        if (xc->event == QX11Info::appRootWindow())
-        {
+        if (xc->event == QX11Info::appRootWindow()) {
             XRaiseWindow(QX11Info::display(), this->winId());
             XFlush(QX11Info::display());
             //raise();
         }
         return false;
-    }
-    else if(responseType == XCB_PROPERTY_NOTIFY)
-    {
+    } else if (responseType == XCB_PROPERTY_NOTIFY) {
         //raise();
         XRaiseWindow(QX11Info::display(), this->winId());
         XFlush(QX11Info::display());
