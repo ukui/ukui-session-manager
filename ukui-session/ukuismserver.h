@@ -120,6 +120,7 @@ public:
     bool prepareForShutdown();
 
     bool isCancelLogout() const;
+    void setIsCancelLogout(bool isCancelLogout);
 };
 
 #endif // UKUISMSERVER_H
