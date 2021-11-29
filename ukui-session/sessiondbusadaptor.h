@@ -102,6 +102,11 @@ public slots:
         m_systemdProvider->doAction(UkuiPower::PowerSwitchUser);
     }
 
+    Q_NOREPLY void hibernate()
+    {
+        m_systemdProvider->doAction(UkuiPower::PowerHibernate);
+    }
+
     Q_NOREPLY void suspend()
     {
         m_systemdProvider->doAction(UkuiPower::PowerSuspend);
