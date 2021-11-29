@@ -532,8 +532,6 @@ void UKUISMServer::phase2Request(UKUISMClient *client)
         --m_wmPhase1WaitingCount;
         //窗管完成phase1保存，请求phase2，服务器先向所有其他客户端发送保存命令
         if(m_wmPhase1WaitingCount == 0) {
-            //将pluma/wps/qtcreator放到客户端队列的最前方
-            changeClientOrder();
             foreach (UKUISMClient *c, m_clients) {
                 if (!isWM(c)) {
                     qCDebug(UKUI_SESSION) << "wm done phase1, sending saveyourself to " << c->clientId();
@@ -666,6 +664,10 @@ void UKUISMServer::performLogout()
 
     m_wmPhase1WaitingCount = 0;
     m_saveType = SmSaveBoth;
+
+    //将该函数的调用放到注销开始阶段
+    //9a0的机器上session是由kwin启动的，所以kwin不会注册到ukuismserver中，注销的时候也不会先保存kwin，而是直接向所有客户端发送保存信号
+    changeClientOrder();
 
     startProtection();
     foreach (UKUISMClient *c, m_clients) {
@@ -1248,10 +1250,11 @@ bool UKUISMServer::isWM(const QString &program) const
 
 void UKUISMServer::changeClientOrder()
 {
+    //桌面和控制栏等没有实现xsmp信号保存的应用会在interect done后发过来一个保存完成的信号，然后不等server的kill connection信号
+    //自己退出，所以将他们从客户端列表中去掉。
     //这只是一个暂时解决的方法，应该由desktop和panel做出修改，在收到服务器的退出信号后才退出进程
     //经过测试，即使将桌面和任务栏放到最后杀死，任然会出现桌面和任务栏先消失，应用还在的情况，要防止这种情况
     //要么在storeSession后直接调用systemd的注销接口，要么让桌面和任务栏按照xsmp规范修改。
-    //软件商店在下载的时候进行注销，注销进程进行到软件商店的时候卡住，需要增加一个超时机制，不让某个应用的阻塞影响到整个注销流程
     foreach (UKUISMClient *c, m_clients) {
         QString programPath = c->program();
         QString programName = programPath.mid(programPath.lastIndexOf(QDir::separator()) + 1);

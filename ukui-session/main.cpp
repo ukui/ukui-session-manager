@@ -60,15 +60,18 @@ void IoErrorHandler(IceConn iceConn)
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QString logPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
-        + "/ukui-session/ukui-session.log";
+        + "/ukui-session/ukui-session-xsmp.log";
+    //判断log文件是否存在
     if (!QFile::exists(logPath)) {
         QString logDir = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session";
+        //不存在时，创建ukui-session文件夹
         QDir dir(logDir);
         if (!dir.exists(logDir)) {
             if (!dir.mkdir(logDir)) {
                 return;
             }
         }
+        //创建log文件
         QFile file(logPath);
         if (!file.open(QIODevice::WriteOnly)) {
             return;
