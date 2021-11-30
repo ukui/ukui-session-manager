@@ -155,7 +155,8 @@ void screenScaleJudgement(QGSettings *settings)
     double       scale;
     scale = settings->get(SCALING_KEY).toDouble();
     if (scale > 1.25) {
-        bool state = false;
+        bool state  = false;
+        bool mScale = false;
         for (QScreen *screen : QGuiApplication::screens()) {
             int width  = screen->geometry().width() * scaling;
             int height = screen->geometry().height() * scaling;
@@ -166,8 +167,11 @@ void screenScaleJudgement(QGSettings *settings)
             else if (width == 1920 && height == 1080 && scale > 1.5) {
                 state = true;
             }
+            else if (width > 2560 && height > 1440) {
+                mScale = true;
+            }
         }
-        if (state) {
+        if (state && !mScale) {
             QGSettings *mGsettings;
             mGsettings = new QGSettings(MOUSE_SCHEMA);
             mGsettings->set(CURSOR_SIZE, 24);
