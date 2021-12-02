@@ -842,7 +842,7 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     QList<UKUISMClient*> pendingClients;
     pendingClients = m_clients;
     //此处判断除窗管之外的客户端是否全部完成保存，没有的话就返回
-    foreach(UKUISMClient *c, pendingClients ) {
+    foreach (UKUISMClient *c, pendingClients ) {
         if (!c->m_saveYourselfDone && !c->m_waitForPhase2) {
             qCDebug(UKUI_SESSION) << "there are none-wm client haven't save";
             return;
@@ -850,7 +850,7 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     }
     //窗管正在等待phase2阶段的保存，则向其发送保存phase2的信号
     bool waitForPhase2 = false;
-    foreach(UKUISMClient *c, pendingClients) {
+    foreach (UKUISMClient *c, pendingClients) {
         if (!c->m_saveYourselfDone && c->m_waitForPhase2) {
             c->m_waitForPhase2 = false;
             qCDebug(UKUI_SESSION) << "sending saveyourselfphase2 to " << c->clientId();
@@ -960,13 +960,13 @@ void UKUISMServer::completeKilling()
         //这一段的含义是只要客户端列表中还有非窗管的客户端存在，则等待，直到客户端中只有一个窗管，则开始杀死窗管
         bool wait = false;
         foreach (UKUISMClient *c, m_clients) {
-            if(isWM(c)) {
+            if (isWM(c)) {
                 continue;
             }
             wait = true;
         }
 
-        if(wait) {
+        if (wait) {
             return;
         }
 
