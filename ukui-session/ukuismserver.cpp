@@ -511,9 +511,17 @@ void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
     m_clientInteracting = nullptr;
     //如果客户端取消关机，则向所有客户端发送取消关机信号
     if (cancelShutdown_) {
-        qCDebug(UKUI_SESSION) << client->clientId() << "cancel shutdown";
-        m_isCancelLogout = true;
-        cancelShutdown(client);
+        QString programPath = client->program();
+        QString programName = programPath.mid(programPath.lastIndexOf(QDir::separator()) + 1);
+        if (programName != QLatin1String("ukui-screensaver-default")) {
+            qCDebug(UKUI_SESSION) << client->clientId() << "cancel shutdown";
+            m_isCancelLogout = true;
+            cancelShutdown(client);
+        } else {
+            //屏保程序不正常退出时，会在注销阶段发送一个取消注销信号过来，忽略这个信号，才能正常完成注销
+            qCDebug(UKUI_SESSION) << "ukui-screensaver-default send cancel shutdown, ignore it";
+            handlePendingInteractions();
+        }
     } else {
         //处理下一个挂起的客户端
         handlePendingInteractions();
@@ -822,7 +830,10 @@ void UKUISMServer::protectionTimeout()
 
 void UKUISMServer::timeoutQuit()
 {
-    killWM();
+//    killWM();
+    //杀死客户端阶段有一个10秒的等待，若10秒过后还有客户端没有响应killconnection信号，则会强制调用killwm
+    //由于现在改成了不杀死窗管，所以这里的强制操作也改为调用systemd的注销
+    killingCompleted();
 }
 
 void UKUISMServer::timeoutWMQuit()
@@ -842,7 +853,7 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     QList<UKUISMClient*> pendingClients;
     pendingClients = m_clients;
     //此处判断除窗管之外的客户端是否全部完成保存，没有的话就返回
-    foreach(UKUISMClient *c, pendingClients ) {
+    foreach (UKUISMClient *c, pendingClients ) {
         if (!c->m_saveYourselfDone && !c->m_waitForPhase2) {
             qCDebug(UKUI_SESSION) << "there are none-wm client haven't save";
             return;
@@ -850,7 +861,7 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     }
     //窗管正在等待phase2阶段的保存，则向其发送保存phase2的信号
     bool waitForPhase2 = false;
-    foreach(UKUISMClient *c, pendingClients) {
+    foreach (UKUISMClient *c, pendingClients) {
         if (!c->m_saveYourselfDone && c->m_waitForPhase2) {
             c->m_waitForPhase2 = false;
             qCDebug(UKUI_SESSION) << "sending saveyourselfphase2 to " << c->clientId();
@@ -960,13 +971,13 @@ void UKUISMServer::completeKilling()
         //这一段的含义是只要客户端列表中还有非窗管的客户端存在，则等待，直到客户端中只有一个窗管，则开始杀死窗管
         bool wait = false;
         foreach (UKUISMClient *c, m_clients) {
-            if(isWM(c)) {
+            if (isWM(c)) {
                 continue;
             }
             wait = true;
         }
 
-        if(wait) {
+        if (wait) {
             return;
         }
 
