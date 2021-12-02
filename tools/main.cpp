@@ -411,12 +411,12 @@ int main(int argc, char* argv[])
         } else {
             if (LockChecker::getLoginedUsers().count() > 1) {//提醒多个用户登录的情况
                 if (messageboxCheck()) {
-                    flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
+                    flag = playShutdownMusic(powermanager, 6, cc, up_to_time);
                 } else {
                     return 0;
                 }
             } else {
-                flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
+                flag = playShutdownMusic(powermanager, 6, cc, up_to_time);
             }
         }
 

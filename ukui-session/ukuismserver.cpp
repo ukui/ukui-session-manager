@@ -1006,7 +1006,7 @@ void UKUISMServer::startKilling()
     }
 
     completeKilling();
-    QTimer::singleShot(10000, this, &UKUISMServer::timeoutQuit);
+    QTimer::singleShot(2000, this, &UKUISMServer::timeoutQuit);
 }
 
 void UKUISMServer::killWM()
