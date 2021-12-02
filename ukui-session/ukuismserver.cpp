@@ -830,7 +830,10 @@ void UKUISMServer::protectionTimeout()
 
 void UKUISMServer::timeoutQuit()
 {
-    killWM();
+//    killWM();
+    //杀死客户端阶段有一个10秒的等待，若10秒过后还有客户端没有响应killconnection信号，则会强制调用killwm
+    //由于现在改成了不杀死窗管，所以这里的强制操作也改为调用systemd的注销
+    killingCompleted();
 }
 
 void UKUISMServer::timeoutWMQuit()
