@@ -511,9 +511,17 @@ void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
     m_clientInteracting = nullptr;
     //如果客户端取消关机，则向所有客户端发送取消关机信号
     if (cancelShutdown_) {
-        qCDebug(UKUI_SESSION) << client->clientId() << "cancel shutdown";
-        m_isCancelLogout = true;
-        cancelShutdown(client);
+        QString programPath = client->program();
+        QString programName = programPath.mid(programPath.lastIndexOf(QDir::separator()) + 1);
+        if (programName != QLatin1String("ukui-screensaver-default")) {
+            qCDebug(UKUI_SESSION) << client->clientId() << "cancel shutdown";
+            m_isCancelLogout = true;
+            cancelShutdown(client);
+        } else {
+            //屏保程序不正常退出时，会在注销阶段发送一个取消注销信号过来，忽略这个信号，才能正常完成注销
+            qCDebug(UKUI_SESSION) << "ukui-screensaver-default send cancel shutdown, ignore it";
+            handlePendingInteractions();
+        }
     } else {
         //处理下一个挂起的客户端
         handlePendingInteractions();
