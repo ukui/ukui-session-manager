@@ -123,7 +123,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
             }
 
         } else {
-            QString   imagefile = "/usr/share/backgrounds/warty-final-ubuntukylin.jpg";
+            QString   imagefile = "/usr/share/backgrounds/1-warty-final-ubuntukylin.jpg";
             QFileInfo fileimage(imagefile);
             if (fileimage.isFile() && fileimage.exists()) {
                 pix.load(imagefile);
@@ -135,14 +135,6 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         pix.load("/usr/share/ukui/ukui-session-manager/images/background-ukui.png");
         pix = blurPixmap(pix);
     }
-
-    //    QString fullstr = "/usr/share/backgrounds/warty-final-ubuntukylin.jpg";
-    //    QFileInfo fileInfo(fullstr);
-    //    if(fileInfo.isFile() && fileInfo.exists()){
-    //        pix.load(fullstr);
-    //        pix = blurPixmap(pix);
-    //    }else
-    //        pix.load(":/images/background-ukui.png");
 
     ui->setupUi(this);
     ui->switchuser->installEventFilter(this);
