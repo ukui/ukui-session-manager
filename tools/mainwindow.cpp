@@ -227,7 +227,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         isHibernateHide = false;
     }
 
-    if (LockChecker::getCachedUsers() > 1) {
+    if (LockChecker::hasMultipleUsers()) {
         isSwitchuserHide = false;
     }
 
