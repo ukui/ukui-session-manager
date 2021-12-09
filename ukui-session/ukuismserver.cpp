@@ -94,17 +94,17 @@ void SaveYourselfRequestProc(SmsConn smsConn, SmPointer managerData, int saveTyp
     }
 }
 
-void KSMSaveYourselfPhase2RequestProc(SmsConn smsConn, SmPointer managerData)
+void SaveYourselfPhase2RequestProc(SmsConn smsConn, SmPointer managerData)
 {
     getGlobalServer()->phase2Request(static_cast<UKUISMClient*>(managerData));
 }
 
-void KSMSaveYourselfDoneProc(SmsConn smsConn, SmPointer managerData, Bool success)
+void SaveYourselfDoneProc(SmsConn smsConn, SmPointer managerData, Bool success)
 {
     getGlobalServer()->saveYourselfDone(static_cast<UKUISMClient*>(managerData), success);
 }
 
-void KSMCloseConnectionProc(SmsConn smsConn, SmPointer managerData, int count, char **reasonMsgs)
+void CloseConnectionProc(SmsConn smsConn, SmPointer managerData, int count, char **reasonMsgs)
 {
     getGlobalServer()->deleteClient(static_cast<UKUISMClient*>(managerData));
     if (count) {
@@ -117,7 +117,7 @@ void KSMCloseConnectionProc(SmsConn smsConn, SmPointer managerData, int count, c
     IceCloseConnection(iceConn);
 }
 
-void KSMSetPropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, SmProp **props)
+void SetPropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, SmProp **props)
 {
     UKUISMClient *client = static_cast<UKUISMClient*>(managerData);
     for (int i = 0; i < numProps; i++) {
@@ -138,7 +138,7 @@ void KSMSetPropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, 
 
 }
 
-void KSMDeletePropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, char **propNames)
+void DeletePropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, char **propNames)
 {
     UKUISMClient *client = static_cast<UKUISMClient*>(managerData);
     for (int i = 0; i < numProps; i++) {
@@ -150,7 +150,7 @@ void KSMDeletePropertiesProc(SmsConn smsConn, SmPointer managerData, int numProp
     }
 }
 
-void KSMGetPropertiesProc(SmsConn smsConn, SmPointer managerData)
+void GetPropertiesProc(SmsConn smsConn, SmPointer managerData)
 {
     UKUISMClient *client = static_cast<UKUISMClient*>(managerData);
     SmProp **props = new SmProp*[client->m_properties.count()];
@@ -177,17 +177,17 @@ static Status NewClientProc(SmsConn conn, SmPointer manager_data, unsigned long 
     cb->interact_done.manager_data = client;
     cb->save_yourself_request.callback = SaveYourselfRequestProc;
     cb->save_yourself_request.manager_data = client;
-    cb->save_yourself_phase2_request.callback = KSMSaveYourselfPhase2RequestProc;
+    cb->save_yourself_phase2_request.callback = SaveYourselfPhase2RequestProc;
     cb->save_yourself_phase2_request.manager_data = client;
-    cb->save_yourself_done.callback = KSMSaveYourselfDoneProc;
+    cb->save_yourself_done.callback = SaveYourselfDoneProc;
     cb->save_yourself_done.manager_data = client;
-    cb->close_connection.callback = KSMCloseConnectionProc;
+    cb->close_connection.callback = CloseConnectionProc;
     cb->close_connection.manager_data = client;
-    cb->set_properties.callback = KSMSetPropertiesProc;
+    cb->set_properties.callback = SetPropertiesProc;
     cb->set_properties.manager_data = client;
-    cb->delete_properties.callback = KSMDeletePropertiesProc;
+    cb->delete_properties.callback = DeletePropertiesProc;
     cb->delete_properties.manager_data = client;
-    cb->get_properties.callback = KSMGetPropertiesProc;
+    cb->get_properties.callback = GetPropertiesProc;
     cb->get_properties.manager_data = client;
 
     *mask_ret = SmsRegisterClientProcMask |
@@ -302,7 +302,7 @@ Status SetAuthentication (int count, IceListenObj *listenObjs, IceAuthDataEntry 
     QString iceAuth = QStandardPaths::findExecutable(QStringLiteral("iceauth"));
     if (iceAuth.isEmpty())
     {
-        qCDebug(UKUI_SESSION) << "KSMServer: could not find iceauth";
+        qCDebug(UKUI_SESSION) << "UKUISMServer: could not find iceauth";
         return 0;
     }
 
@@ -330,7 +330,7 @@ void FreeAuthenticationData(int count, IceAuthDataEntry *authDataEntries)
     QString iceAuth = QStandardPaths::findExecutable(QStringLiteral("iceauth"));
     if (iceAuth.isEmpty())
     {
-        qCDebug(UKUI_SESSION) << "KSMServer: could not find iceauth";
+        qCDebug(UKUI_SESSION) << "UKUISMServer: could not find iceauth";
         return;
     }
 
@@ -375,8 +375,8 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
     }
 
     if (!IceListenForConnections(&numTransports, &listenObjs, 256, errormsg)) {
-        qCDebug(UKUI_SESSION) << "KSMServer: Error listening for connections: " << errormsg;
-        qCDebug(UKUI_SESSION) << "KSMServer: Aborting.";
+        qCDebug(UKUI_SESSION) << "UKUISMServer: Error listening for connections: " << errormsg;
+        qCDebug(UKUI_SESSION) << "UKUISMServer: Aborting.";
         exit(1);
     }
 
@@ -723,7 +723,7 @@ void UKUISMServer::cleanUp()
     IceFreeListenObjs(numTransports, listenObjs);
 
 
-    QByteArray fName = QFile::encodeName(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QLatin1Char('/') + QStringLiteral("KSMserver"));
+    QByteArray fName = QFile::encodeName(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QLatin1Char('/') + QStringLiteral("xsmpserver"));
     QString  display = QString::fromLocal8Bit(::getenv("DISPLAY"));
 
     display.remove(QRegExp(QStringLiteral("\\.[0-9]+$")));
