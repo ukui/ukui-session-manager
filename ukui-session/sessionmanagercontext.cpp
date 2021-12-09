@@ -3,6 +3,8 @@
 #include "sessionmanagercontext.h"
 #include "sessiondbusadaptor.h"
 
+extern UKUISMServer*& getGlobalServer();
+
 SessionManagerDBusContext::SessionManagerDBusContext(ModuleManager *manager, QObject *parent)
     :QObject(parent)
     , mManager(manager)
@@ -86,11 +88,11 @@ Q_NOREPLY void SessionManagerDBusContext::suspend()
 Q_NOREPLY void SessionManagerDBusContext::logout()
 {
     //xsmp协议的退出保存机制
-    theServer->performLogout();
+    getGlobalServer()->performLogout();
     //保证一定会退出
     QTimer::singleShot(20000, [](){
         //判断注销动作是否被取消
-        if (!theServer->isCancelLogout()) {
+        if (!getGlobalServer()->isCancelLogout()) {
             QDBusInterface face("org.freedesktop.login1",
                                 "/org/freedesktop/login1/session/self",
                                 "org.freedesktop.login1.Session",
@@ -99,7 +101,7 @@ Q_NOREPLY void SessionManagerDBusContext::logout()
             face.call("Terminate");
         } else {
             //恢复m_isCancelLogout为false，不影响下一次注销
-            theServer->setIsCancelLogout(false);
+            getGlobalServer()->setIsCancelLogout(false);
         }
         //            qDebug() << "calling force logout";
         //            QDBusInterface face("org.freedesktop.login1",
@@ -113,8 +115,8 @@ Q_NOREPLY void SessionManagerDBusContext::logout()
 
 Q_NOREPLY void SessionManagerDBusContext::reboot()
 {
-    theServer->performLogout();
-    connect(theServer, &UKUISMServer::logoutFinished, [this](){
+    getGlobalServer()->performLogout();
+    connect(getGlobalServer(), &UKUISMServer::logoutFinished, [this](){
         this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
     });
 
@@ -122,8 +124,8 @@ Q_NOREPLY void SessionManagerDBusContext::reboot()
 
 Q_NOREPLY void SessionManagerDBusContext::powerOff()
 {
-    theServer->performLogout();
-    connect(theServer, &UKUISMServer::logoutFinished, [this](){
+    getGlobalServer()->performLogout();
+    connect(getGlobalServer(), &UKUISMServer::logoutFinished, [this](){
         this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
     });
 

@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 
-extern UKUISMServer *theServer;//全局server指针
+extern UKUISMServer*& getGlobalServer();
 
 /*用于生成客户端的唯一ID*/
 Q_GLOBAL_STATIC(QString, my_addr)
@@ -71,7 +71,7 @@ void UKUISMClient::registerClient(const char *previousId)
     SmsRegisterClientReply(m_smsConn, (char*)m_id);
     SmsSaveYourself(m_smsConn, SmSaveLocal, false, SmInteractStyleNone, false);
     SmsSaveComplete(m_smsConn);
-    theServer->clientRegistered(previousId);
+    getGlobalServer()->clientRegistered(previousId);
 }
 
 QString UKUISMClient::program() const

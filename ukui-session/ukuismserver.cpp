@@ -37,7 +37,7 @@ enum KWinSessionState {
     Quitting = 2
 };
 
-UKUISMServer *theServer = nullptr;
+//UKUISMServer *getGlobalServer() = nullptr;
 
 IceAuthDataEntry *authDataEntries = nullptr;
 
@@ -48,6 +48,12 @@ int numTransports = 0;
 static bool onlyLocal = false;
 
 extern "C" int _IceTransNoListen(const char *protocol);
+
+UKUISMServer*& getGlobalServer()
+{
+    static UKUISMServer *server = new UKUISMServer;
+    return server;
+}
 
 static Bool HostBasedAuthProc(char *hostname)
 {
@@ -68,19 +74,19 @@ Status RegisterClientProc(SmsConn smsConn, SmPointer managerData, char *previous
 
 void InteractRequestProc(SmsConn smsConn, SmPointer managerData, int dialogType)
 {
-    theServer->interactRequest(static_cast<UKUISMClient*>(managerData), dialogType );
+    getGlobalServer()->interactRequest(static_cast<UKUISMClient*>(managerData), dialogType );
 }
 
 void InteractDoneProc(SmsConn smsConn, SmPointer managerData, Bool cancelShutdown)
 {
-    theServer->interactDone(static_cast<UKUISMClient*>(managerData), cancelShutdown);
+    getGlobalServer()->interactDone(static_cast<UKUISMClient*>(managerData), cancelShutdown);
 }
 
 void SaveYourselfRequestProc(SmsConn smsConn, SmPointer managerData, int saveType, Bool shutdown, int interactStyle, Bool fast, Bool global)
 {
     //如果shutdown为true,则执行关机流程
     if (shutdown) {
-        theServer->shutdown();
+        getGlobalServer()->shutdown();
     } else if (!global) {
         //如果global为false,则只向发送请求的客户端发送save yourself
         SmsSaveYourself(smsConn, saveType, false, interactStyle, fast);
@@ -90,17 +96,17 @@ void SaveYourselfRequestProc(SmsConn smsConn, SmPointer managerData, int saveTyp
 
 void KSMSaveYourselfPhase2RequestProc(SmsConn smsConn, SmPointer managerData)
 {
-    theServer->phase2Request(static_cast<UKUISMClient*>(managerData));
+    getGlobalServer()->phase2Request(static_cast<UKUISMClient*>(managerData));
 }
 
 void KSMSaveYourselfDoneProc(SmsConn smsConn, SmPointer managerData, Bool success)
 {
-    theServer->saveYourselfDone(static_cast<UKUISMClient*>(managerData), success);
+    getGlobalServer()->saveYourselfDone(static_cast<UKUISMClient*>(managerData), success);
 }
 
 void KSMCloseConnectionProc(SmsConn smsConn, SmPointer managerData, int count, char **reasonMsgs)
 {
-    theServer->deleteClient(static_cast<UKUISMClient*>(managerData));
+    getGlobalServer()->deleteClient(static_cast<UKUISMClient*>(managerData));
     if (count) {
         SmFreeReasons(count, reasonMsgs);
     }
@@ -122,7 +128,7 @@ void KSMSetPropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, 
         }
         client->m_properties.append(props[i]);
         if (!qstrcmp(props[i]->name, SmProgram)) {
-            theServer->clientSetProgram(client);
+            getGlobalServer()->clientSetProgram(client);
         }
     }
 
@@ -353,10 +359,10 @@ void UKUISMWatchProc(IceConn iceConn, IcePointer client_data, Bool opening, IceP
 
 UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QStringLiteral("org.ukui.KWin"), QStringLiteral("/Session"), QDBusConnection::sessionBus(), this))
                              , m_state(Idle), m_saveSession(false), m_wmPhase1WaitingCount(0), m_clientInteracting(nullptr), m_sessionGroup(QStringLiteral(""))
-                             , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false)
+                             , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false), m_wmCommands(QStringList({m_wm}))
 {
-    m_wmCommands = QStringList({m_wm});
-    theServer = this;
+//    m_wmCommands = QStringList({m_wm});
+//    getGlobalServer() = this;
 
     onlyLocal = true;
     if (onlyLocal) {
@@ -444,7 +450,7 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
 UKUISMServer::~UKUISMServer()
 {
     qDeleteAll(m_listener);
-    theServer = nullptr;
+//    getGlobalServer() = nullptr;
     cleanUp();
 }
 
