@@ -262,6 +262,20 @@ int LockChecker::getCachedUsers()
     return userNum;
 }
 
+bool LockChecker::hasMultipleUsers()
+{
+    QDBusInterface interface("org.freedesktop.Accounts",
+                             "/org/freedesktop/Accounts",
+                             "org.freedesktop.DBus.Properties",
+                             QDBusConnection::systemBus());
+    if (!interface.isValid()) {
+        qCritical() << QDBusConnection::systemBus().lastError().message();
+    }
+
+    QDBusReply<QVariant> reply = interface.call("Get","org.freedesktop.Accounts","HasMultipleUsers");
+    return reply.value().toBool();
+}
+
 QDBusArgument &operator<<(QDBusArgument &argument, const Inhibitor &mystruct){
     argument.beginStructure();
     argument << mystruct.action << mystruct.name << mystruct.reason << mystruct.mode << mystruct.uid << mystruct.pid;

@@ -42,6 +42,8 @@ public:
 
     static int getCachedUsers();
 
+    static bool hasMultipleUsers();
+
 private:
     static QString getName(QFile *a);
 };
