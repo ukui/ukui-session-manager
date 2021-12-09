@@ -19,7 +19,6 @@
  */
 #include "sessionapplication.h"
 #include "modulemanager.h"
-#include "sessiondbusadaptor.h"
 #include "idleadbusdaptor.h"
 #include "idlewatcher.h"
 
@@ -116,7 +115,6 @@ void SessionApplication::updateIdleDelay()
 
 void SessionApplication::registerDBus()
 {
-    new SessionDBusAdaptor(modman);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     if (!dbus.isConnected()) {
         qDebug() << "Fatal DBus Error";
@@ -129,10 +127,12 @@ void SessionApplication::registerDBus()
             qWarning() <<  "exited with code" << a->exitCode();
         }
     }
+    m_sessionManagerContext = new SessionManagerDBusContext(modman);
+
     if (!dbus.registerService(QStringLiteral("org.gnome.SessionManager"))) {
         qCritical() << "Can't register org.gnome.SessionManager, there is already a session manager!";
     }
-    if (!dbus.registerObject(("/org/gnome/SessionManager"), modman)) {
+    if (!dbus.registerObject(("/org/gnome/SessionManager"), m_sessionManagerContext)) {
         qCritical() << "Can't register object, there is already an object registered at "
                     << "/org/gnome/SessionManager";
     }

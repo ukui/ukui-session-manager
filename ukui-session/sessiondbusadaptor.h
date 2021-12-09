@@ -26,9 +26,8 @@
 #include "modulemanager.h"
 #include "usminhibit.h"
 #include "ukuismserver.h"
+#include "sessionmanagercontext.h"
 #include <KIdleTime>
-
-extern UKUISMServer *theServer;
 
 class SessionDBusAdaptor : public QDBusAbstractAdaptor
 {
@@ -36,16 +35,22 @@ class SessionDBusAdaptor : public QDBusAbstractAdaptor
     Q_CLASSINFO("D-Bus Interface", "org.gnome.SessionManager")
 
 public:
-    SessionDBusAdaptor(ModuleManager *manager) : QDBusAbstractAdaptor(manager)
-                                               , mManager(manager)
-                                               , minhibit(new usminhibit())
-                                               , m_systemdProvider(new SystemdProvider())
-                                               , m_ukuiProvider(new UKUIProvider())
+    SessionDBusAdaptor(SessionManagerDBusContext *context)
+        :QDBusAbstractAdaptor(context)
     {
-        connect(mManager, &ModuleManager::moduleStateChanged, this , &SessionDBusAdaptor::moduleStateChanged);
-        connect(mManager, &ModuleManager::finished,this,&SessionDBusAdaptor::emitPrepareForPhase2);
-        connect(minhibit, &usminhibit::inhibitRemove,this,&SessionDBusAdaptor::simulateUserActivity);
-        connect(minhibit, &usminhibit::inhibitAdd,this,&SessionDBusAdaptor::simulateUserActivity);
+        connect(parent(), &SessionManagerDBusContext::moduleStateChanged, this, &SessionDBusAdaptor::moduleStateChanged);
+        connect(parent(), &SessionManagerDBusContext::inhibitadded, this, &SessionDBusAdaptor::inhibitadded);
+        connect(parent(), &SessionManagerDBusContext::inhibitremove, this, &SessionDBusAdaptor::inhibitremove);
+        connect(parent(), &SessionManagerDBusContext::StartLogout, this, &SessionDBusAdaptor::StartLogout);
+        connect(parent(), &SessionManagerDBusContext::PrepareForSwitchuser, this, &SessionDBusAdaptor::PrepareForSwitchuser);
+        connect(parent(), &SessionManagerDBusContext::PrepareForPhase2, this, &SessionDBusAdaptor::PrepareForPhase2);
+    }
+
+    virtual ~SessionDBusAdaptor(){}
+
+    inline SessionManagerDBusContext *parent() const
+    {
+        return static_cast<SessionManagerDBusContext *>(QObject::parent());
     }
 
 Q_SIGNALS:
@@ -59,187 +64,126 @@ Q_SIGNALS:
 public slots:
     void startupfinished(const QString &appName ,const QString &string)
     {
-        return mManager->startupfinished(appName, string);
+        return parent()->startupfinished(appName, string);
     }
 
     bool canSwitch()
     {
-        //判断能否切换用户只需要用到systemdProvide的功能。
-        return m_systemdProvider->canAction(UkuiPower::PowerSwitchUser);
+        return parent()->canSwitch();
     }
 
     bool canHibernate()
     {
-        return m_systemdProvider->canAction(UkuiPower::PowerHibernate);
+        return parent()->canHibernate();
     }
 
     bool canSuspend()
     {
-        //睡眠通过systemd判断
-        return m_systemdProvider->canAction(UkuiPower::PowerSuspend);
+        return parent()->canSuspend();
     }
 
     bool canLogout()
     {
-        //暂时都返回true
-        return true;
+        return parent()->canLogout();
     }
 
     bool canReboot()
     {
-        //界面处已经判断过inhibitor,会有界面提示，此处有待优化
-        //判断systemd和ukui-session的inhibitor
-        return m_systemdProvider->canAction(UkuiPower::PowerReboot) && m_ukuiProvider->canAction(UkuiPower::PowerReboot);
+        return parent()->canReboot();
     }
 
     bool canPowerOff()
     {
-        return m_systemdProvider->canAction(UkuiPower::PowerShutdown) && m_ukuiProvider->canAction(UkuiPower::PowerShutdown);
+        return parent()->canPowerOff();
     }
 
     Q_NOREPLY void switchUser()
     {
-        m_systemdProvider->doAction(UkuiPower::PowerSwitchUser);
+        return parent()->switchUser();
     }
 
     Q_NOREPLY void hibernate()
     {
-        m_systemdProvider->doAction(UkuiPower::PowerHibernate);
+        return parent()->hibernate();
     }
 
     Q_NOREPLY void suspend()
     {
-        m_systemdProvider->doAction(UkuiPower::PowerSuspend);
+        return parent()->suspend();
     }
 
     Q_NOREPLY void logout()
     {
-        //xsmp协议的退出保存机制
-        theServer->performLogout();
-        //保证一定会退出
-        QTimer::singleShot(20000, [](){
-            //判断注销动作是否被取消
-            if (!theServer->isCancelLogout()) {
-                QDBusInterface face("org.freedesktop.login1",
-                                    "/org/freedesktop/login1/session/self",
-                                    "org.freedesktop.login1.Session",
-                                    QDBusConnection::systemBus());
-
-                face.call("Terminate");
-            } else {
-                //恢复m_isCancelLogout为false，不影响下一次注销
-                theServer->setIsCancelLogout(false);
-            }
-//            qDebug() << "calling force logout";
-//            QDBusInterface face("org.freedesktop.login1",
-//                                "/org/freedesktop/login1/user/self",
-//                                "org.freedesktop.login1.User",
-//                                QDBusConnection::systemBus());
-
-//            face.call("Kill", 15);
-        });
+        return parent()->logout();
     }
 
     Q_NOREPLY void reboot()
     {
-        theServer->performLogout();
-        connect(theServer, &UKUISMServer::logoutFinished, [this](){
-            this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
-        });
-
+        return parent()->reboot();
     }
 
     Q_NOREPLY void powerOff()
     {
-        theServer->performLogout();
-        connect(theServer, &UKUISMServer::logoutFinished, [this](){
-            this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
-        });
+        return parent()->powerOff();
     }
 
     Q_NOREPLY void startModule(const QString& name)
     {
-        mManager->startProcess(name, true);
+        return parent()->startModule(name);
     }
 
     Q_NOREPLY void stopModule(const QString& name)
     {
-        mManager->stopProcess(name);
+        return parent()->stopModule(name);
     }
 
     uint Inhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
     {
-        uint result = minhibit->addInhibit(app_id, toplevel_xid, reason, flags);
-        if (result < 0) {
-            return 0;
-        }
-        emit inhibitadded(flags);
-        return result;
+        return parent()->Inhibit(app_id,toplevel_xid, reason, flags);
     }
 
     Q_NOREPLY void Uninhibit(uint cookie)
     {
-        uint result = minhibit->unInhibit(cookie);
-        if (result > 0) {
-            emit inhibitremove(result);
-        }
+        return parent()->Uninhibit(cookie);
     }
 
     QStringList GetInhibitors()
     {
-        return minhibit->getInhibitor();
+        return parent()->GetInhibitors();
     }
 
     bool IsSessionRunning(){
-        QString xdg_session_desktop = qgetenv("XDG_SESSION_DESKTOP").toLower();
-        if (xdg_session_desktop == "ukui") {
-            return true;
-        }
-        return false;
+        return parent()->IsSessionRunning();
     }
 
     QString GetSessionName()
     {
-        QString xdg_session_desktop = qgetenv("XDG_SESSION_DESKTOP").toLower();
-        if (xdg_session_desktop == "ukui") {
-            return "ukui-session";
-        }
-        return "error";
+        return parent()->GetSessionName();
     }
 
     bool IsInhibited(quint32 flags)
     {
-        return minhibit->isInhibited(flags);
+        return parent()->IsInhibited(flags);
     }
 
     Q_NOREPLY void emitStartLogout()
     {
-        qDebug() << "emit  StartLogout";
-        emit StartLogout();
+        return parent()->emitStartLogout();
     }
 
     Q_NOREPLY void emitPrepareForSwitchuser()
     {
-        qDebug() << "emit  PrepareForSwitchuser";
-        emit PrepareForSwitchuser();
+        return parent()->emitPrepareForSwitchuser();
     }
 
     Q_NOREPLY void emitPrepareForPhase2()
     {
-        qDebug() << "emit  PrepareForPhase2";
-        emit PrepareForPhase2();
+        return parent()->emitPrepareForPhase2();
     }
 
     Q_NOREPLY void simulateUserActivity(){
-        qDebug()<<"simulate User Activity";
-        KIdleTime::instance()->simulateUserActivity();
+        return parent()->simulateUserActivity();
     }
-
-private:
-    ModuleManager *mManager;
-    usminhibit *minhibit;
-    PowerProvider *m_systemdProvider;
-    PowerProvider *m_ukuiProvider;
 };
 
 #endif // SESSIONDBUSADAPTOR_H
