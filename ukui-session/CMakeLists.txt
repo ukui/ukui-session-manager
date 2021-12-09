@@ -27,6 +27,8 @@ set(ukui-session_SRCS
     ukuismconnection.h
     ukuisessiondebug.cpp
     ukuisessiondebug.h
+    sessionmanagercontext.h
+    sessionmanagercontext.cpp
 )
 
 qt5_add_dbus_interface(ukui-session_SRCS org.ukui.KWin.Session.xml ukuikwinsession_interface)

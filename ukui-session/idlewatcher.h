@@ -50,7 +50,7 @@ Q_SIGNALS:
     void StatusChanged(uint status);
 
 private:
-    int mSecsidle;
+    int mSecsidle = 1 * 60;
     QList<QVariant> args;
 };
 

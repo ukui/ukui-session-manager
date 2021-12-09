@@ -33,8 +33,9 @@
 #define PROPERTY          "Active"
 
 IdleWatcher::IdleWatcher(int idle, QObject *parent) : QObject(parent)
-                                                    , mSecsidle(idle)
 {
+    if(idle > 0)
+        mSecsidle = idle;
     connect(KIdleTime::instance(),
             &KIdleTime::resumingFromIdle,
             this,
@@ -69,7 +70,8 @@ IdleWatcher::~IdleWatcher()
 
 void IdleWatcher::setup()
 {
-    KIdleTime::instance()->addIdleTimeout(1000 * mSecsidle);
+    if(mSecsidle > 0)
+        KIdleTime::instance()->addIdleTimeout(1000 * mSecsidle);
 }
 
 void IdleWatcher::weakupFromSleep(bool a){
@@ -124,9 +126,12 @@ void IdleWatcher::resumingFromIdle()
 
 void IdleWatcher::reset(int idle )
 {
-    qDebug() << "Idle timeout reset to " << idle;
     KIdleTime::instance()->removeAllIdleTimeouts();
-    mSecsidle = idle;
-    setup();
+    if(idle > 0)
+    {
+        qDebug() << "Idle timeout reset to " << idle;
+        mSecsidle = idle;
+        setup();
+    }
 }
 
