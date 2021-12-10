@@ -724,7 +724,9 @@ void UKUISMServer::cleanUp()
     IceFreeListenObjs(numTransports, listenObjs);
 
 
+
     QByteArray fName = QFile::encodeName(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QLatin1Char('/') + QStringLiteral("UKUISMServer"));
+
     QString  display = QString::fromLocal8Bit(::getenv("DISPLAY"));
 
     display.remove(QRegExp(QStringLiteral("\\.[0-9]+$")));
