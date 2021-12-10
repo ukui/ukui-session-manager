@@ -37,7 +37,7 @@ enum KWinSessionState {
     Quitting = 2
 };
 
-UKUISMServer *theServer = nullptr;
+//UKUISMServer *getGlobalServer() = nullptr;
 
 IceAuthDataEntry *authDataEntries = nullptr;
 
@@ -48,6 +48,12 @@ int numTransports = 0;
 static bool onlyLocal = false;
 
 extern "C" int _IceTransNoListen(const char *protocol);
+
+UKUISMServer*& getGlobalServer()
+{
+    static UKUISMServer *server = new UKUISMServer;
+    return server;
+}
 
 static Bool HostBasedAuthProc(char *hostname)
 {
@@ -68,19 +74,19 @@ Status RegisterClientProc(SmsConn smsConn, SmPointer managerData, char *previous
 
 void InteractRequestProc(SmsConn smsConn, SmPointer managerData, int dialogType)
 {
-    theServer->interactRequest(static_cast<UKUISMClient*>(managerData), dialogType );
+    getGlobalServer()->interactRequest(static_cast<UKUISMClient*>(managerData), dialogType );
 }
 
 void InteractDoneProc(SmsConn smsConn, SmPointer managerData, Bool cancelShutdown)
 {
-    theServer->interactDone(static_cast<UKUISMClient*>(managerData), cancelShutdown);
+    getGlobalServer()->interactDone(static_cast<UKUISMClient*>(managerData), cancelShutdown);
 }
 
 void SaveYourselfRequestProc(SmsConn smsConn, SmPointer managerData, int saveType, Bool shutdown, int interactStyle, Bool fast, Bool global)
 {
     //如果shutdown为true,则执行关机流程
     if (shutdown) {
-        theServer->shutdown();
+        getGlobalServer()->shutdown();
     } else if (!global) {
         //如果global为false,则只向发送请求的客户端发送save yourself
         SmsSaveYourself(smsConn, saveType, false, interactStyle, fast);
@@ -88,19 +94,19 @@ void SaveYourselfRequestProc(SmsConn smsConn, SmPointer managerData, int saveTyp
     }
 }
 
-void KSMSaveYourselfPhase2RequestProc(SmsConn smsConn, SmPointer managerData)
+void SaveYourselfPhase2RequestProc(SmsConn smsConn, SmPointer managerData)
 {
-    theServer->phase2Request(static_cast<UKUISMClient*>(managerData));
+    getGlobalServer()->phase2Request(static_cast<UKUISMClient*>(managerData));
 }
 
-void KSMSaveYourselfDoneProc(SmsConn smsConn, SmPointer managerData, Bool success)
+void SaveYourselfDoneProc(SmsConn smsConn, SmPointer managerData, Bool success)
 {
-    theServer->saveYourselfDone(static_cast<UKUISMClient*>(managerData), success);
+    getGlobalServer()->saveYourselfDone(static_cast<UKUISMClient*>(managerData), success);
 }
 
-void KSMCloseConnectionProc(SmsConn smsConn, SmPointer managerData, int count, char **reasonMsgs)
+void CloseConnectionProc(SmsConn smsConn, SmPointer managerData, int count, char **reasonMsgs)
 {
-    theServer->deleteClient(static_cast<UKUISMClient*>(managerData));
+    getGlobalServer()->deleteClient(static_cast<UKUISMClient*>(managerData));
     if (count) {
         SmFreeReasons(count, reasonMsgs);
     }
@@ -111,7 +117,7 @@ void KSMCloseConnectionProc(SmsConn smsConn, SmPointer managerData, int count, c
     IceCloseConnection(iceConn);
 }
 
-void KSMSetPropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, SmProp **props)
+void SetPropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, SmProp **props)
 {
     UKUISMClient *client = static_cast<UKUISMClient*>(managerData);
     for (int i = 0; i < numProps; i++) {
@@ -122,7 +128,7 @@ void KSMSetPropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, 
         }
         client->m_properties.append(props[i]);
         if (!qstrcmp(props[i]->name, SmProgram)) {
-            theServer->clientSetProgram(client);
+            getGlobalServer()->clientSetProgram(client);
         }
     }
 
@@ -132,7 +138,7 @@ void KSMSetPropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, 
 
 }
 
-void KSMDeletePropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, char **propNames)
+void DeletePropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, char **propNames)
 {
     UKUISMClient *client = static_cast<UKUISMClient*>(managerData);
     for (int i = 0; i < numProps; i++) {
@@ -144,7 +150,7 @@ void KSMDeletePropertiesProc(SmsConn smsConn, SmPointer managerData, int numProp
     }
 }
 
-void KSMGetPropertiesProc(SmsConn smsConn, SmPointer managerData)
+void GetPropertiesProc(SmsConn smsConn, SmPointer managerData)
 {
     UKUISMClient *client = static_cast<UKUISMClient*>(managerData);
     SmProp **props = new SmProp*[client->m_properties.count()];
@@ -171,17 +177,17 @@ static Status NewClientProc(SmsConn conn, SmPointer manager_data, unsigned long 
     cb->interact_done.manager_data = client;
     cb->save_yourself_request.callback = SaveYourselfRequestProc;
     cb->save_yourself_request.manager_data = client;
-    cb->save_yourself_phase2_request.callback = KSMSaveYourselfPhase2RequestProc;
+    cb->save_yourself_phase2_request.callback = SaveYourselfPhase2RequestProc;
     cb->save_yourself_phase2_request.manager_data = client;
-    cb->save_yourself_done.callback = KSMSaveYourselfDoneProc;
+    cb->save_yourself_done.callback = SaveYourselfDoneProc;
     cb->save_yourself_done.manager_data = client;
-    cb->close_connection.callback = KSMCloseConnectionProc;
+    cb->close_connection.callback = CloseConnectionProc;
     cb->close_connection.manager_data = client;
-    cb->set_properties.callback = KSMSetPropertiesProc;
+    cb->set_properties.callback = SetPropertiesProc;
     cb->set_properties.manager_data = client;
-    cb->delete_properties.callback = KSMDeletePropertiesProc;
+    cb->delete_properties.callback = DeletePropertiesProc;
     cb->delete_properties.manager_data = client;
-    cb->get_properties.callback = KSMGetPropertiesProc;
+    cb->get_properties.callback = GetPropertiesProc;
     cb->get_properties.manager_data = client;
 
     *mask_ret = SmsRegisterClientProcMask |
@@ -296,7 +302,7 @@ Status SetAuthentication (int count, IceListenObj *listenObjs, IceAuthDataEntry 
     QString iceAuth = QStandardPaths::findExecutable(QStringLiteral("iceauth"));
     if (iceAuth.isEmpty())
     {
-        qCDebug(UKUI_SESSION) << "KSMServer: could not find iceauth";
+        qCDebug(UKUI_SESSION) << "UKUISMServer: could not find iceauth";
         return 0;
     }
 
@@ -324,7 +330,7 @@ void FreeAuthenticationData(int count, IceAuthDataEntry *authDataEntries)
     QString iceAuth = QStandardPaths::findExecutable(QStringLiteral("iceauth"));
     if (iceAuth.isEmpty())
     {
-        qCDebug(UKUI_SESSION) << "KSMServer: could not find iceauth";
+        qCDebug(UKUI_SESSION) << "UKUISMServer: could not find iceauth";
         return;
     }
 
@@ -353,10 +359,10 @@ void UKUISMWatchProc(IceConn iceConn, IcePointer client_data, Bool opening, IceP
 
 UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QStringLiteral("org.ukui.KWin"), QStringLiteral("/Session"), QDBusConnection::sessionBus(), this))
                              , m_state(Idle), m_saveSession(false), m_wmPhase1WaitingCount(0), m_clientInteracting(nullptr), m_sessionGroup(QStringLiteral(""))
-                             , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false)
+                             , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false), m_wmCommands(QStringList({m_wm}))
 {
-    m_wmCommands = QStringList({m_wm});
-    theServer = this;
+//    m_wmCommands = QStringList({m_wm});
+//    getGlobalServer() = this;
 
     onlyLocal = true;
     if (onlyLocal) {
@@ -365,19 +371,19 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
 
     char errormsg[256];
     if (!SmsInitialize((char*)VendorString, (char*)ReleaseString, NewClientProc, (SmPointer) this, HostBasedAuthProc, 256, errormsg)) {
-        qCDebug(UKUI_SESSION) << "xsmpserver: could not register XSM protocol";
+        qCDebug(UKUI_SESSION) << "UKUISMServer: could not register XSM protocol";
     }
 
     if (!IceListenForConnections(&numTransports, &listenObjs, 256, errormsg)) {
-        qCDebug(UKUI_SESSION) << "KSMServer: Error listening for connections: " << errormsg;
-        qCDebug(UKUI_SESSION) << "KSMServer: Aborting.";
+        qCDebug(UKUI_SESSION) << "UKUISMServer: Error listening for connections: " << errormsg;
+        qCDebug(UKUI_SESSION) << "UKUISMServer: Aborting.";
         exit(1);
     }
 
     {
         QByteArray fName = QFile::encodeName(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation)
                                              + QDir::separator()
-                                             + QStringLiteral("xsmpserver"));
+                                             + QStringLiteral("UKUISMServer"));
 
         QString display = QString::fromLocal8Bit(::getenv("DISPLAY"));
         display.remove(QRegExp(QStringLiteral("\\.[0-9]+$")));
@@ -392,6 +398,7 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
 
         fName += '_'+display.toLocal8Bit();
         FILE *f;
+        //w+ 打开可读写文件，若文件存在则文件长度清为零，即该文件内容会消失。若文件不存在则建立该文件
         f = ::fopen(fName.data(), "w+");
         if (!f) {
             QString str = QString(QStringLiteral("UKUISMServer: cannot open %s: %s")).arg(fName.data()).arg(strerror(errno));
@@ -444,7 +451,7 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
 UKUISMServer::~UKUISMServer()
 {
     qDeleteAll(m_listener);
-    theServer = nullptr;
+//    getGlobalServer() = nullptr;
     cleanUp();
 }
 
@@ -717,7 +724,9 @@ void UKUISMServer::cleanUp()
     IceFreeListenObjs(numTransports, listenObjs);
 
 
-    QByteArray fName = QFile::encodeName(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QLatin1Char('/') + QStringLiteral("KSMserver"));
+
+    QByteArray fName = QFile::encodeName(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QLatin1Char('/') + QStringLiteral("UKUISMServer"));
+
     QString  display = QString::fromLocal8Bit(::getenv("DISPLAY"));
 
     display.remove(QRegExp(QStringLiteral("\\.[0-9]+$")));
@@ -1049,6 +1058,8 @@ void UKUISMServer::killingCompleted()
     qCDebug(UKUI_SESSION) << "done killing, exit";
     emit logoutFinished();
 //    qApp->quit();
+    //目前不清楚如果不做清理会有什么影响，看日志没有发现问题，使用上也没有区别，但为了保险还是加上
+    cleanUp();
     qCDebug(UKUI_SESSION) << "call systemd Terminate";
     QDBusInterface face("org.freedesktop.login1",
                         "/org/freedesktop/login1/session/self",

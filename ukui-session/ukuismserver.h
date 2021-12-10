@@ -109,12 +109,12 @@ private:
 
     QList<UKUISMListener*> m_listener;
     QList<UKUISMClient*> m_clients;
-    QStringList m_wmCommands;
     QTimer m_restoreTimer;
     QTimer m_protectionTimer;
     QString m_wm;
     QString m_lastIdRestore;
     QString m_sessionGroup;
+    QStringList m_wmCommands;
 
 public:
     bool prepareForShutdown();

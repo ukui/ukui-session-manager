@@ -35,7 +35,7 @@
 #ifdef signals
 #undef signals
 #endif
-extern UKUISMServer *theServer;
+
 class SessionDBusAdaptor;
 
 class SessionManagerDBusContext : public QObject, protected QDBusContext

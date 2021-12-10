@@ -46,7 +46,7 @@
 #define SESSION_REQUIRED_COMPONENTS "org.ukui.session.required-components"
 #define SESSION_REQUIRED_COMPONENTS_PATH "/org/ukui/desktop/session/required-components/"
 
-extern UKUISMServer *theServer;
+extern UKUISMServer*& getGlobalServer();
 
 void ModuleManager::playBootMusic(bool arg)
 {
@@ -487,7 +487,7 @@ bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 
 void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitStatus)
 {
-    if (theServer->prepareForShutdown()) {
+    if (getGlobalServer()->prepareForShutdown()) {
         qDebug() << "111111111111111111";
         return;
     }
