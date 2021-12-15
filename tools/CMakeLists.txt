@@ -15,6 +15,12 @@ set(tools_SRCS
     loginedusers.cpp
     ../ukui-session/xdgdirs.cpp
     ../ukui-session/xdgdesktopfile.cpp
+    myiconlabel.cpp
+    myiconlabel.h
+    mypushbutton.cpp
+    mypushbutton.h
+    pushbutton.cpp
+    pushbutton.h
 )
 
 find_package(PkgConfig)
