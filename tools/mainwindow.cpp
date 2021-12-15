@@ -421,7 +421,8 @@ void MainWindow::paintEvent(QPaintEvent *e)
         // draw picture to every screen
         QRect rect = screen->geometry();
         painter.drawPixmap(rect, pix.scaled(screen->size()));
-        //painter.drawRect(rect);
+        //drawRect可以避免在白色壁纸的情况下模糊背景造成的问题
+        painter.drawRect(rect);
     }
     QWidget::paintEvent(e);
 }
