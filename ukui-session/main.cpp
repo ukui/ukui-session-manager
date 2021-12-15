@@ -38,6 +38,8 @@
 #include <QScreen>
 #include <QProcess>
 #include <QGSettings/QGSettings>
+#include <QCommandLineParser>
+#include <QTranslator>
 #include <ukui-log4qt.h>
 extern "C" {
 #include <X11/Xatom.h>
@@ -370,6 +372,30 @@ int main(int argc, char **argv)
     IceSetIOErrorHandler(IoErrorHandler);
     server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
 //    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
+
+    // Load ts files
+    const QString locale = QLocale::system().name();
+    QTranslator   translator;
+    qDebug() << "local: " << locale;
+    qDebug() << "path: " << QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager");
+    if (translator.load(locale,
+                        QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
+        app.installTranslator(&translator);
+    } else {
+        qDebug() << "Load translations file failed!";
+    }
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription(
+                QApplication::tr("UKUI Session Manager"));
+
+    const QString VERINFO = QStringLiteral("2.0.11-7");
+    app.setApplicationVersion(VERINFO);
+
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    parser.process(app);
     
     return app.exec();
 }
