@@ -17,7 +17,12 @@ MyIconLabel::MyIconLabel(int labelWidth, int iconWidth, QString path, bool showB
     m_btnIcon->setIcon(QIcon(path));
     m_btnIcon->setIconSize(QSize(iconWidth,iconWidth));
     m_btnIcon->setObjectName("btn");
-    m_btnIcon->setStyleSheet("QPushButton#btn{background-color: transparent;border:none}");
+    m_btnIcon->setStyleSheet("QPushButton#btn{background-color: transparent;border:none;} \
+                             QPushButton:checked  { background-color: transparent;border:none;}\
+                             QPushButton:hover  { background-color: transparent;border:none;}");
+    m_btnIcon->setGeometry(QRect((width() - iconWidth)/2, (width() - iconWidth)/2, iconWidth, iconWidth));
+    m_btnIcon->setCheckable(false);
+    m_btnIcon->setChecked(false);
     m_btnIcon->setGeometry(QRect((width() - iconWidth)/2, (width() - iconWidth)/2, iconWidth, iconWidth));
     m_btnIcon->setAttribute(Qt::WA_TransparentForMouseEvents,true);
     if(m_showBackColor){

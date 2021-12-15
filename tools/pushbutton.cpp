@@ -1,6 +1,7 @@
 #include "pushbutton.h"
 #include <QPushButton>
 #include <QMouseEvent>
+#include <QDebug>
 PushButton::PushButton(QWidget *parent)
     :QPushButton(parent)
 {
@@ -13,19 +14,23 @@ PushButton::~PushButton()
 
 void PushButton::keyPressEvent(QKeyEvent *keyEvent)
 {
+    qDebug() << "keyPressEvent..." << keyEvent->key();
     return;
-//    if(keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return ||  keyEvent->key() == Qt::Key_Escape ||
-//            keyEvent->key() == Qt::Key_Left ||keyEvent->key() == Qt::Key_Right)
-//    return;
-//    return PushButton::keyPressEvent(keyEvent);
 }
 
-//void PushButton::enterEvent(QEvent *event)
-//{
+bool PushButton::event(QEvent *e)
+{
+    if(e->type() == QEvent::FocusIn)
+    {
+        e->accept();
+        //qDebug() << "keyrelease" << static_cast<QKeyEvent*>(e)->key();
+        return true;
+    }
+    if(e->type() == QEvent::KeyRelease || e->type() == QEvent::KeyPress)
+    {
+        e->accept();
+        return true;
+    }
 
-//}
-
-//void PushButton::leaveEvent(QEvent *event)
-//{
-
-//}
+    return QPushButton::event(e);
+}

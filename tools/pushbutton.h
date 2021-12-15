@@ -14,8 +14,8 @@ public:
 private:
 protected:
     void keyPressEvent(QKeyEvent *event);
-    //void enterEvent(QEvent *event);
-    //void leaveEvent(QEvent *event);
+    bool event(QEvent *e);
+
 public:
 
 signals:
