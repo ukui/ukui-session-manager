@@ -314,9 +314,14 @@ int main(int argc, char* argv[])
     if(QFile::exists(logPath)){
         QFile file(logPath);
         if(file.remove()){
-            file.open(QIODevice::WriteOnly);
+            if(file.open(QIODevice::WriteOnly))
+                file.close();
         }
-
+    }
+    else{
+        QFile file(logPath);
+        if(file.open(QIODevice::WriteOnly))
+            file.close();
     }
     qInstallMessageHandler(myMessageOutput);
 
