@@ -1,3 +1,9 @@
+ukui-session-manager (2.0.12-1) v101.hw; urgency=medium
+
+  * Bug Fix: 95246 【影音】点击设置等选项无反应
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 16 Dec 2021 14:57:12 +0800
+
 ukui-session-manager (2.0.11-8) v101.hw; urgency=medium
 
   * Bug Fix:  94928 【开始菜单|电源】鼠标右击任务栏开始菜单-电源-关机，会重启 
