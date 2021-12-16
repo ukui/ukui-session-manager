@@ -52,42 +52,6 @@
 #undef signals
 #endif
 
-void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-{
-    QString logPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session-tools.log";
-    if (!QFile::exists(logPath)) {
-        return;
-    }
-    QByteArray localMsg = msg.toLocal8Bit();
-    QDateTime dateTime = QDateTime::currentDateTime();
-    QByteArray time = QString("[%1] ").arg(dateTime.toString("MM-dd hh:mm:ss.zzz")).toLocal8Bit();
-    QString logMsg;
-    switch (type) {
-    case QtDebugMsg:
-        logMsg = QString("%1 Debug: %2 (%3:%4, %5)\n").arg(time.constData()).arg(localMsg.constData()).arg(context.file).arg(context.line).arg(context.function);
-        break;
-    case QtInfoMsg:
-        logMsg = QString("%1 Info: %2 (%3:%4, %5)\n").arg(time.constData()).arg(localMsg.constData()).arg(context.file).arg(context.line).arg(context.function);
-        break;
-    case QtWarningMsg:
-        logMsg = QString("%1 Warning: %2 (%3:%4, %5)\n").arg(time.constData()).arg(localMsg.constData()).arg(context.file).arg(context.line).arg(context.function);
-        break;
-    case QtCriticalMsg:
-        logMsg = QString("%1 Critical: %2 (%3:%4, %5)\n").arg(time.constData()).arg(localMsg.constData()).arg(context.file).arg(context.line).arg(context.function);
-        break;
-    case QtFatalMsg:
-        logMsg = QString("%1 Fatal: %2 (%3:%4, %5)\n").arg(time.constData()).arg(localMsg.constData()).arg(context.file).arg(context.line).arg(context.function);
-        break;
-    }
-
-    QFile logFile(logPath);
-    logFile.open(QIODevice::WriteOnly | QIODevice::Append);
-    QTextStream ts(&logFile);
-    ts << logMsg << endl;
-    logFile.flush();
-    logFile.close();
-}
-
 /*菜单栏调用睡眠且有inhibitor阻塞时调用此函数进行消息提示*/
 bool sleepInhibitorCheck()
 {
