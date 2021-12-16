@@ -39,8 +39,6 @@
 #include "loginedusers.h"
 #include "lockchecker.h"
 #include <QPushButton>
-#include <QStandardPaths>
-#include <QDateTime>
 
 #include <sys/file.h>
 #include <stdio.h>
@@ -272,22 +270,6 @@ int main(int argc, char* argv[])
 #endif
 
     QApplication a(argc, argv);
-
-    QString logPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session/ukui-session-tools.log";
-
-    if(QFile::exists(logPath)){
-        QFile file(logPath);
-        if(file.remove()){
-            if(file.open(QIODevice::WriteOnly))
-                file.close();
-        }
-    }
-    else{
-        QFile file(logPath);
-        if(file.open(QIODevice::WriteOnly))
-            file.close();
-    }
-    qInstallMessageHandler(myMessageOutput);
 
 //    int cc = check_lock();
     int cc = LockChecker::checkLock();
