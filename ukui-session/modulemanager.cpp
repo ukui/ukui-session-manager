@@ -367,9 +367,11 @@ void ModuleManager::startup()
     startProcess(mFileManager, true);
     startModuleTimer(tdesktop,5);
 
-    qDebug() << "Start desktop: ";
-    for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
-        startProcess(*i, true);
+    if (!isWayland) {
+        qDebug() << "Start desktop: ";
+        for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
+            startProcess(*i, true);
+        }
     }
 }
 
@@ -391,9 +393,12 @@ void ModuleManager::timerUpdate()
     QTimer::singleShot(500, this, [&](){
         emit finished();
     });
-    qDebug() << "Start desktop: ";
-    for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
-        startProcess(*i, true);
+
+    if (isWayland) {
+        qDebug() << "Start desktop: ";
+        for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
+            startProcess(*i, true);
+        }
     }
 
     qDebug() << "Start application: ";

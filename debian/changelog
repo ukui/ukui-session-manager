@@ -1,3 +1,16 @@
+ukui-session-manager (2.0.11-8) v101.hw; urgency=medium
+
+  * Bug Fix:  94928 【开始菜单|电源】鼠标右击任务栏开始菜单-电源-关机，会重启 
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 02 Dec 2021 11:27:25 +0800
+
+ukui-session-manager (2.0.11-7) v101; urgency=medium
+
+  * Bug Fix: 94042 【内测】【1125版本】【电源管理】开始菜单-电源 点击休眠，不能进入休眠
+  *          92966 【会话管理器】【PTOF】休眠功能不可用
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 29 Nov 2021 16:02:07 +0800
+
 ukui-session-manager (2.0.11-6) v101.hw; urgency=medium
 
   * 其他改动：切换用户之后，kwin混成被关闭出现大黑款问题解决
