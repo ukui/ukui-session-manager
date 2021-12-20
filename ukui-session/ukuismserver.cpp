@@ -601,7 +601,7 @@ void *UKUISMServer::watchConnection(IceConn iceConn)
     return (void*)conn;
 }
 
-void UKUISMServer::restoreSession(const QString &sessionName)
+void UKUISMServer::restoreWM(const QString &sessionName)
 {
     if(m_state != Idle) return;
 
@@ -612,22 +612,24 @@ void UKUISMServer::restoreSession(const QString &sessionName)
     m_sessionGroup = QLatin1String("Session: ") + sessionName;
     KConfigGroup configSessionGroup(config, m_sessionGroup);
 
+    //如果以后要加上恢复会话功能，m_appsToStart会被用到
     int count = configSessionGroup.readEntry("count", 0);
     m_appsToStart = count;
 
-    QList<QStringList> wmStartCommands;
-    if (!m_wm.isEmpty()) {
-        for (int i = 1; i <= count; i++) {
-            QString n = QString::number(i);
-            if (isWM(configSessionGroup.readEntry(QStringLiteral("program") + n, QString()))) {
-                wmStartCommands << configSessionGroup.readEntry(QStringLiteral("restartCommand") + n, QStringList());
-            }
-        }
-    }
+    //以下这段是从保存的会话文件中寻找wm的重启命令，因为wm不在此处启动，所以不再需要这里的代码
+//    QList<QStringList> wmStartCommands;
+//    if (!m_wm.isEmpty()) {
+//        for (int i = 1; i <= count; i++) {
+//            QString n = QString::number(i);
+//            if (isWM(configSessionGroup.readEntry(QStringLiteral("program") + n, QString()))) {
+//                wmStartCommands << configSessionGroup.readEntry(QStringLiteral("restartCommand") + n, QStringList());
+//            }
+//        }
+//    }
 
-    if (wmStartCommands.isEmpty()) {
-        wmStartCommands << m_wmCommands;
-    }
+//    if (wmStartCommands.isEmpty()) {
+//        wmStartCommands << m_wmCommands;
+//    }
 
     //launchWM(wmStartCommands);
 }

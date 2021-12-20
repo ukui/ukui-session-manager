@@ -38,7 +38,7 @@ public:
     void* watchConnection(IceConn iceConn );
     void removeConnection(UKUISMConnection *conn );
     void restoreSession();
-    void restoreSession(const QString &sessionName);
+    void restoreWM(const QString &sessionName);
     void startDefaultSession();
 
     void shutdown();
