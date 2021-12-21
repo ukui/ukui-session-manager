@@ -21,6 +21,8 @@ set(tools_SRCS
     mypushbutton.h
     pushbutton.cpp
     pushbutton.h
+    waylandgrabkeys.cpp
+    waylandgrabkeys.h
 )
 
 find_package(PkgConfig)
@@ -39,6 +41,8 @@ target_link_libraries(ukui-session-tools
     Qt5::DBus
     Qt5::Multimedia
     Qt5::X11Extras
+    KF5::WaylandClient
+    KF5::GlobalAccel
     ${GSETTINGS_QT_LIBRARIES}
     -lxcb
     -lX11
