@@ -120,6 +120,16 @@ Q_NOREPLY void SessionManagerDBusContext::reboot()
         this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
     });
 
+    //保证在注销阶段出现问题的情况下一定能重启
+    QTimer::singleShot(20000, [this](){
+        //判断注销动作是否被取消
+        if (!getGlobalServer()->isCancelLogout()) {
+            this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
+        } else {
+            //恢复m_isCancelLogout为false，不影响下一次注销
+            getGlobalServer()->setIsCancelLogout(false);
+        }
+    });
 }
 
 Q_NOREPLY void SessionManagerDBusContext::powerOff()
@@ -129,6 +139,16 @@ Q_NOREPLY void SessionManagerDBusContext::powerOff()
         this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
     });
 
+    //保证在注销阶段出现问题的情况下一定能关机
+    QTimer::singleShot(20000, [this](){
+        //判断注销动作是否被取消
+        if (!getGlobalServer()->isCancelLogout()) {
+            this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
+        } else {
+            //恢复m_isCancelLogout为false，不影响下一次注销
+            getGlobalServer()->setIsCancelLogout(false);
+        }
+    });
 }
 
 Q_NOREPLY void SessionManagerDBusContext::startModule(const QString& name)
