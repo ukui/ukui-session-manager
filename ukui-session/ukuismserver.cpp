@@ -654,11 +654,12 @@ void UKUISMServer::shutdown()
     performLogout();
 }
 
-void UKUISMServer::performLogout()
+bool UKUISMServer::performLogout()
 {
     //已经在执行关机，直接返回
     if (m_state >= Shutdown) {
-        return;
+        qCDebug(UKUI_SESSION) << "already perform Logout";
+        return false;
     }
 
     //暂时注释此处
@@ -714,6 +715,8 @@ void UKUISMServer::performLogout()
     if (m_clients.isEmpty()) {
         completeShutdownOrCheckpoint();
     }
+
+    return true;
 }
 
 void UKUISMServer::cleanUp()

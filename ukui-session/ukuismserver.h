@@ -42,7 +42,7 @@ public:
     void startDefaultSession();
 
     void shutdown();
-    void performLogout();
+    bool performLogout();
 
 Q_SIGNALS:
     void logoutFinished();
