@@ -359,7 +359,8 @@ void UKUISMWatchProc(IceConn iceConn, IcePointer client_data, Bool opening, IceP
 
 UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QStringLiteral("org.ukui.KWin"), QStringLiteral("/Session"), QDBusConnection::sessionBus(), this))
                              , m_state(Idle), m_saveSession(false), m_wmPhase1WaitingCount(0), m_clientInteracting(nullptr), m_sessionGroup(QStringLiteral(""))
-                             , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false), m_wmCommands(QStringList({m_wm}))
+                             , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false), m_isCancelShutdown(true), m_isCancelReboot(true)
+                             , m_wmCommands(QStringList({m_wm}))
 {
 //    m_wmCommands = QStringList({m_wm});
 //    getGlobalServer() = this;
@@ -523,6 +524,8 @@ void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
         if (programName != QLatin1String("ukui-screensaver-default")) {
             qCDebug(UKUI_SESSION) << client->clientId() << "cancel shutdown";
             m_isCancelLogout = true;
+            m_isCancelShutdown = true;
+            m_isCancelReboot = true;
             cancelShutdown(client);
         } else {
             //屏保程序不正常退出时，会在注销阶段发送一个取消注销信号过来，忽略这个信号，才能正常完成注销
@@ -1325,6 +1328,26 @@ bool UKUISMServer::syncDBusEnvironment()
         qWarning() << program << args << "exited with code" << p.exitCode();
     }
     return p.exitCode() == 0;//QProcess::NormalExit	0   QProcess::CrashExit	1
+}
+
+bool UKUISMServer::isCancelReboot() const
+{
+    return m_isCancelReboot;
+}
+
+void UKUISMServer::setIsCancelReboot(bool isCancelReboot)
+{
+    m_isCancelReboot = isCancelReboot;
+}
+
+bool UKUISMServer::isCancelShutdown() const
+{
+    return m_isCancelShutdown;
+}
+
+void UKUISMServer::setIsCancelShutdown(bool isCancelShutdown)
+{
+    m_isCancelShutdown = isCancelShutdown;
 }
 
 void UKUISMServer::setIsCancelLogout(bool isCancelLogout)

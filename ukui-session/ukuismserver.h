@@ -98,6 +98,8 @@ private:
     bool clean;
     bool m_saveSession;
     bool m_isCancelLogout;
+    bool m_isCancelShutdown;
+    bool m_isCancelReboot;
     int m_wmPhase1WaitingCount;
     int m_appsToStart;
     int m_appRestored;
@@ -121,6 +123,10 @@ public:
 
     bool isCancelLogout() const;
     void setIsCancelLogout(bool isCancelLogout);
+    bool isCancelShutdown() const;
+    void setIsCancelShutdown(bool isCancelShutdown);
+    bool isCancelReboot() const;
+    void setIsCancelReboot(bool isCancelReboot);
 };
 
 #endif // UKUISMSERVER_H
