@@ -1,3 +1,17 @@
+ukui-session-manager (2.0.12-3) v101.hw; urgency=medium
+
+  * Bug Fix: #92604【备份还原】正在备份时重启，提示窗未汉化
+             #85005 【电源管理】英文模式下，在拷贝大文件时，无法执行睡眠提醒界面英化不完全且语法错误
+
+ -- liuliang <liuliang@kylinos.cn>  Fri, 24 Dec 2021 16:44:09 +0800
+
+ukui-session-manager (2.0.12-2) v101.hw; urgency=medium
+
+  *  BUG FIX: 98814 【前场 浪潮用例】【浪潮CE520L】u盘安装时出现概率性花屏现象
+              97222 【安装】【3A5000】【41A1】在安装界面出现2次开机提示音 
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 20 Dec 2021 15:14:57 +0800
+
 ukui-session-manager (2.0.12-1) v101.hw; urgency=medium
 
   * Bug Fix: 95246 【影音】点击设置等选项无反应

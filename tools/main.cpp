@@ -145,7 +145,8 @@ bool messageboxCheck()
 void messagecheck()
 {
     QMessageBox msgBox;
-    msgBox.setWindowTitle(QObject::tr("notice"));
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
     QString t1 = QObject::tr("System update or package installation in progress,this function is temporarily unavailable.");
     QString t2 = QObject::tr("System backup or restore in progress,this function is temporarily unavailable.");
 
@@ -159,7 +160,13 @@ void messagecheck()
         msgBox.setText(t2);
     }
 
+    QPushButton *cancelButton = msgBox.addButton(QObject::tr("OK"), QMessageBox::RejectRole);
+
     msgBox.exec();
+
+    if (msgBox.clickedButton() == cancelButton) {
+        qDebug() << "OK!";
+    }
 }
 
 bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_time)
@@ -200,9 +207,9 @@ bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_t
         }
 
         QDBusMessage msg;
-        if (num == 4) {
-            msg = dbus.call("emitStartLogout");
-        }
+//        if (num == 4) {
+//            msg = dbus.call("emitStartLogout");
+//        }
 
         if (num == 0) {
             msg = dbus.call("emitPrepareForSwitchuser");

@@ -181,6 +181,8 @@ void ModuleManager::constructStartupList()
     }
 
     if (!panel_found || !fm_found || !wm_found) isDirectInstall = true;
+    if (isDirectInstall)
+        wmFound = wm_found;
 
     if (wm_found == false) {
         QFileInfo check_ukwm("/usr/share/applications/ukwm.desktop");
@@ -325,20 +327,32 @@ void ModuleManager::startCompsite()
     QDBusInterface dbus("org.ukui.KWin", "/Compositor", "org.ukui.kwin.Compositing", QDBusConnection::sessionBus());
 
     if (!dbus.isValid()) {
-        qWarning() << "dbusCall: QDBusInterface is invalid";
+        qWarning() << "dbusCall: QDBusInterface is invalid ; kwin do not exit!";
+        timerUpdate();
+    } else {
+        qDebug() << "Start composite";
+        dbus.call("resume");
+
         timerUpdate();
     }
-    qDebug() << "Start composite";
-    dbus.call("resume");
-
-    timerUpdate();
 }
 
 void ModuleManager::startup()
 {
+    //直接安装进入的流程
     const QFile file_installer("/etc/xdg/autostart/kylin-os-installer.desktop");
     if (file_installer.exists() && isDirectInstall) {
-        timerUpdate();
+        if (wmFound) {
+            isPanelStarted   = true;
+            isDesktopStarted = true;
+            connect(this, &ModuleManager::wmfinished, [=](){ startCompsite(); });
+
+            startProcess(mWindowManager, false);
+            startModuleTimer(twm, 18);
+        } else
+            timerUpdate();
+
+        return;
     }
 
     if (isWayland) {
