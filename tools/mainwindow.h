@@ -140,7 +140,6 @@ private:
     QLabel *m_messageLabel2 = nullptr;
 
     QWidget *m_toolWidget = nullptr;
-    QWidget *m_systemMonitorBtn = nullptr;
 
     QGridLayout *m_buttonHLayout = nullptr;
 
