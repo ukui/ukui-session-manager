@@ -23,6 +23,41 @@ SessionManagerDBusContext::SessionManagerDBusContext(ModuleManager *manager, QOb
     m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
     m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
     connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, &SessionManagerDBusContext::on_serviceUnregistered);
+
+    connect(&m_systemdLogoutTimer, &QTimer::timeout, [](){
+        //判断注销动作是否被取消
+        if (!getGlobalServer()->isCancelLogout()) {
+            QDBusInterface face("org.freedesktop.login1",
+                                "/org/freedesktop/login1/session/self",
+                                "org.freedesktop.login1.Session",
+                                QDBusConnection::systemBus());
+
+            face.call("Terminate");
+        } else {
+            //恢复m_isCancelLogout为false，不影响下一次注销
+            getGlobalServer()->setIsCancelLogout(false);
+        }
+    });
+
+    connect(&m_systemdShutdownTimer, &QTimer::timeout, [this](){
+        //判断关机动作是否被取消
+        if (!getGlobalServer()->isCancelShutdown()) {
+            this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
+        } else {
+            //恢复m_isCancelLogout为false，不影响下一次注销
+            getGlobalServer()->setIsCancelLogout(false);
+        }
+    });
+
+    connect(&m_systemdRebootTimer, &QTimer::timeout, [this](){
+        //判断重启动作是否被取消
+        if (!getGlobalServer()->isCancelReboot()) {
+            this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
+        } else {
+            //恢复m_isCancelLogout为false，不影响下一次注销
+            getGlobalServer()->setIsCancelLogout(false);
+        }
+    });
 }
 
 SessionManagerDBusContext::~SessionManagerDBusContext() = default;
@@ -88,47 +123,38 @@ Q_NOREPLY void SessionManagerDBusContext::suspend()
 Q_NOREPLY void SessionManagerDBusContext::logout()
 {
     //xsmp协议的退出保存机制
-    getGlobalServer()->performLogout();
-    //保证一定会退出
-    QTimer::singleShot(20000, [](){
-        //判断注销动作是否被取消
-        if (!getGlobalServer()->isCancelLogout()) {
-            QDBusInterface face("org.freedesktop.login1",
-                                "/org/freedesktop/login1/session/self",
-                                "org.freedesktop.login1.Session",
-                                QDBusConnection::systemBus());
-
-            face.call("Terminate");
-        } else {
-            //恢复m_isCancelLogout为false，不影响下一次注销
-            getGlobalServer()->setIsCancelLogout(false);
-        }
-        //            qDebug() << "calling force logout";
-        //            QDBusInterface face("org.freedesktop.login1",
-        //                                "/org/freedesktop/login1/user/self",
-        //                                "org.freedesktop.login1.User",
-        //                                QDBusConnection::systemBus());
-
-        //            face.call("Kill", 15);
-    });
+    //perforemLogout有可能返回false,返回false是为了避免在注销的时候再次进行注销动作，
+    //同时此处也需要配合performLogout的返回值做相应处理，如果performLogout返回了false,说明已经有一个
+    //注销动作在进行，则不应该再执行一个定时注销的动作。
+    if (getGlobalServer()->performLogout()) {
+        //启动定时器，保证15秒后一定会退出
+        m_systemdLogoutTimer.setSingleShot(true);
+        m_systemdLogoutTimer.start(15000);
+    }
 }
 
 Q_NOREPLY void SessionManagerDBusContext::reboot()
 {
-    getGlobalServer()->performLogout();
-    connect(getGlobalServer(), &UKUISMServer::logoutFinished, [this](){
-        this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
-    });
+    if (getGlobalServer()->performLogout()) {
+        connect(getGlobalServer(), &UKUISMServer::logoutFinished, [this](){
+            this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
+        });
 
+        m_systemdRebootTimer.setSingleShot(true);
+        m_systemdRebootTimer.start(15000);
+    }
 }
 
 Q_NOREPLY void SessionManagerDBusContext::powerOff()
 {
-    getGlobalServer()->performLogout();
-    connect(getGlobalServer(), &UKUISMServer::logoutFinished, [this](){
-        this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
-    });
+    if (getGlobalServer()->performLogout()) {
+        connect(getGlobalServer(), &UKUISMServer::logoutFinished, [this](){
+            this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
+        });
 
+        m_systemdShutdownTimer.setSingleShot(true);
+        m_systemdShutdownTimer.start(15000);
+    }
 }
 
 Q_NOREPLY void SessionManagerDBusContext::startModule(const QString& name)
