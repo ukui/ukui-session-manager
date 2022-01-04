@@ -132,9 +132,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     }
 
     //clear file content when it is too large
-    QString logFilePath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session";
-    logFilePath = logFilePath + "/ukui-session-xsmp.log";
-    QFile file(logFilePath);
+    QFile file(logPath);
     qint64 fileSize = file.size();
     if (fileSize >= 1024 * 1024 * 10) {
         file.open(QFile::WriteOnly | QFile::Truncate);
@@ -142,7 +140,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         file.close();
     }
 
-    QFile logFile(logFilePath);
+    QFile logFile(logPath);
     logFile.open(QIODevice::WriteOnly | QIODevice::Append);
     QTextStream ts(&logFile);
     ts << logMsg << endl;
@@ -319,6 +317,7 @@ bool require_dbus_session()
     if (a->exitCode()) {
         qWarning() <<  "exited with code" << a->exitCode();
     }
+    delete a;
     return true;
 }
 
