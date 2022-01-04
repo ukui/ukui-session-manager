@@ -6,7 +6,7 @@
 extern UKUISMServer*& getGlobalServer();
 
 SessionManagerDBusContext::SessionManagerDBusContext(ModuleManager *manager, QObject *parent)
-    :QObject(parent)
+    : QObject(parent)
     , mManager(manager)
     , minhibit(new usminhibit())
     , m_systemdProvider(new SystemdProvider())
@@ -16,9 +16,9 @@ SessionManagerDBusContext::SessionManagerDBusContext(ModuleManager *manager, QOb
     new SessionDBusAdaptor(this);
 
     connect(mManager, &ModuleManager::moduleStateChanged, this , &SessionManagerDBusContext::moduleStateChanged);
-    connect(mManager, &ModuleManager::finished,this,&SessionManagerDBusContext::emitPrepareForPhase2);
-    connect(minhibit, &usminhibit::inhibitRemove,this,&SessionManagerDBusContext::simulateUserActivity);
-    connect(minhibit, &usminhibit::inhibitAdd,this,&SessionManagerDBusContext::simulateUserActivity);
+    connect(mManager, &ModuleManager::finished, this, &SessionManagerDBusContext::emitPrepareForPhase2);
+    connect(minhibit, &usminhibit::inhibitRemove, this, &SessionManagerDBusContext::simulateUserActivity);
+    connect(minhibit, &usminhibit::inhibitAdd, this, &SessionManagerDBusContext::simulateUserActivity);
 
     m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
     m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
@@ -63,9 +63,9 @@ SessionManagerDBusContext::SessionManagerDBusContext(ModuleManager *manager, QOb
 SessionManagerDBusContext::~SessionManagerDBusContext() = default;
 
 
-Q_NOREPLY void SessionManagerDBusContext::startupfinished(const QString& appName ,const QString& string)
+Q_NOREPLY void SessionManagerDBusContext::startupfinished(const QString &appName ,const QString &string)
 {
-    return mManager->startupfinished(appName,string);
+    return mManager->startupfinished(appName, string);
 }
 
 bool SessionManagerDBusContext::canSwitch()
@@ -170,7 +170,7 @@ Q_NOREPLY void SessionManagerDBusContext::stopModule(const QString& name)
 uint SessionManagerDBusContext::Inhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
 {
     uint result = minhibit->addInhibit(app_id, toplevel_xid, reason, flags);
-    if(result < 0){
+    if (result < 0) {
         return 0;
     }
 
@@ -178,22 +178,19 @@ uint SessionManagerDBusContext::Inhibit(QString app_id, quint32 toplevel_xid, QS
     qDebug() << "SessionManagerDBusContext message().service():" << dbusService;
 
     QStringList keys = m_hashInhibitionServices.keys();
-    if(!keys.contains(dbusService))
-    {
+    if (!keys.contains(dbusService)) {
         QList<quint32> cookies;
         cookies.append(result);
         m_hashInhibitionServices.insert(dbusService, cookies);
         m_serviceWatcher->addWatchedService(dbusService);
         qDebug() << "m_serviceWatcher services:..." << m_serviceWatcher->watchedServices();
-    }
-    else{
-        for(auto iter = m_hashInhibitionServices.begin(); iter != m_hashInhibitionServices.end(); iter++){
+    } else {
+        for (auto iter = m_hashInhibitionServices.begin(); iter != m_hashInhibitionServices.end(); iter++) {
             qDebug() << "Inhibit iter.key()" << iter.key() << dbusService;
 
-            if(iter.key() == dbusService)
-            {
+            if (iter.key() == dbusService) {
                 QList<quint32> cookies = iter.value();
-                if(!cookies.contains(result)){
+                if (!cookies.contains(result)) {
                     cookies.append(result);
                     m_hashInhibitionServices[dbusService] = cookies;
                     break;
@@ -206,23 +203,21 @@ uint SessionManagerDBusContext::Inhibit(QString app_id, quint32 toplevel_xid, QS
     return result;
 }
 
-Q_NOREPLY void SessionManagerDBusContext::Uninhibit(uint cookie){
+Q_NOREPLY void SessionManagerDBusContext::Uninhibit(uint cookie)
+{
     uint result = minhibit->unInhibit(cookie);
-    if(result > 0){
+    if (result > 0) {
         emit inhibitremove(result);
     }
-    for(auto iter = m_hashInhibitionServices.begin();iter != m_hashInhibitionServices.end(); iter++){
+    for (auto iter = m_hashInhibitionServices.begin(); iter != m_hashInhibitionServices.end(); iter++) {
         QList<quint32> cookies = iter.value();
-        for(int i = 0; i < cookies.length(); i++)
-        {
-            if(cookie == cookies[i])
-            {
+        for (int i = 0; i < cookies.length(); i++) {
+            if (cookie == cookies[i]) {
                 qDebug() << "Uninhibit cookies:" << cookies << "cookie:" << cookie;
-                if(cookies.length() > 1){
+                if (cookies.length() > 1) {
                     cookies.removeAt(i);
                     m_hashInhibitionServices[iter.key()] = cookies;
-                }
-                else{
+                } else {
                     m_serviceWatcher->removeWatchedService(iter.key());
                     m_hashInhibitionServices.remove(iter.key());
                     qDebug() << "Uninhibit m_hashInhibitionServices...:" << m_hashInhibitionServices;
@@ -234,45 +229,56 @@ Q_NOREPLY void SessionManagerDBusContext::Uninhibit(uint cookie){
     }
 }
 
-QStringList SessionManagerDBusContext::GetInhibitors(){
+QStringList SessionManagerDBusContext::GetInhibitors()
+{
     return minhibit->getInhibitor();
 }
 
-bool SessionManagerDBusContext::IsSessionRunning(){
+bool SessionManagerDBusContext::IsSessionRunning()
+{
     QString xdg_session_desktop = qgetenv("XDG_SESSION_DESKTOP").toLower();
-    if(xdg_session_desktop == "ukui")
+    if (xdg_session_desktop == "ukui") {
         return true;
+    }
     return false;
 }
 
-QString SessionManagerDBusContext::GetSessionName(){
+QString SessionManagerDBusContext::GetSessionName()
+{
     QString xdg_session_desktop = qgetenv("XDG_SESSION_DESKTOP").toLower();
-    if(xdg_session_desktop == "ukui")
+    if (xdg_session_desktop == "ukui") {
         return "ukui-session";
+    }
+
     return "error";
 }
 
-bool SessionManagerDBusContext::IsInhibited(quint32 flags){
+bool SessionManagerDBusContext::IsInhibited(quint32 flags)
+{
     return minhibit->isInhibited(flags);
 }
 
-Q_NOREPLY void SessionManagerDBusContext::emitStartLogout(){
-    qDebug()<<"emit  StartLogout";
+Q_NOREPLY void SessionManagerDBusContext::emitStartLogout()
+{
+    qDebug() << "emit  StartLogout";
     emit StartLogout();
 }
 
-Q_NOREPLY void SessionManagerDBusContext::emitPrepareForSwitchuser(){
-    qDebug()<<"emit  PrepareForSwitchuser";
+Q_NOREPLY void SessionManagerDBusContext::emitPrepareForSwitchuser()
+{
+    qDebug() << "emit  PrepareForSwitchuser";
     emit PrepareForSwitchuser();
 }
 
-Q_NOREPLY void SessionManagerDBusContext::emitPrepareForPhase2(){
-    qDebug()<<"emit  PrepareForPhase2";
+Q_NOREPLY void SessionManagerDBusContext::emitPrepareForPhase2()
+{
+    qDebug() << "emit  PrepareForPhase2";
     emit PrepareForPhase2();
 }
 
-Q_NOREPLY void SessionManagerDBusContext::simulateUserActivity(){
-    qDebug()<<"simulate User Activity";
+Q_NOREPLY void SessionManagerDBusContext::simulateUserActivity()
+{
+    qDebug() << "simulate User Activity";
     KIdleTime::instance()->simulateUserActivity();
 }
 
@@ -280,12 +286,10 @@ void SessionManagerDBusContext::on_serviceUnregistered(const QString &serviceNam
 {
     qDebug() << "onServiceUnregistered..." << serviceName;
 
-    for(auto iter = m_hashInhibitionServices.begin(); iter != m_hashInhibitionServices.end(); iter++)
-    {
-        if(iter.key() == serviceName)
-        {
+    for (auto iter = m_hashInhibitionServices.begin(); iter != m_hashInhibitionServices.end(); iter++) {
+        if (iter.key() == serviceName) {
             QList<quint32> cookies = iter.value();
-            for(auto i = 0; i < cookies.length(); i++){
+            for (auto i = 0; i < cookies.length(); i++) {
                 quint32 cookie = cookies[i];
                 qDebug() << "on_serviceUnregistered cookie:" << cookie;
                 Uninhibit(cookie);
