@@ -73,10 +73,8 @@ void removeEndingSlash(QString &s)
 QString createDirectory(const QString &dir)
 {
     QDir d(dir);
-    if (!d.exists())
-    {
-        if (!d.mkpath(QLatin1String(".")))
-        {
+    if (!d.exists()) {
+        if (!d.mkpath(QLatin1String("."))) {
             qWarning() << QString::fromLatin1("Can't create %1 directory.").arg(d.absolutePath());
         }
     }
@@ -211,8 +209,9 @@ bool XdgDirs::setUserDir(XdgDirs::UserDirectory dir, const QString& value, bool 
     if (!foundVar)
         stream << QString::fromLatin1("XDG_%1_DIR=\"%2\"\n").arg(folderName.toUpper(),(value));
 
-    for (QVector<QString>::iterator i = lines.begin(); i != lines.end(); ++i)
+    for (QVector<QString>::iterator i = lines.begin(); i != lines.end(); ++i) {
         stream << *i << QLatin1Char('\n');
+    }
 
     configFile.close();
 
@@ -329,8 +328,9 @@ QStringList XdgDirs::autostartDirs(const QString &postfix)
 {
     QStringList dirs;
     const QStringList s = configDirs();
-    for (const QString &dir : s)
+    for (const QString &dir : s) {
         dirs << QString::fromLatin1("%1/autostart").arg(dir) + postfix;
+    }
 
     return dirs;
 }

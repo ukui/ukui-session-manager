@@ -155,8 +155,7 @@ void ModuleManager::constructStartupList()
     //const auto files = XdgAutoStart::desktopFileList(desktop_paths, false);
     for (const QString &dirName : const_cast<const QStringList&>(desktop_paths)) {
         QDir dir(dirName);
-        if (!dir.exists())
-            continue;
+        if (!dir.exists()) continue;
         const QFileInfoList files = dir.entryInfoList(QStringList(QLatin1String("*.desktop")), QDir::Files | QDir::Readable);
         for (const QFileInfo &fi : files) {
             if (fi.fileName() == panel) {
@@ -181,8 +180,9 @@ void ModuleManager::constructStartupList()
     }
 
     if (!panel_found || !fm_found || !wm_found) isDirectInstall = true;
-    if (isDirectInstall)
+    if (isDirectInstall) {
         wmFound = wm_found;
+    }
 
     if (wm_found == false) {
         QFileInfo check_ukwm("/usr/share/applications/ukwm.desktop");
@@ -349,8 +349,9 @@ void ModuleManager::startup()
 
             startProcess(mWindowManager, false);
             startModuleTimer(twm, 18);
-        } else
+        } else {
             timerUpdate();
+        }
 
         return;
     }
@@ -486,8 +487,9 @@ void ModuleManager::startProcess(const QString& name, bool required)
 
 void ModuleManager::stopProcess(const QString& name)
 {
-     if (mNameMap.contains(name))
+     if (mNameMap.contains(name)) {
          mNameMap[name]->terminate();
+     }
 }
 
 bool ModuleManager::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
@@ -507,7 +509,7 @@ bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitStatus)
 {
     if (getGlobalServer()->prepareForShutdown()) {
-        qDebug() << "111111111111111111";
+        qDebug() << "Logout phase, don't Restart";
         return;
     }
 

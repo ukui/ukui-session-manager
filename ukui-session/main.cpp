@@ -159,23 +159,22 @@ void screenScaleJudgement(QGSettings *settings)
     if (scale > 1.25) {
         bool state  = false;
         bool mScale = false;
+
         for (QScreen *screen : QGuiApplication::screens()) {
             int width  = screen->geometry().width() * scaling;
             int height = screen->geometry().height() * scaling;
 
             if (width < 1920 && height < 1080) {
                 state = true;
-            }
-            else if (width == 1920 && height == 1080 && scale > 1.5) {
+            } else if (width == 1920 && height == 1080 && scale > 1.5) {
                 state = true;
-            }
-            else if (width > 2560 && height > 1440) {
+            } else if (width > 2560 && height > 1440) {
                 mScale = true;
             }
         }
+
         if (state && !mScale) {
-            QGSettings *mGsettings;
-            mGsettings = new QGSettings(MOUSE_SCHEMA);
+            QGSettings *mGsettings = new QGSettings(MOUSE_SCHEMA);
             mGsettings->set(CURSOR_SIZE, 24);
             settings->set(SCALING_KEY, 1.0);
             delete mGsettings;
@@ -194,8 +193,8 @@ void setXresources(int dpi)
                          .arg(mouse_settings->get(CURSOR_THEME).toString());
 
     dpy = XOpenDisplay(NULL);
-    XChangeProperty(dpy, RootWindow(dpy, 0),
-                    XA_RESOURCE_MANAGER, XA_STRING, 8, PropModeReplace, (unsigned char *) str.toLatin1().data(), str.length());
+    XChangeProperty(dpy, RootWindow(dpy, 0), XA_RESOURCE_MANAGER, XA_STRING, 8,
+                    PropModeReplace, (unsigned char *) str.toLatin1().data(), str.length());
     XCloseDisplay(dpy);
 
     qDebug() << "setXresources：" << str;
@@ -246,26 +245,24 @@ void writeXresourcesFile(QString XresourcesFile, QGSettings *settings, double sc
 bool isTheFirstLogin(QGSettings *settings)
 {
     QString homePath       = getenv("HOME");
-    QString XresourcesFile = homePath+"/.config/xresources";
+    QString XresourcesFile = homePath + "/.config/xresources";
     qreal   scaling        = qApp->devicePixelRatio();
     bool    zoom1 = false, zoom2 = false, zoom3 = false;
     double  mScaling;
     bool res;
 
     res = isFileExist(XresourcesFile); //判断标志文件是否存在
-    if (res)
-        return false;
+    if (res) return false;
 
     for (QScreen *screen : QGuiApplication::screens()) {
         int width  = screen->geometry().width() * scaling;
         int height = screen->geometry().height() * scaling;
+
         if (width <= 1920 && height <= 1080) {
             zoom1 = true;
-        }
-        else if (width > 1920 && height > 1080 && width <= 2560 && height <=1500) {
+        } else if (width > 1920 && height > 1080 && width <= 2560 && height <=1500) {
             zoom2 = true;
-        }
-        else if (width > 2560 && height > 1440) {
+        } else if (width > 2560 && height > 1440) {
             zoom3 = true;
         }
     }
@@ -292,7 +289,7 @@ void setHightResolutionScreenZoom()
     settings = new QGSettings(XSETTINGS_SCHEMA);
 
     if (isTheFirstLogin(settings)) {
-        qDebug()<<"Set the default zoom value when logging in for the first time.";
+        qDebug() << "Set the default zoom value when logging in for the first time.";
         goto end;
     }
     /* 过滤单双屏下小分辨率大缩放值 */
@@ -313,8 +310,7 @@ end:
 bool require_dbus_session()
 {
     QString env_dbus = qgetenv("DBUS_SESSION_BUS_ADDRESS");
-    if (!env_dbus.isEmpty())
-        return true;
+    if (!env_dbus.isEmpty()) return true;
     qDebug() << "Fatal DBus Error";
     QProcess *a  = new QProcess;
     a->setProcessChannelMode(QProcess::ForwardedChannels);
@@ -377,16 +373,14 @@ int main(int argc, char **argv)
     QTranslator   translator;
     qDebug() << "local: " << locale;
     qDebug() << "path: " << QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager");
-    if (translator.load(locale,
-                        QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
+    if (translator.load(locale, QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
         app.installTranslator(&translator);
     } else {
         qDebug() << "Load translations file failed!";
     }
 
     QCommandLineParser parser;
-    parser.setApplicationDescription(
-                QApplication::tr("UKUI Session Manager"));
+    parser.setApplicationDescription(QApplication::tr("UKUI Session Manager"));
 
     const QString VERINFO = QStringLiteral("2.0.11-7");
     app.setApplicationVersion(VERINFO);

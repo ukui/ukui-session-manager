@@ -34,18 +34,15 @@
 
 IdleWatcher::IdleWatcher(int idle, QObject *parent) : QObject(parent)
 {
-    if(idle > 0)
+    if (idle > 0) {
         mSecsidle = idle;
-    connect(KIdleTime::instance(),
-            &KIdleTime::resumingFromIdle,
-            this,
-            &IdleWatcher::resumingFromIdle);
-//    connect(KIdleTime::instance(),
-//            static_cast<void (KIdleTime::*)(int)>(&KIdleTime::timeoutReached),
-//            this,
-//            &IdleWatcher::timeoutReached);
-    connect(KIdleTime::instance(), SIGNAL(timeoutReached(int,int)),
-            this, SLOT(timeoutReached(int,int)));
+    }
+
+    connect(KIdleTime::instance(), &KIdleTime::resumingFromIdle,
+            this, &IdleWatcher::resumingFromIdle);
+
+    connect(KIdleTime::instance(), SIGNAL(timeoutReached(int, int)),
+            this, SLOT(timeoutReached(int, int)));
 
     QDBusConnection::systemBus().connect(QString("org.freedesktop.login1"),
                                          QString("/org/freedesktop/login1"),
@@ -70,22 +67,25 @@ IdleWatcher::~IdleWatcher()
 
 void IdleWatcher::setup()
 {
-    if(mSecsidle > 0)
+    if (mSecsidle > 0) {
         KIdleTime::instance()->addIdleTimeout(1000 * mSecsidle);
+    }
 }
 
-void IdleWatcher::weakupFromSleep(bool a){
+void IdleWatcher::weakupFromSleep(bool a)
+{
     if (!a) {
         qDebug() << "模拟用户操作";
         KIdleTime::instance()->simulateUserActivity();
     }
 }
 
-void IdleWatcher::timeoutReached(int identifier , int timeout)
+void IdleWatcher::timeoutReached(int identifier, int timeout)
 {
     quint32 inhibit_idle = 8;
     bool isinhibited = false;
-    QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_idle);
+    QDBusReply<bool> reply = interface->call("IsInhibited", inhibit_idle);
+
     if (reply.isValid()) {
         // use the returned value
         qDebug() << "Is inhibit by someone: " << reply.value();
@@ -98,15 +98,18 @@ void IdleWatcher::timeoutReached(int identifier , int timeout)
         qDebug() << "some applications inhibit idle.";
         return;
     }
+
     if (isinhibited == false) {
         //Inactive user do not send StatusChanged signal.
-        QDBusMessage mesg = QDBusMessage::createMethodCall(SYSTEMD_SERVICE,SYSTEMD_PATH,"org.freedesktop.DBus.Properties","Get");
+        QDBusMessage mesg = QDBusMessage::createMethodCall(SYSTEMD_SERVICE,SYSTEMD_PATH, "org.freedesktop.DBus.Properties", "Get");
         mesg.setArguments(args);
         QDBusMessage ret = QDBusConnection::systemBus().call(mesg);
+
         if (ret.type() == QDBusMessage::ErrorMessage) {
             qDebug() << "Error getting property value.";
             return;
         }
+
         bool value = ret.arguments()[0].value<QDBusVariant>().variant().value<bool>();
         if (!value) return;
 
@@ -124,11 +127,10 @@ void IdleWatcher::resumingFromIdle()
     emit StatusChanged(0);
 }
 
-void IdleWatcher::reset(int idle )
+void IdleWatcher::reset(int idle)
 {
     KIdleTime::instance()->removeAllIdleTimeouts();
-    if(idle > 0)
-    {
+    if (idle > 0) {
         qDebug() << "Idle timeout reset to " << idle;
         mSecsidle = idle;
         setup();
