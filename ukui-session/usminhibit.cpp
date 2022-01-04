@@ -46,7 +46,9 @@ usminhibit::usminhibit()
     inhibit_idle_num = 0;
 }
 
-usminhibit::~usminhibit(){}
+usminhibit::~usminhibit()
+{
+}
 
 bool usminhibit::isInhibited(quint32 flags)
 {
@@ -111,7 +113,8 @@ quint32 usminhibit::addInhibit(QString app_id, quint32 toplevel_xid, QString rea
     return cookie;
 }
 
-uint usminhibit::generateCookie(){
+uint usminhibit::generateCookie()
+{
     quint32 cookie;
     do {
         cookie = QRandomGenerator::global()->bounded(1, 4294967295);//std::numeric_limits<quint32>::max()
