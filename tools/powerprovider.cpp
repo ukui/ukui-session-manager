@@ -119,14 +119,20 @@ static bool dbusCallSystemd(const QString &service,
         return false;
     }
 
-    QDBusMessage msg = dbus.call(method, needBoolArg ? QVariant(true) : QVariant());
+    // QDBusMessage msg = dbus.call(method, needBoolArg ? QVariant(true) : QVariant());
+    // 在华为相关的机器上，如果调用的method没有参数，但仍传入一个空值，会调用失败
+    QDBusMessage msg;
+    if (needBoolArg) {
+        msg = dbus.call(method, QVariant(true));
+    } else
+        msg = dbus.call(method);
 
     if (!msg.errorName().isEmpty()) {
         qWarning() << "Debus error: " << msg;
     }
 
     if (msg.arguments().isEmpty() || msg.arguments().constFirst().isNull()) {
-        return true;
+        return false;
     }
 
     QString response = msg.arguments().constFirst().toString();
