@@ -824,8 +824,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             && !m_switchUserBtn->geometry().contains(event->pos())
             && !m_logoutBtn->geometry().contains(event->pos())
             && !m_rebootBtn->geometry().contains(event->pos())
-            && !m_shutDownBtn->geometry().contains(event->pos())
-            && !m_systemMonitorBtn->geometry().contains(event->pos())) {
+            && !m_shutDownBtn->geometry().contains(event->pos())) {
             exitt();
         }
     }
