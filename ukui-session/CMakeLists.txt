@@ -53,7 +53,7 @@ target_link_libraries(ukui-session
     KF5::ConfigGui
     KF5::WindowSystem
     -lSM -lICE
-    -lukui-log4qt ${GSETTINGS_QT_LIBRARIES} ${X11_LIBRARIES})
+    ${GSETTINGS_QT_LIBRARIES} ${X11_LIBRARIES})
 #${GSETTINGS_QT_LIBRARIES}
 
 install(TARGETS ukui-session DESTINATION bin)
