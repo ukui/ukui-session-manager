@@ -25,6 +25,12 @@ SessionManagerDBusContext::SessionManagerDBusContext(ModuleManager *manager, QOb
     connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, &SessionManagerDBusContext::on_serviceUnregistered);
 
     connect(&m_systemdLogoutTimer, &QTimer::timeout, [](){
+        QProcess *proc = new QProcess;
+        QString argu = "--lockall";
+        proc->start("boxadm", QStringList{argu});
+        proc->waitForFinished(-1);
+        delete proc;
+
         //判断注销动作是否被取消
         if (!getGlobalServer()->isCancelLogout()) {
             QDBusInterface face("org.freedesktop.login1",
@@ -40,6 +46,12 @@ SessionManagerDBusContext::SessionManagerDBusContext(ModuleManager *manager, QOb
     });
 
     connect(&m_systemdShutdownTimer, &QTimer::timeout, [this](){
+        QProcess *proc = new QProcess;
+        QString argu = "--lockall";
+        proc->start("boxadm", QStringList{argu});
+        proc->waitForFinished(-1);
+        delete proc;
+
         //判断关机动作是否被取消
         if (!getGlobalServer()->isCancelShutdown()) {
             this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
@@ -50,6 +62,12 @@ SessionManagerDBusContext::SessionManagerDBusContext(ModuleManager *manager, QOb
     });
 
     connect(&m_systemdRebootTimer, &QTimer::timeout, [this](){
+        QProcess *proc = new QProcess;
+        QString argu = "--lockall";
+        proc->start("boxadm", QStringList{argu});
+        proc->waitForFinished(-1);
+        delete proc;
+
         //判断重启动作是否被取消
         if (!getGlobalServer()->isCancelReboot()) {
             this->m_systemdProvider->doAction(UkuiPower::PowerReboot);

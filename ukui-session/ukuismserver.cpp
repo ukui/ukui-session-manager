@@ -362,9 +362,6 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
                              , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false), m_isCancelShutdown(true), m_isCancelReboot(true)
                              , m_wmCommands(QStringList({m_wm}))
 {
-//    m_wmCommands = QStringList({m_wm});
-//    getGlobalServer() = this;
-
     onlyLocal = true;
     if (onlyLocal) {
         _IceTransNoListen("tcp");//这个函数到底是哪个库里面的？还是需要自己定义？
@@ -1068,6 +1065,15 @@ void UKUISMServer::killingCompleted()
 //    qApp->quit();
     //目前不清楚如果不做清理会有什么影响，看日志没有发现问题，使用上也没有区别，但为了保险还是加上
     cleanUp();
+
+    qCDebug(UKUI_SESSION) << "call boxadm -lockall";
+    QProcess *proc = new QProcess;
+    QString argu = "--lockall";
+    proc->start("boxadm", QStringList{argu});
+    proc->waitForFinished(-1);
+    delete proc;
+    qCDebug(UKUI_SESSION) << "finish boxadm";
+
     qCDebug(UKUI_SESSION) << "call systemd Terminate";
     QDBusInterface face("org.freedesktop.login1",
                         "/org/freedesktop/login1/session/self",
