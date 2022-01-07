@@ -238,17 +238,18 @@ bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_t
             } else {
                 QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/shutdown.wav");
             }
+            up_to_time->start(5000);
         } else if (num == 4) {
             if (xdg_session_type == "wayland") {
                 QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/logout.wav");
             } else {
                 QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/logout.wav");
             }
+            up_to_time->start(2000);
         } else {
             qDebug() << "error num";
             return false;
         }
-        up_to_time->start(1200);
     } else {
         if (powermanager.canAction(UkuiPower::Action(action))) {
             powermanager.doAction(UkuiPower::Action(action));
