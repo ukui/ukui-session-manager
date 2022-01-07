@@ -296,13 +296,12 @@ void setHightResolutionScreenZoom()
         goto end;
     }
     /* 过滤单双屏下小分辨率大缩放值 */
-    screenScaleJudgement(settings);
-    dpi = settings->get(SCALING_KEY).toDouble() * 96;
+
     if (ScreenNum > 1) {
-        setXresources(dpi);
-        delete settings;
-        return;
+        goto end;
     }
+
+    screenScaleJudgement(settings);
 
 end:
     dpi = 0.0;
