@@ -52,9 +52,7 @@ public slots:
     bool doAction(Action action);
 
 private:
-//    QList<PowerProvider*> mProviders;
-//    PowerProvider *m_systemdProvider;
-//    PowerProvider *m_ukuiProvider;
+    PowerProvider *m_systemdProvider;
 };
 
 #endif // UKUIPOWER_H
