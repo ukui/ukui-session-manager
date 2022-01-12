@@ -359,11 +359,9 @@ void UKUISMWatchProc(IceConn iceConn, IcePointer client_data, Bool opening, IceP
 
 UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QStringLiteral("org.ukui.KWin"), QStringLiteral("/Session"), QDBusConnection::sessionBus(), this))
                              , m_state(Idle), m_saveSession(false), m_wmPhase1WaitingCount(0), m_clientInteracting(nullptr), m_sessionGroup(QStringLiteral(""))
-                             , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false), m_wmCommands(QStringList({m_wm}))
+                             , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false), m_isCancelShutdown(true), m_isCancelReboot(true)
+                             , m_wmCommands(QStringList({m_wm}))
 {
-//    m_wmCommands = QStringList({m_wm});
-//    getGlobalServer() = this;
-
     onlyLocal = true;
     if (onlyLocal) {
         _IceTransNoListen("tcp");//这个函数到底是哪个库里面的？还是需要自己定义？
@@ -523,6 +521,8 @@ void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
         if (programName != QLatin1String("ukui-screensaver-default")) {
             qCDebug(UKUI_SESSION) << client->clientId() << "cancel shutdown";
             m_isCancelLogout = true;
+            m_isCancelShutdown = true;
+            m_isCancelReboot = true;
             cancelShutdown(client);
         } else {
             //屏保程序不正常退出时，会在注销阶段发送一个取消注销信号过来，忽略这个信号，才能正常完成注销
@@ -601,7 +601,7 @@ void *UKUISMServer::watchConnection(IceConn iceConn)
     return (void*)conn;
 }
 
-void UKUISMServer::restoreSession(const QString &sessionName)
+void UKUISMServer::restoreWM(const QString &sessionName)
 {
     if(m_state != Idle) return;
 
@@ -612,22 +612,24 @@ void UKUISMServer::restoreSession(const QString &sessionName)
     m_sessionGroup = QLatin1String("Session: ") + sessionName;
     KConfigGroup configSessionGroup(config, m_sessionGroup);
 
+    //如果以后要加上恢复会话功能，m_appsToStart会被用到
     int count = configSessionGroup.readEntry("count", 0);
     m_appsToStart = count;
 
-    QList<QStringList> wmStartCommands;
-    if (!m_wm.isEmpty()) {
-        for (int i = 1; i <= count; i++) {
-            QString n = QString::number(i);
-            if (isWM(configSessionGroup.readEntry(QStringLiteral("program") + n, QString()))) {
-                wmStartCommands << configSessionGroup.readEntry(QStringLiteral("restartCommand") + n, QStringList());
-            }
-        }
-    }
+    //以下这段是从保存的会话文件中寻找wm的重启命令，因为wm不在此处启动，所以不再需要这里的代码
+//    QList<QStringList> wmStartCommands;
+//    if (!m_wm.isEmpty()) {
+//        for (int i = 1; i <= count; i++) {
+//            QString n = QString::number(i);
+//            if (isWM(configSessionGroup.readEntry(QStringLiteral("program") + n, QString()))) {
+//                wmStartCommands << configSessionGroup.readEntry(QStringLiteral("restartCommand") + n, QStringList());
+//            }
+//        }
+//    }
 
-    if (wmStartCommands.isEmpty()) {
-        wmStartCommands << m_wmCommands;
-    }
+//    if (wmStartCommands.isEmpty()) {
+//        wmStartCommands << m_wmCommands;
+//    }
 
     //launchWM(wmStartCommands);
 }
@@ -652,11 +654,12 @@ void UKUISMServer::shutdown()
     performLogout();
 }
 
-void UKUISMServer::performLogout()
+bool UKUISMServer::performLogout()
 {
     //已经在执行关机，直接返回
     if (m_state >= Shutdown) {
-        return;
+        qCDebug(UKUI_SESSION) << "already perform Logout";
+        return false;
     }
 
     //暂时注释此处
@@ -712,6 +715,8 @@ void UKUISMServer::performLogout()
     if (m_clients.isEmpty()) {
         completeShutdownOrCheckpoint();
     }
+
+    return true;
 }
 
 void UKUISMServer::cleanUp()
@@ -1060,6 +1065,15 @@ void UKUISMServer::killingCompleted()
 //    qApp->quit();
     //目前不清楚如果不做清理会有什么影响，看日志没有发现问题，使用上也没有区别，但为了保险还是加上
     cleanUp();
+
+    qCDebug(UKUI_SESSION) << "call boxadm -lockall";
+    QProcess *proc = new QProcess;
+    QString argu = "--lockall";
+    proc->start("boxadm", QStringList{argu});
+    proc->waitForFinished(-1);
+    delete proc;
+    qCDebug(UKUI_SESSION) << "finish boxadm";
+
     qCDebug(UKUI_SESSION) << "call systemd Terminate";
     QDBusInterface face("org.freedesktop.login1",
                         "/org/freedesktop/login1/session/self",
@@ -1320,6 +1334,26 @@ bool UKUISMServer::syncDBusEnvironment()
         qWarning() << program << args << "exited with code" << p.exitCode();
     }
     return p.exitCode() == 0;//QProcess::NormalExit	0   QProcess::CrashExit	1
+}
+
+bool UKUISMServer::isCancelReboot() const
+{
+    return m_isCancelReboot;
+}
+
+void UKUISMServer::setIsCancelReboot(bool isCancelReboot)
+{
+    m_isCancelReboot = isCancelReboot;
+}
+
+bool UKUISMServer::isCancelShutdown() const
+{
+    return m_isCancelShutdown;
+}
+
+void UKUISMServer::setIsCancelShutdown(bool isCancelShutdown)
+{
+    m_isCancelShutdown = isCancelShutdown;
 }
 
 void UKUISMServer::setIsCancelLogout(bool isCancelLogout)

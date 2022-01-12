@@ -22,17 +22,14 @@
  *
  * END_COMMON_COPYRIGHT_HEADER */
 #include "ukuipower.h"
-//#include "powerprovider.h"
+#include "powerprovider.h"
 #include <QDebug>
 #include <QDBusInterface>
 #include <QDBusReply>
 
 UkuiPower::UkuiPower(QObject *parent) : QObject(parent)
 {
-//    mProviders.append(new SystemdProvider(this));
-//    mProviders.append(new UKUIProvider(this));
-//    m_systemdProvider = new SystemdProvider(this);
-//    m_ukuiProvider = new UKUIProvider(this);
+    m_systemdProvider = new SystemdProvider(this);
 }
 
 UkuiPower::~UkuiPower()
@@ -75,7 +72,13 @@ bool UkuiPower::canAction(UkuiPower::Action action) const
     }
 
     QDBusReply<bool> reply = sessionInterface->call(command);
-    if(!reply.isValid()) {
+    if (!reply.isValid()) {
+        //解决老版本升级到新版本接口不兼容的问题，在session接口不存在的情况下，调用systemd的接口
+        QDBusError error =  reply.error();
+        if (error.type() == QDBusError::UnknownMethod) {
+            return m_systemdProvider->canAction(action);
+
+        }
         return false;
     }
 
@@ -116,7 +119,12 @@ bool UkuiPower::doAction(UkuiPower::Action action)
         return false;
     }
 
-    sessionInterface->call(command);
+    QDBusMessage mes = sessionInterface->call(command);
+
+    if (!(mes.errorName().isEmpty())) {
+        //本来应该判断错误类别，考虑到运行效率，不做该判断
+        return m_systemdProvider->doAction(action);
+    }
 
     return true;
 }

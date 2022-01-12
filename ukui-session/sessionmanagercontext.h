@@ -116,6 +116,10 @@ private:
     QHash<QString, QList<quint32>> m_hashInhibitionServices;
     QDBusServiceWatcher *m_serviceWatcher = nullptr;
     SessionDBusAdaptor *m_sessionDBusAdaptor = nullptr;
+
+    QTimer m_systemdLogoutTimer;
+    QTimer m_systemdShutdownTimer;
+    QTimer m_systemdRebootTimer;
 };
 
 

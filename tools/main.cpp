@@ -145,7 +145,8 @@ bool messageboxCheck()
 void messagecheck()
 {
     QMessageBox msgBox;
-    msgBox.setWindowTitle(QObject::tr("notice"));
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
     QString t1 = QObject::tr("System update or package installation in progress,this function is temporarily unavailable.");
     QString t2 = QObject::tr("System backup or restore in progress,this function is temporarily unavailable.");
 
@@ -159,7 +160,13 @@ void messagecheck()
         msgBox.setText(t2);
     }
 
+    QPushButton *cancelButton = msgBox.addButton(QObject::tr("OK"), QMessageBox::RejectRole);
+
     msgBox.exec();
+
+    if (msgBox.clickedButton() == cancelButton) {
+        qDebug() << "OK!";
+    }
 }
 
 bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_time)
@@ -200,9 +207,9 @@ bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_t
         }
 
         QDBusMessage msg;
-        if (num == 4) {
-            msg = dbus.call("emitStartLogout");
-        }
+//        if (num == 4) {
+//            msg = dbus.call("emitStartLogout");
+//        }
 
         if (num == 0) {
             msg = dbus.call("emitPrepareForSwitchuser");
@@ -231,17 +238,18 @@ bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_t
             } else {
                 QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/shutdown.wav");
             }
+            up_to_time->start(5000);
         } else if (num == 4) {
             if (xdg_session_type == "wayland") {
                 QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/logout.wav");
             } else {
                 QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/logout.wav");
             }
+            up_to_time->start(2000);
         } else {
             qDebug() << "error num";
             return false;
         }
-        up_to_time->start(1200);
     } else {
         if (powermanager.canAction(UkuiPower::Action(action))) {
             powermanager.doAction(UkuiPower::Action(action));

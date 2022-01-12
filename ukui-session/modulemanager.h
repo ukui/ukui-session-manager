@@ -98,6 +98,7 @@ private:
     bool isCompsiteStarted = false;
 
     bool isWayland         = false;
+    bool wmFound           = false;
 
     //QMediaPlayer *player;
     bool isDirectInstall = false;

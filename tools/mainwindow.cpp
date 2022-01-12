@@ -802,7 +802,7 @@ void MainWindow::doEvent(QString test, int i)
                     qDebug() << "failure to close Grab";
                 }
             }
-            // this->hide();
+            this->hide();
             if (i == 3) {
                 doLockscreen();
             } else {

@@ -296,13 +296,12 @@ void setHightResolutionScreenZoom()
         goto end;
     }
     /* 过滤单双屏下小分辨率大缩放值 */
-    screenScaleJudgement(settings);
-    dpi = settings->get(SCALING_KEY).toDouble() * 96;
+
     if (ScreenNum > 1) {
-        setXresources(dpi);
-        delete settings;
-        return;
+        goto end;
     }
+
+    screenScaleJudgement(settings);
 
 end:
     dpi = 0.0;
@@ -370,7 +369,7 @@ int main(int argc, char **argv)
 //    UKUISMServer *server = new UKUISMServer;
     UKUISMServer *&server = getGlobalServer();
     IceSetIOErrorHandler(IoErrorHandler);
-    server->restoreSession(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
+    server->restoreWM(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
 //    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
 
     // Load ts files
