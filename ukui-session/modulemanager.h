@@ -32,6 +32,7 @@
 #include <QTimer>
 #include <QMediaPlayer>
 #include <QDBusInterface>
+#include <vector>
 
 class XdgDesktopFile;
 class IdleWatcher;
@@ -60,6 +61,9 @@ public:
     // Qt5 users native event filter
     bool nativeEventFilter(const QByteArray &eventType, void* message, long* result) override;
 
+    static void insertStartupList(QString &&str);
+
+    static bool isProgramStarted(QString &&str);
 private:
     bool startModuleTimer(QTimer *timer,int i);
     void playBootMusic(bool arg);
@@ -105,6 +109,7 @@ private:
     bool mWmStarted;
     bool mTrayStarted;
 
+    static std::vector<QString> m_startupList;
     ModulesMap mNameMap;
     XdgDesktopFileList mInitialization;
     XdgDesktopFile mWindowManager;
