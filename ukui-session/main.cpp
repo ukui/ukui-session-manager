@@ -243,14 +243,25 @@ void writeXresourcesFile(QString XresourcesFile, QGSettings *settings, double sc
 bool isTheFirstLogin(QGSettings *settings)
 {
     QString homePath       = getenv("HOME");
-    QString XresourcesFile = homePath + "/.config/xresources";
+    QString XresourcesFile = homePath+"/.config/xresources";
+    QString Xresources     = homePath+"/.Xresources";
     qreal   scaling        = qApp->devicePixelRatio();
     bool    zoom1 = false, zoom2 = false, zoom3 = false;
     double  mScaling;
-    bool res;
+    bool xres, Xres;
 
-    res = isFileExist(XresourcesFile); //判断标志文件是否存在
-    if (res) return false;
+    Xres = isFileExist(Xresources);
+    xres = isFileExist(XresourcesFile); //判断标志文件是否存在
+
+    if (xres && !Xres) {
+        return false;
+    } else if (xres && Xres) {
+        QFile::remove(Xresources);
+        return false;
+    } else if (Xres && !xres) {
+        QFile::rename(Xresources, XresourcesFile);
+        return false;
+    }
 
     for (QScreen *screen : QGuiApplication::screens()) {
         int width  = screen->geometry().width() * scaling;
