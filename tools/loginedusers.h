@@ -22,7 +22,8 @@
 
 #include <QDBusArgument>
 
-struct LoginedUsers {
+struct LoginedUsers
+{
     int uid;
     QString userName;
     QDBusObjectPath objpath;
