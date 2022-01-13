@@ -20,7 +20,8 @@ LockChecker::~LockChecker()
 {
 }
 
-int LockChecker::checkLock(){
+int LockChecker::checkLock()
+{
     bool lockfile = false;
     bool lockuser = false;
 
@@ -70,7 +71,8 @@ int LockChecker::checkLock(){
     return 0;
 }
 
-QStringList LockChecker::getLoginedUsers(){
+QStringList LockChecker::getLoginedUsers()
+{
     QStringList loginedUser;
     qRegisterMetaType<LoginedUsers>("LoginedUsers");
     qDBusRegisterMetaType<LoginedUsers>();
@@ -210,7 +212,8 @@ void LockChecker::getShutdownInhibitors(QStringList &shutdownInhibitors, QString
     }
 }
 
-QString LockChecker::getName(QFile *a){
+QString LockChecker::getName(QFile *a)
+{
     QString user = getenv("USER");
     if (a->exists()) {
         a->open(QIODevice::ReadOnly|QIODevice::Text);
@@ -263,14 +266,16 @@ int LockChecker::getCachedUsers()
     return userNum;
 }
 
-QDBusArgument &operator<<(QDBusArgument &argument, const Inhibitor &mystruct){
+QDBusArgument &operator<<(QDBusArgument &argument, const Inhibitor &mystruct)
+{
     argument.beginStructure();
     argument << mystruct.action << mystruct.name << mystruct.reason << mystruct.mode << mystruct.uid << mystruct.pid;
     argument.endStructure();
     return argument;
 }
 
-const QDBusArgument &operator>>(const QDBusArgument &argument, Inhibitor &mystruct){
+const QDBusArgument &operator>>(const QDBusArgument &argument, Inhibitor &mystruct)
+{
     argument.beginStructure();
     argument >> mystruct.action >> mystruct.name >> mystruct.reason >> mystruct.mode >> mystruct.uid >> mystruct.pid;
     argument.endStructure();

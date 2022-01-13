@@ -9,7 +9,6 @@ PushButton::PushButton(QWidget *parent)
 
 PushButton::~PushButton()
 {
-
 }
 
 void PushButton::keyPressEvent(QKeyEvent *keyEvent)
@@ -20,14 +19,13 @@ void PushButton::keyPressEvent(QKeyEvent *keyEvent)
 
 bool PushButton::event(QEvent *e)
 {
-    if(e->type() == QEvent::FocusIn)
-    {
+    if (e->type() == QEvent::FocusIn) {
         e->accept();
         //qDebug() << "keyrelease" << static_cast<QKeyEvent*>(e)->key();
         return true;
     }
-    if(e->type() == QEvent::KeyRelease || e->type() == QEvent::KeyPress)
-    {
+
+    if (e->type() == QEvent::KeyRelease || e->type() == QEvent::KeyPress) {
         e->accept();
         return true;
     }
