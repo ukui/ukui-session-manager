@@ -1,4 +1,20 @@
-ukui-session-manager (2.0.12-3) v101.hw; urgency=medium
+ukui-session-manager (2.0.12-8) v101; urgency=medium
+
+  * bug fix:  101381 【自适应升级】【V10-SP2】【会话管理器】更新升级后无法切换用户，重启后正常
+              101378 【自适应升级】【V10-SP2】【会话管理器】更新升级后无休眠模块，重启后出现休眠模块
+              96796 【重启】【PTOF】在电源管理界面点击重启后要过段时间才开始进行重启操作，概率为4/10
+
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 11 Jan 2022 09:41:05 +0800
+
+ukui-session-manager (2.0.12-7) v101; urgency=medium
+
+  * 其他改动：更新开机、关机、注销和唤醒提示音源文件
+  * 影响域：开机、关机、注销和唤醒时长
+
+ -- liuliang <liuliang@kylinos.cn>  Fri, 07 Jan 2022 20:21:08 +0800
+
+ukui-session-manager (2.0.12-6) v101.hw; urgency=medium
 
   * Bug Fix: #92604【备份还原】正在备份时重启，提示窗未汉化
              #85005 【电源管理】英文模式下，在拷贝大文件时，无法执行睡眠提醒界面英化不完全且语法错误
