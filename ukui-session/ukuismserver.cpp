@@ -127,8 +127,10 @@ void SetPropertiesProc(SmsConn smsConn, SmPointer managerData, int numProps, SmP
             SmFreeProperty(p);
         }
         client->m_properties.append(props[i]);
+
         if (!qstrcmp(props[i]->name, SmProgram)) {
             getGlobalServer()->clientSetProgram(client);
+            qCDebug(UKUI_SESSION) << client->clientId() << " and " << client->program();
         }
     }
 
@@ -359,7 +361,7 @@ void UKUISMWatchProc(IceConn iceConn, IcePointer client_data, Bool opening, IceP
 
 UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QStringLiteral("org.ukui.KWin"), QStringLiteral("/Session"), QDBusConnection::sessionBus(), this))
                              , m_state(Idle), m_saveSession(false), m_wmPhase1WaitingCount(0), m_clientInteracting(nullptr), m_sessionGroup(QStringLiteral(""))
-                             , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false), m_isCancelShutdown(true), m_isCancelReboot(true)
+                             , m_wm(QStringLiteral("ukui-kwin_x11")), m_isCancelLogout(false), m_isCancelShutdown(false), m_isCancelReboot(false)
                              , m_wmCommands(QStringList({m_wm}))
 {
     onlyLocal = true;

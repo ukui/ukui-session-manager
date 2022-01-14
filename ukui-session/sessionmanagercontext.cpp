@@ -2,6 +2,7 @@
 //#include "sessioninhibitcontext.h"
 #include "sessionmanagercontext.h"
 #include "sessiondbusadaptor.h"
+#include <QDebug>
 
 extern UKUISMServer*& getGlobalServer();
 
@@ -54,6 +55,7 @@ SessionManagerDBusContext::SessionManagerDBusContext(ModuleManager *manager, QOb
 
         //判断关机动作是否被取消
         if (!getGlobalServer()->isCancelShutdown()) {
+            qDebug() << "call force shutdown";
             this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
         } else {
             //恢复m_isCancelLogout为false，不影响下一次注销
@@ -70,6 +72,7 @@ SessionManagerDBusContext::SessionManagerDBusContext(ModuleManager *manager, QOb
 
         //判断重启动作是否被取消
         if (!getGlobalServer()->isCancelReboot()) {
+            qDebug() << "call force Reboot";
             this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
         } else {
             //恢复m_isCancelLogout为false，不影响下一次注销
@@ -155,6 +158,7 @@ Q_NOREPLY void SessionManagerDBusContext::reboot()
 {
     if (getGlobalServer()->performLogout()) {
         connect(getGlobalServer(), &UKUISMServer::logoutFinished, [this](){
+            qDebug() << "call Reboot";
             this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
         });
 
@@ -167,6 +171,7 @@ Q_NOREPLY void SessionManagerDBusContext::powerOff()
 {
     if (getGlobalServer()->performLogout()) {
         connect(getGlobalServer(), &UKUISMServer::logoutFinished, [this](){
+            qDebug() << "call powerOff";
             this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
         });
 
