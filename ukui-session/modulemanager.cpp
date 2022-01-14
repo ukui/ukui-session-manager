@@ -504,12 +504,12 @@ bool ModuleManager::nativeEventFilter(const QByteArray &eventType, void *message
 
 void ModuleManager::insertStartupList(QString &&str)
 {
-    m_startupList.push_back(str);
+    m_startupList.push_back(std::forward<QString>(str));
 }
 
 bool ModuleManager::isProgramStarted(QString &&str)
 {
-    auto it = std::find(m_startupList.begin(), m_startupList.end(), str);
+    auto it = std::find(m_startupList.begin(), m_startupList.end(), std::forward<QString>(str));
 
     if (it != m_startupList.end()) {
         return true;
