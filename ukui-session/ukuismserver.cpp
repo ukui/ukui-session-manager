@@ -451,7 +451,6 @@ UKUISMServer::UKUISMServer() : m_kwinInterface(new OrgKdeKWinSessionInterface(QS
 UKUISMServer::~UKUISMServer()
 {
     qDeleteAll(m_listener);
-//    getGlobalServer() = nullptr;
     cleanUp();
 }
 
