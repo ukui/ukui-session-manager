@@ -59,7 +59,7 @@ public:
     void initialDateTimeWidget();
     void initialBtnCfg();
     void setLayoutWidgetVisible(QLayout* layout, bool show);
-    void changeBtnState(QString btnName, bool isEnterKey = false);
+    void changeBtnState(QString btnName, bool isKeySelect = false);
 
 private:
     void ResizeEvent();

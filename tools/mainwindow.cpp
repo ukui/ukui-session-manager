@@ -199,18 +199,8 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
 
     gs = new QGSettings("org.ukui.session", "/org/ukui/desktop/session/");
 
-    if(m_Is_UKUI_3_1)
-    {
-        tableNum = -1;
-        lastWidget = m_lockScreenBtn->getIconLabel();
-        changeBtnState("empty");
-    }
-    else
-    {
-        tableNum = 3;
-        lastWidget = m_lockScreenBtn;
-        changeBtnState(map.value(tableNum)->objectName());
-    }
+    tableNum = -1;
+    changeBtnState("empty");
 
     initialDateTimeWidget();
 
@@ -239,6 +229,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     m_toolWidget->setLayout(m_vBoxLayout);
     setCentralWidget(m_toolWidget);
 
+    qDebug() << "m_toolWidget...." << m_toolWidget->geometry();
     /*捕获键盘，如果捕获失败，那么模拟一次esc按键来退出菜单，如果仍捕获失败，则放弃捕获*/
     if (establishGrab()) {
         qDebug() << "establishGrab : true";
@@ -490,7 +481,6 @@ void MainWindow::initialDateTimeWidget()
 
 void MainWindow::initialBtnCfg()
 {
-    /*
     bool newIniFile = false;//ini文件是否为新建文件
     QString iniDir = "/usr/share/ukui/ukui-session-manager/config";
     if(!QFile::exists(iniDir + "/btnconfig.ini")){
@@ -522,20 +512,17 @@ void MainWindow::initialBtnCfg()
         m_btnCfgSetting->setValue("btn/SuspendBtnHide", false);
     }
 
-    if(m_Is_UKUI_3_1)
-    isHibernateHide = true;
-
     m_btnCfgSetting->setValue("btn/SwitchUserBtnHide", isSwitchuserHide);
     m_btnCfgSetting->setValue("btn/HibernateBtnHide", isHibernateHide);
-*/
+
     qDebug() << "isHibernateHide..." << isHibernateHide;
     m_btnHideMap.insert(m_switchUserBtn, isSwitchuserHide);
     m_btnHideMap.insert(m_hibernateBtn, isHibernateHide);
-    m_btnHideMap.insert(m_suspendBtn, false);
-    m_btnHideMap.insert(m_lockScreenBtn, false);
-    m_btnHideMap.insert(m_logoutBtn, false);
-    m_btnHideMap.insert(m_rebootBtn, false);
-    m_btnHideMap.insert(m_shutDownBtn, false);
+    m_btnHideMap.insert(m_suspendBtn, m_btnCfgSetting->value("btn/SuspendBtnHide").toBool());
+    m_btnHideMap.insert(m_lockScreenBtn, m_btnCfgSetting->value("btn/LockScreenBtnHide").toBool());
+    m_btnHideMap.insert(m_logoutBtn, m_btnCfgSetting->value("btn/LogoutBtnHide").toBool());
+    m_btnHideMap.insert(m_rebootBtn, m_btnCfgSetting->value("btn/RebootBtnHide").toBool());
+    m_btnHideMap.insert(m_shutDownBtn, m_btnCfgSetting->value("btn/ShutDownBtnHide").toBool());
 }
 
 void MainWindow::setLayoutWidgetVisible(QLayout* layout, bool show)
@@ -548,12 +535,12 @@ void MainWindow::setLayoutWidgetVisible(QLayout* layout, bool show)
     }
 }
 
-void MainWindow::changeBtnState(QString btnName, bool isEnterKey)
+void MainWindow::changeBtnState(QString btnName, bool isKeySelect)
 {
-    //qDebug() << "changeBtnState: " << btnName;
     for(auto item = map.begin(); item != map.end(); item++)
     {
-        item.value()->changeIconBackColor((item.value()->objectName() == btnName), isEnterKey);
+        if((!isKeySelect && !item.value()->getIsKeySelect()) || (isKeySelect && !item.value()->getIsMouseSelect()))
+            item.value()->changeIconBackColor((item.value()->objectName() == btnName), isKeySelect);
     }
 }
 
@@ -565,8 +552,6 @@ void MainWindow::mouseReleaseSlots(QEvent *event, QString objName)
                 objName == "suspend_button" || objName == "lockscreen_button" ||
                 objName == "logout_button" || objName == "reboot_button" ||
                 objName == "shutdown_button"){
-        tableNum   = -1;
-        flag = false;
         changeBtnState("empty");
         //return;
         }
@@ -754,19 +739,16 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 void MainWindow::changePoint(QWidget *widget, QEvent *event, int i)
 {
     if (event->type() == QEvent::Enter) {
-        tableNum = i;
-        flag     = true;
         changeBtnState(widget->objectName());
     }
     if (event->type() == QEvent::Leave) {
         flag       = false;
-        lastWidget = widget;
     }
 }
 
 void MainWindow::doEvent(QString test, int i)
 {
-    qDebug() << "doevent... i:" << i;
+    qDebug() << "doevent... i:" << i << test;
     defaultnum = i;
     if (inhibitShutdown && (i ==5 || i ==6)) {
         //显示禁止shutdown的提示信息
@@ -918,20 +900,24 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
     }
     else if(key == "Left" || key == "Right")
     {
-        if(flag)
-            return;
+//        if(flag)
+//            return;
         calculateKeyBtn(key);
         QString button = map[tableNum]->objectName();
+//        qDebug() << "calculateKeyBtn..." << button;
 
         changeBtnState(button, true);
-
-        lastWidget = this->findChild<QWidget *>(button);
     }
     else if (key == "Return") {   // space,KP_Enter
-        if(tableNum >= 0 && tableNum <= 6){
-            qDebug() << map[tableNum]->objectName() << "";
-
-            doEvent(map[tableNum]->objectName(), tableNum);
+        for(auto item = map.begin(); item != map.end(); item++)
+        {
+            if(item.value()->getIsKeySelect())
+                return doEvent(item.value()->objectName(), item.key());
+        }
+        for(auto item = map.begin(); item != map.end(); item++)
+        {
+            if(item.value()->getIsMouseSelect())
+                return doEvent(item.value()->objectName(), item.key());
         }
     }
 }
@@ -1168,4 +1154,3 @@ bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, l
     }
     return false;
 }
-

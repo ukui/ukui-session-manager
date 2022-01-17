@@ -41,13 +41,24 @@ MyPushButton::~MyPushButton()
 {
 }
 
-void MyPushButton::changeIconBackColor(bool isChoose, bool isEnterKey)
+void MyPushButton::changeIconBackColor(bool isChoose, bool isKeySelect)
 {
+    if(isChoose)
+    {
+        m_isKeySelect = isKeySelect;
+        m_isMouseSelect = !isKeySelect;
+    }
+    else
+    {
+        m_isKeySelect = false;
+        m_isMouseSelect = false;
+    }
+
     if(!m_isRecBtn)
     {
         QString str;
         if(isChoose){
-            if(isEnterKey)
+            if(isKeySelect)
                 str = "QLabel#"+m_iconLabel->objectName() + "{background-color: rgb(255,255,255,80);border: 1px solid #296CD9; border-radius: " + QString::number(m_iconLabel->width()/2) + "px;}";
             else
                 str = "QLabel#"+m_iconLabel->objectName() + "{background-color: rgb(255,255,255,80);border-radius: " + QString::number(m_iconLabel->width()/2) + "px;}";
@@ -59,8 +70,8 @@ void MyPushButton::changeIconBackColor(bool isChoose, bool isEnterKey)
     else{
         QString str;
         if(isChoose){
-            if(isEnterKey)
-                str = "QWidget#"+ this->objectName() + "{background-color: rgb(255,255,255,80);border: 0px solid #296CD9; border-radius: 6px;}";
+            if(isKeySelect)
+                str = "QWidget#"+ this->objectName() + "{background-color: rgb(255,255,255,80);border: 1px solid #296CD9; border-radius: 6px;}";
             else
                 str = "QWidget#"+ this->objectName() + "{background-color: rgb(255,255,255,80);border-radius: 6px;}";
         }else
@@ -78,4 +89,14 @@ MyIconLabel* MyPushButton::getIconLabel()
 void MyPushButton::iconLabelMouseEvent(QEvent *event)
 {
     emit mouseRelase(event, m_iconLabel->objectName());
+}
+
+bool MyPushButton::getIsKeySelect()
+{
+    return m_isKeySelect;
+}
+
+bool MyPushButton::getIsMouseSelect()
+{
+    return m_isMouseSelect;
 }
