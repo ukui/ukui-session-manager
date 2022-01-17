@@ -561,16 +561,16 @@ void MainWindow::changeBtnState(QString btnName, bool isEnterKey)
 
 QString MainWindow::getAppLocalName(QString desktopfp)
 {
-    GError** error=nullptr;
-    GKeyFileFlags flags=G_KEY_FILE_NONE;
-    GKeyFile* keyfile=g_key_file_new ();
+    GError **error = nullptr;
+    GKeyFileFlags flags = G_KEY_FILE_NONE;
+    GKeyFile *keyfile = g_key_file_new();
 
-    QByteArray fpbyte=desktopfp.toLocal8Bit();
-    char* filepath=fpbyte.data();
-    g_key_file_load_from_file(keyfile,filepath,flags,error);
+    QByteArray fpbyte = desktopfp.toLocal8Bit();
+    char *filepath = fpbyte.data();
+    g_key_file_load_from_file(keyfile, filepath, flags,error);
 
-    char* name=g_key_file_get_locale_string(keyfile,"Desktop Entry","Name", nullptr, nullptr);
-    QString namestr=QString::fromLocal8Bit(name);
+    char *name = g_key_file_get_locale_string(keyfile, "Desktop Entry", "Name", nullptr, nullptr);
+    QString namestr = QString::fromLocal8Bit(name);
 
     g_key_file_free(keyfile);
     return namestr;
