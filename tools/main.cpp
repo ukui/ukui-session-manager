@@ -54,98 +54,6 @@
 #undef signals
 #endif
 
-
-void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-{
-    QString logPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
-        + "/ukui-session/ukui-session-tools.log";
-    //判断log文件是否存在
-    if (!QFile::exists(logPath)) {
-        QString logDir = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session";
-        //不存在时，创建ukui-session文件夹
-        QDir dir(logDir);
-        if (!dir.exists(logDir)) {
-            if (!dir.mkdir(logDir)) {
-                return;
-            }
-        }
-        //创建log文件
-        QFile file(logPath);
-        if (!file.open(QIODevice::WriteOnly)) {
-            return;
-        }
-        file.close();
-    }
-    if (!QFile::exists(logPath)) {
-        return;
-    }
-
-    QByteArray localMsg = msg.toLocal8Bit();
-    QDateTime  dateTime = QDateTime::currentDateTime();
-    QByteArray time = QString("[%1] ").arg(dateTime.toString("MM-dd hh:mm:ss.zzz")).toLocal8Bit();
-    QString    logMsg;
-    switch (type) {
-    case QtDebugMsg:
-        logMsg = QString("%1 Debug: %2 (%3:%4, %5)\n")
-                     .arg(time.constData())
-                     .arg(localMsg.constData())
-                     .arg(context.file)
-                     .arg(context.line)
-                     .arg(context.function);
-        break;
-    case QtInfoMsg:
-        logMsg = QString("%1 Info: %2 (%3:%4, %5)\n")
-                     .arg(time.constData())
-                     .arg(localMsg.constData())
-                     .arg(context.file)
-                     .arg(context.line)
-                     .arg(context.function);
-        break;
-    case QtWarningMsg:
-        logMsg = QString("%1 Warning: %2 (%3:%4, %5)\n")
-                     .arg(time.constData())
-                     .arg(localMsg.constData())
-                     .arg(context.file)
-                     .arg(context.line)
-                     .arg(context.function);
-        break;
-    case QtCriticalMsg:
-        logMsg = QString("%1 Critical: %2 (%3:%4, %5)\n")
-                     .arg(time.constData())
-                     .arg(localMsg.constData())
-                     .arg(context.file)
-                     .arg(context.line)
-                     .arg(context.function);
-        break;
-    case QtFatalMsg:
-        logMsg = QString("%1 Fatal: %2 (%3:%4, %5)\n")
-                     .arg(time.constData())
-                     .arg(localMsg.constData())
-                     .arg(context.file)
-                     .arg(context.line)
-                     .arg(context.function);
-        break;
-    }
-
-    //clear file content when it is too large
-    QString logFilePath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/ukui-session";
-    logFilePath = logFilePath + "/ukui-session-tools.log";
-    QFile file(logFilePath);
-    qint64 fileSize = file.size();
-    if (fileSize >= 1024 * 1024 * 10) {
-        file.open(QFile::WriteOnly | QFile::Truncate);
-        file.flush();
-        file.close();
-    }
-
-    QFile logFile(logFilePath);
-    logFile.open(QIODevice::WriteOnly | QIODevice::Append);
-    QTextStream ts(&logFile);
-    ts << logMsg << endl;
-    logFile.flush();
-    logFile.close();
-}
-
 /*菜单栏调用睡眠且有inhibitor阻塞时调用此函数进行消息提示*/
 bool sleepInhibitorCheck()
 {
@@ -375,7 +283,6 @@ int main(int argc, char* argv[])
 
     QApplication a(argc, argv);
 
-    qInstallMessageHandler(myMessageOutput);
 //    int cc = check_lock();
     int cc = LockChecker::checkLock();
     qDebug() << cc << "   cc";

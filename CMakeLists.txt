@@ -25,8 +25,6 @@ find_package(Qt5DBus)
 find_package(KF5CoreAddons)
 find_package(KF5Config)
 find_package(KF5WindowSystem)
-find_package(KF5Wayland)
-find_package(KF5GlobalAccel)
 
 # For debug: cmake -DCMAKE_BUILD_TYPE=debug
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")

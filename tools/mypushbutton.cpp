@@ -43,8 +43,6 @@ MyPushButton::~MyPushButton()
 
 void MyPushButton::changeIconBackColor(bool isChoose, bool isKeySelect)
 {
-    qDebug() << "isKeySelect..." << objectName() << m_isKeySelect << m_isMouseSelect << isChoose << isKeySelect;
-
     if(m_isMouseSelect && m_isKeySelect){
         if((isChoose && isKeySelect) || (isChoose && !isKeySelect)){
             m_isKeySelect = true;
@@ -93,7 +91,7 @@ void MyPushButton::changeIconBackColor(bool isChoose, bool isKeySelect)
             m_isMouseSelect = isChoose;
         }
     }
-    qDebug() << "isKeySelect..." << objectName() << m_isKeySelect << m_isMouseSelect;
+//    qDebug() << "isKeySelect..." << objectName() << m_isKeySelect << m_isMouseSelect;
     if(!m_isRecBtn)
     {
         QString str;
