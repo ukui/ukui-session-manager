@@ -21,7 +21,7 @@ Build-Depends: debhelper-compat (= 12),
                pkg-config,
                libukui-log4qt-dev,
                libkf5windowsystem-dev,
-               libsm-dev
+               libsm-dev,
 	       libglib2.0-dev
 Rules-Requires-Root: no
 Standards-Version: 4.5.0
