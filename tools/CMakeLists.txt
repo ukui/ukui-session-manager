@@ -27,7 +27,11 @@ set(tools_SRCS
 
 find_package(PkgConfig)
 pkg_search_module(GSETTINGS_QT REQUIRED gsettings-qt)
+pkg_check_modules(GLIB2 REQUIRED glib-2.0)
+pkg_check_modules(GIO2 REQUIRED gio-2.0)
 include_directories(${GSETTINGS_QT_INCLUDES})
+include_directories(${GLIB2_INCLUDE_DIRS})
+include_directories(${GIO2_INCLUDE_DIRS})
 
 add_executable(ukui-session-tools
                ${tools_SRCS}
@@ -48,6 +52,8 @@ target_link_libraries(ukui-session-tools
     -lX11
     -lXtst
     -lukui-log4qt
+    ${GLIB2_LIBRARIES}
+    ${GIO2_LIBRARIES}
 )
 
 install(TARGETS

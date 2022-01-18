@@ -11,11 +11,11 @@
 MyIconLabel::MyIconLabel(int labelWidth, int iconWidth, QString path, bool showBackColor, QWidget *parent)
     :m_showBackColor(showBackColor)
 {
-    this->setFixedSize(labelWidth,labelWidth);
+    this->setFixedSize(labelWidth, labelWidth);
     this->setObjectName("iconlabel");
     m_btnIcon = new PushButton(this);
     m_btnIcon->setIcon(QIcon(path));
-    m_btnIcon->setIconSize(QSize(iconWidth,iconWidth));
+    m_btnIcon->setIconSize(QSize(iconWidth, iconWidth));
     m_btnIcon->setObjectName("btn");
     m_btnIcon->setStyleSheet("QPushButton#btn{background-color: transparent;border:none;} \
                              QPushButton:checked  { background-color: transparent;border:none;}\
@@ -25,12 +25,11 @@ MyIconLabel::MyIconLabel(int labelWidth, int iconWidth, QString path, bool showB
     m_btnIcon->setChecked(false);
     m_btnIcon->setGeometry(QRect((width() - iconWidth)/2, (width() - iconWidth)/2, iconWidth, iconWidth));
     m_btnIcon->setAttribute(Qt::WA_TransparentForMouseEvents,true);
-    if(m_showBackColor){
+    if (m_showBackColor) {
         //mask不要与控件一样大  锯齿明显  稍微大一点
         this->setMask(QRegion(this->x() - 1, this->y() - 1, this->width() + 2, this->height() + 2,QRegion::Ellipse));
         this->setStyleSheet("QLabel#"+ this->objectName() + "{background-color: rgb(255,255,255,40);border-radius:" + QString::number(this->width()/2) + "px;}");
-    }
-    else{
+    } else {
         this->setStyleSheet("QLabel#"+ this->objectName() + "{background-color: transparent;}");
     }
 
@@ -64,8 +63,7 @@ void MyIconLabel::paintEvent(QPaintEvent *event)
 */
 void MyIconLabel::enterEvent(QEvent *event)
 {
-    if(!m_showBackColor)
-        return;
+    if (!m_showBackColor) return;
     emit mouseEventSignals(event);
 
     QString str = "QLabel{background-color: rgb(255,255,255,80);border-radius: " + QString::number(this->width()/2) + "px;}";
@@ -77,8 +75,7 @@ void MyIconLabel::enterEvent(QEvent *event)
 void MyIconLabel::leaveEvent(QEvent *event)
 {
     return;
-    if(!m_showBackColor)
-        return;
+    if (!m_showBackColor) return;
     QString str = "QLabel{background-color: rgb(255,255,255,40);border-radius: " + QString::number(this->width()/2) + "px;}";
     this->setStyleSheet(str);
     this->setAttribute(Qt::WA_StyledBackground);
@@ -87,24 +84,22 @@ void MyIconLabel::leaveEvent(QEvent *event)
 bool MyIconLabel::event(QEvent *event)
 {
 //    qDebug() << m_showBackColor << "event..." << event->type();
-    if(!m_showBackColor)
+    if (!m_showBackColor) {
         return QWidget::event(event);
+    }
 
-    if(event->type() == QEvent::MouseButtonPress)
-    {
+    if (event->type() == QEvent::MouseButtonPress) {
         QString str = "QLabel{background-color: rgb(255,255,255,100);border-radius: " + QString::number(this->width()/2) + "px;}";
         this->setStyleSheet(str);
         this->setAttribute(Qt::WA_StyledBackground);
-    }
-    else if(event->type() == QEvent::MouseButtonRelease)
-    {
+    } else if (event->type() == QEvent::MouseButtonRelease) {
         QString str = "QLabel{background-color: rgb(255,255,255,80);border-radius: " + QString::number(this->width()/2) + "px;}";
         this->setStyleSheet(str);
         this->setAttribute(Qt::WA_StyledBackground);
         emit mouseEventSignals(event);
-    }
-    else
+    } else {
         emit mouseEventSignals(event);
+    }
     return QWidget::event(event);
 }
 
@@ -136,7 +131,7 @@ void MyIconLabel::mouseMoveEvent(QMouseEvent *event)
 bool MyIconLabel::containsPoint(QPoint p)
 {
     QPainterPath path;
-    path.addEllipse(QRect(0,0,width(),height()));
+    path.addEllipse(QRect(0, 0, width(), height()));
     //qDebug() << "containsPoint..." << width() << height() << p << QRect(0,0,width(),height());
     return path.contains(p);
 }

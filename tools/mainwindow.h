@@ -62,10 +62,11 @@ public:
     void changeBtnState(QString btnName, bool isKeySelect = false);
 
 private:
+    QString getAppLocalName(QString desktopfp);//获取应用名
     void ResizeEvent();
     void showInhibitWarning();//当有inhibitor存在时显示提醒界面
     void drawWarningWindow(QRect &rect);//画出提醒界面
-    QMap<QString, QString> findCNNameAndIcon(QString &basename);//根据inhibitor的名称获取对应desktop文件中的中文名和icon路径
+    QMap<QString, QString> findNameAndIcon(QString &basename);//根据inhibitor的名称获取对应desktop文件中的应用名和icon路径
 
     void calculateBtnSpan(int allNum, MyPushButton*, int& colum, int& row);
     void calculateKeyBtn(const QString &key);

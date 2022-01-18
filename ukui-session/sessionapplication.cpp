@@ -106,7 +106,7 @@ void SessionApplication::updateIdleDelay()
 {
     if (gsettings_usable) {
         const int idle = gs->get("idle-delay").toInt() * 60;
-        if (lastIdleTime == idle ){
+        if (lastIdleTime == idle ) {
             return;
         }
         mIdleWatcher->reset(idle);
@@ -154,7 +154,7 @@ void SessionApplication::registerDBus()
     modman->startup();
 }
 
-SessionApplication::SessionApplication(int& argc, char** argv) : QApplication(argc, argv)
+SessionApplication::SessionApplication(int &argc, char* *argv) : QApplication(argc, argv)
 {
     const QByteArray id(SESSION_DEFAULT_SETTINGS);
     if (QGSettings::isSchemaInstalled(id)) {

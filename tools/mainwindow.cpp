@@ -57,6 +57,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pwd.h>
+#include <glib.h>
 
 QT_BEGIN_NAMESPACE
 extern void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly,
@@ -140,8 +141,8 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
 
     m_toolWidget = new QWidget();
-    m_toolWidget->setFixedSize(QSize(m_screen.width(),m_screen.height()));
-    m_toolWidget->move(m_screen.x(),m_screen.y());
+    m_toolWidget->setFixedSize(QSize(m_screen.width(), m_screen.height()));
+    m_toolWidget->move(m_screen.x(), m_screen.y());
 
     qDebug() << "m_toolWidget width:" << m_toolWidget->width()<<m_toolWidget->height();
     m_vBoxLayout = new QVBoxLayout();
@@ -162,12 +163,12 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     initialJudgeWidget();
 
     //获取mode为block的sleep和shutdown inhibitors
-    if(LockChecker::isSleepBlocked()) {
+    if (LockChecker::isSleepBlocked()) {
         LockChecker::getSleepInhibitors(sleepInhibitors, sleepInhibitorsReason);
         inhibitSleep = true;
     }
 
-    if(LockChecker::isShutdownBlocked()) {
+    if (LockChecker::isShutdownBlocked()) {
         LockChecker::getShutdownInhibitors(shutdownInhibitors, shutdownInhibitorsReason);
         inhibitShutdown = true;
     }
@@ -205,17 +206,17 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     initialDateTimeWidget();
 
     m_vBoxLayout->addStretch(20);
-    m_vBoxLayout->addLayout(m_dateTimeLayout,60);
+    m_vBoxLayout->addLayout(m_dateTimeLayout, 60);
     m_vBoxLayout->addStretch(60);
-    m_vBoxLayout->addLayout(m_judgeWidgetVLayout,140);
-    if(m_screen.width() > 1088)
-        m_vBoxLayout->addLayout(m_buttonHLayout,140);
-    else
-        m_vBoxLayout->addLayout(m_buttonHLayout,280);
+    m_vBoxLayout->addLayout(m_judgeWidgetVLayout, 140);
+    if (m_screen.width() > 1088) {
+        m_vBoxLayout->addLayout(m_buttonHLayout, 140);
+    } else {
+        m_vBoxLayout->addLayout(m_buttonHLayout, 280);
+    }
     m_vBoxLayout->addStretch(174);
-    m_vBoxLayout->addLayout(m_messageVLayout,80);
+    m_vBoxLayout->addLayout(m_messageVLayout, 80);
     m_vBoxLayout->addStretch(106);
-
 
     //根据屏幕分辨率与鼠标位置重设界面
     //m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
@@ -321,11 +322,11 @@ void MainWindow::initialBtn()
 void MainWindow::initialJudgeWidget()
 {
     int margins = 0;
-    if(m_screen.width() > 1088)
-        margins = (m_screen.width() - 60 * 6 - 140 * 7)/2;
-    else
-        margins = (m_screen.width() - 60 * 2 - 140 * 3)/2;
-
+    if (m_screen.width() > 1088) {
+        margins = (m_screen.width() - 60 * 6 - 140 * 7) / 2;
+    } else {
+        margins = (m_screen.width() - 60 * 2 - 140 * 3) / 2;
+    }
 //    QStringList userlist = getLoginedUsers();
     QStringList userlist = LockChecker::getLoginedUsers();
     if (userlist.count() > 1) {
@@ -345,8 +346,8 @@ void MainWindow::initialJudgeWidget()
     m_confirmBtn = new QPushButton(QApplication::tr("confirm"));
     m_cancelBtn->setObjectName("cancelButton");
     m_confirmBtn->setObjectName("confirmButton");
-    m_cancelBtn->setGeometry(QRect(0,0,96,36));
-    m_confirmBtn->setGeometry(QRect(0,0,96,36));
+    m_cancelBtn->setGeometry(QRect(0, 0, 96, 36));
+    m_confirmBtn->setGeometry(QRect(0, 0, 96, 36));
 
     m_judgeBtnHLayout->setAlignment(Qt::AlignHCenter| Qt::AlignBottom);
     m_judgeBtnHLayout->setSpacing(0);
@@ -369,13 +370,14 @@ void MainWindow::initialJudgeWidget()
 void MainWindow::initialMessageWidget()
 {
     int margins = 0;
-    if(m_screen.width() > 1088)
-        margins = (m_screen.width() - 60 * 6 - 140 * 7)/2;
-    else
-        margins = (m_screen.width() - 60 * 2 - 140 * 3)/2;
+    if (m_screen.width() > 1088) {
+        margins = (m_screen.width() - 60 * 6 - 140 * 7) / 2;
+    } else {
+        margins = (m_screen.width() - 60 * 2 - 140 * 3) / 2;
+    }
 
-    m_messageLabel1->setGeometry(QRect(0,0,700,40));
-    m_messageLabel1->setGeometry(QRect(0,0,700,40));
+    m_messageLabel1->setGeometry(QRect(0, 0, 700, 40));
+    m_messageLabel1->setGeometry(QRect(0, 0, 700, 40));
     m_messageLabel1->setStyleSheet("color:white;font:12pt;");
     m_messageLabel2->setStyleSheet("color:white;font:12pt;");
     m_messageLabel1->setObjectName("messagelabel1");
@@ -418,8 +420,10 @@ void MainWindow::initialMessageWidget()
             lable2_text = b1;
             m_logoutBtn->setAttribute(Qt::WA_TransparentForMouseEvents, true);
 
-        } else
+        } else {
             lable2_text = b2;
+        }
+
         m_messageLabel1->setText(user + lable1_text);
         m_messageLabel2->setText(lable2_text);
         m_shutDownBtn->setAttribute(Qt::WA_TransparentForMouseEvents, true);
@@ -443,19 +447,21 @@ void MainWindow::initialDateTimeWidget()
         QGSettings *controlSetting = new QGSettings(id_control, QByteArray(), this);
         QString     formate_a      = controlSetting->get("date").toString();
         QString     formate_b      = controlSetting->get("hoursystem").toString();
-        if (formate_a == "en")
+        if (formate_a == "en") {
             current_date = current_date_time.toString("yyyy-MM-dd ddd");
-        else if (formate_a == "cn")
+        } else if (formate_a == "cn") {
             current_date = current_date_time.toString("yyyy/MM/dd ddd");
-        else
+        } else {
             current_date = current_date_time.toString("yyyy-MM-dd ddd");
+        }
 
-        if (formate_b == "12")
+        if (formate_b == "12") {
             current_time = current_date_time.toString("A hh:mm");
-        else if (formate_b == "24")
+        } else if (formate_b == "24") {
             current_time = current_date_time.toString("hh:mm");
-        else
+        } else {
             current_time = current_date_time.toString("hh:mm");
+        }
     } else {
         current_date = current_date_time.toString("yyyy-MM-dd ddd");
         current_time = current_date_time.toString("hh:mm");
@@ -527,11 +533,11 @@ void MainWindow::initialBtnCfg()
 
 void MainWindow::setLayoutWidgetVisible(QLayout* layout, bool show)
 {
-    for(int i = 0;i < layout->count(); i++)
-    {
+    for (int i = 0;i < layout->count(); i++) {
         QLayoutItem*item = layout->layout()->itemAt(i);
-        if(item->widget() != nullptr)
+        if (item->widget() != nullptr) {
             item->widget()->setVisible(show);
+        }
     }
 }
 
@@ -539,16 +545,31 @@ void MainWindow::changeBtnState(QString btnName, bool isKeySelect)
 {
     for(auto item = map.begin(); item != map.end(); item++)
     {
-        if((!isKeySelect && !item.value()->getIsKeySelect()) || (isKeySelect && !item.value()->getIsMouseSelect()))
-            item.value()->changeIconBackColor((item.value()->objectName() == btnName), isKeySelect);
+        item.value()->changeIconBackColor((item.value()->objectName() == btnName), isKeySelect);
     }
+}
+
+QString MainWindow::getAppLocalName(QString desktopfp)
+{
+    GError **error = nullptr;
+    GKeyFileFlags flags = G_KEY_FILE_NONE;
+    GKeyFile *keyfile = g_key_file_new();
+
+    QByteArray fpbyte = desktopfp.toLocal8Bit();
+    char *filepath = fpbyte.data();
+    g_key_file_load_from_file(keyfile, filepath, flags,error);
+
+    char *name = g_key_file_get_locale_string(keyfile, "Desktop Entry", "Name", nullptr, nullptr);
+    QString namestr = QString::fromLocal8Bit(name);
+
+    g_key_file_free(keyfile);
+    return namestr;
 }
 
 void MainWindow::mouseReleaseSlots(QEvent *event, QString objName)
 {
-    if(event->type() == QEvent::Leave)
-    {
-        if(objName == "switchuser_button" || objName == "hibernate_button" ||
+    if (event->type() == QEvent::Leave) {
+        if (objName == "switchuser_button" || objName == "hibernate_button" ||
                 objName == "suspend_button" || objName == "lockscreen_button" ||
                 objName == "logout_button" || objName == "reboot_button" ||
                 objName == "shutdown_button"){
@@ -557,10 +578,8 @@ void MainWindow::mouseReleaseSlots(QEvent *event, QString objName)
         }
     }
 
-    for(auto iter = map.begin(); iter != map.end(); iter++)
-    {
-        if(iter.value()->getIconLabel()->objectName() == objName)
-        {
+    for (auto iter = map.begin(); iter != map.end(); iter++) {
+        if (iter.value()->getIconLabel()->objectName() == objName) {
             changePoint(iter.value(), event, iter.key());
             if (event->type() == QEvent::MouseButtonRelease) {
                 doEvent(objName, iter.key());
@@ -570,7 +589,8 @@ void MainWindow::mouseReleaseSlots(QEvent *event, QString objName)
     }
 }
 
-void MainWindow::screenCountChanged(){
+void MainWindow::screenCountChanged()
+{
     QDesktopWidget *desktop = QApplication::desktop();
     qDebug() << "inside screenCountChanged,screenCount = " << desktop->screenCount();
     //setGeometry(desktop->geometry());
@@ -584,35 +604,36 @@ void MainWindow::screenCountChanged(){
 void MainWindow::calculateBtnSpan(int allNum, MyPushButton* btn, int& colum, int& row)
 {
     int afterHideNum = 0;
-    for(int i = 0; i < m_btnHideMap.count(); i++){
-        if(map.key(btn) > i){
-            if(m_btnHideMap.value(map.value(i)))
+    for (int i = 0; i < m_btnHideMap.count(); i++) {
+        if (map.key(btn) > i) {
+            if (m_btnHideMap.value(map.value(i))) {
                 afterHideNum++;
+            }
         }
     }
-    int dowmRows = allNum/2 + allNum%2;
+    int dowmRows = allNum / 2 + allNum % 2;
     int upRows = allNum - dowmRows;
     //qDebug() << "allNum:" << allNum << dowmRows << upRows << afterHideNum;
-    if((map.key(btn) - afterHideNum) < upRows)//在上面
-    {
+    if ((map.key(btn) - afterHideNum) < upRows) {//在上面
         row = allNum%2 + (map.key(btn) - afterHideNum) * 2;
         colum = 0;
-    }else{//在下面
+    } else {//在下面
         row = (map.key(btn) - afterHideNum - upRows) * 2;
         colum = 1;
     }
 }
 
-void MainWindow::ResizeEvent(){
+void MainWindow::ResizeEvent()
+{
     int xx = m_screen.x();
     int yy = m_screen.y();   //取得当前鼠标所在屏幕的最左，上坐标
 
     qDebug() << "moveWidget  m_screen:" << m_screen.width() << m_screen.height();
     int hideNum = 0;
-    for(int i = 0; i < m_btnHideMap.count(); i++)
-    {
-        if(m_btnHideMap.value(map.value(i)))
+    for (int i = 0; i < m_btnHideMap.count(); i++) {
+        if (m_btnHideMap.value(map.value(i))) {
             hideNum++;
+        }
     }
 
     // Move the widget to the direction where they should be
@@ -620,40 +641,41 @@ void MainWindow::ResizeEvent(){
     int sum = 0;
     int k   = 0;
     int recWidth;
-    if(m_Is_UKUI_3_1)
+    if (m_Is_UKUI_3_1) {
         recWidth = 128;
-    else
+    } else {
         recWidth = 140;
-    for (int i = 0; i <= 6; i++) {
-        if(m_btnHideMap.value(map.value(i)))
-            map[i]->hide();
     }
-    if (m_Is_UKUI_3_1 || (!m_Is_UKUI_3_1 && (m_screen.width() > 1088 || (7 - hideNum) <= 4))){
+    for (int i = 0; i <= 6; i++) {
+        if (m_btnHideMap.value(map.value(i))) {
+            map[i]->hide();
+        }
+    }
+    if (m_Is_UKUI_3_1 || (!m_Is_UKUI_3_1 && (m_screen.width() > 1088 || (7 - hideNum) <= 4))) {
         int margins = 0;
         qDebug() << "margins::::" << (m_screen.width() - recWidth * (6 - hideNum))/(7 - hideNum);
 
-        if((m_screen.width() - recWidth * (7 - hideNum))/(8 - hideNum) > 60)
-        margins = (m_screen.width() - 60 * (6 - hideNum) - recWidth * (7 - hideNum))/2;
-        else
-        {
-            margins = (m_screen.width() - recWidth * (7 - hideNum))/(8 - hideNum);
+        if ((m_screen.width() - recWidth * (7 - hideNum)) / (8 - hideNum) > 60) {
+            margins = (m_screen.width() - 60 * (6 - hideNum) - recWidth * (7 - hideNum)) / 2;
+        } else {
+            margins = (m_screen.width() - recWidth * (7 - hideNum)) / (8 - hideNum);
         }
         qDebug() << "margins:" << margins;
-        m_buttonHLayout->setContentsMargins(margins,0,margins,0);
-        m_buttonHLayout->addWidget(m_switchUserBtn,0,0);
-        m_buttonHLayout->addWidget(m_hibernateBtn,0,1);
-        m_buttonHLayout->addWidget(m_suspendBtn,0,2);
-        m_buttonHLayout->addWidget(m_lockScreenBtn,0,3);
-        m_buttonHLayout->addWidget(m_logoutBtn,0,4);
-        m_buttonHLayout->addWidget(m_rebootBtn,0,5);
-        m_buttonHLayout->addWidget(m_shutDownBtn,0,6);
+        m_buttonHLayout->setContentsMargins(margins, 0, margins, 0);
+        m_buttonHLayout->addWidget(m_switchUserBtn, 0, 0);
+        m_buttonHLayout->addWidget(m_hibernateBtn, 0, 1);
+        m_buttonHLayout->addWidget(m_suspendBtn, 0, 2);
+        m_buttonHLayout->addWidget(m_lockScreenBtn, 0, 3);
+        m_buttonHLayout->addWidget(m_logoutBtn, 0, 4);
+        m_buttonHLayout->addWidget(m_rebootBtn, 0, 5);
+        m_buttonHLayout->addWidget(m_shutDownBtn, 0, 6);
         m_buttonHLayout->setAlignment(Qt::AlignHCenter);
     } else {
         int margins = 0;
         int allBtnNum = 7 - hideNum;
-        int rows = allBtnNum/2 + allBtnNum%2;
+        int rows = allBtnNum / 2 + allBtnNum % 2;
         qDebug() << "margins:" << margins;
-        margins = (m_screen.width() - 40 * (rows - 1) - recWidth * rows)/2;
+        margins = (m_screen.width() - 40 * (rows - 1) - recWidth * rows) / 2;
         qDebug() << "ResizeEvent margins:" << margins;
 
         int switchRow, switchColumn;
@@ -664,13 +686,13 @@ void MainWindow::ResizeEvent(){
         int rebootRow, rebootColumn;
         int shutDownRow, shutDownColumn;
 
-        calculateBtnSpan(allBtnNum,m_switchUserBtn, switchRow, switchColumn);
-        calculateBtnSpan(allBtnNum,m_hibernateBtn, hibernateRow, hibernateColumn);
-        calculateBtnSpan(allBtnNum,m_suspendBtn, suspendRow, suspendColumn);
-        calculateBtnSpan(allBtnNum,m_lockScreenBtn, lockScreenRow, lockScreenColumn);
-        calculateBtnSpan(allBtnNum,m_logoutBtn, logoutRow, logoutColumn);
-        calculateBtnSpan(allBtnNum,m_rebootBtn, rebootRow, rebootColumn);
-        calculateBtnSpan(allBtnNum,m_shutDownBtn, shutDownRow, shutDownColumn);
+        calculateBtnSpan(allBtnNum, m_switchUserBtn, switchRow, switchColumn);
+        calculateBtnSpan(allBtnNum, m_hibernateBtn, hibernateRow, hibernateColumn);
+        calculateBtnSpan(allBtnNum, m_suspendBtn, suspendRow, suspendColumn);
+        calculateBtnSpan(allBtnNum, m_lockScreenBtn, lockScreenRow, lockScreenColumn);
+        calculateBtnSpan(allBtnNum, m_logoutBtn, logoutRow, logoutColumn);
+        calculateBtnSpan(allBtnNum, m_rebootBtn, rebootRow, rebootColumn);
+        calculateBtnSpan(allBtnNum, m_shutDownBtn, shutDownRow, shutDownColumn);
         //qDebug() << "switchRow:" << switchRow << switchColumn;
         //qDebug() << "hibernateRow:" << hibernateRow << hibernateColumn;
         //qDebug() << "suspendRow:" << suspendRow << suspendColumn;
@@ -678,18 +700,18 @@ void MainWindow::ResizeEvent(){
         //qDebug() << "logoutRow:" << logoutRow << logoutColumn;
         //qDebug() << "rebootRow:" << rebootRow << rebootColumn;
         //qDebug() << "shutDownRow:" << shutDownRow << shutDownColumn;
-        m_buttonHLayout->setContentsMargins(margins,0,margins,0);
-        m_buttonHLayout->addWidget(m_switchUserBtn,switchRow,switchColumn,1,2);
-        m_buttonHLayout->addWidget(m_hibernateBtn,hibernateRow,hibernateColumn,1,2);
-        m_buttonHLayout->addWidget(m_suspendBtn,suspendRow,suspendColumn,1,2);
-        m_buttonHLayout->addWidget(m_lockScreenBtn,lockScreenRow,lockScreenColumn,1,2);
-        m_buttonHLayout->addWidget(m_logoutBtn,logoutRow,logoutColumn,1,2);
-        m_buttonHLayout->addWidget(m_rebootBtn,rebootRow,rebootColumn,1,2);
-        m_buttonHLayout->addWidget(m_shutDownBtn,shutDownRow,shutDownColumn,1,2);
+        m_buttonHLayout->setContentsMargins(margins, 0, margins, 0);
+        m_buttonHLayout->addWidget(m_switchUserBtn, switchRow, switchColumn, 1, 2);
+        m_buttonHLayout->addWidget(m_hibernateBtn, hibernateRow, hibernateColumn, 1, 2);
+        m_buttonHLayout->addWidget(m_suspendBtn, suspendRow, suspendColumn, 1, 2);
+        m_buttonHLayout->addWidget(m_lockScreenBtn, lockScreenRow, lockScreenColumn, 1, 2);
+        m_buttonHLayout->addWidget(m_logoutBtn, logoutRow, logoutColumn, 1, 2);
+        m_buttonHLayout->addWidget(m_rebootBtn, rebootRow, rebootColumn, 1, 2);
+        m_buttonHLayout->addWidget(m_shutDownBtn, shutDownRow, shutDownColumn, 1, 2);
         m_buttonHLayout->setAlignment(Qt::AlignHCenter);
     }
-    m_toolWidget->setFixedSize(m_screen.width(),m_screen.height());
-    m_toolWidget->move(xx,yy);
+    m_toolWidget->setFixedSize(m_screen.width(), m_screen.height());
+    m_toolWidget->move(xx, yy);
 }
 
 // Paint the background picture
@@ -709,7 +731,8 @@ void MainWindow::paintEvent(QPaintEvent *e)
 }
 
 //lock screen
-void doLockscreen(){
+void doLockscreen()
+{
     QDBusInterface *interface = new QDBusInterface("org.ukui.ScreenSaver",
                                                    "/",
                                                    "org.ukui.ScreenSaver"
@@ -719,12 +742,11 @@ void doLockscreen(){
 }
 
 // handle mouse-clicked event
-bool MainWindow::eventFilter(QObject *obj, QEvent *event){
-    if(!m_Is_UKUI_3_1){
-        for(auto iter = map.begin(); iter != map.end(); iter++)
-        {
-            if(iter.value()->objectName() == obj->objectName())
-            {
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (!m_Is_UKUI_3_1) {
+        for (auto iter = map.begin(); iter != map.end(); iter++) {
+            if (iter.value()->objectName() == obj->objectName()) {
                 changePoint(iter.value(), event, iter.key());
                 if (event->type() == QEvent::MouseButtonRelease) {
                     doEvent(iter.value()->objectName(), iter.key());
@@ -753,11 +775,9 @@ void MainWindow::doEvent(QString test, int i)
     if (inhibitShutdown && (i ==5 || i ==6)) {
         //显示禁止shutdown的提示信息
         showInhibitWarning();
-
     } else if (inhibitSleep && (i == 2 || i == 1)) {
         //显示禁止sleep的提示信息
         showInhibitWarning();
-
     } else if (close_system_needed_to_confirm && (i == 5 || i == 6)) {
         connect(this, &MainWindow::confirmButtonclicked, [&](){
             gs->set("win-key-release", false);
@@ -826,9 +846,10 @@ bool MainWindow::exitt()
 
 bool MainWindow::judgeBtnIsEnable(int index)
 {
-    if(!m_btnHideMap.value(map.value(index)) && (((lockfile && index != 1 && index != 5 && index != 6 )&&
-                                              (!lockuser || (lockuser && index != 4))) ||!lockfile))
+    if (!m_btnHideMap.value(map.value(index)) && (((lockfile && index != 1 && index != 5 && index != 6 )&&
+                                              (!lockuser || (lockuser && index != 4))) ||!lockfile)) {
         return true;
+    }
     return false;
 }
 
@@ -836,21 +857,21 @@ void MainWindow::calculateKeyBtn(const QString &key)
 {
     if (key == "Left") {
         if (tableNum == 0 || tableNum == -1) {
-            for(int i = 6; i >= 0; i--){
-                if(judgeBtnIsEnable(i)){
+            for (int i = 6; i >= 0; i--) {
+                if (judgeBtnIsEnable(i)) {
                     tableNum = i;
                     return;
                 }
             }
         } else {
-            for(int i = tableNum - 1; i >= 0; i--){
-                if(judgeBtnIsEnable(i)){
+            for (int i = tableNum - 1; i >= 0; i--) {
+                if (judgeBtnIsEnable(i)) {
                     tableNum = i;
                     return;
                 }
             }
-            for(int i = 6; i >= tableNum + 1; i--){
-                if(judgeBtnIsEnable(i)){
+            for (int i = 6; i >= tableNum + 1; i--) {
+                if (judgeBtnIsEnable(i)) {
                     tableNum = i;
                     return;
                 }
@@ -859,21 +880,21 @@ void MainWindow::calculateKeyBtn(const QString &key)
     }
     if (key == "Right") {
         if (tableNum == 6 || tableNum == -1) {
-            for(int i = 0; i <= 6; i++){
-                if(judgeBtnIsEnable(i)){
+            for (int i = 0; i <= 6; i++) {
+                if (judgeBtnIsEnable(i)) {
                     tableNum = i;
                     return;
                 }
             }
         } else {
-            for(int i = tableNum + 1; i <= 6; i++){
-                if(judgeBtnIsEnable(i)){
+            for (int i = tableNum + 1; i <= 6; i++) {
+                if (judgeBtnIsEnable(i)) {
                     tableNum = i;
                     return;
                 }
             }
-            for(int i = 0; i <= tableNum - 1; i++){
-                if(judgeBtnIsEnable(i)){
+            for (int i = 0; i <= tableNum - 1; i++) {
+                if (judgeBtnIsEnable(i)) {
                     tableNum = i;
                     return;
                 }
@@ -897,14 +918,10 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
 
     if (key == "Escape") {
         exitt();
-    }
-    else if(key == "Left" || key == "Right")
-    {
-//        if(flag)
-//            return;
+    } else if (key == "Left" || key == "Right") {
+        //if (flag) return;
         calculateKeyBtn(key);
         QString button = map[tableNum]->objectName();
-//        qDebug() << "calculateKeyBtn..." << button;
 
         changeBtnState(button, true);
     }
@@ -922,7 +939,8 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
     }
 }
 
-void MainWindow::showInhibitWarning(){
+void MainWindow::showInhibitWarning()
+{
     QRect mainScreen;
     QList<QScreen*> screens = QApplication::screens();
     QPoint ptf(QCursor::pos());
@@ -941,7 +959,8 @@ void MainWindow::showInhibitWarning(){
     drawWarningWindow(mainScreen);
 }
 
-void MainWindow::drawWarningWindow(QRect &rect){
+void MainWindow::drawWarningWindow(QRect &rect)
+{
     int xx = rect.x();
     int yy = rect.y();//用于设置相对位置
 
@@ -971,12 +990,12 @@ void MainWindow::drawWarningWindow(QRect &rect){
         for (int i = 0; i < sleepInhibitors.length(); ++i) {
 //            QIcon icon("/usr/share/icons/ukui-icon-theme-default/32x32/mimetypes/application-x-desktop.png");//默认图标
             QIcon icon;
-            QString CNName;
+            QString AppName;
             QString iconName;
             QString appName = sleepInhibitors.at(i);
-            QMap<QString, QString> nameAndIcon = findCNNameAndIcon(appName);
+            QMap<QString, QString> nameAndIcon = findNameAndIcon(appName);
             if (nameAndIcon.size() != 0) {
-                CNName = nameAndIcon.begin().key();
+                AppName = nameAndIcon.begin().key();
                 iconName = nameAndIcon.begin().value();
             }
 
@@ -987,9 +1006,9 @@ void MainWindow::drawWarningWindow(QRect &rect){
                 icon = QIcon::fromTheme("application-x-desktop");
             }
 
-            if (!CNName.isEmpty()) {
-                //中文名存在则换用中文名显示
-                CNName.swap(appName);
+            if (!AppName.isEmpty()) {
+                //查找到的应用名存在则用应用名
+                AppName.swap(appName);
             }
 
             model->appendRow(new QStandardItem(icon, appName));
@@ -997,12 +1016,12 @@ void MainWindow::drawWarningWindow(QRect &rect){
     } else if (inhibitShutdown && (defaultnum ==5 || defaultnum ==6)) {
         for (int i = 0; i < shutdownInhibitors.length(); ++i) {
             QIcon icon;
-            QString CNName;
+            QString AppName;
             QString iconName;
             QString appName = shutdownInhibitors.at(i);
-            QMap<QString, QString> nameAndIcon = findCNNameAndIcon(appName);
+            QMap<QString, QString> nameAndIcon = findNameAndIcon(appName);
             if (nameAndIcon.size() != 0) {
-                CNName = nameAndIcon.begin().key();
+                AppName = nameAndIcon.begin().key();
                 iconName = nameAndIcon.begin().value();
             }
 
@@ -1013,8 +1032,8 @@ void MainWindow::drawWarningWindow(QRect &rect){
                 icon = QIcon::fromTheme("application-x-desktop");
             }
 
-            if (!CNName.isEmpty()) {
-                CNName.swap(appName);
+            if (!AppName.isEmpty()) {
+                AppName.swap(appName);
             }
 
             model->appendRow(new QStandardItem(icon, appName));
@@ -1067,10 +1086,11 @@ void MainWindow::drawWarningWindow(QRect &rect){
     area->show();
 }
 
-QMap<QString, QString> MainWindow::findCNNameAndIcon(QString &basename){
+QMap<QString, QString> MainWindow::findNameAndIcon(QString &basename)
+{
     QMap<QString, QString> nameAndIcon;
-    QString value;
-    QString CNName;
+    QString icon;
+    QString Name;
     QStringList desktop_paths;
     desktop_paths << "/usr/share/applications";
     desktop_paths << "/etc/xdg/autostart";
@@ -1087,9 +1107,10 @@ QMap<QString, QString> MainWindow::findCNNameAndIcon(QString &basename){
             if (base == basename) {
                 XdgDesktopFile desktopFile;
                 desktopFile.load(fi.absoluteFilePath());
-                value = desktopFile.value("Icon").toString();
-                CNName = desktopFile.value("Name[zh_CN]").toString();
-                nameAndIcon[CNName] = value;
+                icon = desktopFile.value("Icon").toString();
+//                Name = desktopFile.value("Name[zh_CN]").toString();
+                Name = getAppLocalName(fi.absoluteFilePath());//根据系统的本地语言设置获取对应的名称
+                nameAndIcon[Name] = icon;
             }
         }
     }
@@ -1097,10 +1118,11 @@ QMap<QString, QString> MainWindow::findCNNameAndIcon(QString &basename){
     return nameAndIcon;
 }
 
-void MainWindow::judgeboxShow(){
+void MainWindow::judgeboxShow()
+{
     QRect m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
     click_blank_space_need_to_exit = false;
-    for(int j = 0; j < 7; j++) {
+    for (int j = 0; j < 7; j++) {
         map[j]->hide();
     }
 
@@ -1111,7 +1133,8 @@ void MainWindow::judgeboxShow(){
     setLayoutWidgetVisible(m_judgeBtnHLayout, true);
 }
 
-void MainWindow::keyPressEmulate(){
+void MainWindow::keyPressEmulate()
+{
     QTimer::singleShot(500, this, [&](){
         qDebug()<<"Emulate press key A";
         XTestFakeKeyEvent(QX11Info::display(), XKeysymToKeycode(QX11Info::display(),XK_A), True, 1);
@@ -1154,3 +1177,4 @@ bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, l
     }
     return false;
 }
+

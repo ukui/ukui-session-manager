@@ -1,8 +1,6 @@
 #include "ukuismclient.h"
 #include "ukuismserver.h"
 
-
-
 #include <unistd.h>
 #include <stdlib.h>
 
