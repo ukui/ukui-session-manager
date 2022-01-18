@@ -3,8 +3,8 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include <QEvent>
-MyPushButton::MyPushButton(QString iconPath, QString buttonLable, QString objName, bool isRecBtn, int x, int y,
-                           int width, int height, int iconWidth, int labelWidth, QWidget *parent)
+MyPushButton::MyPushButton(QString iconPath, QString buttonLable, QString objName, QWidget *parent, bool isRecBtn, int x, int y,
+                           int width, int height, int iconWidth, int labelWidth)
     : m_isRecBtn(isRecBtn)
     , QWidget(parent)
 {

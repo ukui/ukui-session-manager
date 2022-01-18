@@ -16,9 +16,9 @@ class MyPushButton : public QWidget
     Q_OBJECT
 
 public:
-    MyPushButton(QString iconPath, QString buttonLable, QString objName, bool isRecBtn=true, int x = 0, int y = 0,
+    MyPushButton(QString iconPath, QString buttonLable, QString objName, QWidget *parent = nullptr, bool isRecBtn=true, int x = 0, int y = 0,
                  int width = 140, int height = 180, int iconWidth = 48,
-                 int labelWidth = 128, QWidget *parent = nullptr);
+                 int labelWidth = 128);
     ~MyPushButton();
 
     void changeIconBackColor(bool isChoose = true, bool isKeySelect = false);

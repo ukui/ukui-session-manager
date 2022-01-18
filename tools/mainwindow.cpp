@@ -140,9 +140,8 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     this->setObjectName("widget");
     m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
 
-    m_toolWidget = new QWidget();
-    m_toolWidget->setFixedSize(QSize(m_screen.width(), m_screen.height()));
-    m_toolWidget->move(m_screen.x(), m_screen.y());
+    m_toolWidget = new QWidget(this);
+    m_toolWidget->setGeometry(m_screen);
 
     qDebug() << "m_toolWidget width:" << m_toolWidget->width()<<m_toolWidget->height();
     m_vBoxLayout = new QVBoxLayout();
@@ -228,9 +227,12 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
     // setAttribute(Qt::WA_TranslucentBackground, true);//设定该窗口透明显示
     m_toolWidget->setLayout(m_vBoxLayout);
-    setCentralWidget(m_toolWidget);
+    //setCentralWidget(m_toolWidget);
 
     qDebug() << "m_toolWidget...." << m_toolWidget->geometry();
+    qDebug() << "pos..." << QCursor::pos() << this->geometry();
+    qDebug() << "m_screen..." << m_screen;
+
     /*捕获键盘，如果捕获失败，那么模拟一次esc按键来退出菜单，如果仍捕获失败，则放弃捕获*/
     if (establishGrab()) {
         qDebug() << "establishGrab : true";
@@ -294,13 +296,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::initialBtn()
 {
-    m_switchUserBtn = new MyPushButton(m_btnImagesPath+"/switchuser.svg", QApplication::tr("Switch User"), "switchuser", !m_Is_UKUI_3_1);
-    m_hibernateBtn = new MyPushButton(m_btnImagesPath+"/hibernate.svg", QApplication::tr("Hibernate"), "hibernate", !m_Is_UKUI_3_1);
-    m_suspendBtn = new MyPushButton(m_btnImagesPath+"/suspend.svg", QApplication::tr("Suspend"), "suspend", !m_Is_UKUI_3_1);
-    m_logoutBtn = new MyPushButton(m_btnImagesPath+"/logout.svg", QApplication::tr("Logout"), "logout", !m_Is_UKUI_3_1);
-    m_rebootBtn = new MyPushButton(m_btnImagesPath+"/reboot.svg", QApplication::tr("Reboot"), "reboot", !m_Is_UKUI_3_1);
-    m_shutDownBtn = new MyPushButton(m_btnImagesPath+"/shutdown.svg", QApplication::tr("Shut Down"), "shutdown", !m_Is_UKUI_3_1);
-    m_lockScreenBtn = new MyPushButton(m_btnImagesPath+"/lockscreen.svg", QApplication::tr("Lock Screen"), "lockscreen", !m_Is_UKUI_3_1);
+    m_switchUserBtn = new MyPushButton(m_btnImagesPath+"/switchuser.svg", QApplication::tr("Switch User"), "switchuser", m_toolWidget, !m_Is_UKUI_3_1);
+    m_hibernateBtn = new MyPushButton(m_btnImagesPath+"/hibernate.svg", QApplication::tr("Hibernate"), "hibernate", m_toolWidget, !m_Is_UKUI_3_1);
+    m_suspendBtn = new MyPushButton(m_btnImagesPath+"/suspend.svg", QApplication::tr("Suspend"), "suspend", m_toolWidget, !m_Is_UKUI_3_1);
+    m_logoutBtn = new MyPushButton(m_btnImagesPath+"/logout.svg", QApplication::tr("Logout"), "logout", m_toolWidget, !m_Is_UKUI_3_1);
+    m_rebootBtn = new MyPushButton(m_btnImagesPath+"/reboot.svg", QApplication::tr("Reboot"), "reboot", m_toolWidget, !m_Is_UKUI_3_1);
+    m_shutDownBtn = new MyPushButton(m_btnImagesPath+"/shutdown.svg", QApplication::tr("Shut Down"), "shutdown", m_toolWidget, !m_Is_UKUI_3_1);
+    m_lockScreenBtn = new MyPushButton(m_btnImagesPath+"/lockscreen.svg", QApplication::tr("Lock Screen"), "lockscreen", m_toolWidget, !m_Is_UKUI_3_1);
 
     //ui->setupUi(this);
     m_switchUserBtn->installEventFilter(this);
@@ -710,8 +712,7 @@ void MainWindow::ResizeEvent()
         m_buttonHLayout->addWidget(m_shutDownBtn, shutDownRow, shutDownColumn, 1, 2);
         m_buttonHLayout->setAlignment(Qt::AlignHCenter);
     }
-    m_toolWidget->setFixedSize(m_screen.width(), m_screen.height());
-    m_toolWidget->move(xx, yy);
+    m_toolWidget->setGeometry(m_screen);
 }
 
 // Paint the background picture
@@ -820,13 +821,13 @@ void MainWindow::doEvent(QString test, int i)
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     if (click_blank_space_need_to_exit) {
-        if (!m_suspendBtn->geometry().contains(event->pos())
-            && !m_hibernateBtn->geometry().contains(event->pos())
-            && !m_lockScreenBtn->geometry().contains(event->pos())
-            && !m_switchUserBtn->geometry().contains(event->pos())
-            && !m_logoutBtn->geometry().contains(event->pos())
-            && !m_rebootBtn->geometry().contains(event->pos())
-            && !m_shutDownBtn->geometry().contains(event->pos())) {
+        if (!m_suspendBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_hibernateBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_lockScreenBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_switchUserBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_logoutBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_rebootBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_shutDownBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))) {
             exitt();
         }
     }
