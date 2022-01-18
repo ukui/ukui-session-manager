@@ -1,0 +1,89 @@
+<schemalist gettext-domain="@GETTEXT_PACKAGE@">
+    <schema id="org.ukui.session" path="/org/ukui/desktop/session/">
+	<key name="mouse-size-changed" type="b">
+            <default>false</default>
+            <summary>Weather mouse size changed</summary>
+            <description>The bool-value of whether the mouse size has been changed</description>
+    </key>
+    <key name="win-key-release" type="b">
+            <default>false</default>
+            <summary>whether release the Win-Key shortcut bound </summary>
+            <description>whether release the Win-Key shortcut bound</description>
+    </key>
+    <key name="startup-music" type="b">
+            <default>true</default>
+            <summary>whether play startup music </summary>
+            <description>Whether the boot-music button oped</description>
+    </key>
+    <key name="poweroff-music" type="b">
+            <default>false</default>
+            <summary>Weathe play shutdown music </summary>
+            <description>Whether the shutdown-music button oped</description>
+    </key>
+
+    <key name="logout-music" type="b">
+            <default>false</default>
+            <summary>whether play logout music </summary>
+            <description>Whether the logout button oped</description>
+    </key>
+    <key name="weakup-music" type="b">
+            <default>true</default>
+            <summary>whether play weakup music </summary>
+            <description>Whether the weakup music oped</description>
+    </key>
+    <key name="gdk-scale" type="i"> 
+	    <default>1</default>
+	    <summary>Gdk scale</summary>
+	    <description>The scale value of Gdk</description>
+    </key>
+    <key name="qt-scale-factor" type="i">
+            <default>1</default>
+	    <summary>Qt scale factor</summary>
+	    <description>The scale factor value of Qt</description>
+    </key>
+    <key name="hidpi" type="b">
+            <default>false</default>
+	    <summary>HIDPI</summary>
+	     <description>Weather set High DPI value automatic</description>
+    </key>
+    <key name="logout-timeout" type="i">
+      <default>60</default>
+      <range min="0" max="300"/>
+      <summary>Logout timeout</summary>
+      <description>If logout prompt is enabled, this set the timeout in seconds before logout automatically. If 0, automatic logout is disabled.</description>
+    </key>
+    <key name="idle-delay" type="i">
+      <default>1</default>
+      <summary>Time before session is considered idle</summary>
+      <description>The number of minutes of inactivity before the session is considered idle.</description>
+    </key>
+    <key name="power-delay" type="i">
+      <default>1</default>
+      <summary>Time before session is considered idle for powermanager</summary>
+      <description>The number of minutes of inactivity before the session is considered idle for powermanager.</description>
+    </key>
+    <key name="canhibernate" type="b">
+      <default>false</default>
+      <summary>Can Hibernate</summary>
+      <description>A bool value whether the hibernate function can execute or not.</description>
+    </key>
+    <child name="required-components" schema="org.ukui.session.required-components"/>
+  </schema>
+  <schema id="org.ukui.session.required-components" path="/org/ukui/desktop/session/required-components/">
+    <key name="windowmanager" type="s">
+      <default>'ukui-kwin'</default>
+      <summary>Window Manager</summary>
+      <description>The window manager is the program that draws the title bar and borders around windows, and allows you to move and resize windows.</description>
+    </key>
+    <key name="panel" type="s">
+      <default>'ukui-panel'</default>
+      <summary>Panel</summary>
+      <description>The panel provides the bar at the top or bottom of the screen containing menus, the window list, status icons, the clock, etc.</description>
+    </key>
+    <key name="filemanager" type="s">
+      <default>'peony-desktop'</default>
+      <summary>File Manager</summary>
+      <description>The file manager provides the desktop icons and allows you to interact with your saved files.</description>
+    </key>
+  </schema>
+</schemalist>
