@@ -27,9 +27,6 @@
 #include <QString>
 #include <QSoundEffect>
 #include <QTimer>
-#include <QStandardPaths>
-#include <QDir>
-#include <QDateTime>
 #include <QGSettings/QGSettings>
 #include <X11/Xlib.h>
 
@@ -48,7 +45,6 @@
 #include <stdlib.h>
 #include <pwd.h>
 #include <ukui-log4qt.h>
-#include <QX11Info>
 
 #ifdef signals
 #undef signals
@@ -432,18 +428,6 @@ int main(int argc, char* argv[])
             }
         }
 
-    }
-
-
-    {
-        WId wid = QX11Info::appRootWindow();
-        XWindowAttributes xwa;
-        XGetWindowAttributes (QX11Info::display(), wid, &xwa);
-        qDebug()<<"xwa.width = "<<xwa.width<<"xwa.height = "<<xwa.height;
-
-
-        QDesktopWidget *widget = QApplication::desktop();
-        qDebug() << "widget primaryScreen....." << widget->primaryScreen();
     }
 
     if (flag) {
