@@ -497,8 +497,8 @@ UKUISMClient *UKUISMServer::newClient(SmsConn conn)
 
 void UKUISMServer::deleteClient(UKUISMClient *client)
 {
-    m_clients.removeAll(client);
-    qCDebug(UKUI_SESSION) << "m_clients remove client " << client->clientId();
+    int num = m_clients.removeAll(client);
+    qCDebug(UKUI_SESSION) << "m_clients remove client " << client->clientId() << " num is " << num;
 
     if (client == m_clientInteracting) {
         m_clientInteracting = nullptr;
@@ -529,16 +529,14 @@ void UKUISMServer::clientRegistered(const char *previousId)
 
 void UKUISMServer::interactRequest(UKUISMClient *client, int dialogType)
 {
-    qCDebug(UKUI_SESSION) << client->clientId() << "ask for interact";
-
     //如果是关机阶段，该客户端的请求就要暂时挂起
     if (m_state == Shutdown) {
         //将pendingInteraction属性设置为true,以便在handlePendingInteractions中处理
-        qCDebug(UKUI_SESSION) << "pending client " << client->clientId();
+        qCDebug(UKUI_SESSION) << client->clientId() << "ask for interact" << "pending it";
         client->m_pendingInteraction = true;
     } else {
         //非关机阶段，则直接授予客户端交互权限
-        qCDebug(UKUI_SESSION) << "sending save yourself to client " << client->clientId();
+        qCDebug(UKUI_SESSION) << "sending interact permission to client " << client->clientId();
         SmsInteract(client->connection());
     }
     //处理被挂起的客户端请求
@@ -575,7 +573,6 @@ void UKUISMServer::interactDone(UKUISMClient *client, bool cancelShutdown_)
 
 void UKUISMServer::phase2Request(UKUISMClient *client)
 {
-    qCDebug(UKUI_SESSION) << "wm ask for phase2";
     //这两个成员变量对于窗管才有用
     client->m_waitForPhase2 = true;
     client->m_wasPhase2 = true;
@@ -609,7 +606,7 @@ void UKUISMServer::saveYourselfDone(UKUISMClient *client, bool success)
     }
 
     if (success) {
-        qCDebug(UKUI_SESSION) << client->program() << " " << client->clientId() << "done save";
+        qCDebug(UKUI_SESSION) << client->clientId() << "successfully done save";
         client->m_saveYourselfDone = true;
         completeShutdownOrCheckpoint();
     } else {
@@ -622,9 +619,10 @@ void UKUISMServer::saveYourselfDone(UKUISMClient *client, bool success)
 
 void UKUISMServer::clientSetProgram(UKUISMClient *client)
 {
-    if (isWM(client)) {
-        qCDebug(UKUI_SESSION) << "windowManager loaded";
-    }
+    //kde根据窗管开始设置client属性来确定窗管已经启动完成，ukui-session中不需要通过这种方式来确定，暂时注释这一段
+//    if (isWM(client)) {
+//        qCDebug(UKUI_SESSION) << "windowManager loaded, wm set property";
+//    }
 }
 
 void UKUISMServer::ioError(IceConn iceConn)
@@ -817,18 +815,18 @@ void UKUISMServer::processData(int socket)
     IceConn iceConn = ((UKUISMConnection*)sender())->iceConn;
     IceProcessMessagesStatus status = IceProcessMessages(iceConn, nullptr, nullptr);
     if (status == IceProcessMessagesIOError) {
-        if (m_state == Shutdown) {
-            qCDebug(UKUI_SESSION) << "processData called and status is IOError";
-        }
+        //如果有同类应用再次注册进来就会触发此处
         IceSetShutdownNegotiation(iceConn, False);
         QList<UKUISMClient*>::iterator it = m_clients.begin();
         QList<UKUISMClient*>::iterator const itEnd = m_clients.end();
+        //这里做的就是找出发出错误信息的那个client，然后从m_clients中移除掉
         while ((it != itEnd) && *it && (SmsGetIceConnection((*it)->connection()) != iceConn)) {
             ++it;
         }
 
         if ((it != itEnd) && *it) {
             SmsConn smsConn = (*it)->connection();
+            qCDebug(UKUI_SESSION) << "same app regist, earse duplicate";
             deleteClient(*it);
             SmsCleanUp(smsConn);
         }
@@ -859,10 +857,9 @@ void UKUISMServer::wmProcessChange()
 
 void UKUISMServer::protectionTimeout()
 {
-    qCDebug(UKUI_SESSION) << "enter protectionTimeout";
     if ((m_state != Shutdown) || m_clientInteracting) {//如果状态不是三者中的任何一个，或者clientInteracing有值，则条件成立
         //m_clientInteracting有可能为nullptr，所以在这里获取clientid不是很方便
-        qCDebug(UKUI_SESSION) << "state is " << m_state << "clientInteracting is " << m_clientInteracting << "protectionTimeout returned";
+        qCDebug(UKUI_SESSION) << "protectionTimeou: state is " << m_state << "clientInteracting is " << m_clientInteracting << "protectionTimeout returned";
         //如果有一个客户端正在interact,而这里已经超时了，则会直接return，protectiontimer不能用于更改正在interect的客户端的状态。
         //KDE关机界面上的30秒计时是指，如果30秒后用户不点击界面上的任何按钮，则会自动调用KDE的D-Bus注销接口
         return;
@@ -870,7 +867,7 @@ void UKUISMServer::protectionTimeout()
 
     foreach (UKUISMClient *c, m_clients) {
         if (!c->m_saveYourselfDone && !c->m_waitForPhase2) {//非窗管这类客户端且没有完成保存自身
-            qCDebug(UKUI_SESSION) << "protectionTimeout: client " << c->program() << "(" << c->clientId() << ")";
+            qCDebug(UKUI_SESSION) << "protectionTimeout: client " << c->clientId();
             c->m_saveYourselfDone = true;
         }
     }
@@ -1096,7 +1093,6 @@ void UKUISMServer::completeKillingWM()
 
 void UKUISMServer::killingCompleted()
 {
-    qCDebug(UKUI_SESSION) << "done killing, exit";
     emit logoutFinished();
 //    qApp->quit();
     //目前不清楚如果不做清理会有什么影响，看日志没有发现问题，使用上也没有区别，但为了保险还是加上
@@ -1131,11 +1127,9 @@ void UKUISMServer::cancelShutdown(UKUISMClient *c)
         qCDebug(UKUI_SESSION) << "sending cancel shutdown to client " << c->clientId();
         SmsShutdownCancelled(c->connection());
         if (c->m_saveYourselfDone) {
-            qCDebug(UKUI_SESSION) << c->clientId() << "discard saveing state";
             QStringList discard = c->discardCommand();
-            qCDebug(UKUI_SESSION) << c->clientId() << "'s discardCommand is " << discard;
-
             if (!discard.isEmpty()) {
+                qCDebug(UKUI_SESSION) << c->clientId() << "discard saveing state, discardCommand is " << discard;
                 executeCommand(discard);
             }
         }
@@ -1157,7 +1151,7 @@ KProcess *UKUISMServer::startApplication(const QStringList &command, bool wm)
         process->start();
         return process;
     } else {
-        qDebug(UKUI_SESSION) << "The Restart Command is :" << command;
+        qCDebug(UKUI_SESSION) << "The Restart Command is :" << command;
         int n = command.count();
         QString app = command[0];
         QStringList argList;
@@ -1232,8 +1226,6 @@ void UKUISMServer::launchWM(const QList<QStringList> &wmStartCommands)
 
 void UKUISMServer::tryRestoreNext()
 {
-    qDebug() << "Enter tryRestoreNext";
-
     if (m_state != Restoring) {
         return;
     }
@@ -1417,7 +1409,7 @@ void UKUISMServer::restoreSession()
 
 bool UKUISMServer::prepareForShutdown()
 {
-    qDebug() << "m_state = " << m_state;
+    qCDebug(UKUI_SESSION) << "m_state = " << m_state;
     if (m_state >= Shutdown)
         return true;
     else
