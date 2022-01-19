@@ -1238,36 +1238,22 @@ void UKUISMServer::tryRestoreNext()
         QString clientId = config.readEntry(QLatin1String("clientId") + n, QString());
         QString clientName = config.readEntry(QLatin1String("program") + n, QString());
 
+        if (ModuleManager::isProgramStarted(std::move(clientName))) {
+            qCDebug(UKUI_SESSION) << clientName << " already started";
+            continue;
+        }
+
         bool alreadyStarted = false;
         foreach (UKUISMClient *c, m_clients) {
             if (QString::fromLocal8Bit(c->clientId()) == clientId) {
-                qDebug(UKUI_SESSION) << c->program() << " is already started";
+                qCDebug(UKUI_SESSION) << c->program() << " is already started";
                 alreadyStarted = true;
                 break;
             } else if (c->program() == clientName) {
-                qDebug(UKUI_SESSION) << c->program() << " already started";
+                qCDebug(UKUI_SESSION) << c->program() << " already started";
                 alreadyStarted = true;
                 break;
-            } else if (ModuleManager::isProgramStarted(std::move(clientName))) {
-                qDebug(UKUI_SESSION) << c->program() << " already started";
-                alreadyStarted = true;
-                break;
-            }/*else if (clientName == QString("/usr/bin/ukui-menu")) {
-                alreadyStarted = true;
-                break;
-            } else if (clientName == QString("/usr/bin/kylin-nm")) {
-                alreadyStarted = true;
-                break;
-            } else if (clientName == QString("/usr/bin/indicator-china-weather")) {
-                alreadyStarted = true;
-                break;
-            } else if (clientName == QString("/usr/bin/kylin-printer")) {
-                alreadyStarted = true;
-                break;
-            } else if (clientName == QString("/usr/bin/ukui-search")) {
-                alreadyStarted = true;
-                break;
-            }*/
+            }
         }
 
         if (alreadyStarted) {
