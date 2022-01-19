@@ -124,8 +124,9 @@ static bool dbusCallSystemd(const QString &service,
     QDBusMessage msg;
     if (needBoolArg) {
         msg = dbus.call(method, QVariant(true));
-    } else
+    } else {
         msg = dbus.call(method);
+    }
 
     if (!msg.errorName().isEmpty()) {
         qWarning() << "Debus error: " << msg;
