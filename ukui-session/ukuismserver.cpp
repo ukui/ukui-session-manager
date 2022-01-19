@@ -1,3 +1,4 @@
+#include "modulemanager.h"
 #include "ukuismserver.h"
 #include "ukuismclient.h"
 #include "ukuismconnection.h"
@@ -1255,7 +1256,11 @@ void UKUISMServer::tryRestoreNext()
                 qDebug(UKUI_SESSION) << c->program() << " already started";
                 alreadyStarted = true;
                 break;
-            } else if (clientName == QString("/usr/bin/ukui-menu")) {
+            } else if (ModuleManager::isProgramStarted(std::move(clientName))) {
+                qDebug(UKUI_SESSION) << c->program() << " already started";
+                alreadyStarted = true;
+                break;
+            }/*else if (clientName == QString("/usr/bin/ukui-menu")) {
                 alreadyStarted = true;
                 break;
             } else if (clientName == QString("/usr/bin/kylin-nm")) {
@@ -1270,7 +1275,7 @@ void UKUISMServer::tryRestoreNext()
             } else if (clientName == QString("/usr/bin/ukui-search")) {
                 alreadyStarted = true;
                 break;
-            }
+            }*/
         }
 
         if (alreadyStarted) {

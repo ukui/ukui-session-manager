@@ -372,10 +372,9 @@ int main(int argc, char **argv)
     setHightResolutionScreenZoom();
 
     app.setQuitOnLastWindowClosed(false);
-//    UKUISMServer *server = new UKUISMServer;
-    UKUISMServer *&server = getGlobalServer();
+
     IceSetIOErrorHandler(IoErrorHandler);
-    server->restoreWM(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
+    getGlobalServer()->restoreWM(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
 //    server->startDefaultSession();//默认方式启动的窗管不含任何命令行参数
 
     // Load ts files
