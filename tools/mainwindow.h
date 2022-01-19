@@ -59,7 +59,7 @@ public:
     void initialDateTimeWidget();
     void initialBtnCfg();
     void setLayoutWidgetVisible(QLayout* layout, bool show);
-    void changeBtnState(QString btnName, bool isEnterKey = false);
+    void changeBtnState(QString btnName, bool isKeySelect = false);
 
 private:
     QString getAppLocalName(QString desktopfp);//获取应用名
@@ -141,7 +141,6 @@ private:
     QLabel *m_messageLabel2 = nullptr;
 
     QWidget *m_toolWidget = nullptr;
-    QWidget *m_systemMonitorBtn = nullptr;
 
     QGridLayout *m_buttonHLayout = nullptr;
 

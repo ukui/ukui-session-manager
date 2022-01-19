@@ -7,3 +7,5 @@ install(FILES org.ukui.session.gschema.xml DESTINATION "${CMAKE_INSTALL_PREFIX}/
 install(FILES logout.wav weakup.wav startup.wav shutdown.wav DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ukui/ukui-session-manager")
 
 install(DIRECTORY images DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ukui/ukui-session-manager")
+
+install(DIRECTORY config DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ukui/ukui-session-manager")

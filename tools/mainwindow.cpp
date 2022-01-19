@@ -140,9 +140,8 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     this->setObjectName("widget");
     m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
 
-    m_toolWidget = new QWidget();
-    m_toolWidget->setFixedSize(QSize(m_screen.width(), m_screen.height()));
-    m_toolWidget->move(m_screen.x(), m_screen.y());
+    m_toolWidget = new QWidget(this);
+    m_toolWidget->setGeometry(m_screen);
 
     qDebug() << "m_toolWidget width:" << m_toolWidget->width()<<m_toolWidget->height();
     m_vBoxLayout = new QVBoxLayout();
@@ -200,15 +199,8 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
 
     gs = new QGSettings("org.ukui.session", "/org/ukui/desktop/session/");
 
-    if (m_Is_UKUI_3_1) {
-        tableNum = -1;
-        lastWidget = m_lockScreenBtn->getIconLabel();
-        changeBtnState("empty");
-    } else {
-        tableNum = 3;
-        lastWidget = m_lockScreenBtn;
-        changeBtnState(map.value(tableNum)->objectName());
-    }
+    tableNum = -1;
+    changeBtnState("empty");
 
     initialDateTimeWidget();
 
@@ -235,7 +227,11 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
     // setAttribute(Qt::WA_TranslucentBackground, true);//设定该窗口透明显示
     m_toolWidget->setLayout(m_vBoxLayout);
-    setCentralWidget(m_toolWidget);
+    //setCentralWidget(m_toolWidget);
+
+    qDebug() << "m_toolWidget...." << m_toolWidget->geometry();
+    qDebug() << "pos..." << QCursor::pos() << this->geometry();
+    qDebug() << "m_screen..." << m_screen;
 
     /*捕获键盘，如果捕获失败，那么模拟一次esc按键来退出菜单，如果仍捕获失败，则放弃捕获*/
     if (establishGrab()) {
@@ -300,13 +296,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::initialBtn()
 {
-    m_switchUserBtn = new MyPushButton(m_btnImagesPath+"/switchuser.svg", QApplication::tr("Switch User"), "switchuser", !m_Is_UKUI_3_1);
-    m_hibernateBtn = new MyPushButton(m_btnImagesPath+"/hibernate.svg", QApplication::tr("Hibernate"), "hibernate", !m_Is_UKUI_3_1);
-    m_suspendBtn = new MyPushButton(m_btnImagesPath+"/suspend.svg", QApplication::tr("Suspend"), "suspend", !m_Is_UKUI_3_1);
-    m_logoutBtn = new MyPushButton(m_btnImagesPath+"/logout.svg", QApplication::tr("Logout"), "logout", !m_Is_UKUI_3_1);
-    m_rebootBtn = new MyPushButton(m_btnImagesPath+"/reboot.svg", QApplication::tr("Reboot"), "reboot", !m_Is_UKUI_3_1);
-    m_shutDownBtn = new MyPushButton(m_btnImagesPath+"/shutdown.svg", QApplication::tr("Shut Down"), "shutdown", !m_Is_UKUI_3_1);
-    m_lockScreenBtn = new MyPushButton(m_btnImagesPath+"/lockscreen.svg", QApplication::tr("Lock Screen"), "lockscreen", !m_Is_UKUI_3_1);
+    m_switchUserBtn = new MyPushButton(m_btnImagesPath+"/switchuser.svg", QApplication::tr("Switch User"), "switchuser", m_toolWidget, !m_Is_UKUI_3_1);
+    m_hibernateBtn = new MyPushButton(m_btnImagesPath+"/hibernate.svg", QApplication::tr("Hibernate"), "hibernate", m_toolWidget, !m_Is_UKUI_3_1);
+    m_suspendBtn = new MyPushButton(m_btnImagesPath+"/suspend.svg", QApplication::tr("Suspend"), "suspend", m_toolWidget, !m_Is_UKUI_3_1);
+    m_logoutBtn = new MyPushButton(m_btnImagesPath+"/logout.svg", QApplication::tr("Logout"), "logout", m_toolWidget, !m_Is_UKUI_3_1);
+    m_rebootBtn = new MyPushButton(m_btnImagesPath+"/reboot.svg", QApplication::tr("Reboot"), "reboot", m_toolWidget, !m_Is_UKUI_3_1);
+    m_shutDownBtn = new MyPushButton(m_btnImagesPath+"/shutdown.svg", QApplication::tr("Shut Down"), "shutdown", m_toolWidget, !m_Is_UKUI_3_1);
+    m_lockScreenBtn = new MyPushButton(m_btnImagesPath+"/lockscreen.svg", QApplication::tr("Lock Screen"), "lockscreen", m_toolWidget, !m_Is_UKUI_3_1);
 
     //ui->setupUi(this);
     m_switchUserBtn->installEventFilter(this);
@@ -493,7 +489,6 @@ void MainWindow::initialDateTimeWidget()
 
 void MainWindow::initialBtnCfg()
 {
-    /*
     bool newIniFile = false;//ini文件是否为新建文件
     QString iniDir = "/usr/share/ukui/ukui-session-manager/config";
     if(!QFile::exists(iniDir + "/btnconfig.ini")){
@@ -525,20 +520,17 @@ void MainWindow::initialBtnCfg()
         m_btnCfgSetting->setValue("btn/SuspendBtnHide", false);
     }
 
-    if(m_Is_UKUI_3_1)
-    isHibernateHide = true;
-
     m_btnCfgSetting->setValue("btn/SwitchUserBtnHide", isSwitchuserHide);
     m_btnCfgSetting->setValue("btn/HibernateBtnHide", isHibernateHide);
-*/
+
     qDebug() << "isHibernateHide..." << isHibernateHide;
     m_btnHideMap.insert(m_switchUserBtn, isSwitchuserHide);
     m_btnHideMap.insert(m_hibernateBtn, isHibernateHide);
-    m_btnHideMap.insert(m_suspendBtn, false);
-    m_btnHideMap.insert(m_lockScreenBtn, false);
-    m_btnHideMap.insert(m_logoutBtn, false);
-    m_btnHideMap.insert(m_rebootBtn, false);
-    m_btnHideMap.insert(m_shutDownBtn, false);
+    m_btnHideMap.insert(m_suspendBtn, m_btnCfgSetting->value("btn/SuspendBtnHide").toBool());
+    m_btnHideMap.insert(m_lockScreenBtn, m_btnCfgSetting->value("btn/LockScreenBtnHide").toBool());
+    m_btnHideMap.insert(m_logoutBtn, m_btnCfgSetting->value("btn/LogoutBtnHide").toBool());
+    m_btnHideMap.insert(m_rebootBtn, m_btnCfgSetting->value("btn/RebootBtnHide").toBool());
+    m_btnHideMap.insert(m_shutDownBtn, m_btnCfgSetting->value("btn/ShutDownBtnHide").toBool());
 }
 
 void MainWindow::setLayoutWidgetVisible(QLayout* layout, bool show)
@@ -551,11 +543,11 @@ void MainWindow::setLayoutWidgetVisible(QLayout* layout, bool show)
     }
 }
 
-void MainWindow::changeBtnState(QString btnName, bool isEnterKey)
+void MainWindow::changeBtnState(QString btnName, bool isKeySelect)
 {
-    //qDebug() << "changeBtnState: " << btnName;
-    for (auto item = map.begin(); item != map.end(); item++) {
-        item.value()->changeIconBackColor((item.value()->objectName() == btnName), isEnterKey);
+    for(auto item = map.begin(); item != map.end(); item++)
+    {
+        item.value()->changeIconBackColor((item.value()->objectName() == btnName), isKeySelect);
     }
 }
 
@@ -582,11 +574,9 @@ void MainWindow::mouseReleaseSlots(QEvent *event, QString objName)
         if (objName == "switchuser_button" || objName == "hibernate_button" ||
                 objName == "suspend_button" || objName == "lockscreen_button" ||
                 objName == "logout_button" || objName == "reboot_button" ||
-                objName == "shutdown_button") {
-            tableNum   = -1;
-            flag = false;
-            changeBtnState("empty");
-            //return;
+                objName == "shutdown_button"){
+        changeBtnState("empty");
+        //return;
         }
     }
 
@@ -722,8 +712,7 @@ void MainWindow::ResizeEvent()
         m_buttonHLayout->addWidget(m_shutDownBtn, shutDownRow, shutDownColumn, 1, 2);
         m_buttonHLayout->setAlignment(Qt::AlignHCenter);
     }
-    m_toolWidget->setFixedSize(m_screen.width(), m_screen.height());
-    m_toolWidget->move(xx, yy);
+    m_toolWidget->setGeometry(m_screen);
 }
 
 // Paint the background picture
@@ -773,19 +762,16 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 void MainWindow::changePoint(QWidget *widget, QEvent *event, int i)
 {
     if (event->type() == QEvent::Enter) {
-        tableNum = i;
-        flag     = true;
         changeBtnState(widget->objectName());
     }
     if (event->type() == QEvent::Leave) {
         flag       = false;
-        lastWidget = widget;
     }
 }
 
 void MainWindow::doEvent(QString test, int i)
 {
-    qDebug() << "doevent... i:" << i;
+    qDebug() << "doevent... i:" << i << test;
     defaultnum = i;
     if (inhibitShutdown && (i ==5 || i ==6)) {
         //显示禁止shutdown的提示信息
@@ -835,13 +821,13 @@ void MainWindow::doEvent(QString test, int i)
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     if (click_blank_space_need_to_exit) {
-        if (!m_suspendBtn->geometry().contains(event->pos())
-            && !m_hibernateBtn->geometry().contains(event->pos())
-            && !m_lockScreenBtn->geometry().contains(event->pos())
-            && !m_switchUserBtn->geometry().contains(event->pos())
-            && !m_logoutBtn->geometry().contains(event->pos())
-            && !m_rebootBtn->geometry().contains(event->pos())
-            && !m_shutDownBtn->geometry().contains(event->pos())) {
+        if (!m_suspendBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_hibernateBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_lockScreenBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_switchUserBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_logoutBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_rebootBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !m_shutDownBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))) {
             exitt();
         }
     }
@@ -934,18 +920,22 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
     if (key == "Escape") {
         exitt();
     } else if (key == "Left" || key == "Right") {
-        if (flag) return;
+        //if (flag) return;
         calculateKeyBtn(key);
         QString button = map[tableNum]->objectName();
 
         changeBtnState(button, true);
-
-        lastWidget = this->findChild<QWidget *>(button);
-    } else if (key == "Return") {   // space,KP_Enter
-        if (tableNum >= 0 && tableNum <= 6) {
-            qDebug() << map[tableNum]->objectName() << "";
-
-            doEvent(map[tableNum]->objectName(), tableNum);
+    }
+    else if (key == "Return") {   // space,KP_Enter
+        for(auto item = map.begin(); item != map.end(); item++)
+        {
+            if(item.value()->getIsKeySelect())
+                return doEvent(item.value()->objectName(), item.key());
+        }
+        for(auto item = map.begin(); item != map.end(); item++)
+        {
+            if(item.value()->getIsMouseSelect())
+                return doEvent(item.value()->objectName(), item.key());
         }
     }
 }
