@@ -67,6 +67,7 @@ void UKUISMClient::registerClient(const char *previousId)
     }
 
     SmsRegisterClientReply(m_smsConn, (char*)m_id);
+    //此处向应用发出保存自身信号，应用收到信号后，调用SmcSetProperties将应用的名称等信息注册到server
     SmsSaveYourself(m_smsConn, SmSaveLocal, false, SmInteractStyleNone, false);
     SmsSaveComplete(m_smsConn);
     getGlobalServer()->clientRegistered(previousId);

@@ -38,8 +38,6 @@ enum KWinSessionState {
     Quitting = 2
 };
 
-//UKUISMServer *getGlobalServer() = nullptr;
-
 IceAuthDataEntry *authDataEntries = nullptr;
 
 static QTemporaryFile *remTempFile = nullptr;
@@ -692,16 +690,12 @@ void UKUISMServer::shutdown()
 
 bool UKUISMServer::performLogout()
 {
+    qCDebug(UKUI_SESSION) << "begin logout";
     //已经在执行关机，直接返回
     if (m_state >= Shutdown) {
         qCDebug(UKUI_SESSION) << "already perform Logout";
         return false;
     }
-
-    //暂时注释此处
-//    if (m_state != Idle) {
-//        QTimer::singleShot(1000, this, &UKUISMServer::performLogout);
-//    }
 
     m_kwinInterface->setState(KWinSessionState::Saving);
     m_state = Shutdown;
@@ -710,11 +704,6 @@ bool UKUISMServer::performLogout()
     if (m_saveSession) {
         m_sessionGroup = QStringLiteral("Session: ") + QString::fromLocal8Bit(SESSION_PREVIOUS_LOGOUT);
     }
-
-    //将桌面背景设置为黑色,似乎无效
-//    QPalette palette;
-//    palette.setColor(QApplication::desktop()->backgroundRole(), Qt::black);
-//    QApplication::setPalette(palette);
 
     m_wmPhase1WaitingCount = 0;
     m_saveType = SmSaveBoth;
@@ -932,14 +921,6 @@ void UKUISMServer::completeShutdownOrCheckpoint()
         if (m_state == WaitingForKNotify) {
             qCDebug(UKUI_SESSION) << "begin killint client";
             startKilling();
-            //调用systemd的接口直接注销
-//            QDBusInterface face("org.freedesktop.login1",\
-//                                "/org/freedesktop/login1/session/self",\
-//                                "org.freedesktop.login1.Session",\
-//                                QDBusConnection::systemBus());
-
-//            face.call("Terminate");
-//            exit(0);
         }
     }
 }
