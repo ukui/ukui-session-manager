@@ -2,6 +2,7 @@
 //#include "sessioninhibitcontext.h"
 #include "sessionmanagercontext.h"
 #include "sessiondbusadaptor.h"
+#include <QDebug>
 
 extern UKUISMServer*& getGlobalServer();
 
@@ -23,59 +24,6 @@ SessionManagerDBusContext::SessionManagerDBusContext(ModuleManager *manager, QOb
     m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
     m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
     connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, &SessionManagerDBusContext::on_serviceUnregistered);
-
-    connect(&m_systemdLogoutTimer, &QTimer::timeout, [](){
-        QProcess *proc = new QProcess;
-        QString argu = "--lockall";
-        proc->start("boxadm", QStringList{argu});
-        proc->waitForFinished(-1);
-        delete proc;
-
-        //判断注销动作是否被取消
-        if (!getGlobalServer()->isCancelLogout()) {
-            QDBusInterface face("org.freedesktop.login1",
-                                "/org/freedesktop/login1/session/self",
-                                "org.freedesktop.login1.Session",
-                                QDBusConnection::systemBus());
-
-            face.call("Terminate");
-        } else {
-            //恢复m_isCancelLogout为false，不影响下一次注销
-            getGlobalServer()->setIsCancelLogout(false);
-        }
-    });
-
-    connect(&m_systemdShutdownTimer, &QTimer::timeout, [this](){
-        QProcess *proc = new QProcess;
-        QString argu = "--lockall";
-        proc->start("boxadm", QStringList{argu});
-        proc->waitForFinished(-1);
-        delete proc;
-
-        //判断关机动作是否被取消
-        if (!getGlobalServer()->isCancelShutdown()) {
-            this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
-        } else {
-            //恢复m_isCancelLogout为false，不影响下一次注销
-            getGlobalServer()->setIsCancelLogout(false);
-        }
-    });
-
-    connect(&m_systemdRebootTimer, &QTimer::timeout, [this](){
-        QProcess *proc = new QProcess;
-        QString argu = "--lockall";
-        proc->start("boxadm", QStringList{argu});
-        proc->waitForFinished(-1);
-        delete proc;
-
-        //判断重启动作是否被取消
-        if (!getGlobalServer()->isCancelReboot()) {
-            this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
-        } else {
-            //恢复m_isCancelLogout为false，不影响下一次注销
-            getGlobalServer()->setIsCancelLogout(false);
-        }
-    });
 }
 
 SessionManagerDBusContext::~SessionManagerDBusContext() = default;
@@ -146,8 +94,7 @@ Q_NOREPLY void SessionManagerDBusContext::logout()
     //注销动作在进行，则不应该再执行一个定时注销的动作。
     if (getGlobalServer()->performLogout()) {
         //启动定时器，保证15秒后一定会退出
-        m_systemdLogoutTimer.setSingleShot(true);
-        m_systemdLogoutTimer.start(15000);
+        getGlobalServer()->startLogoutTimer();
     }
 }
 
@@ -155,11 +102,11 @@ Q_NOREPLY void SessionManagerDBusContext::reboot()
 {
     if (getGlobalServer()->performLogout()) {
         connect(getGlobalServer(), &UKUISMServer::logoutFinished, [this](){
+            qDebug() << "complete xsmp logout, call Reboot";
             this->m_systemdProvider->doAction(UkuiPower::PowerReboot);
         });
 
-        m_systemdRebootTimer.setSingleShot(true);
-        m_systemdRebootTimer.start(15000);
+        getGlobalServer()->startRebootTimer();
     }
 }
 
@@ -167,11 +114,11 @@ Q_NOREPLY void SessionManagerDBusContext::powerOff()
 {
     if (getGlobalServer()->performLogout()) {
         connect(getGlobalServer(), &UKUISMServer::logoutFinished, [this](){
+            qDebug() << "complete xsmp logout, call powerOff";
             this->m_systemdProvider->doAction(UkuiPower::PowerShutdown);
         });
 
-        m_systemdShutdownTimer.setSingleShot(true);
-        m_systemdShutdownTimer.start(15000);
+        getGlobalServer()->startShutdownTimer();
     }
 }
 

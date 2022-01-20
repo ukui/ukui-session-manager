@@ -34,6 +34,10 @@ public:
 
     // error handling
     void ioError(IceConn iceConn);
+
+    void startLogoutTimer();
+    void startShutdownTimer();
+    void startRebootTimer();
 public:
     void* watchConnection(IceConn iceConn );
     void removeConnection(UKUISMConnection *conn );
@@ -84,9 +88,8 @@ private:
 
     //改变客户端的顺序
     void changeClientOrder();
-
     bool syncDBusEnvironment();
-
+    inline void executeBoxadm();
 private:
     enum State {
         Idle,
@@ -97,9 +100,6 @@ private:
 
     bool clean;
     bool m_saveSession;
-    bool m_isCancelLogout;
-    bool m_isCancelShutdown;
-    bool m_isCancelReboot;
     int m_wmPhase1WaitingCount;
     int m_appsToStart;
     int m_appRestored;
@@ -117,6 +117,10 @@ private:
     QString m_lastIdRestore;
     QString m_sessionGroup;
     QStringList m_wmCommands;
+
+    QTimer m_systemdLogoutTimer;
+    QTimer m_systemdShutdownTimer;
+    QTimer m_systemdRebootTimer;
 
 public:
     bool prepareForShutdown();
