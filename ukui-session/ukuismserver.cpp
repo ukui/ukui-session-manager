@@ -105,6 +105,7 @@ void SaveYourselfDoneProc(SmsConn smsConn, SmPointer managerData, Bool success)
 
 void CloseConnectionProc(SmsConn smsConn, SmPointer managerData, int count, char **reasonMsgs)
 {
+    qCDebug(UKUI_SESSION) << "one app close connection";
     getGlobalServer()->deleteClient(static_cast<UKUISMClient*>(managerData));
     if (count) {
         SmFreeReasons(count, reasonMsgs);
@@ -815,7 +816,7 @@ void UKUISMServer::processData(int socket)
 
         if ((it != itEnd) && *it) {
             SmsConn smsConn = (*it)->connection();
-            qCDebug(UKUI_SESSION) << "same app regist, earse duplicate";
+            qCDebug(UKUI_SESSION) << "earse duplicate app, or some app close connection";
             deleteClient(*it);
             SmsCleanUp(smsConn);
         }
@@ -891,7 +892,7 @@ void UKUISMServer::completeShutdownOrCheckpoint()
     //此处判断除窗管之外的客户端是否全部完成保存，没有的话就返回
     foreach (UKUISMClient *c, pendingClients ) {
         if (!c->m_saveYourselfDone && !c->m_waitForPhase2) {
-            qCDebug(UKUI_SESSION) << "there are none-wm client haven't save";
+            qCDebug(UKUI_SESSION) << c->clientId() << " haven't save";
             return;
         }
     }
@@ -1175,6 +1176,7 @@ void UKUISMServer::handlePendingInteractions()
         qCDebug(UKUI_SESSION) << "sending interact to " << m_clientInteracting->clientId();
         SmsInteract(m_clientInteracting->connection());
     } else {
+        qCDebug(UKUI_SESSION) << "no more client is pending";
         startProtection();
     }
 }
