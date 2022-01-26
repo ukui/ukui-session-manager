@@ -982,7 +982,8 @@ void MainWindow::drawWarningWindow(QRect &rect)
             str = QObject::tr("The following program blocking system into hibernate");
         else if(defaultnum == 2)
             str = QObject::tr("The following program blocking system into sleep");
-    } else if (inhibitShutdown) {
+    }
+    if (inhibitShutdown) {
         if(defaultnum ==5)
             str = QObject::tr("The following program blocking system reboot");
         else if(defaultnum ==6)
@@ -1067,7 +1068,8 @@ void MainWindow::drawWarningWindow(QRect &rect)
             confirmBtn->setText(QObject::tr("Still Hibernate"));
         else if(defaultnum == 2)
             confirmBtn->setText(QObject::tr("Still Sleep"));
-    } else if (inhibitShutdown) {
+    }
+    if (inhibitShutdown) {
         if(defaultnum ==5)
             confirmBtn->setText(QObject::tr("Still Reboot"));
         else if(defaultnum ==6)
