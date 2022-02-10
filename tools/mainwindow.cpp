@@ -965,10 +965,11 @@ void MainWindow::drawWarningWindow(QRect &rect)
     int xx = rect.x();
     int yy = rect.y();//用于设置相对位置
 
+    bool isEnoughBig = m_screen.height() - 266 - 467 > 0 ? true : false;
     //area作为该界面所有组件的父指针，方便排版
     QWidget *area = new QWidget(this);
     area->setObjectName(QString::fromUtf8("area"));
-    area->setGeometry(0, 0, 714, 467);
+    area->setGeometry(0, 0, 714, isEnoughBig ? 467 : 415);
 
     //顶部提醒信息
     QLabel *tips = new QLabel(area);
@@ -976,10 +977,17 @@ void MainWindow::drawWarningWindow(QRect &rect)
     tips->setGeometry(0, 0, 714, 27);
     QString str;
     //defaultnum会在doevent中初始化为按钮的编号，结合defaultnum判断可以保证sleep和shutdown都被阻止时能够正确显示信息
-    if (inhibitSleep && (defaultnum == 2 || defaultnum == 1)) {
-        str = QObject::tr("The following program blocking system into sleep");
-    } else if (inhibitShutdown && (defaultnum ==5 || defaultnum ==6)) {
-        str = QObject::tr("The following program blocking system shutdown");
+    if (inhibitSleep) {
+        if(defaultnum == 1)
+            str = QObject::tr("The following program blocking system into hibernate");
+        else if(defaultnum == 2)
+            str = QObject::tr("The following program blocking system into sleep");
+    }
+    if (inhibitShutdown) {
+        if(defaultnum ==5)
+            str = QObject::tr("The following program blocking system reboot");
+        else if(defaultnum ==6)
+            str = QObject::tr("The following program blocking system shutdown");
     }
     tips->setText(str);
     tips->setAlignment(Qt::AlignCenter);
@@ -1044,7 +1052,7 @@ void MainWindow::drawWarningWindow(QRect &rect)
     //列表视图
     QListView *applist = new QListView(area);
     applist->setObjectName(QString::fromUtf8("applist"));
-    applist->setGeometry(97, 51, 520, 320);
+    applist->setGeometry(97, isEnoughBig ? 51 : 32, 520, 320);
     applist->verticalScrollMode();
     applist->setStyleSheet("font:10pt;color:white");
     applist->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -1055,13 +1063,20 @@ void MainWindow::drawWarningWindow(QRect &rect)
     QPushButton *confirmBtn = new QPushButton(area);
     confirmBtn->setObjectName(QString::fromUtf8("confirmBtn"));
 
-    if (inhibitSleep && (defaultnum == 2 || defaultnum == 1)) {
-        confirmBtn->setText(QObject::tr("Still Sleep"));
-    } else if (inhibitShutdown && (defaultnum ==5 || defaultnum ==6)) {
-        confirmBtn->setText(QObject::tr("Still Shutdown"));
+    if (inhibitSleep) {
+        if(defaultnum == 1)
+            confirmBtn->setText(QObject::tr("Still Hibernate"));
+        else if(defaultnum == 2)
+            confirmBtn->setText(QObject::tr("Still Sleep"));
+    }
+    if (inhibitShutdown) {
+        if(defaultnum ==5)
+            confirmBtn->setText(QObject::tr("Still Reboot"));
+        else if(defaultnum ==6)
+            confirmBtn->setText(QObject::tr("Still Shutdown"));
     }
 
-    confirmBtn->setGeometry(227, 419, 120, 48);
+    confirmBtn->setGeometry(227, isEnoughBig ? 419 : 362, 120, 48);
     confirmBtn->setStyleSheet("font:12pt;color:white");
     connect(confirmBtn, &QPushButton::clicked, [this]() {
         gs->set("win-key-release", false);
@@ -1077,13 +1092,13 @@ void MainWindow::drawWarningWindow(QRect &rect)
     //取消按钮
     QPushButton *cancelBtn = new QPushButton(area);
     cancelBtn->setObjectName(QString::fromUtf8("cancelBtn"));
-    cancelBtn->setText(QObject::tr("cancel"));
-    cancelBtn->setGeometry(367, 419, 120, 48);
+    cancelBtn->setText(QObject::tr("Cancel"));
+    cancelBtn->setGeometry(367, isEnoughBig ? 419 : 362, 120, 48);
     cancelBtn->setStyleSheet("font:12pt;color:white");
     connect(cancelBtn, &QPushButton::clicked, this, &MainWindow::exitt);
 
     //移动整个区域到指定的相对位置
-    area->move(xx + (rect.width() - 714) / 2, yy + 266 * m_screen.height()/1440);
+    area->move(xx + (rect.width() - 714) / 2, (yy + 266 * m_screen.height()/1440) + (isEnoughBig ? 0 : 10));
     area->show();
 }
 

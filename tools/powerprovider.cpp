@@ -350,7 +350,6 @@ bool UKUIProvider::canAction(UkuiPower::Action action) const
 
         if (isinhibited == true) {
             isinhibited = !messageBoxCheck();
-            return isinhibited;
         }
 
         return !isinhibited;
