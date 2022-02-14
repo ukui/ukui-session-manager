@@ -22,6 +22,7 @@
 
 #include <QFileInfo>
 #include <QDebug>
+#include <modulemanager.h>
 
 UkuiModule::UkuiModule(const XdgDesktopFile& file, QObject* parent) : QProcess(parent)
                                                                     , file(file)
@@ -40,6 +41,7 @@ void UkuiModule::start()
     QString command = args.takeFirst();
     qDebug() << "Start ukui module: " << command << "args: " << args;
     QProcess::start(command, args);
+    ModuleManager::insertStartupList(std::move(command));
 }
 
 void UkuiModule::terminate()
