@@ -926,7 +926,7 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
 
         changeBtnState(button, true);
     }
-    else if (key == "Return") {   // space,KP_Enter
+    else if (key == "Return" || key == "KP_Enter") {   // space,KP_Enter
         for(auto item = map.begin(); item != map.end(); item++)
         {
             if(item.value()->getIsKeySelect())
