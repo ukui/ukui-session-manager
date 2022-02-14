@@ -1,4 +1,3 @@
-#ifndef LOGINEDUSER_H
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
  *
  * Copyright (C) 2019 Tianjin KYLIN Information Technology Co., Ltd.
@@ -18,6 +17,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  */
+
+#ifndef LOGINEDUSER_H
 #define LOGINEDUSER_H
 
 #include <QDBusArgument>
