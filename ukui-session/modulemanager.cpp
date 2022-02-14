@@ -48,6 +48,8 @@
 
 extern UKUISMServer*& getGlobalServer();
 
+std::vector<QString> ModuleManager::m_startupList = {};
+
 void ModuleManager::playBootMusic(bool arg)
 {
     //set default value of whether boot-music is opened
@@ -441,10 +443,10 @@ void ModuleManager::timerUpdate()
     }
 
     //加上恢复会话的部分
-//    qDebug(UKUI_SESSION) << "began restore session";
-//    QTimer::singleShot(500, [](){
-//        theServer->restoreSession();
-//    });
+    qDebug(UKUI_SESSION) << "began restore session";
+    QTimer::singleShot(500, [](){
+        getGlobalServer()->restoreSession();
+    });
 }
 
 void ModuleManager::startProcess(const XdgDesktopFile &file, bool required)
@@ -496,6 +498,22 @@ bool ModuleManager::nativeEventFilter(const QByteArray &eventType, void *message
 {
     if (eventType != "xcb_generic_event_t") // We only want to handle XCB events
         return false;
+
+    return false;
+}
+
+void ModuleManager::insertStartupList(QString &&str)
+{
+    m_startupList.push_back(std::forward<QString>(str));
+}
+
+bool ModuleManager::isProgramStarted(QString &&str)
+{
+    auto it = std::find(m_startupList.begin(), m_startupList.end(), std::forward<QString>(str));
+
+    if (it != m_startupList.end()) {
+        return true;
+    }
 
     return false;
 }
