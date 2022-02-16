@@ -167,7 +167,7 @@
         <translation>为了系统安全，重启、关机和休眠功能暂时不可用。</translation>
     </message>
     <message>
-        <location filename="../ukui-session/main.cpp" line="393"/>
+        <location filename="../ukui-session/main.cpp" line="392"/>
         <source>UKUI Session Manager</source>
         <translation type="unfinished"></translation>
     </message>
@@ -182,7 +182,7 @@
     </message>
     <message>
         <location filename="../tools/main.cpp" line="71"/>
-        <source>Are you sure you want to get system into slepp?</source>
+        <source>Are you sure you want to get system into sleep?</source>
         <translation>你确定要让系统进入睡眠吗?</translation>
     </message>
     <message>
@@ -225,47 +225,47 @@
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="982"/>
+        <location filename="../tools/mainwindow.cpp" line="984"/>
         <source>The following program blocking system into hibernate</source>
         <translation>以下程序阻止系统进入休眠</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="984"/>
+        <location filename="../tools/mainwindow.cpp" line="986"/>
         <source>The following program blocking system into sleep</source>
         <translation>以下程序阻止系统进入睡眠</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="987"/>
+        <location filename="../tools/mainwindow.cpp" line="990"/>
         <source>The following program blocking system reboot</source>
         <translation>以下程序阻止系统执行重启</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="989"/>
+        <location filename="../tools/mainwindow.cpp" line="992"/>
         <source>The following program blocking system shutdown</source>
         <translation>以下程序阻止系统执行关机</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1067"/>
+        <location filename="../tools/mainwindow.cpp" line="1070"/>
         <source>Still Hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1069"/>
+        <location filename="../tools/mainwindow.cpp" line="1072"/>
         <source>Still Sleep</source>
         <translation>睡眠</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1072"/>
+        <location filename="../tools/mainwindow.cpp" line="1076"/>
         <source>Still Reboot</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1074"/>
+        <location filename="../tools/mainwindow.cpp" line="1078"/>
         <source>Still Shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1093"/>
+        <location filename="../tools/mainwindow.cpp" line="1097"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>

@@ -122,7 +122,6 @@ void SessionApplication::registerDBus()
         a->setProcessChannelMode(QProcess::ForwardedChannels);
         //这种启动方式是否就是在d-bus服务被杀死的情况下session启动两次的原因
         a->start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
-        //a->start("mate-terminal");
         a->waitForFinished(-1);
         if (a->exitCode()) {
             qWarning() <<  "exited with code" << a->exitCode();
@@ -170,10 +169,9 @@ SessionApplication::SessionApplication(int &argc, char* *argv) : QApplication(ar
 
     modman = new ModuleManager();
 
-    startup();
-    //QTimer::singleShot(0, this, SLOT(startup()));
 
     // Wait until the event loop starts
+    QTimer::singleShot(0, this, SLOT(startup()));
 }
 
 SessionApplication::~SessionApplication()
@@ -186,8 +184,7 @@ SessionApplication::~SessionApplication()
 
 bool SessionApplication::startup()
 {
-    //QTimer::singleShot(0, this, SLOT(registerDBus()));
-    registerDBus();
+    QTimer::singleShot(0, this, SLOT(registerDBus()));
 
     return true;
 }

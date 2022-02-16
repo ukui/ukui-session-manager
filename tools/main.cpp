@@ -68,7 +68,7 @@ bool sleepInhibitorCheck()
         QString inhibitMessage = num + QObject::tr(" is block system into sleep for reason ") + reason;
         message.append(std::move(inhibitMessage));
     }
-    message.append(std::move(QObject::tr("Are you sure you want to get system into slepp?")));
+    message.append(std::move(QObject::tr("Are you sure you want to get system into sleep?")));
     msgBox.setText(message);
     QPushButton *cancelButton = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
     QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
