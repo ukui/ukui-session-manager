@@ -62,37 +62,37 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../tools/main.cpp" line="319"/>
+        <location filename="../tools/main.cpp" line="340"/>
         <source>UKUI session tools, show the shutdown dialog without any arguments.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="327"/>
+        <location filename="../tools/main.cpp" line="348"/>
         <source>Switch the user of this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="330"/>
+        <location filename="../tools/main.cpp" line="351"/>
         <source>Hibernate this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="333"/>
+        <location filename="../tools/main.cpp" line="354"/>
         <source>Suspend this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="336"/>
+        <location filename="../tools/main.cpp" line="357"/>
         <source>Logout this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="339"/>
+        <location filename="../tools/main.cpp" line="360"/>
         <source>Restart this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="342"/>
+        <location filename="../tools/main.cpp" line="363"/>
         <source>Shutdown this computer.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -167,7 +167,7 @@
         <translation>为了系统安全，重启、关机和休眠功能暂时不可用。</translation>
     </message>
     <message>
-        <location filename="../ukui-session/main.cpp" line="393"/>
+        <location filename="../ukui-session/main.cpp" line="392"/>
         <source>UKUI Session Manager</source>
         <translation type="unfinished"></translation>
     </message>
@@ -175,97 +175,136 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../tools/main.cpp" line="68"/>
-        <location filename="../tools/main.cpp" line="102"/>
-        <source> is block system into sleep for reason </source>
-        <translation>阻止系统关机，因为</translation>
+        <location filename="../tools/main.cpp" line="70"/>
+        <source> is block system</source>
+        <translation>阻止系统</translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="71"/>
-        <source>Are you sure you want to get system into slepp?</source>
+        <location filename="../tools/main.cpp" line="70"/>
+        <source> into sleep for reason </source>
+        <translation>休眠，因为</translation>
+    </message>
+    <message>
+        <location filename="../tools/main.cpp" line="72"/>
+        <source> is block system </source>
+        <translation>阻止系统</translation>
+    </message>
+    <message>
+        <location filename="../tools/main.cpp" line="72"/>
+        <source>into sleep for reason </source>
+        <translation>睡眠，因为</translation>
+    </message>
+    <message>
+        <location filename="../tools/main.cpp" line="78"/>
+        <source>Are you sure</source>
+        <translation>你确定</translation>
+    </message>
+    <message>
+        <location filename="../tools/main.cpp" line="78"/>
+        <source> you want to get system into sleep?</source>
+        <translation>要让系统进入休眠吗?</translation>
+    </message>
+    <message>
+        <location filename="../tools/main.cpp" line="80"/>
+        <source>Are you sure you want to get system into sleep?</source>
         <translation>你确定要让系统进入睡眠吗?</translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="73"/>
-        <location filename="../tools/main.cpp" line="107"/>
-        <location filename="../tools/main.cpp" line="129"/>
+        <location filename="../tools/main.cpp" line="83"/>
+        <location filename="../tools/main.cpp" line="128"/>
+        <location filename="../tools/main.cpp" line="150"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="74"/>
-        <location filename="../tools/main.cpp" line="108"/>
-        <location filename="../tools/main.cpp" line="130"/>
+        <location filename="../tools/main.cpp" line="84"/>
+        <location filename="../tools/main.cpp" line="129"/>
+        <location filename="../tools/main.cpp" line="151"/>
         <source>confirm</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="105"/>
+        <location filename="../tools/main.cpp" line="114"/>
+        <source> is block system into reboot for reason </source>
+        <translation>阻止系统重启，因为</translation>
+    </message>
+    <message>
+        <location filename="../tools/main.cpp" line="116"/>
+        <source> is block system into shutdown for reason </source>
+        <translation>阻止系统关机，因为</translation>
+    </message>
+    <message>
+        <location filename="../tools/main.cpp" line="122"/>
+        <source>Are you sure you want to reboot?</source>
+        <translation>你确定要重启系统吗？</translation>
+    </message>
+    <message>
+        <location filename="../tools/main.cpp" line="124"/>
         <source>Are you sure you want to shutdown?</source>
         <translation>你确定要退出系统吗？</translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="128"/>
+        <location filename="../tools/main.cpp" line="149"/>
         <source>Multiple users are logged in at the same time.Are you sure you want to close this system?</source>
         <translation>同时有多个用户处于登录状态，你确定要退出系统吗？</translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="150"/>
+        <location filename="../tools/main.cpp" line="171"/>
         <source>System update or package installation in progress,this function is temporarily unavailable.</source>
         <translation>正在进行升级或安装/卸载（相关操作），这个功能暂时不可用。</translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="151"/>
+        <location filename="../tools/main.cpp" line="172"/>
         <source>System backup or restore in progress,this function is temporarily unavailable.</source>
         <translation>正在进行系统备份或还原，这个功能暂时不可用。</translation>
     </message>
     <message>
-        <location filename="../tools/main.cpp" line="163"/>
+        <location filename="../tools/main.cpp" line="184"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="982"/>
+        <location filename="../tools/mainwindow.cpp" line="984"/>
         <source>The following program blocking system into hibernate</source>
         <translation>以下程序阻止系统进入休眠</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="984"/>
+        <location filename="../tools/mainwindow.cpp" line="986"/>
         <source>The following program blocking system into sleep</source>
         <translation>以下程序阻止系统进入睡眠</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="987"/>
+        <location filename="../tools/mainwindow.cpp" line="990"/>
         <source>The following program blocking system reboot</source>
         <translation>以下程序阻止系统执行重启</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="989"/>
+        <location filename="../tools/mainwindow.cpp" line="992"/>
         <source>The following program blocking system shutdown</source>
         <translation>以下程序阻止系统执行关机</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1067"/>
+        <location filename="../tools/mainwindow.cpp" line="1070"/>
         <source>Still Hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1069"/>
+        <location filename="../tools/mainwindow.cpp" line="1072"/>
         <source>Still Sleep</source>
         <translation>睡眠</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1072"/>
+        <location filename="../tools/mainwindow.cpp" line="1076"/>
         <source>Still Reboot</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1074"/>
+        <location filename="../tools/mainwindow.cpp" line="1078"/>
         <source>Still Shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1093"/>
+        <location filename="../tools/mainwindow.cpp" line="1097"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>

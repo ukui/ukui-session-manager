@@ -51,7 +51,7 @@
 #endif
 
 /*菜单栏调用睡眠且有inhibitor阻塞时调用此函数进行消息提示*/
-bool sleepInhibitorCheck()
+bool sleepInhibitorCheck(int doaction)
 {
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Warning);
@@ -65,10 +65,20 @@ bool sleepInhibitorCheck()
     for (int i = 0; i < Inhibitors.length(); ++i) {
         QString num            = QString("%1").arg(Inhibitors.at(i));
         QString reason         = QString("%1 \n").arg(Reason.at(i));
-        QString inhibitMessage = num + QObject::tr(" is block system into sleep for reason ") + reason;
+        QString inhibitMessage = "";
+        if(doaction == 1)//主要是为了睡眠、休眠中午翻译上作区分
+            inhibitMessage = num + QObject::tr(" is block system") + QObject::tr(" into sleep for reason ") + reason;//休眠
+        else
+            inhibitMessage = num + QObject::tr(" is block system ") + QObject::tr("into sleep for reason ") + reason;//睡眠
+
         message.append(std::move(inhibitMessage));
     }
-    message.append(std::move(QObject::tr("Are you sure you want to get system into slepp?")));
+    QString messageStr = "";
+    if(doaction == 1)
+        messageStr = QObject::tr("Are you sure") + QObject::tr(" you want to get system into sleep?");//休眠
+    else
+        messageStr = QObject::tr("Are you sure you want to get system into sleep?");//睡眠
+    message.append(std::move(messageStr));
     msgBox.setText(message);
     QPushButton *cancelButton = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
     QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
@@ -85,7 +95,7 @@ bool sleepInhibitorCheck()
 }
 
 /*菜单栏调用重启或关机且有inhibitor阻塞时调用此函数进行消息提示*/
-bool shutdownInhibitorCheck()
+bool shutdownInhibitorCheck(int doaction)
 {
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Warning);
@@ -99,10 +109,21 @@ bool shutdownInhibitorCheck()
     for(int i = 0; i < Inhibitors.length(); ++i) {
         QString num            = QString("%1").arg(Inhibitors.at(i));
         QString reason         = QString("%1 \n").arg(Reason.at(i));
-        QString inhibitMessage = num + QObject::tr(" is block system into sleep for reason ") + reason;
+        QString inhibitMessage = "";
+        if(doaction == 5)
+            inhibitMessage = num + QObject::tr(" is block system into reboot for reason ") + reason;//重启
+        else
+            inhibitMessage = num + QObject::tr(" is block system into shutdown for reason ") + reason;//关机
+
         message.append(std::move(inhibitMessage));
     }
-    message.append(std::move(QObject::tr("Are you sure you want to shutdown?")));
+    QString messageStr = "";
+    if(doaction == 5)
+        messageStr = QObject::tr("Are you sure you want to reboot?");//重启
+    else
+        messageStr = QObject::tr("Are you sure you want to shutdown?");//关机
+
+    message.append(std::move(messageStr));
     msgBox.setText(message);
     QPushButton *cancelButton = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
     QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
@@ -349,7 +370,7 @@ int main(int argc, char* argv[])
     }
     if (parser.isSet(hibernateOption)) {
         if (LockChecker::isSleepBlocked()) {
-            if (sleepInhibitorCheck()) {
+            if (sleepInhibitorCheck(1)) {
                 flag = playShutdownMusic(powermanager, 1, cc, up_to_time);
             } else {
                 return 0;
@@ -360,7 +381,7 @@ int main(int argc, char* argv[])
     }
     if (parser.isSet(suspendOption)) {
         if (LockChecker::isSleepBlocked()) {
-            if (sleepInhibitorCheck()) {
+            if (sleepInhibitorCheck(2)) {
                 flag = playShutdownMusic(powermanager, 2, cc, up_to_time);
             } else {
                 return 0;
@@ -374,7 +395,7 @@ int main(int argc, char* argv[])
     }
     if (parser.isSet(rebootOption)) {
         if (LockChecker::isShutdownBlocked()) {//有inhibitor的情况下
-            if (shutdownInhibitorCheck()) {//先提醒inhibitor
+            if (shutdownInhibitorCheck(5)) {//先提醒inhibitor
                 if (LockChecker::getLoginedUsers().count() > 1) {//再提醒多个用户登录的情况
                     if (messageboxCheck()) {
                         flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
@@ -403,7 +424,7 @@ int main(int argc, char* argv[])
     }
     if (parser.isSet(shutdownOption)) {
         if (LockChecker::isShutdownBlocked()) {
-            if (shutdownInhibitorCheck()) {
+            if (shutdownInhibitorCheck(6)) {
                 if (LockChecker::getLoginedUsers().count() > 1) {
                     if (messageboxCheck()) {
                         flag = playShutdownMusic(powermanager, 6, cc, up_to_time);

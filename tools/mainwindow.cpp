@@ -627,6 +627,8 @@ void MainWindow::calculateBtnSpan(int allNum, MyPushButton* btn, int& colum, int
 
 void MainWindow::ResizeEvent()
 {
+    m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
+
     int xx = m_screen.x();
     int yy = m_screen.y();   //取得当前鼠标所在屏幕的最左，上坐标
 
