@@ -338,7 +338,7 @@ int main(int argc, char* argv[])
     QCommandLineParser parser;
     parser.setApplicationDescription(
         QApplication::tr("UKUI session tools, show the shutdown dialog without any arguments."));
-    const QString VERINFO = QStringLiteral("2.0");
+    const QString VERINFO = QStringLiteral("3.0");
     a.setApplicationVersion(VERINFO);
 
     parser.addHelpOption();
