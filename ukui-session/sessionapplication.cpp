@@ -19,7 +19,6 @@
  */
 #include "sessionapplication.h"
 #include "modulemanager.h"
-#include "sessiondbusadaptor.h"
 #include "idleadbusdaptor.h"
 #include "idlewatcher.h"
 
@@ -40,27 +39,46 @@
 #define FONT_REENDERING_PATH "/org/ukui/desktop/font-rendering/"
 #define DPI_KEY "dpi"
 
-QByteArray typeConver(int i){
+QByteArray typeConver(int i)
+{
     QString str = QString::number(i);
     QByteArray byte;
     byte.append(str);
     return byte;
 }
 
-void SessionApplication::InitialEnvironment()
+void SessionApplication::initialEnvironment()
 {
-    UkuiPower *upower = new UkuiPower();
-    if(gsettings_usable){
-        if(upower->canAction(UkuiPower::PowerHibernate))
-            gs->set("canhibernate",true);
-        else
-            gs->set("canhibernate",false);
+//    UkuiPower *upower = new UkuiPower();
+//    if (gsettings_usable) {
+//        if (upower->canAction(UkuiPower::PowerHibernate)) {
+//            gs->set("canhibernate", true);
+//        } else {
+//            gs->set("canhibernate", false);
+//        }
+//        //在打开关机管理界面后通过物理按键的方式关机/重启
+//        //将导致win-key-release键值为true
+//        //造成大部分热键和组合键失效
+//        //所以在登录进来时恢复默认值
+//        gs->reset("win-key-release");
+//        gs->reset("idle-delay");
+//    }
+
+    //这样更快？
+    SystemdProvider *sysProvider = new SystemdProvider();
+    if (gsettings_usable) {
+        if (sysProvider->canAction(UkuiPower::PowerHibernate)) {
+            gs->set("canhibernate", true);
+        } else {
+            gs->set("canhibernate", false);
+        }
 
         //在打开关机管理界面后通过物理按键的方式关机/重启
         //将导致win-key-release键值为true
         //造成大部分热键和组合键失效
         //所以在登录进来时恢复默认值
         gs->reset("win-key-release");
+        gs->reset("idle-delay");
     }
 
     //检查qt主题是否安装
@@ -72,58 +90,61 @@ void SessionApplication::InitialEnvironment()
         QT_QPA_PLATFORMTHEME = "gtk2";
     }
 
-    qputenv("XDG_CURRENT_DESKTOP","UKUI");
-    qputenv("QT_QPA_PLATFORMTHEME",QT_QPA_PLATFORMTHEME);
-    qputenv("QT_QPA_PLATFORM", "xcb");
+    qputenv("XDG_CURRENT_DESKTOP", "UKUI");
+    qputenv("QT_QPA_PLATFORMTHEME", QT_QPA_PLATFORMTHEME);
+//    qputenv("QT_QPA_PLATFORM", "xcb");
 
     QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
-    if (xdg_session_type == "wayland"){
-        QProcess::startDetached("dbus-update-activation-environment", QStringList() << "--systemd" << "DISPLAY"<<"QT_QPA_PLATFORM");
+    if (xdg_session_type == "wayland") {
+        QProcess::startDetached("dbus-update-activation-environment", QStringList() << "--systemd" << "DISPLAY" << "QT_QPA_PLATFORM");
     }
     //restart user's gvfs-daemon.service
     //QProcess::startDetached("systemctl", QStringList() << "--user" << "restart" << "gvfs-daemon.service");
 }
 
-void SessionApplication::updateIdleDelay(){
+void SessionApplication::updateIdleDelay()
+{
     if (gsettings_usable) {
         const int idle = gs->get("idle-delay").toInt() * 60;
-        const int power = gs->get("power-delay").toInt() * 60;
-        mIdleWatcher->reset(idle,power);
+        if (lastIdleTime == idle ) {
+            return;
+        }
+        mIdleWatcher->reset(idle);
     }
 }
 
 void SessionApplication::registerDBus()
 {
-    new SessionDBusAdaptor(modman);
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    if(!dbus.isConnected()){
-        qDebug()<<"Fatal DBus Error";
-        QProcess a;
-        a.setProcessChannelMode(QProcess::ForwardedChannels);
-        a.start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
-        a.waitForFinished(-1);
-        if (a.exitCode()) {
-            qWarning() <<  "exited with code" << a.exitCode();
+    if (!dbus.isConnected()) {
+        qDebug() << "Fatal DBus Error";
+        QProcess *a = new QProcess(this);
+        a->setProcessChannelMode(QProcess::ForwardedChannels);
+        //这种启动方式是否就是在d-bus服务被杀死的情况下session启动两次的原因
+        a->start("dbus-launch", QStringList() << "--exit-with-session" << "ukui-session");
+        a->waitForFinished(-1);
+        if (a->exitCode()) {
+            qWarning() <<  "exited with code" << a->exitCode();
         }
     }
+    m_sessionManagerContext = new SessionManagerDBusContext(modman);
+
     if (!dbus.registerService(QStringLiteral("org.gnome.SessionManager"))) {
         qCritical() << "Can't register org.gnome.SessionManager, there is already a session manager!";
     }
-    if (!dbus.registerObject(("/org/gnome/SessionManager"), modman)) {
+    if (!dbus.registerObject(("/org/gnome/SessionManager"), m_sessionManagerContext)) {
         qCritical() << "Can't register object, there is already an object registered at "
                     << "/org/gnome/SessionManager";
     }
 
-    int idle = 5 * 60;
-    int power = 5 * 60;
+    lastIdleTime = 1 * 60;
 
     if (gsettings_usable) {
-        idle = gs->get("idle-delay").toInt() * 60;
-        power = gs->get("power-delay").toInt() * 60;
+        lastIdleTime = gs->get("idle-delay").toInt() * 60;
         connect(gs, &QGSettings::changed, this, &SessionApplication::updateIdleDelay);
     }
 
-    mIdleWatcher = new IdleWatcher(idle,power);
+    mIdleWatcher = new IdleWatcher(lastIdleTime);
     new IdleDBusAdaptor(mIdleWatcher);
     if (!dbus.registerObject("/org/gnome/SessionManager/Presence", mIdleWatcher)) {
         qCritical() << "Cant' register object, there is already an object registered at "
@@ -133,20 +154,18 @@ void SessionApplication::registerDBus()
     modman->startup();
 }
 
-SessionApplication::SessionApplication(int& argc, char** argv) :
-    QApplication(argc, argv)
+SessionApplication::SessionApplication(int &argc, char* *argv) : QApplication(argc, argv)
 {
     const QByteArray id(SESSION_DEFAULT_SETTINGS);
     if (QGSettings::isSchemaInstalled(id)) {
         gsettings_usable = true;
-        gs = new QGSettings(SESSION_DEFAULT_SETTINGS,SESSION_DEFAULT_SETTINGS_PATH,this);
-
+        gs = new QGSettings(SESSION_DEFAULT_SETTINGS, SESSION_DEFAULT_SETTINGS_PATH, this);
     } else {
         qWarning() << "Failed to get default value from gsettings, set gsettings_usable to false!";
         gsettings_usable = false;
     }
 
-    InitialEnvironment();
+    initialEnvironment();
 
     modman = new ModuleManager();
 

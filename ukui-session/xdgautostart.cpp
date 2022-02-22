@@ -63,17 +63,20 @@ XdgDesktopFileList XdgAutoStart::desktopFileList(QStringList dirs, bool excludeH
 
         const QFileInfoList files = dir.entryInfoList(QStringList(QLatin1String("*.desktop")), QDir::Files | QDir::Readable);
         for (const QFileInfo &fi : files) {
-            if (processed.contains(fi.fileName()))
+            if (processed.contains(fi.fileName())) {
                 continue;
+            }
 
             processed << fi.fileName();
 
             XdgDesktopFile desktop;
-            if (!desktop.load(fi.absoluteFilePath()))
+            if (!desktop.load(fi.absoluteFilePath())) {
                 continue;
+            }
 
-            if (!desktop.isSuitable(excludeHidden))
+            if (!desktop.isSuitable(excludeHidden)) {
                 continue;
+            }
 
             ret << desktop;
         }

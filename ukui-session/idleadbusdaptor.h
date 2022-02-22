@@ -33,8 +33,7 @@ class IdleDBusAdaptor : public QDBusAbstractAdaptor
     Q_CLASSINFO("D-Bus Interface", "org.gnome.SessionManager.Presence")
 
 public:
-    IdleDBusAdaptor(IdleWatcher *mIdleWatch)
-        : QDBusAbstractAdaptor(mIdleWatch)
+    IdleDBusAdaptor(IdleWatcher *mIdleWatch) : QDBusAbstractAdaptor(mIdleWatch)
     {
         connect(mIdleWatch, &IdleWatcher::StatusChanged, this , &IdleDBusAdaptor::StatusChanged);
     }

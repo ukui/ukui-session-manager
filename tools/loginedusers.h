@@ -1,4 +1,3 @@
-#ifndef LOGINEDUSER_H
 /* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
  *
  * Copyright (C) 2019 Tianjin KYLIN Information Technology Co., Ltd.
@@ -18,29 +17,24 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  */
+
+#ifndef LOGINEDUSER_H
 #define LOGINEDUSER_H
 
 #include <QDBusArgument>
 
-struct LoginedUsers {
+struct LoginedUsers
+{
     int uid;
     QString userName;
     QDBusObjectPath objpath;
 };
 
-QDBusArgument &operator<<(QDBusArgument &argument, const LoginedUsers &mystruct) {
-    argument.beginStructure();
-    argument << mystruct.uid << mystruct.userName << mystruct.objpath;;//< mystruct.usergroup;
-    argument.endStructure();
-    return argument;
-}
+QDBusArgument &operator<<(QDBusArgument &argument, const LoginedUsers &mystruct);
 
-const QDBusArgument &operator>>(const QDBusArgument &argument, LoginedUsers &mystruct) {
-    argument.beginStructure();
-    argument >> mystruct.uid >> mystruct.userName >> mystruct.objpath;// >> mystruct.usergroup;
-    argument.endStructure();
-    return argument;
-}
+const QDBusArgument &operator>>(const QDBusArgument &argument, LoginedUsers &mystruct);
+
+
 
 Q_DECLARE_METATYPE(LoginedUsers)
 

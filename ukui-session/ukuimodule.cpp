@@ -22,12 +22,12 @@
 
 #include <QFileInfo>
 #include <QDebug>
+#include <modulemanager.h>
 
-UkuiModule::UkuiModule(const XdgDesktopFile& file, QObject* parent) :
-    QProcess(parent),
-    file(file),
-    fileName(QFileInfo(file.fileName()).fileName()),
-    mIsTerminating(false)
+UkuiModule::UkuiModule(const XdgDesktopFile& file, QObject* parent) : QProcess(parent)
+                                                                    , file(file)
+                                                                    , fileName(QFileInfo(file.fileName()).fileName())
+                                                                    , mIsTerminating(false)
 {
     restartNum = 0;
     QProcess::setProcessChannelMode(QProcess::ForwardedChannels);
@@ -41,6 +41,7 @@ void UkuiModule::start()
     QString command = args.takeFirst();
     qDebug() << "Start ukui module: " << command << "args: " << args;
     QProcess::start(command, args);
+    ModuleManager::insertStartupList(std::move(command));
 }
 
 void UkuiModule::terminate()

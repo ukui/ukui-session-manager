@@ -26,7 +26,7 @@
 
 #include <QObject>
 #include <QDBusInterface>
-
+#include <QList>
 
 //class ScreenSaver;
 
@@ -34,23 +34,24 @@ class IdleWatcher : public QObject
 {
     Q_OBJECT
 public:
-    explicit IdleWatcher(int idle, int power, QObject *parent = nullptr);
+    explicit IdleWatcher(int idle, QObject *parent = nullptr);
     virtual ~IdleWatcher();
 
-    void reset(int idle, int power);
+    void reset(int idle);
     QDBusInterface *interface;
 
 private slots:
     void resumingFromIdle();
     void timeoutReached(int identifier, int timeout);
     void setup();
+    void weakupFromSleep(bool a);
 
 Q_SIGNALS:
     void StatusChanged(uint status);
 
 private:
-    int mSecsidle;
-    int mSecspower;
+    int mSecsidle = 1 * 60;
+    QList<QVariant> args;
 };
 
 #endif // IDLEWATCHER_H
