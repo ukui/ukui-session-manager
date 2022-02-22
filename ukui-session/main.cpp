@@ -391,9 +391,6 @@ int main(int argc, char **argv)
     QCommandLineParser parser;
     parser.setApplicationDescription(QApplication::tr("UKUI Session Manager"));
 
-    const QString VERINFO = QStringLiteral("2.0.11-7");
-    app.setApplicationVersion(VERINFO);
-
     parser.addHelpOption();
     parser.addVersionOption();
 
