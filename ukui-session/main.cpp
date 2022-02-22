@@ -392,7 +392,6 @@ int main(int argc, char **argv)
     parser.setApplicationDescription(QApplication::tr("UKUI Session Manager"));
 
     parser.addHelpOption();
-    parser.addVersionOption();
 
     parser.process(app);
     
