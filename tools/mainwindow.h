@@ -110,6 +110,7 @@ private:
     bool flag = false;
     bool isSwitchuserHide = true;
     bool isHibernateHide = true;
+    bool isSuspendHide = true;
     bool lockfile = false;
     bool lockuser = false;
     bool click_blank_space_need_to_exit = true;

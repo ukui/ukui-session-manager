@@ -184,6 +184,10 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         isHibernateHide = false;
     }
 
+    if (m_power->canAction(UkuiPower::PowerSuspend)) {
+        isSuspendHide = false;
+    }
+
     if (LockChecker::getCachedUsers() > 1) {
         isSwitchuserHide = false;
     }
@@ -522,11 +526,12 @@ void MainWindow::initialBtnCfg()
 
     m_btnCfgSetting->setValue("btn/SwitchUserBtnHide", isSwitchuserHide);
     m_btnCfgSetting->setValue("btn/HibernateBtnHide", isHibernateHide);
+    m_btnCfgSetting->setValue("btn/SuspendBtnHide", isSuspendHide);
 
     qDebug() << "isHibernateHide..." << isHibernateHide;
     m_btnHideMap.insert(m_switchUserBtn, isSwitchuserHide);
     m_btnHideMap.insert(m_hibernateBtn, isHibernateHide);
-    m_btnHideMap.insert(m_suspendBtn, m_btnCfgSetting->value("btn/SuspendBtnHide").toBool());
+    m_btnHideMap.insert(m_suspendBtn, isSuspendHide);
     m_btnHideMap.insert(m_lockScreenBtn, m_btnCfgSetting->value("btn/LockScreenBtnHide").toBool());
     m_btnHideMap.insert(m_logoutBtn, m_btnCfgSetting->value("btn/LogoutBtnHide").toBool());
     m_btnHideMap.insert(m_rebootBtn, m_btnCfgSetting->value("btn/RebootBtnHide").toBool());
