@@ -1,3 +1,43 @@
+ukui-session-manager (2.0.12-13) v101; urgency=medium
+
+  * Bug Fix:  102827 【SP2-2201整机】【同方驻场】【超翔H880-T1】【注销】点击注销/重启/关机后，在桌面停留30秒后，才能进入登录界面 
+              103032 【SP2-2201整机】【同方驻场】【超翔H880-T1】【开始菜单】弹出关机菜单后鼠标指针放在锁屏选项上,点击键盘向左/向右方向键，无法移动 
+
+ -- liuliang <liuliang@kylinos.cn>  Wed, 23 Feb 2022 17:17:16 +0800
+
+ukui-session-manager (2.0.12-12) v101.hw; urgency=medium
+
+  * Bug Fix:  105688 【CPM】【HUAWEI】【KOS】【Graphic】【VN1】【L1】OOBE界面，输入用户名密码之后，点击下一步进入系统，系统配置完成之后，没有画面，只有一个光标（一般+低概率+常用功能） 
+              107512 【内测】【0222冒烟】【系统注销】打开几个应用后注销系统重新登录，登录进入桌面后注销前打开的窗口应用又会自动打开（像文件管理器、终端便签等）
+
+
+ -- liuliang <liuliang@kylinos.cn>  Wed, 23 Feb 2022 11:28:30 +0800
+
+ukui-session-manager (2.0.12-11) v101.hw; urgency=medium
+
+  * Bug Fix:  101836 【备份还原】备份时关机管理界面显示“麒麟备份还原工具正在进行备份或还原”
+              106545 【电源管理】英文模式下，在拷贝大文件时，无法执行睡眠弹窗信息sleep单词错误
+              105477 【9A0历史CPM-79706】进入系统，按ctrl+alt+del打开电源选项界面，鼠标指针停在任一选项图标上，无法使用键盘左右键切换电源选项（提示+必现+常用功能） 
+
+ -- liuliang <liuliang@kylinos.cn>  Tue, 22 Feb 2022 10:46:51 +0800
+
+ukui-session-manager (2.0.12-10) v101.hw; urgency=medium
+
+  * Bug Fix:  100906 【内测】【会话管理器|显示】安装deb包后注销，进入桌面缩放比改变
+              100908 【内测】【会话管理器|快捷键】安装包后锁屏快捷键不可用
+              105152 【CPM】【HUAWEI】【KOS】【Graphic】【VN1】【L1】双屏扩展模式设置VGA为主屏，修改分辨率电源选项界面会向左/右偏移（一般+必现+常用功能）
+              104621 【CPM】【HUAWEI】【KOS】【OS】【L2】【VN1整机】拷贝文件过程中，点休眠，弹出的选择框内显示的是睡眠按钮(提示+必现+常用功能)    
+
+ -- liuliang <liuliang@kylinos.cn>  Fri, 21 Jan 2022 11:11:42 +0800
+
+ukui-session-manager (2.0.12-9) v101.hw; urgency=medium
+
+  * Bug Fix:  96227 【启动关机】【用例78191】安装时不创建swap分区无法休眠，但仍有休眠选项
+              102895 【双屏】外接4k屏，扩展模式下点击开始菜单-电源，出现的选项界面在副屏且位置偏移
+
+
+ -- liuliang <liuliang@kylinos.cn>  Fri, 21 Jan 2022 11:05:39 +0800
+
 ukui-session-manager (2.0.12-8) v101; urgency=medium
 
   * bug fix:  101381 【自适应升级】【V10-SP2】【会话管理器】更新升级后无法切换用户，重启后正常
