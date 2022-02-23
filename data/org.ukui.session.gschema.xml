@@ -67,6 +67,11 @@
       <summary>Can Hibernate</summary>
       <description>A bool value whether the hibernate function can execute or not.</description>
     </key>
+    <key name="restore-session" type="b">
+      <default>false</default>
+      <summary>Restore Session</summary>
+      <description>A bool value whether the session can restore or not.</description>
+    </key>
     <child name="required-components" schema="org.ukui.session.required-components"/>
   </schema>
   <schema id="org.ukui.session.required-components" path="/org/ukui/desktop/session/required-components/">
