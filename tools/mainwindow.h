@@ -53,13 +53,47 @@ public:
     virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
     //void closeEvent(QCloseEvent *event);
 
+    /**
+     * @brief 初始化系统监视器按钮
+     */
+    void initialSystemMonitor();
+
+    /**
+     * @brief 初始化按钮
+     */
     void initialBtn();
+
+    /**
+     * @brief 初始化提示内容的控件
+     */
     void initialJudgeWidget();
+
+    /**
+     * @brief 初始化提示阻止重启、休眠、关机等原有的控件
+     */
     void initialMessageWidget();
+
+    /**
+     * @brief 初始化时间控件
+     */
     void initialDateTimeWidget();
+
+    /**
+     * @brief 可以通过配置文件来控制按钮是否显示
+     */
     void initialBtnCfg();
+
+    /**
+     * @brief 设置layout是否显示
+     */
     void setLayoutWidgetVisible(QLayout* layout, bool show);
-    void changeBtnState(QString btnName, bool isKeySelect = false);
+
+    /**
+     * @param btnName 指定按钮objectname
+     * @param isEnterKey 是否通过键盘按键选中
+     * @brief 修改按钮样式
+     */
+    void changeBtnState(QString btnName, bool isEnterKey = false);
 
 private:
     QString getAppLocalName(QString desktopfp);//获取应用名
@@ -71,6 +105,8 @@ private:
     void calculateBtnSpan(int allNum, MyPushButton*, int& colum, int& row);
     void calculateKeyBtn(const QString &key);
     bool judgeBtnIsEnable(int index);
+    void doSystemMonitor();
+
 
 Q_SIGNALS:
     void signalTostart();
@@ -121,7 +157,7 @@ private:
 
     QHash<MyPushButton*, bool> m_btnHideMap;
 
-    bool m_Is_UKUI_3_1 = false;
+    bool m_IsRoundBtn = true;//是否是圆形按钮
     QString m_btnImagesPath = "/usr/share/ukui/ukui-session-manager/images";
     MyPushButton *m_switchUserBtn = nullptr;
     MyPushButton *m_hibernateBtn = nullptr;
@@ -130,6 +166,7 @@ private:
     MyPushButton *m_logoutBtn = nullptr;
     MyPushButton *m_rebootBtn = nullptr;
     MyPushButton *m_shutDownBtn = nullptr;
+    QWidget *m_systemMonitorBtn = nullptr;
 
     QLabel *m_dateLabel = nullptr;
     QLabel *m_timeLabel = nullptr;
@@ -150,6 +187,12 @@ private:
     QHBoxLayout *m_judgeBtnHLayout = nullptr;
     QVBoxLayout *m_messageVLayout = nullptr;
     QVBoxLayout *m_vBoxLayout = nullptr;
+    QHBoxLayout *m_systemMonitorHLayout = nullptr;
+
+    QLabel *m_systemMonitorIconLabel = nullptr;
+    QLabel *m_systemMonitorLabel = nullptr;
+    QPixmap m_systemMonitorIcon;
+
     QSettings *m_btnCfgSetting = nullptr;
     QRect m_screen;
 

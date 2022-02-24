@@ -40,7 +40,6 @@ LockChecker::~LockChecker()
 
 int LockChecker::checkLock()
 {
-    return 2;
     bool lockfile = false;
     bool lockuser = false;
 

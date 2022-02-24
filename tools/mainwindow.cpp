@@ -157,6 +157,8 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     m_messageLabel1 = new QLabel();
     m_messageLabel2 = new QLabel();
 
+    initialSystemMonitor();
+
     initialBtn();
 
     initialJudgeWidget();
@@ -219,7 +221,8 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     }
     m_vBoxLayout->addStretch(174);
     m_vBoxLayout->addLayout(m_messageVLayout, 80);
-    m_vBoxLayout->addStretch(106);
+    m_vBoxLayout->addWidget(m_systemMonitorBtn,48,Qt::AlignHCenter);
+    m_vBoxLayout->addStretch(58);
 
     //根据屏幕分辨率与鼠标位置重设界面
     //m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
@@ -298,15 +301,58 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::initialSystemMonitor()
+{
+    m_systemMonitorHLayout = new QHBoxLayout();
+    m_systemMonitorBtn = new QWidget(this);
+    m_systemMonitorIconLabel = new QLabel();
+    m_systemMonitorLabel = new QLabel(m_systemMonitorBtn);
+    m_systemMonitorBtn->setObjectName("systemMonitor");
+    QFont font;
+    font.setFamily("Noto Sans CJK SC");
+    font.setPointSize(12);
+    QFontMetrics fm(font);
+
+    m_systemMonitorLabel->setText(QApplication::tr("system-monitor"));
+    m_systemMonitorLabel->setFont(font);
+    m_systemMonitorLabel->setStyleSheet("color: white; font: 12pt");
+
+    int btnWidth = /*m_systemMonitorIconLabel->width() +
+            */fm.boundingRect(m_systemMonitorLabel->text()).width() + 40;
+
+    qDebug() << "btnWidth:" << btnWidth << fontMetrics().width(m_systemMonitorLabel->width()) ;
+    m_systemMonitorBtn->setFixedSize(btnWidth,48);
+    QString str = "QWidget#systemMonitor{background-color: transparent;border-radius: " + QString::number(m_systemMonitorBtn->height()/2) + "px;}";
+
+    //QString str = "QWidget#systemMonitor{background-color: rgb(255,255,255,40);border-radius: " + QString::number(m_systemMonitorBtn->height()/2) + "px;}";
+    m_systemMonitorBtn->setStyleSheet(str);
+    m_systemMonitorBtn->setAttribute(Qt::WA_StyledBackground);
+    QRegion region0(m_systemMonitorBtn->x() + m_systemMonitorBtn->height()/2 + 1, m_systemMonitorBtn->y() - 1, m_systemMonitorBtn->width()-m_systemMonitorBtn->height(), m_systemMonitorBtn->height() + 2);
+    QRegion region1(m_systemMonitorBtn->x() - 1, m_systemMonitorBtn->y() - 1, m_systemMonitorBtn->height() + 2, m_systemMonitorBtn->height() + 2, QRegion::Ellipse);
+    QRegion region2(m_systemMonitorBtn->x() + m_systemMonitorBtn->width() - m_systemMonitorBtn->height(), m_systemMonitorBtn->y() - 1, m_systemMonitorBtn->height() + 2, m_systemMonitorBtn->height() + 2, QRegion::Ellipse);
+    QRegion region = region0 + region1 + region2;
+    m_systemMonitorBtn->setMask(region);
+    m_systemMonitorLabel->setAlignment(Qt::AlignCenter);
+    m_systemMonitorHLayout->setAlignment(Qt::AlignCenter);
+
+    m_systemMonitorHLayout->addWidget(m_systemMonitorLabel,fm.boundingRect(m_systemMonitorLabel->text()).width());
+
+    m_systemMonitorBtn->setLayout(m_systemMonitorHLayout);
+    m_systemMonitorBtn->installEventFilter(this);
+    qDebug() << "m_systemMonitorIcon:" << m_systemMonitorIcon.width() << m_systemMonitorIcon.height() << m_systemMonitorIconLabel->width() << m_systemMonitorIconLabel->height();
+    qDebug() << "m_systemMonitorBtn:" << m_systemMonitorBtn->height();
+
+}
+
 void MainWindow::initialBtn()
 {
-    m_switchUserBtn = new MyPushButton(m_btnImagesPath+"/switchuser.svg", QApplication::tr("Switch User"), "switchuser", m_toolWidget, !m_Is_UKUI_3_1);
-    m_hibernateBtn = new MyPushButton(m_btnImagesPath+"/hibernate.svg", QApplication::tr("Hibernate"), "hibernate", m_toolWidget, !m_Is_UKUI_3_1);
-    m_suspendBtn = new MyPushButton(m_btnImagesPath+"/suspend.svg", QApplication::tr("Suspend"), "suspend", m_toolWidget, !m_Is_UKUI_3_1);
-    m_logoutBtn = new MyPushButton(m_btnImagesPath+"/logout.svg", QApplication::tr("Logout"), "logout", m_toolWidget, !m_Is_UKUI_3_1);
-    m_rebootBtn = new MyPushButton(m_btnImagesPath+"/reboot.svg", QApplication::tr("Reboot"), "reboot", m_toolWidget, !m_Is_UKUI_3_1);
-    m_shutDownBtn = new MyPushButton(m_btnImagesPath+"/shutdown.svg", QApplication::tr("Shut Down"), "shutdown", m_toolWidget, !m_Is_UKUI_3_1);
-    m_lockScreenBtn = new MyPushButton(m_btnImagesPath+"/lockscreen.svg", QApplication::tr("Lock Screen"), "lockscreen", m_toolWidget, !m_Is_UKUI_3_1);
+    m_switchUserBtn = new MyPushButton(m_btnImagesPath+"/switchuser.svg", QApplication::tr("Switch User"), "switchuser", m_toolWidget, !m_IsRoundBtn);
+    m_hibernateBtn = new MyPushButton(m_btnImagesPath+"/hibernate.svg", QApplication::tr("Hibernate"), "hibernate", m_toolWidget, !m_IsRoundBtn);
+    m_suspendBtn = new MyPushButton(m_btnImagesPath+"/suspend.svg", QApplication::tr("Suspend"), "suspend", m_toolWidget, !m_IsRoundBtn);
+    m_logoutBtn = new MyPushButton(m_btnImagesPath+"/logout.svg", QApplication::tr("Logout"), "logout", m_toolWidget, !m_IsRoundBtn);
+    m_rebootBtn = new MyPushButton(m_btnImagesPath+"/reboot.svg", QApplication::tr("Reboot"), "reboot", m_toolWidget, !m_IsRoundBtn);
+    m_shutDownBtn = new MyPushButton(m_btnImagesPath+"/shutdown.svg", QApplication::tr("Shut Down"), "shutdown", m_toolWidget, !m_IsRoundBtn);
+    m_lockScreenBtn = new MyPushButton(m_btnImagesPath+"/lockscreen.svg", QApplication::tr("Lock Screen"), "lockscreen", m_toolWidget, !m_IsRoundBtn);
 
     //ui->setupUi(this);
     m_switchUserBtn->installEventFilter(this);
@@ -550,6 +596,17 @@ void MainWindow::setLayoutWidgetVisible(QLayout* layout, bool show)
 
 void MainWindow::changeBtnState(QString btnName, bool isKeySelect)
 {
+//    if(btnName == "empty")
+//    {
+//        for(auto item = map.begin(); item != map.end(); item++)
+//        {
+//            item.value()->setIsKeySelect(false);
+//            item.value()->setIsMouseSelect(false);
+
+//            item.value()->changeIconBackColor(false, isKeySelect);
+//        }
+//        return;
+//    }
     for(auto item = map.begin(); item != map.end(); item++)
     {
         item.value()->changeIconBackColor((item.value()->objectName() == btnName), isKeySelect);
@@ -575,16 +632,6 @@ QString MainWindow::getAppLocalName(QString desktopfp)
 
 void MainWindow::mouseReleaseSlots(QEvent *event, QString objName)
 {
-    if (event->type() == QEvent::Leave) {
-        if (objName == "switchuser_button" || objName == "hibernate_button" ||
-                objName == "suspend_button" || objName == "lockscreen_button" ||
-                objName == "logout_button" || objName == "reboot_button" ||
-                objName == "shutdown_button"){
-        changeBtnState("empty");
-        //return;
-        }
-    }
-
     for (auto iter = map.begin(); iter != map.end(); iter++) {
         if (iter.value()->getIconLabel()->objectName() == objName) {
             changePoint(iter.value(), event, iter.key());
@@ -650,7 +697,7 @@ void MainWindow::ResizeEvent()
     int sum = 0;
     int k   = 0;
     int recWidth;
-    if (m_Is_UKUI_3_1) {
+    if (m_IsRoundBtn) {
         recWidth = 128;
     } else {
         recWidth = 140;
@@ -660,17 +707,14 @@ void MainWindow::ResizeEvent()
             map[i]->hide();
         }
     }
-    if (m_Is_UKUI_3_1 || (!m_Is_UKUI_3_1 && (m_screen.width() > 1088 || (7 - hideNum) <= 4))) {
+    if (m_screen.width() >= 1080 || (7 - hideNum) <= 4) {
         int margins = 0;
         qDebug() << "margins::::" << (m_screen.width() - recWidth * (6 - hideNum))/(7 - hideNum);
 
-        if ((m_screen.width() - recWidth * (7 - hideNum)) / (8 - hideNum) > 60) {
-            margins = (m_screen.width() - 60 * (6 - hideNum) - recWidth * (7 - hideNum)) / 2;
-        } else {
-            margins = (m_screen.width() - recWidth * (7 - hideNum)) / (8 - hideNum);
-        }
+        margins = (m_screen.width() - recWidth * (7 - hideNum) - 60 * (6 - hideNum)) / 2;
         qDebug() << "margins:" << margins;
-        m_buttonHLayout->setContentsMargins(margins, 0, margins, 0);
+        m_buttonHLayout->setSpacing(60);
+        m_buttonHLayout->setContentsMargins(0, 0, 0, 0);
         m_buttonHLayout->addWidget(m_switchUserBtn, 0, 0);
         m_buttonHLayout->addWidget(m_hibernateBtn, 0, 1);
         m_buttonHLayout->addWidget(m_suspendBtn, 0, 2);
@@ -749,20 +793,46 @@ void doLockscreen()
     exit(0);
 }
 
+void MainWindow::doSystemMonitor()
+{
+    qDebug() << "doSystemMonitor....";
+    QProcess::startDetached("ukui-system-monitor", QStringList());
+    exitt();
+}
+
 // handle mouse-clicked event
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-    if (!m_Is_UKUI_3_1) {
-        for (auto iter = map.begin(); iter != map.end(); iter++) {
-            if (iter.value()->objectName() == obj->objectName()) {
-                changePoint(iter.value(), event, iter.key());
-                if (event->type() == QEvent::MouseButtonRelease) {
-                    doEvent(iter.value()->objectName(), iter.key());
-                    return QWidget::eventFilter(obj, event);
-                }
-            }
-        }
-    }
+    if (obj->objectName() == "systemMonitor") {
+           if (event->type() == QEvent::MouseButtonRelease /*|| event->type() == QEvent::MouseButtonPress*/) {
+               doSystemMonitor();
+           }
+           else{
+               if(event->type() == QEvent::Leave){
+                   QString str = "QWidget#systemMonitor{background-color: transparent;border-radius: " + QString::number(m_systemMonitorBtn->height()/2) + "px;}";
+                   m_systemMonitorBtn->setStyleSheet(str);
+                   m_systemMonitorBtn->setAttribute(Qt::WA_StyledBackground);
+
+                   tableNum   = -1;
+                   flag = false;
+                   changeBtnState("empty");
+               }
+               else if(event->type() == QEvent::Enter){
+                   QString str = "QWidget#systemMonitor{background-color: rgb(255,255,255,40);border-radius: " + QString::number(m_systemMonitorBtn->height()/2) + "px;}";
+                   m_systemMonitorBtn->setStyleSheet(str);
+                   m_systemMonitorBtn->setAttribute(Qt::WA_StyledBackground);
+
+                   tableNum   = -1;
+                   flag = true;
+                   changeBtnState("empty");
+               }
+               else if(event->type() == QEvent::MouseButtonPress){
+                   QString str = "QWidget#systemMonitor{background-color: rgb(255,255,255,80);border-radius: " + QString::number(m_systemMonitorBtn->height()/2) + "px;}";
+                   m_systemMonitorBtn->setStyleSheet(str);
+                   m_systemMonitorBtn->setAttribute(Qt::WA_StyledBackground);
+               }
+           }
+       }
     return QWidget::eventFilter(obj, event);
 }
 
@@ -828,13 +898,27 @@ void MainWindow::doEvent(QString test, int i)
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     if (click_blank_space_need_to_exit) {
+        QPainterPath path;
+        QRect rect(m_systemMonitorBtn->geometry());
+        const qreal radius = m_systemMonitorBtn->height()/2;
+        path.moveTo(rect.topRight() - QPointF(radius, 0));
+        path.lineTo(rect.topLeft() + QPointF(radius, 0));
+        path.quadTo(rect.topLeft(), rect.topLeft() + QPointF(0, radius));
+        path.lineTo(rect.bottomLeft() + QPointF(0, -radius));
+        path.quadTo(rect.bottomLeft(), rect.bottomLeft() + QPointF(radius, 0));
+        path.lineTo(rect.bottomRight() - QPointF(radius, 0));
+        path.quadTo(rect.bottomRight(), rect.bottomRight() + QPointF(0, -radius));
+        path.lineTo(rect.topRight() + QPointF(0, radius));
+        path.quadTo(rect.topRight(), rect.topRight() + QPointF(-radius, -0));
+
         if (!m_suspendBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
             && !m_hibernateBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
             && !m_lockScreenBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
             && !m_switchUserBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
             && !m_logoutBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
             && !m_rebootBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
-            && !m_shutDownBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))) {
+            && !m_shutDownBtn->geometry().contains(m_toolWidget->mapFromGlobal(event->pos()))
+            && !path.contains(event->pos())) {
             exitt();
         }
     }
