@@ -596,17 +596,6 @@ void MainWindow::setLayoutWidgetVisible(QLayout* layout, bool show)
 
 void MainWindow::changeBtnState(QString btnName, bool isKeySelect)
 {
-//    if(btnName == "empty")
-//    {
-//        for(auto item = map.begin(); item != map.end(); item++)
-//        {
-//            item.value()->setIsKeySelect(false);
-//            item.value()->setIsMouseSelect(false);
-
-//            item.value()->changeIconBackColor(false, isKeySelect);
-//        }
-//        return;
-//    }
     for(auto item = map.begin(); item != map.end(); item++)
     {
         item.value()->changeIconBackColor((item.value()->objectName() == btnName), isKeySelect);
@@ -813,18 +802,18 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
                    m_systemMonitorBtn->setStyleSheet(str);
                    m_systemMonitorBtn->setAttribute(Qt::WA_StyledBackground);
 
-                   tableNum   = -1;
-                   flag = false;
-                   changeBtnState("empty");
+//                   tableNum   = -1;
+//                   flag = false;
+//                   changeBtnState("empty");
                }
                else if(event->type() == QEvent::Enter){
                    QString str = "QWidget#systemMonitor{background-color: rgb(255,255,255,40);border-radius: " + QString::number(m_systemMonitorBtn->height()/2) + "px;}";
                    m_systemMonitorBtn->setStyleSheet(str);
                    m_systemMonitorBtn->setAttribute(Qt::WA_StyledBackground);
 
-                   tableNum   = -1;
-                   flag = true;
-                   changeBtnState("empty");
+//                   tableNum   = -1;
+//                   flag = true;
+//                   changeBtnState("empty");
                }
                else if(event->type() == QEvent::MouseButtonPress){
                    QString str = "QWidget#systemMonitor{background-color: rgb(255,255,255,80);border-radius: " + QString::number(m_systemMonitorBtn->height()/2) + "px;}";
