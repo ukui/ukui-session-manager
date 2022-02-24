@@ -442,11 +442,18 @@ void ModuleManager::timerUpdate()
         startProcess(*i, true);
     }
 
-    //加上恢复会话的部分
-    qDebug(UKUI_SESSION) << "began restore session";
-    QTimer::singleShot(500, [](){
-        getGlobalServer()->restoreSession();
-    });
+    if (QGSettings::isSchemaInstalled("org.ukui.session")) {
+        QGSettings *gset = new QGSettings("org.ukui.session", "/org/ukui/desktop/session/", this);
+        QStringList keys = gset->keys();
+        if(keys.contains("restore-session")){
+            bool restoreSession = gset->get("restore-session").toBool();
+            if (restoreSession) {
+                //加上恢复会话的部分
+                qDebug(UKUI_SESSION) << "began restore session";
+                getGlobalServer()->restoreSession();
+            }
+        }
+    }
 }
 
 void ModuleManager::startProcess(const XdgDesktopFile &file, bool required)
