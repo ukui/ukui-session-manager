@@ -31,6 +31,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QSettings>
+#include <QScrollArea>
 #include "mypushbutton.h"
 class XEventMonitor;
 
@@ -56,7 +57,7 @@ public:
     /**
      * @brief 初始化系统监视器按钮
      */
-    void initialSystemMonitor();
+    //void initialSystemMonitor();
 
     /**
      * @brief 初始化按钮
@@ -102,10 +103,10 @@ private:
     void drawWarningWindow(QRect &rect);//画出提醒界面
     QMap<QString, QString> findNameAndIcon(QString &basename);//根据inhibitor的名称获取对应desktop文件中的应用名和icon路径
 
-    void calculateBtnSpan(int allNum, MyPushButton*, int& colum, int& row);
+    void calculateBtnSpan(int allNum, int lineMaxNum, MyPushButton*, int& row, int& colum);
     void calculateKeyBtn(const QString &key);
     bool judgeBtnIsEnable(int index);
-    void doSystemMonitor();
+    //void doSystemMonitor();
 
 
 Q_SIGNALS:
@@ -135,6 +136,8 @@ private:
     QGSettings *gs;
     QWidget *lastWidget;
     QHash<int, MyPushButton*> map;
+    QHash<int, int> rowMap;
+
     QStringList shutdownInhibitors;//阻止shutdown的inhibitors
     QStringList shutdownInhibitorsReason;//阻止shutdown的inhibitor对应的原因
     QStringList sleepInhibitors;//阻止sleep的inhibitors
@@ -166,7 +169,7 @@ private:
     MyPushButton *m_logoutBtn = nullptr;
     MyPushButton *m_rebootBtn = nullptr;
     MyPushButton *m_shutDownBtn = nullptr;
-    QWidget *m_systemMonitorBtn = nullptr;
+    //QWidget *m_systemMonitorBtn = nullptr;
 
     QLabel *m_dateLabel = nullptr;
     QLabel *m_timeLabel = nullptr;
@@ -180,6 +183,7 @@ private:
 
     QWidget *m_toolWidget = nullptr;
 
+    QWidget *m_btnWidget = nullptr;
     QGridLayout *m_buttonHLayout = nullptr;
 
     QVBoxLayout *m_dateTimeLayout = nullptr;
@@ -187,14 +191,25 @@ private:
     QHBoxLayout *m_judgeBtnHLayout = nullptr;
     QVBoxLayout *m_messageVLayout = nullptr;
     QVBoxLayout *m_vBoxLayout = nullptr;
-    QHBoxLayout *m_systemMonitorHLayout = nullptr;
+    QScrollArea *m_scrollArea = nullptr;
+    //QHBoxLayout *m_systemMonitorHLayout = nullptr;
 
-    QLabel *m_systemMonitorIconLabel = nullptr;
-    QLabel *m_systemMonitorLabel = nullptr;
-    QPixmap m_systemMonitorIcon;
+    //QLabel *m_systemMonitorIconLabel = nullptr;
+    //QLabel *m_systemMonitorLabel = nullptr;
+    //QPixmap m_systemMonitorIcon;
+
+    int m_switchRow = 0, m_switchColumn = 0;
+    int m_hibernateRow = 0, m_hibernateColumn = 0;
+    int m_suspendRow = 0, m_suspendColumn = 0;
+    int m_lockScreenRow = 0, m_lockScreenColumn = 0;
+    int m_logoutRow = 0, m_logoutColumn = 0;
+    int m_rebootRow = 0, m_rebootColumn = 0;
+    int m_shutDownRow = 0, m_shutDownColumn = 0;
+    int m_lineNum = 1;
 
     QSettings *m_btnCfgSetting = nullptr;
     QRect m_screen;
+    bool m_btnWidgetNeedScrollbar = false;
 
 };
 #endif // MAINWINDOW_H
