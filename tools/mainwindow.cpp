@@ -231,16 +231,15 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     m_vBoxLayout->addLayout(m_dateTimeLayout, 60);
     m_vBoxLayout->addStretch();
     m_vBoxLayout->addLayout(m_judgeWidgetVLayout, 140);
-    if(!m_btnWidgetNeedScrollbar)
-        m_vBoxLayout->addWidget(m_scrollArea,632);
-    else
-        m_vBoxLayout->addWidget(m_scrollArea,632);
+    m_vBoxLayout->addWidget(m_scrollArea,632);
     m_vBoxLayout->addStretch(174);
     m_vBoxLayout->addLayout(m_messageVLayout, 80);
     //m_vBoxLayout->addWidget(m_systemMonitorBtn,48,Qt::AlignHCenter);
     m_vBoxLayout->addStretch(58);
-    m_vBoxLayout->setContentsMargins(0,0,0,0);
+    //m_vBoxLayout->setContentsMargins(0,0,0,0);
+    m_vBoxLayout->setContentsMargins((m_screen.width() - m_scrollArea->width() - 20)/2,0,(m_screen.width() - m_scrollArea->width() - 20)/2,0);
 
+    qDebug() << "width..........." << m_judgeLabel->width() << m_scrollArea->width() << m_messageLabel1->width() << m_messageLabel2->width();
     //根据屏幕分辨率与鼠标位置重设界面
     //m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
     setFixedSize(QApplication::primaryScreen()->virtualSize());
@@ -374,13 +373,13 @@ void MainWindow::initialSystemMonitor()
 
 void MainWindow::initialBtn()
 {
-    m_switchUserBtn = new MyPushButton(m_btnImagesPath+"/switchuser.svg", QApplication::tr("Switch User"), "switchuser", m_toolWidget, !m_IsRoundBtn);
-    m_hibernateBtn = new MyPushButton(m_btnImagesPath+"/hibernate.svg", QApplication::tr("Hibernate"), "hibernate", m_toolWidget, !m_IsRoundBtn);
-    m_suspendBtn = new MyPushButton(m_btnImagesPath+"/suspend.svg", QApplication::tr("Suspend"), "suspend", m_toolWidget, !m_IsRoundBtn);
-    m_logoutBtn = new MyPushButton(m_btnImagesPath+"/logout.svg", QApplication::tr("Logout"), "logout", m_toolWidget, !m_IsRoundBtn);
-    m_rebootBtn = new MyPushButton(m_btnImagesPath+"/reboot.svg", QApplication::tr("Reboot"), "reboot", m_toolWidget, !m_IsRoundBtn);
-    m_shutDownBtn = new MyPushButton(m_btnImagesPath+"/shutdown.svg", QApplication::tr("Shut Down"), "shutdown", m_toolWidget, !m_IsRoundBtn);
-    m_lockScreenBtn = new MyPushButton(m_btnImagesPath+"/lockscreen.svg", QApplication::tr("Lock Screen"), "lockscreen", m_toolWidget, !m_IsRoundBtn);
+    m_switchUserBtn = new MyPushButton(m_btnImagesPath+"/switchuser.svg", QApplication::tr("Switch User"), "switchuser", m_scrollArea, !m_IsRoundBtn);
+    m_hibernateBtn = new MyPushButton(m_btnImagesPath+"/hibernate.svg", QApplication::tr("Hibernate"), "hibernate", m_scrollArea, !m_IsRoundBtn);
+    m_suspendBtn = new MyPushButton(m_btnImagesPath+"/suspend.svg", QApplication::tr("Suspend"), "suspend", m_scrollArea, !m_IsRoundBtn);
+    m_logoutBtn = new MyPushButton(m_btnImagesPath+"/logout.svg", QApplication::tr("Logout"), "logout", m_scrollArea, !m_IsRoundBtn);
+    m_rebootBtn = new MyPushButton(m_btnImagesPath+"/reboot.svg", QApplication::tr("Reboot"), "reboot", m_scrollArea, !m_IsRoundBtn);
+    m_shutDownBtn = new MyPushButton(m_btnImagesPath+"/shutdown.svg", QApplication::tr("Shut Down"), "shutdown", m_scrollArea, !m_IsRoundBtn);
+    m_lockScreenBtn = new MyPushButton(m_btnImagesPath+"/lockscreen.svg", QApplication::tr("Lock Screen"), "lockscreen", m_scrollArea, !m_IsRoundBtn);
 
     //ui->setupUi(this);
     m_switchUserBtn->installEventFilter(this);
@@ -465,17 +464,20 @@ void MainWindow::initialMessageWidget()
     m_messageLabel2->setStyleSheet("color:white;font:12pt;");
     m_messageLabel1->setObjectName("messagelabel1");
     m_messageLabel2->setObjectName("messagelabel2");
-    m_messageLabel1->setFixedWidth(m_screen.width() - 2 * margins);
-    m_messageLabel2->setFixedWidth(m_screen.width() - 2 * margins);
+//    m_messageLabel1->setFixedWidth(m_screen.width() - 20);
+//    m_messageLabel2->setFixedWidth(m_screen.width() - 20);
     m_messageLabel1->setWordWrap(true);
     m_messageLabel2->setWordWrap(true);
     m_messageLabel2->setAlignment(Qt::AlignCenter);
     m_messageLabel1->setAlignment(Qt::AlignCenter);
+    m_messageLabel1->setMargin(0);
+    m_messageLabel2->setMargin(0);
 
     m_messageVLayout->addWidget(m_messageLabel1);
     m_messageVLayout->addSpacing(10);
     m_messageVLayout->addWidget(m_messageLabel2);
-    m_messageVLayout->setAlignment(Qt::AlignCenter);
+    //m_messageVLayout->setAlignment(Qt::AlignHCenter);
+    m_messageVLayout->setContentsMargins(0,0,0,0);
 
     if (lockfile) {
         QFile   file_update("/tmp/lock/kylin-update.lock");
@@ -1012,16 +1014,19 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         path.lineTo(rect.topRight() + QPointF(0, radius));
         path.quadTo(rect.topRight(), rect.topRight() + QPointF(-radius, -0));
 */
-        if (!m_suspendBtn->geometry().contains(m_btnWidget->mapFromGlobal(event->pos()))
-            && !m_hibernateBtn->geometry().contains(m_btnWidget->mapFromGlobal(event->pos()))
-            && !m_lockScreenBtn->geometry().contains(m_btnWidget->mapFromGlobal(event->pos()))
-            && !m_switchUserBtn->geometry().contains(m_btnWidget->mapFromGlobal(event->pos()))
-            && !m_logoutBtn->geometry().contains(m_btnWidget->mapFromGlobal(event->pos()))
-            && !m_rebootBtn->geometry().contains(m_btnWidget->mapFromGlobal(event->pos()))
-            && !m_shutDownBtn->geometry().contains(m_btnWidget->mapFromGlobal(event->pos()))) {
-            qDebug() << "mousePressEvent" << m_switchUserBtn->geometry() << m_btnWidget->mapFromGlobal(event->pos());
+
+        qDebug() << "mousePressEvent" << m_switchUserBtn->geometry() << m_scrollArea->mapFromGlobal(event->pos());
+
+        if (!m_suspendBtn->getIconLabel()->containsPoint(m_suspendBtn->getIconLabel()->mapFromGlobal(event->pos()))
+            && !m_hibernateBtn->getIconLabel()->containsPoint(m_hibernateBtn->getIconLabel()->mapFromGlobal(event->pos()))
+            && !m_lockScreenBtn->getIconLabel()->containsPoint(m_lockScreenBtn->getIconLabel()->mapFromGlobal(event->pos()))
+            && !m_switchUserBtn->getIconLabel()->containsPoint(m_switchUserBtn->getIconLabel()->mapFromGlobal(event->pos()))
+            && !m_logoutBtn->getIconLabel()->containsPoint(m_logoutBtn->getIconLabel()->mapFromGlobal(event->pos()))
+            && !m_rebootBtn->getIconLabel()->containsPoint(m_rebootBtn->getIconLabel()->mapFromGlobal(event->pos()))
+            && !m_shutDownBtn->getIconLabel()->containsPoint(m_shutDownBtn->getIconLabel()->mapFromGlobal(event->pos()))) {
             exitt();
         }
+
     }
 }
 
@@ -1173,30 +1178,31 @@ void MainWindow::drawWarningWindow(QRect &rect)
 
     bool isEnoughBig = m_screen.height() - 266 - 467 > 0 ? true : false;
 
-    m_showWarningArea->setGeometry(0, 0, 740 * m_screen.width()/1920, isEnoughBig ? 467 : (467 * m_screen.height()/1080));
+    m_showWarningArea->setGeometry(0, 0, isEnoughBig ? 740 : 1200 * m_screen.width()/1920, isEnoughBig ? 467 : (500 * m_screen.height()/1080));
     QVBoxLayout *vBoxLayout = new QVBoxLayout();
     //顶部提醒信息
     QLabel *tips = new QLabel(m_showWarningArea);
     tips->setObjectName(QString::fromUtf8("tips"));
-    //tips->setGeometry(0, 0, area->width(), 27);
+    tips->setGeometry(0, 0, isEnoughBig ? 740 : m_showWarningArea->width(), 27);
     tips->setWordWrap(true);
 
     QString str;
     //defaultnum会在doevent中初始化为按钮的编号，结合defaultnum判断可以保证sleep和shutdown都被阻止时能够正确显示信息
     if (inhibitSleep) {
         if(defaultnum == 1)
-            str = QObject::tr("The following program blocking system into hibernate");
+            str = QObject::tr("The following programs are running to prevent the system from hibernate!");
         else if(defaultnum == 2)
-            str = QObject::tr("The following program blocking system into sleep");
+            str = QObject::tr("The following programs are running to prevent the system from suspend!");
     }
     if (inhibitShutdown) {
         if(defaultnum ==5)
-            str = QObject::tr("The following program blocking system reboot");
+            str = QObject::tr("The following programs are running to prevent the system from reboot!");
         else if(defaultnum ==6)
-            str = QObject::tr("The following program blocking system shutdown");
+            str = QObject::tr("The following programs are running to prevent the system from shutting down!");
     }
     tips->setText(str);
     tips->setAlignment(Qt::AlignCenter);
+    tips->setContentsMargins(0,0,0,0);
     tips->setStyleSheet(QString::fromUtf8("color:white;font:14pt;"));
 
     //数据模型
@@ -1240,7 +1246,6 @@ void MainWindow::drawWarningWindow(QRect &rect)
                 iconName = nameAndIcon.begin().value();
             }
 
-
             if (!iconName.isEmpty() && QIcon::hasThemeIcon(iconName)) {
                 icon = QIcon::fromTheme(iconName);
             } else if (QIcon::hasThemeIcon("application-x-desktop")) {
@@ -1283,7 +1288,7 @@ void MainWindow::drawWarningWindow(QRect &rect)
         if(defaultnum == 1)
             confirBTnText = (QObject::tr("Still Hibernate"));
         else if(defaultnum == 2)
-            confirBTnText = (QObject::tr("Still Sleep"));
+            confirBTnText = (QObject::tr("Still Suspend"));
     }
     if (inhibitShutdown) {
         if(defaultnum ==5)
@@ -1310,10 +1315,10 @@ void MainWindow::drawWarningWindow(QRect &rect)
     connect(cancelBtn, &CommonPushButton::clicked, this, &MainWindow::exitt);
 
     qDebug() << "applist->width():" << applist->width() << cancelBtn->width();
-    hBoxLayout->setContentsMargins(0,0,0,0);
-    hBoxLayout->setSpacing(isEnoughBig ? 24 : 12);
+    //hBoxLayout->setContentsMargins(0,0,0,0);
+    //hBoxLayout->setSpacing(isEnoughBig ? 24 : 12);
     hBoxLayout->addStretch();
-    hBoxLayout->addWidget(confirmBtn);
+    //hBoxLayout->addWidget(confirmBtn);
     hBoxLayout->addWidget(cancelBtn);
     hBoxLayout->addStretch();
 
@@ -1324,6 +1329,7 @@ void MainWindow::drawWarningWindow(QRect &rect)
     //移动整个区域到指定的相对位置
     m_showWarningArea->move(xx + (m_screen.width() - m_showWarningArea->width()) / 2, (yy + 266 * m_screen.height()/1080) + (isEnoughBig ? 0 : 10));
 //    applist->move((area->width() - applist->width()) / 2, isEnoughBig ? 51 : 32);
+    m_showWarningArea->setContentsMargins(0,0,0,0);
     m_showWarningArea->setLayout(vBoxLayout);
     m_showWarningArea->show();
     m_showWarningMesg = true;
