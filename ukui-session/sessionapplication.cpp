@@ -150,8 +150,6 @@ void SessionApplication::registerDBus()
         qCritical() << "Cant' register object, there is already an object registered at "
                     << "org/gnome/SessionManager/Presence";
     }
-
-    modman->startup();
 }
 
 SessionApplication::SessionApplication(int &argc, char* *argv) : QApplication(argc, argv)
@@ -169,6 +167,7 @@ SessionApplication::SessionApplication(int &argc, char* *argv) : QApplication(ar
 
     modman = new ModuleManager();
 
+    registerDBus();
 
     // Wait until the event loop starts
     QTimer::singleShot(0, this, SLOT(startup()));
@@ -184,7 +183,8 @@ SessionApplication::~SessionApplication()
 
 bool SessionApplication::startup()
 {
-    QTimer::singleShot(0, this, SLOT(registerDBus()));
+
+    modman->startup();
 
     return true;
 }
