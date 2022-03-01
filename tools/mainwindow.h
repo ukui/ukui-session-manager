@@ -108,7 +108,8 @@ private:
     bool judgeBtnIsEnable(int index);
     //void doSystemMonitor();
 
-
+    void showNormalBtnWidget(int hideBtnNum);
+    void showHasScrollBarBtnWidget(int hideBtnNum);
 Q_SIGNALS:
     void signalTostart();
     void confirmButtonclicked();

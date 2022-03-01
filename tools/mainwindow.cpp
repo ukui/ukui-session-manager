@@ -239,6 +239,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     m_vBoxLayout->addLayout(m_messageVLayout, 80);
     //m_vBoxLayout->addWidget(m_systemMonitorBtn,48,Qt::AlignHCenter);
     m_vBoxLayout->addStretch(58);
+    m_vBoxLayout->setContentsMargins(0,0,0,0);
 
     //根据屏幕分辨率与鼠标位置重设界面
     //m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
@@ -693,6 +694,120 @@ void MainWindow::calculateBtnSpan(int allNum, int lineMaxNum, MyPushButton *btn,
     }
 }
 
+void MainWindow::showNormalBtnWidget(int hideNum)
+{
+    int margins = 0;
+
+    margins = (m_screen.width() -160 - 128 * (7 - hideNum))/(6-hideNum);
+    qDebug() << "margins:" << margins;
+    int btnWidgetWidth = 0;
+    if(margins > 60)
+    {
+        //m_buttonHLayout->addWidget(m_listView);
+        btnWidgetWidth = (128 * (7 - hideNum) + 60 * (6 - hideNum));
+        m_buttonHLayout->setHorizontalSpacing(60);
+    }
+    else
+    {
+        btnWidgetWidth = 128 * (7 - hideNum) + margins * (6 - hideNum);
+        m_buttonHLayout->setHorizontalSpacing(margins);
+    }
+    m_btnWidget->setGeometry(QRect(0,0,btnWidgetWidth+ 24, 632));
+    m_btnWidget->setContentsMargins(0,0,0,0);
+
+    m_scrollArea->setGeometry(QRect(0,0,btnWidgetWidth + 24, 632));
+
+    m_scrollArea->setContentsMargins(0,0,0,0);
+    m_scrollArea->verticalScrollBar()->setVisible(false);
+    m_scrollArea->verticalScrollBar()->setDisabled(true);
+
+    m_buttonHLayout->setContentsMargins(0,0,0,160);
+
+    for (int i = 0;i < m_buttonHLayout->count(); i++) {
+        QLayoutItem*item = m_buttonHLayout->layout()->itemAt(i);
+        if (item->widget() != nullptr) {
+            m_buttonHLayout->removeWidget(item->widget());
+        }
+    }
+
+    m_buttonHLayout->addWidget(m_switchUserBtn,0,0);
+    m_buttonHLayout->addWidget(m_hibernateBtn,0,1);
+    m_buttonHLayout->addWidget(m_suspendBtn,0,2);
+    m_buttonHLayout->addWidget(m_lockScreenBtn,0,3);
+    m_buttonHLayout->addWidget(m_logoutBtn,0,4);
+    m_buttonHLayout->addWidget(m_rebootBtn,0,5);
+    m_buttonHLayout->addWidget(m_shutDownBtn,0,6);
+    m_btnWidgetNeedScrollbar = false;
+}
+
+void MainWindow::showHasScrollBarBtnWidget(int hideNum)
+{
+    int allBtnNum = 7 - hideNum;
+    int lineWidth = m_screen.width() - 160 - 6;
+    int lineMaxBtnNum = (lineWidth - 128)/188 + 1;
+    m_lineNum = allBtnNum/lineMaxBtnNum + ((allBtnNum%lineMaxBtnNum > 0) ? 1 : 0);
+    int needHeight = (m_lineNum * 171 + (m_lineNum - 1) * 32);
+    int btnWidgetHeight = 632;
+
+    qDebug() << "lineWidth:" << lineWidth << "lineMaxBtnNum:" << lineMaxBtnNum << "needHeight:" << needHeight << "lineNum:" << m_lineNum<< allBtnNum/lineMaxBtnNum << allBtnNum%lineMaxBtnNum;
+
+    calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_switchUserBtn, m_switchRow, m_switchColumn);
+    calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_hibernateBtn, m_hibernateRow, m_hibernateColumn);
+    calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_suspendBtn, m_suspendRow, m_suspendColumn);
+    calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_lockScreenBtn, m_lockScreenRow, m_lockScreenColumn);
+    calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_logoutBtn, m_logoutRow, m_logoutColumn);
+    calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_rebootBtn, m_rebootRow, m_rebootColumn);
+    calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_shutDownBtn, m_shutDownRow, m_shutDownColumn);
+
+//        qDebug() << "switchRow:" << m_switchRow << m_switchColumn;
+//        qDebug() << "hibernateRow:" << m_hibernateRow << m_hibernateColumn;
+//        qDebug() << "suspendRow:" << m_suspendRow << m_suspendColumn;
+//        qDebug() << "lockScreenRow:" << m_lockScreenRow << m_lockScreenColumn;
+//        qDebug() << "logoutRow:" << m_logoutRow << m_logoutColumn;
+//        qDebug() << "rebootRow:" << m_rebootRow << m_rebootColumn;
+//        qDebug() << "shutDownRow:" << m_shutDownRow << m_shutDownColumn;
+
+    {
+        m_scrollArea->verticalScrollBar()->setVisible(!m_judgeLabel->isVisible());
+        m_scrollArea->verticalScrollBar()->setDisabled(false);
+        m_scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar{ background: transparent; margin-top:0px;margin-bottom:0px ; }"\
+                                                         "QScrollBar:vertical{width: 6px;background: transparent;border-radius:3px;}"\
+                                                         "QScrollBar::handle:vertical{width: 6px; background: rgba(255,255,255, 40); border-radius:3px;}"\
+                                                         "QScrollBar::handle:vertical:hover{width: 6px; background: rgba(255,255,255, 60); border-radius:3px;}"\
+                                                         "QScrollBar::add-line:vertical{width:0px;height:0px}"\
+                                                         "QScrollBar::sub-line:vertical{width:0px;height:0px}");
+
+        qDebug() << "set bar pos...";
+        //m_scrollArea->verticalScrollBar()->setGeometry(QRect(lineWidth + 20, 0, 6, 100));
+        m_scrollArea->setContentsMargins(0,0,0,0);
+        m_scrollArea->setGeometry(QRect(0,0,128 * lineMaxBtnNum + 60 * (lineMaxBtnNum-1)  +6,btnWidgetHeight));
+
+        m_buttonHLayout->setContentsMargins(0,0,0,0);// (needHeight > 632 ? 0 : (632 - needHeight)) * m_screen.height()/1080);
+
+        m_btnWidget->setGeometry(QRect(0,0,128 * lineMaxBtnNum + 60 * (lineMaxBtnNum-1),needHeight));
+        m_btnWidget->setContentsMargins(6,0,12,0);
+        qDebug() << "m_btnWidget FixedHeight:" << needHeight << btnWidgetHeight << m_btnWidget->width() << m_scrollArea->width();
+        qDebug() << "isSwitchuserHide:" << isSwitchuserHide << "isHibernateHide:" << isHibernateHide << "isSuspendHide:" << isSuspendHide;
+
+        for (int i = 0;i < m_buttonHLayout->count(); i++) {
+            QLayoutItem*item = m_buttonHLayout->layout()->itemAt(i);
+            if (item->widget() != nullptr) {
+                m_buttonHLayout->removeWidget(item->widget());
+            }
+        }
+        m_buttonHLayout->addWidget(m_switchUserBtn, m_switchRow, m_switchColumn);
+        m_buttonHLayout->addWidget(m_hibernateBtn, m_hibernateRow, m_hibernateColumn);
+        m_buttonHLayout->addWidget(m_suspendBtn, m_suspendRow, m_suspendColumn);
+        m_buttonHLayout->addWidget(m_lockScreenBtn, m_lockScreenRow, m_lockScreenColumn);
+        m_buttonHLayout->addWidget(m_logoutBtn, m_logoutRow, m_logoutColumn);
+        m_buttonHLayout->addWidget(m_rebootBtn, m_rebootRow, m_rebootColumn);
+        m_buttonHLayout->addWidget(m_shutDownBtn, m_shutDownRow, m_shutDownColumn);
+        m_buttonHLayout->setHorizontalSpacing(60);
+        m_buttonHLayout->setAlignment(Qt::AlignHCenter);
+        m_btnWidgetNeedScrollbar = true;
+    }
+}
+
 void MainWindow::ResizeEvent()
 {
     m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
@@ -726,120 +841,18 @@ void MainWindow::ResizeEvent()
             map[i]->hide();
         }
     }
-    if((m_screen.width() -160 - 128 * (7 - hideNum))/(6-hideNum) >= 16){
-
-        int margins = 0;
-
-        margins = (m_screen.width() -160 - 128 * (7 - hideNum))/(6-hideNum);
-        qDebug() << "margins:" << margins;
-        int btnWidgetWidth = 0;
-        if(margins > 60)
-        {
-            //m_buttonHLayout->addWidget(m_listView);
-            btnWidgetWidth = (128 * (7 - hideNum) + 60 * (6 - hideNum));
-            m_buttonHLayout->setHorizontalSpacing(60);
-        }
-        else
-        {
-            btnWidgetWidth = 128 * (7 - hideNum) + margins * (6 - hideNum);
-            m_buttonHLayout->setHorizontalSpacing(margins);
-        }
-        m_btnWidget->setGeometry(QRect(0,0,btnWidgetWidth+ 24, 632));
-        m_btnWidget->setContentsMargins(0,0,0,0);
-
-        m_scrollArea->setGeometry(QRect(0,0,btnWidgetWidth + 24, 632));
-
-        m_scrollArea->setContentsMargins(0,0,0,0);
-        m_scrollArea->horizontalScrollBar()->setVisible(false);
-        m_scrollArea->horizontalScrollBar()->setDisabled(true);
-        m_scrollArea->verticalScrollBar()->setVisible(false);
-        m_scrollArea->verticalScrollBar()->setDisabled(true);
-
-        m_buttonHLayout->setContentsMargins(0,0,0,160);
-
-        for (int i = 0;i < m_buttonHLayout->count(); i++) {
-            QLayoutItem*item = m_buttonHLayout->layout()->itemAt(i);
-            if (item->widget() != nullptr) {
-                m_buttonHLayout->removeWidget(item->widget());
-            }
-        }
-
-        m_buttonHLayout->addWidget(m_switchUserBtn,0,0);
-        m_buttonHLayout->addWidget(m_hibernateBtn,0,1);
-        m_buttonHLayout->addWidget(m_suspendBtn,0,2);
-        m_buttonHLayout->addWidget(m_lockScreenBtn,0,3);
-        m_buttonHLayout->addWidget(m_logoutBtn,0,4);
-        m_buttonHLayout->addWidget(m_rebootBtn,0,5);
-        m_buttonHLayout->addWidget(m_shutDownBtn,0,6);
-        m_btnWidgetNeedScrollbar = false;
-    } else {
-        int allBtnNum = 7 - hideNum;
-        int lineWidth = m_screen.width() - 160 - 6;
-        int lineMaxBtnNum = (lineWidth - 128)/188 + 1;
-        m_lineNum = allBtnNum/lineMaxBtnNum + ((allBtnNum%lineMaxBtnNum > 0) ? 1 : 0);
-        int needHeight = (m_lineNum * 171 + (m_lineNum - 1) * 32);
-        int btnWidgetHeight = 632;
-
-        qDebug() << "lineWidth:" << lineWidth << "lineMaxBtnNum:" << lineMaxBtnNum << "needHeight:" << needHeight << "lineNum:" << m_lineNum<< allBtnNum/lineMaxBtnNum << allBtnNum%lineMaxBtnNum;
-
-        calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_switchUserBtn, m_switchRow, m_switchColumn);
-        calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_hibernateBtn, m_hibernateRow, m_hibernateColumn);
-        calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_suspendBtn, m_suspendRow, m_suspendColumn);
-        calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_lockScreenBtn, m_lockScreenRow, m_lockScreenColumn);
-        calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_logoutBtn, m_logoutRow, m_logoutColumn);
-        calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_rebootBtn, m_rebootRow, m_rebootColumn);
-        calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_shutDownBtn, m_shutDownRow, m_shutDownColumn);
-
-//        qDebug() << "switchRow:" << m_switchRow << m_switchColumn;
-//        qDebug() << "hibernateRow:" << m_hibernateRow << m_hibernateColumn;
-//        qDebug() << "suspendRow:" << m_suspendRow << m_suspendColumn;
-//        qDebug() << "lockScreenRow:" << m_lockScreenRow << m_lockScreenColumn;
-//        qDebug() << "logoutRow:" << m_logoutRow << m_logoutColumn;
-//        qDebug() << "rebootRow:" << m_rebootRow << m_rebootColumn;
-//        qDebug() << "shutDownRow:" << m_shutDownRow << m_shutDownColumn;
-
-        {
-            m_scrollArea->horizontalScrollBar()->setVisible(false);
-            m_scrollArea->horizontalScrollBar()->setDisabled(true);
-            m_scrollArea->verticalScrollBar()->setVisible(!m_judgeLabel->isVisible());
-            m_scrollArea->verticalScrollBar()->setDisabled(false);
-            m_scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar{ background: transparent; margin-top:0px;margin-bottom:0px ; }"\
-                                                             "QScrollBar:vertical{width: 6px;background: transparent;border-radius:3px;}"\
-                                                             "QScrollBar::handle:vertical{width: 6px; background: rgba(255,255,255, 40); border-radius:3px;}"\
-                                                             "QScrollBar::handle:vertical:hover{width: 6px; background: rgba(255,255,255, 60); border-radius:3px;}"\
-                                                             "QScrollBar::add-line:vertical{width:0px;height:0px}"\
-                                                             "QScrollBar::sub-line:vertical{width:0px;height:0px}");
-
-            m_scrollArea->setContentsMargins(0,0,0,0);
-            m_scrollArea->setGeometry(QRect(0,0,128 * lineMaxBtnNum + 60 * (lineMaxBtnNum-1)  +6,btnWidgetHeight));
-
-            m_buttonHLayout->setContentsMargins(0,0,0,0);// (needHeight > 632 ? 0 : (632 - needHeight)) * m_screen.height()/1080);
-
-            m_btnWidget->setGeometry(QRect(0,0,128 * lineMaxBtnNum + 60 * (lineMaxBtnNum-1),needHeight));
-            m_btnWidget->setContentsMargins(6,0,12,0);
-            qDebug() << "m_btnWidget FixedHeight:" << needHeight << btnWidgetHeight << m_btnWidget->width() << m_scrollArea->width();
-            qDebug() << "isSwitchuserHide:" << isSwitchuserHide << "isHibernateHide:" << isHibernateHide << "isSuspendHide:" << isSuspendHide;
-
-            for (int i = 0;i < m_buttonHLayout->count(); i++) {
-                QLayoutItem*item = m_buttonHLayout->layout()->itemAt(i);
-                if (item->widget() != nullptr) {
-                    m_buttonHLayout->removeWidget(item->widget());
-                }
-            }
-            m_buttonHLayout->addWidget(m_switchUserBtn, m_switchRow, m_switchColumn);
-            m_buttonHLayout->addWidget(m_hibernateBtn, m_hibernateRow, m_hibernateColumn);
-            m_buttonHLayout->addWidget(m_suspendBtn, m_suspendRow, m_suspendColumn);
-            m_buttonHLayout->addWidget(m_lockScreenBtn, m_lockScreenRow, m_lockScreenColumn);
-            m_buttonHLayout->addWidget(m_logoutBtn, m_logoutRow, m_logoutColumn);
-            m_buttonHLayout->addWidget(m_rebootBtn, m_rebootRow, m_rebootColumn);
-            m_buttonHLayout->addWidget(m_shutDownBtn, m_shutDownRow, m_shutDownColumn);
-            m_buttonHLayout->setHorizontalSpacing(60);
-            m_buttonHLayout->setAlignment(Qt::AlignHCenter);
-            m_btnWidgetNeedScrollbar = true;
-        }
+    if((m_screen.width() -160 - 128 * (7 - hideNum))/(6-hideNum) >= 16)
+    {
+        showNormalBtnWidget(hideNum);
+    }
+    else
+    {
+        showHasScrollBarBtnWidget(hideNum);
     }
     m_btnWidget->setStyleSheet("QWidget#btnWidget{background-color: transparent;}");
     m_btnWidget->setLayout(m_buttonHLayout);
+    m_scrollArea->horizontalScrollBar()->setVisible(false);
+    m_scrollArea->horizontalScrollBar()->setDisabled(true);
     m_scrollArea->setWidget(m_btnWidget);
     m_scrollArea->setStyleSheet("QScrollArea#scrollArea{background-color: transparent;}");
     m_scrollArea->setAlignment(Qt::AlignHCenter);
