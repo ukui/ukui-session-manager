@@ -820,8 +820,6 @@ void MainWindow::ResizeEvent()
         m_toolWidget->setGeometry(m_screen);
         return;
     }
-    int xx = m_screen.x();
-    int yy = m_screen.y();   //取得当前鼠标所在屏幕的最左，上坐标
 
     qDebug() << "ResizeEvent moveWidget  m_screen:" << m_screen.width() << m_screen.height();
     int hideNum = 0;
@@ -1207,57 +1205,37 @@ void MainWindow::drawWarningWindow(QRect &rect)
 
     //数据模型
     QStandardItemModel *model = new QStandardItemModel(this);
-    if (inhibitSleep && (defaultnum == 2 || defaultnum == 1)) {
-        for (int i = 0; i < sleepInhibitors.length(); ++i) {
-//            QIcon icon("/usr/share/icons/ukui-icon-theme-default/32x32/mimetypes/application-x-desktop.png");//默认图标
-            QIcon icon;
-            QString AppName;
-            QString iconName;
-            QString appName = sleepInhibitors.at(i);
-            QMap<QString, QString> nameAndIcon = findNameAndIcon(appName);
-            if (nameAndIcon.size() != 0) {
-                AppName = nameAndIcon.begin().key();
-                iconName = nameAndIcon.begin().value();
-            }
-
-            if (!iconName.isEmpty() && QIcon::hasThemeIcon(iconName)) {
-                icon = QIcon::fromTheme(iconName);
-            } else if (QIcon::hasThemeIcon("application-x-desktop")) {
-                //无法从desktop文件获取指定图标时使用默认的图标
-                icon = QIcon::fromTheme("application-x-desktop");
-            }
-
-            if (!AppName.isEmpty()) {
-                //查找到的应用名存在则用应用名
-                AppName.swap(appName);
-            }
-
-            model->appendRow(new QStandardItem(icon, appName));
+    QStringList appNameList;
+    if (inhibitSleep && (defaultnum == 2 || defaultnum == 1))
+    {
+        appNameList = sleepInhibitors;
+    }
+    else if (inhibitShutdown && (defaultnum ==5 || defaultnum ==6))
+    {
+        appNameList = shutdownInhibitors;
+    }
+    for (int i = 0; i < appNameList.length(); ++i) {
+        QIcon icon;
+        QString oneAppName;
+        QString iconName;
+        QString appName = appNameList.at(i);
+        QMap<QString, QString> nameAndIcon = findNameAndIcon(appName);
+        if (nameAndIcon.size() != 0) {
+            oneAppName = nameAndIcon.begin().key();
+            iconName = nameAndIcon.begin().value();
         }
-    } else if (inhibitShutdown && (defaultnum ==5 || defaultnum ==6)) {
-        for (int i = 0; i < shutdownInhibitors.length(); ++i) {
-            QIcon icon;
-            QString AppName;
-            QString iconName;
-            QString appName = shutdownInhibitors.at(i);
-            QMap<QString, QString> nameAndIcon = findNameAndIcon(appName);
-            if (nameAndIcon.size() != 0) {
-                AppName = nameAndIcon.begin().key();
-                iconName = nameAndIcon.begin().value();
-            }
 
-            if (!iconName.isEmpty() && QIcon::hasThemeIcon(iconName)) {
-                icon = QIcon::fromTheme(iconName);
-            } else if (QIcon::hasThemeIcon("application-x-desktop")) {
-                icon = QIcon::fromTheme("application-x-desktop");
-            }
-
-            if (!AppName.isEmpty()) {
-                AppName.swap(appName);
-            }
-
-            model->appendRow(new QStandardItem(icon, appName));
+        if (!iconName.isEmpty() && QIcon::hasThemeIcon(iconName)) {
+            icon = QIcon::fromTheme(iconName);
+        } else if (QIcon::hasThemeIcon("application-x-desktop")) {
+            icon = QIcon::fromTheme("application-x-desktop");
         }
+
+        if (!oneAppName.isEmpty()) {
+            oneAppName.swap(appName);
+        }
+
+        model->appendRow(new QStandardItem(icon, appName));
     }
 
     //列表视图
@@ -1339,7 +1317,7 @@ QMap<QString, QString> MainWindow::findNameAndIcon(QString &basename)
 {
     QMap<QString, QString> nameAndIcon;
     QString icon;
-    QString Name;
+    QString name;
     QStringList desktop_paths;
     desktop_paths << "/usr/share/applications";
     desktop_paths << "/etc/xdg/autostart";
@@ -1358,8 +1336,8 @@ QMap<QString, QString> MainWindow::findNameAndIcon(QString &basename)
                 desktopFile.load(fi.absoluteFilePath());
                 icon = desktopFile.value("Icon").toString();
 //                Name = desktopFile.value("Name[zh_CN]").toString();
-                Name = getAppLocalName(fi.absoluteFilePath());//根据系统的本地语言设置获取对应的名称
-                nameAndIcon[Name] = icon;
+                name = getAppLocalName(fi.absoluteFilePath());//根据系统的本地语言设置获取对应的名称
+                nameAndIcon[name] = icon;
             }
         }
     }
