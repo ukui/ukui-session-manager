@@ -209,7 +209,8 @@ private:
 
     QSettings *m_btnCfgSetting = nullptr;
     QRect m_screen;
+    QWidget *m_showWarningArea = nullptr;
     bool m_btnWidgetNeedScrollbar = false;
-
+    bool m_showWarningMesg = false;
 };
 #endif // MAINWINDOW_H

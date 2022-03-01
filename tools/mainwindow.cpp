@@ -165,6 +165,9 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     m_btnWidget = new QWidget();
     m_btnWidget->setObjectName("btnWidget");
 
+    //m_showWarningArea 作为该界面所有组件的父指针，方便排版
+    m_showWarningArea = new QWidget(this);
+    m_showWarningArea->setObjectName(QString::fromUtf8("area"));
     //initialSystemMonitor();
 
     initialBtn();
@@ -411,7 +414,7 @@ void MainWindow::initialJudgeWidget()
     QString tips = QApplication::tr("Multiple users are logged in at the same time.Are you sure "
                                     "you want to close this system?");
     m_judgeLabel->setText(tips);
-    m_judgeLabel->setStyleSheet("color:white;font:14pt;");
+    m_judgeLabel->setStyleSheet("color:white;font:12pt;");
     m_judgeLabel->setObjectName("label");
     m_judgeLabel->setGeometry(0,0,m_screen.width() - 2 * margins,50);
     //m_judgeLabel->setFixedHeight(60);
@@ -694,6 +697,12 @@ void MainWindow::ResizeEvent()
 {
     m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
 
+    if(m_showWarningMesg)
+    {
+        showInhibitWarning();
+        m_toolWidget->setGeometry(m_screen);
+        return;
+    }
     int xx = m_screen.x();
     int yy = m_screen.y();   //取得当前鼠标所在屏幕的最左，上坐标
 
@@ -792,7 +801,7 @@ void MainWindow::ResizeEvent()
         {
             m_scrollArea->horizontalScrollBar()->setVisible(false);
             m_scrollArea->horizontalScrollBar()->setDisabled(true);
-            m_scrollArea->verticalScrollBar()->setVisible(true);
+            m_scrollArea->verticalScrollBar()->setVisible(!m_judgeLabel->isVisible());
             m_scrollArea->verticalScrollBar()->setDisabled(false);
             m_scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar{ background: transparent; margin-top:0px;margin-bottom:0px ; }"\
                                                              "QScrollBar:vertical{width: 6px;background: transparent;border-radius:3px;}"\
@@ -1150,13 +1159,11 @@ void MainWindow::drawWarningWindow(QRect &rect)
     int yy = rect.y();//用于设置相对位置
 
     bool isEnoughBig = m_screen.height() - 266 - 467 > 0 ? true : false;
-    //area作为该界面所有组件的父指针，方便排版
-    QWidget *area = new QWidget(this);
-    area->setObjectName(QString::fromUtf8("area"));
-    area->setGeometry(0, 0, 740 * m_screen.width()/1920, isEnoughBig ? 467 : (467 * m_screen.height()/1080));
+
+    m_showWarningArea->setGeometry(0, 0, 740 * m_screen.width()/1920, isEnoughBig ? 467 : (467 * m_screen.height()/1080));
     QVBoxLayout *vBoxLayout = new QVBoxLayout();
     //顶部提醒信息
-    QLabel *tips = new QLabel();
+    QLabel *tips = new QLabel(m_showWarningArea);
     tips->setObjectName(QString::fromUtf8("tips"));
     //tips->setGeometry(0, 0, area->width(), 27);
     tips->setWordWrap(true);
@@ -1236,7 +1243,7 @@ void MainWindow::drawWarningWindow(QRect &rect)
     }
 
     //列表视图
-    QListView *applist = new QListView();
+    QListView *applist = new QListView(m_showWarningArea);
     applist->setObjectName(QString::fromUtf8("applist"));
     if(isEnoughBig)
         applist->setFixedSize(520 * (isEnoughBig ? 1: m_screen.width()/1920), 320 * (isEnoughBig ? 1 : m_screen.height()/1080));
@@ -1271,7 +1278,7 @@ void MainWindow::drawWarningWindow(QRect &rect)
         else if(defaultnum ==6)
             confirBTnText = (QObject::tr("Still Shutdown"));
     }
-    CommonPushButton *confirmBtn = new CommonPushButton(confirBTnText, QString::fromUtf8("confirmBtn"), 120, 48, area);
+    CommonPushButton *confirmBtn = new CommonPushButton(confirBTnText, QString::fromUtf8("confirmBtn"), 120, 48, m_showWarningArea);
 
     connect(confirmBtn, &CommonPushButton::clicked, [this]() {
         gs->set("win-key-release", false);
@@ -1285,7 +1292,7 @@ void MainWindow::drawWarningWindow(QRect &rect)
     });
 
     //取消按钮
-    CommonPushButton *cancelBtn = new CommonPushButton(QObject::tr("Cancel"), QString::fromUtf8("cancelBtn"), 120, 48, area);
+    CommonPushButton *cancelBtn = new CommonPushButton(QObject::tr("Cancel"), QString::fromUtf8("cancelBtn"), 120, 48, m_showWarningArea);
 
     connect(cancelBtn, &CommonPushButton::clicked, this, &MainWindow::exitt);
 
@@ -1302,10 +1309,11 @@ void MainWindow::drawWarningWindow(QRect &rect)
     vBoxLayout->addLayout(hBoxLayout, Qt::AlignHCenter);
 
     //移动整个区域到指定的相对位置
-    area->move(xx + (m_screen.width() - area->width()) / 2, (yy + 266 * m_screen.height()/1080) + (isEnoughBig ? 0 : 10));
+    m_showWarningArea->move(xx + (m_screen.width() - m_showWarningArea->width()) / 2, (yy + 266 * m_screen.height()/1080) + (isEnoughBig ? 0 : 10));
 //    applist->move((area->width() - applist->width()) / 2, isEnoughBig ? 51 : 32);
-    area->setLayout(vBoxLayout);
-    area->show();
+    m_showWarningArea->setLayout(vBoxLayout);
+    m_showWarningArea->show();
+    m_showWarningMesg = true;
 }
 
 QMap<QString, QString> MainWindow::findNameAndIcon(QString &basename)
