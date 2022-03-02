@@ -1188,15 +1188,15 @@ void MainWindow::drawWarningWindow(QRect &rect)
     //defaultnum会在doevent中初始化为按钮的编号，结合defaultnum判断可以保证sleep和shutdown都被阻止时能够正确显示信息
     if (inhibitSleep) {
         if(defaultnum == 1)
-            str = QObject::tr("The following programs are running to prevent the system from hibernate!");
+            str = QObject::tr("The following program is running to prevent the system from hibernate!");
         else if(defaultnum == 2)
-            str = QObject::tr("The following programs are running to prevent the system from suspend!");
+            str = QObject::tr("The following program is running to prevent the system from suspend!");
     }
     if (inhibitShutdown) {
         if(defaultnum ==5)
-            str = QObject::tr("The following programs are running to prevent the system from reboot!");
+            str = QObject::tr("The following program is running to prevent the system from reboot!");
         else if(defaultnum ==6)
-            str = QObject::tr("The following programs are running to prevent the system from shutting down!");
+            str = QObject::tr("The following program is running to prevent the system from shutting down!");
     }
     tips->setText(str);
     tips->setAlignment(Qt::AlignCenter);
