@@ -448,7 +448,7 @@ void ModuleManager::timerUpdate()
         if (restoreSession) {
             //加上恢复会话的部分
             qDebug(UKUI_SESSION) << "began restore session";
-                getGlobalServer()->restoreSession();
+            getGlobalServer()->restoreSession();
         }
     }
 }

@@ -21,6 +21,8 @@ set(tools_SRCS
     mypushbutton.h
     pushbutton.cpp
     pushbutton.h
+    commonpushbutton.cpp
+    commonpushbutton.h
 )
 
 find_package(PkgConfig)

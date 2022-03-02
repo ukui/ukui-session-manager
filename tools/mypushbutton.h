@@ -48,6 +48,11 @@ public:
 
     bool getIsMouseSelect();
 
+    void setIsKeySelect(bool isKeySelect);
+
+    void setIsMouseSelect(bool isMouseSelect);
+
+
 protected:
 
 private:
