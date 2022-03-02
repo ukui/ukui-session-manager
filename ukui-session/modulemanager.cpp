@@ -444,14 +444,11 @@ void ModuleManager::timerUpdate()
 
     if (QGSettings::isSchemaInstalled("org.ukui.session")) {
         QGSettings *gset = new QGSettings("org.ukui.session", "/org/ukui/desktop/session/", this);
-        QStringList keys = gset->keys();
-        if(keys.contains("restore-session")){
-            bool restoreSession = gset->get("restore-session").toBool();
-            if (restoreSession) {
-                //加上恢复会话的部分
-                qDebug(UKUI_SESSION) << "began restore session";
-                getGlobalServer()->restoreSession();
-            }
+        bool restoreSession = gset->get("restore-session").toBool();
+        if (restoreSession) {
+            //加上恢复会话的部分
+            qDebug(UKUI_SESSION) << "began restore session";
+            getGlobalServer()->restoreSession();
         }
     }
 }

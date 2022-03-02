@@ -103,10 +103,9 @@ void MyIconLabel::leaveEvent(QEvent *event)
 bool MyIconLabel::event(QEvent *event)
 {
 //    qDebug() << m_showBackColor << "event..." << event->type();
-    if (!m_showBackColor) {
-        return QWidget::event(event);
-    }
-
+//    if (!m_showBackColor) {
+//        return QWidget::event(event);
+//    }
     if (event->type() == QEvent::MouseButtonPress) {
         QString str = "QLabel{background-color: rgb(255,255,255,100);border-radius: " + QString::number(this->width()/2) + "px;}";
         this->setStyleSheet(str);

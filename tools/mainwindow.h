@@ -31,6 +31,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QSettings>
+#include <QScrollArea>
 #include "mypushbutton.h"
 class XEventMonitor;
 
@@ -53,13 +54,47 @@ public:
     virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
     //void closeEvent(QCloseEvent *event);
 
+    /**
+     * @brief 初始化系统监视器按钮
+     */
+    //void initialSystemMonitor();
+
+    /**
+     * @brief 初始化按钮
+     */
     void initialBtn();
+
+    /**
+     * @brief 初始化提示内容的控件
+     */
     void initialJudgeWidget();
+
+    /**
+     * @brief 初始化提示阻止重启、休眠、关机等原有的控件
+     */
     void initialMessageWidget();
+
+    /**
+     * @brief 初始化时间控件
+     */
     void initialDateTimeWidget();
+
+    /**
+     * @brief 可以通过配置文件来控制按钮是否显示
+     */
     void initialBtnCfg();
+
+    /**
+     * @brief 设置layout是否显示
+     */
     void setLayoutWidgetVisible(QLayout* layout, bool show);
-    void changeBtnState(QString btnName, bool isKeySelect = false);
+
+    /**
+     * @param btnName 指定按钮objectname
+     * @param isEnterKey 是否通过键盘按键选中
+     * @brief 修改按钮样式
+     */
+    void changeBtnState(QString btnName, bool isEnterKey = false);
 
 private:
     QString getAppLocalName(QString desktopfp);//获取应用名
@@ -68,10 +103,13 @@ private:
     void drawWarningWindow(QRect &rect);//画出提醒界面
     QMap<QString, QString> findNameAndIcon(QString &basename);//根据inhibitor的名称获取对应desktop文件中的应用名和icon路径
 
-    void calculateBtnSpan(int allNum, MyPushButton*, int& colum, int& row);
+    void calculateBtnSpan(int allNum, int lineMaxNum, MyPushButton*, int& row, int& colum);
     void calculateKeyBtn(const QString &key);
     bool judgeBtnIsEnable(int index);
+    //void doSystemMonitor();
 
+    void showNormalBtnWidget(int hideBtnNum);
+    void showHasScrollBarBtnWidget(int hideBtnNum);
 Q_SIGNALS:
     void signalTostart();
     void confirmButtonclicked();
@@ -99,6 +137,8 @@ private:
     QGSettings *gs;
     QWidget *lastWidget;
     QHash<int, MyPushButton*> map;
+    QHash<int, int> rowMap;
+
     QStringList shutdownInhibitors;//阻止shutdown的inhibitors
     QStringList shutdownInhibitorsReason;//阻止shutdown的inhibitor对应的原因
     QStringList sleepInhibitors;//阻止sleep的inhibitors
@@ -110,6 +150,7 @@ private:
     bool flag = false;
     bool isSwitchuserHide = true;
     bool isHibernateHide = true;
+    bool isSuspendHide = true;
     bool lockfile = false;
     bool lockuser = false;
     bool click_blank_space_need_to_exit = true;
@@ -120,7 +161,7 @@ private:
 
     QHash<MyPushButton*, bool> m_btnHideMap;
 
-    bool m_Is_UKUI_3_1 = false;
+    bool m_IsRoundBtn = true;//是否是圆形按钮
     QString m_btnImagesPath = "/usr/share/ukui/ukui-session-manager/images";
     MyPushButton *m_switchUserBtn = nullptr;
     MyPushButton *m_hibernateBtn = nullptr;
@@ -129,6 +170,7 @@ private:
     MyPushButton *m_logoutBtn = nullptr;
     MyPushButton *m_rebootBtn = nullptr;
     MyPushButton *m_shutDownBtn = nullptr;
+    //QWidget *m_systemMonitorBtn = nullptr;
 
     QLabel *m_dateLabel = nullptr;
     QLabel *m_timeLabel = nullptr;
@@ -142,6 +184,7 @@ private:
 
     QWidget *m_toolWidget = nullptr;
 
+    QWidget *m_btnWidget = nullptr;
     QGridLayout *m_buttonHLayout = nullptr;
 
     QVBoxLayout *m_dateTimeLayout = nullptr;
@@ -149,8 +192,26 @@ private:
     QHBoxLayout *m_judgeBtnHLayout = nullptr;
     QVBoxLayout *m_messageVLayout = nullptr;
     QVBoxLayout *m_vBoxLayout = nullptr;
+    QScrollArea *m_scrollArea = nullptr;
+    //QHBoxLayout *m_systemMonitorHLayout = nullptr;
+
+    //QLabel *m_systemMonitorIconLabel = nullptr;
+    //QLabel *m_systemMonitorLabel = nullptr;
+    //QPixmap m_systemMonitorIcon;
+
+    int m_switchRow = 0, m_switchColumn = 0;
+    int m_hibernateRow = 0, m_hibernateColumn = 0;
+    int m_suspendRow = 0, m_suspendColumn = 0;
+    int m_lockScreenRow = 0, m_lockScreenColumn = 0;
+    int m_logoutRow = 0, m_logoutColumn = 0;
+    int m_rebootRow = 0, m_rebootColumn = 0;
+    int m_shutDownRow = 0, m_shutDownColumn = 0;
+    int m_lineNum = 1;
+
     QSettings *m_btnCfgSetting = nullptr;
     QRect m_screen;
-
+    QWidget *m_showWarningArea = nullptr;
+    bool m_btnWidgetNeedScrollbar = false;
+    bool m_showWarningMesg = false;
 };
 #endif // MAINWINDOW_H
