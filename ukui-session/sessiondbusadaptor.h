@@ -22,8 +22,12 @@
 
 #include <QtDBus>
 #include "../tools/ukuipower.h"
+#include "../tools/powerprovider.h"
 #include "modulemanager.h"
 #include "usminhibit.h"
+#include "ukuismserver.h"
+#include "sessionmanagercontext.h"
+#include <KIdleTime>
 
 class SessionDBusAdaptor : public QDBusAbstractAdaptor
 {
@@ -31,14 +35,22 @@ class SessionDBusAdaptor : public QDBusAbstractAdaptor
     Q_CLASSINFO("D-Bus Interface", "org.gnome.SessionManager")
 
 public:
-    SessionDBusAdaptor(ModuleManager *manager)
-        : QDBusAbstractAdaptor(manager),
-          mManager(manager),
-          mPower(new UkuiPower()),
-          minhibit(new usminhibit())
+    SessionDBusAdaptor(SessionManagerDBusContext *context)
+        :QDBusAbstractAdaptor(context)
     {
-        connect(mManager, &ModuleManager::moduleStateChanged, this , &SessionDBusAdaptor::moduleStateChanged);
-        connect(mManager, &ModuleManager::finished,this,&SessionDBusAdaptor::emitPrepareForPhase2);
+        connect(parent(), &SessionManagerDBusContext::moduleStateChanged, this, &SessionDBusAdaptor::moduleStateChanged);
+        connect(parent(), &SessionManagerDBusContext::inhibitadded, this, &SessionDBusAdaptor::inhibitadded);
+        connect(parent(), &SessionManagerDBusContext::inhibitremove, this, &SessionDBusAdaptor::inhibitremove);
+        connect(parent(), &SessionManagerDBusContext::StartLogout, this, &SessionDBusAdaptor::StartLogout);
+        connect(parent(), &SessionManagerDBusContext::PrepareForSwitchuser, this, &SessionDBusAdaptor::PrepareForSwitchuser);
+        connect(parent(), &SessionManagerDBusContext::PrepareForPhase2, this, &SessionDBusAdaptor::PrepareForPhase2);
+    }
+
+    virtual ~SessionDBusAdaptor(){}
+
+    inline SessionManagerDBusContext *parent() const
+    {
+        return static_cast<SessionManagerDBusContext *>(QObject::parent());
     }
 
 Q_SIGNALS:
@@ -50,122 +62,128 @@ Q_SIGNALS:
     void PrepareForPhase2();
 
 public slots:
-    void startupfinished(const QString& appName ,const QString& string)
+    void startupfinished(const QString &appName ,const QString &string)
     {
-        return mManager->startupfinished(appName,string);
+        return parent()->startupfinished(appName, string);
+    }
+
+    bool canSwitch()
+    {
+        return parent()->canSwitch();
+    }
+
+    bool canHibernate()
+    {
+        return parent()->canHibernate();
+    }
+
+    bool canSuspend()
+    {
+        return parent()->canSuspend();
     }
 
     bool canLogout()
     {
-        return true;
+        return parent()->canLogout();
     }
 
     bool canReboot()
     {
-        return mPower->canAction(UkuiPower::PowerReboot);
+        return parent()->canReboot();
     }
 
     bool canPowerOff()
     {
-        return mPower->canAction(UkuiPower::PowerShutdown);
+        return parent()->canPowerOff();
+    }
+
+    Q_NOREPLY void switchUser()
+    {
+        return parent()->switchUser();
+    }
+
+    Q_NOREPLY void hibernate()
+    {
+        return parent()->hibernate();
+    }
+
+    Q_NOREPLY void suspend()
+    {
+        return parent()->suspend();
     }
 
     Q_NOREPLY void logout()
     {
-        mManager->logout(true);
+        return parent()->logout();
     }
 
     Q_NOREPLY void reboot()
     {
-        if(mPower->canAction(UkuiPower::PowerReboot)){
-            mManager->logout(false);
-            mPower->doAction(UkuiPower::PowerReboot);
-        }
-        //QCoreApplication::exit(0);
+        return parent()->reboot();
     }
 
     Q_NOREPLY void powerOff()
     {
-        if(mPower->canAction(UkuiPower::PowerShutdown)){
-            mManager->logout(false);
-            mPower->doAction(UkuiPower::PowerShutdown);
-        }
-        //QCoreApplication::exit(0);
+        return parent()->powerOff();
     }
-
-//    QDBusVariant listModules()
-//    {
-//        return QDBusVariant(mManager->listModules());
-//    }
 
     Q_NOREPLY void startModule(const QString& name)
     {
-        mManager->startProcess(name, true);
+        return parent()->startModule(name);
     }
 
     Q_NOREPLY void stopModule(const QString& name)
     {
-        mManager->stopProcess(name);
+        return parent()->stopModule(name);
     }
 
     uint Inhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
     {
-        uint result = minhibit->addinhibit(app_id,toplevel_xid,reason,flags);
-        if(result < 0){
-            return 0;
-        }
-        emit inhibitadded(flags);
-        return result;
+        return parent()->Inhibit(app_id,toplevel_xid, reason, flags);
     }
 
-    Q_NOREPLY void Uninhibit(uint cookie){
-        uint result = minhibit->uninhibit(cookie);
-        if(result > 0){
-            emit inhibitremove(result);
-        }
+    Q_NOREPLY void Uninhibit(uint cookie)
+    {
+        return parent()->Uninhibit(cookie);
     }
 
-    QStringList GetInhibitors(){
-        return minhibit->getinhibitor();
+    QStringList GetInhibitors()
+    {
+        return parent()->GetInhibitors();
     }
 
     bool IsSessionRunning(){
-        QString xdg_session_desktop = qgetenv("XDG_SESSION_DESKTOP").toLower();
-        if(xdg_session_desktop == "ukui")
-            return true;
-        return false;
+        return parent()->IsSessionRunning();
     }
 
-    QString GetSessionName(){
-        QString xdg_session_desktop = qgetenv("XDG_SESSION_DESKTOP").toLower();
-        if(xdg_session_desktop == "ukui")
-            return "ukui-session";
-        return "error";
+    QString GetSessionName()
+    {
+        return parent()->GetSessionName();
     }
 
-    bool IsInhibited(quint32 flags){
-        return minhibit->IsInhibited(flags);
+    bool IsInhibited(quint32 flags)
+    {
+        return parent()->IsInhibited(flags);
     }
 
-    Q_NOREPLY void emitStartLogout(){
-        qDebug()<<"emit  StartLogout";
-        emit StartLogout();
+    Q_NOREPLY void emitStartLogout()
+    {
+        return parent()->emitStartLogout();
     }
 
-    Q_NOREPLY void emitPrepareForSwitchuser(){
-        qDebug()<<"emit  PrepareForSwitchuser";
-        emit PrepareForSwitchuser();
+    Q_NOREPLY void emitPrepareForSwitchuser()
+    {
+        return parent()->emitPrepareForSwitchuser();
     }
 
-    Q_NOREPLY void emitPrepareForPhase2(){
-        qDebug()<<"emit  PrepareForPhase2";
-        emit PrepareForPhase2();
+    Q_NOREPLY void emitPrepareForPhase2()
+    {
+        return parent()->emitPrepareForPhase2();
     }
 
-private:
-    ModuleManager *mManager;
-    UkuiPower *mPower;
-    usminhibit *minhibit;
+    Q_NOREPLY void simulateUserActivity(){
+        return parent()->simulateUserActivity();
+    }
 };
 
 #endif // SESSIONDBUSADAPTOR_H

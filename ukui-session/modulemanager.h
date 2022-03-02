@@ -32,6 +32,7 @@
 #include <QTimer>
 #include <QMediaPlayer>
 #include <QDBusInterface>
+#include <vector>
 
 class XdgDesktopFile;
 class IdleWatcher;
@@ -53,8 +54,6 @@ public:
 
     void startup();
 
-    void doStart();
-
     void dostartwm();
 
     void startupfinished(const QString& appName ,const QString& string);
@@ -62,13 +61,26 @@ public:
     // Qt5 users native event filter
     bool nativeEventFilter(const QByteArray &eventType, void* message, long* result) override;
 
+    static void insertStartupList(QString &&str);
+
+    static bool isProgramStarted(QString &&str);
+private:
+    bool startModuleTimer(QTimer *timer,int i);
+    void playBootMusic(bool arg);
+    void startProcess(const XdgDesktopFile &file, bool required);
+    void constructStartupList();
+    bool autoRestart(const XdgDesktopFile &file);
+
 public slots:
     void startCompsite();
     void logout(bool doExit);
     void timerUpdate();
     void timeup();
     void weakup(bool arg);
-    void stateChanged(QMediaPlayer::State state);
+    //void stateChanged(QMediaPlayer::State state);
+
+private slots:
+    void restartModules(int exitCode, QProcess::ExitStatus exitStatus);
 
 Q_SIGNALS:
     void moduleStateChanged(QString moduleName, bool state);
@@ -83,31 +95,22 @@ private:
     QTimer *twm = new QTimer();
     QTimer *tpanel = new QTimer();
     QTimer *tdesktop = new QTimer();
-    bool start_module_Timer(QTimer *timer,int i);
-    bool isPanelStarted, isDesktopStarted, isWMStarted ,isCompsiteStarted;
 
-    QMediaPlayer *player;
-    bool runUsd = true;
-    bool runWm = true;
-    bool runPanel = true;
-    bool runDesktop = true;
+    bool isPanelStarted    = false;
+    bool isDesktopStarted  = false;
+    bool isWMStarted       = false;
+    bool isCompsiteStarted = false;
+
+    bool isWayland         = false;
+    bool wmFound           = false;
+
+    //QMediaPlayer *player;
     bool isDirectInstall = false;
-    void playBootMusic(bool arg);
-    void startProcess(const XdgDesktopFile &file, bool required);
-
-    void constructStartupList();
-
-    bool autoRestart(const XdgDesktopFile &file);
-
-    ModulesMap mNameMap;
-
-    QList<QString> mAllAppList;
-
     bool mWmStarted;
     bool mTrayStarted;
-    bool m_ukuiKwinExisted;
-    QEventLoop* mWaitLoop;
 
+    static std::vector<QString> m_startupList;
+    ModulesMap mNameMap;
     XdgDesktopFileList mInitialization;
     XdgDesktopFile mWindowManager;
     XdgDesktopFile mPanel;
@@ -115,10 +118,6 @@ private:
     XdgDesktopFileList mDesktop;
     XdgDesktopFileList mApplication;
     XdgDesktopFileList mForceApplication;
-
-private slots:
-    void restartModules(int exitCode, QProcess::ExitStatus exitStatus);
-
 };
 
 #endif // MODULEMANAGER_H

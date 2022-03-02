@@ -1,41 +1,23 @@
-/* 挂起按钮 */
-QLabel#suspend_icon{
-    background:url(/usr/share/ukui/ukui-session-manager/images/suspend.png);
-    background-repeat:no-repeat;
+/*睡眠提示界面的继续执行按钮*/
+QPushButton#confirmBtn {
+    background-color: rgb(255,255,255,80);
+    border-style: outset;
+    border-width: 0px;
+    border-radius: 24px;
 }
 
-/* 休眠按钮 */
-QLabel#hibernate_icon{
-    background:url(/usr/share/ukui/ukui-session-manager/images/hibernate.png);
-    background-repeat:no-repeat;
+/*睡眠提示界面的取消按钮*/
+QPushButton#cancelBtn {
+    background-color: rgb(255,255,255,80);
+    border-style: outset;
+    border-width: 0px;
+    border-radius: 24px;
 }
 
-/*切换账户按钮*/
-QLabel#switchuser_icon{
-    background:url(/usr/share/ukui/ukui-session-manager/images/switchuser.png);
-    background-repeat:no-repeat;
-}
-
-/*注销按钮*/
-QLabel#logout_icon{
-    background:url(/usr/share/ukui/ukui-session-manager/images/logout.png);
-    background-repeat:no-repeat;
-}
-
-/*重启按钮*/
-QLabel#reboot_icon{
-    background:url(/usr/share/ukui/ukui-session-manager/images/reboot.png);
-    background-repeat:no-repeat;
-}
-
-/*注销按钮*/
-QLabel#shutdown_icon{
-    background:url(/usr/share/ukui/ukui-session-manager/images/shutdown.png);
-    background-repeat:no-repeat;
-}
-
-/*锁屏按钮*/
-QLabel#lockscreen_icon{
-    background:url(/usr/share/ukui/ukui-session-manager/images/lockscreen.png);
-    background-repeat:no-repeat;
+/*提示界面的应用列表*/
+QListView#applist {
+    background-color: rgb(255,255,255,80);
+    border-style: outset;
+    border-width: 0px;
+    border-radius: 4px;
 }

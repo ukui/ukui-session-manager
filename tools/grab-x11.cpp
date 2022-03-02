@@ -20,7 +20,8 @@
 #include <X11/Xlib.h>
 #include <xcb/xcb.h>
 
-class XServerGraber{
+class XServerGraber
+{
 public:
     XServerGraber() {
         xcb_grab_server(QX11Info::connection());
@@ -57,8 +58,9 @@ bool establishGrab()
 
     Q_UNUSED(xserverGraber);
 
-    if(!grabKeyboard())
+    if (!grabKeyboard()) {
         return false;
+    }
 
     //不抢占鼠标事件
 //    if(!grabMouse()) {

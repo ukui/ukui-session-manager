@@ -1,20 +1,27 @@
-/*
- * Copyright (C) Copyright 2021 KylinSoft Co., Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see <http://www.gnu.org/licenses/>.
- *
-**/
+/*****************************************************************
+ukuismserver - the UKUI session management server
+
+Copyright 2000 Matthias Ettrich <ettrich@kde.org>
+Copyright 2021 KylinSoft Co., Ltd.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+******************************************************************/
 
 #ifndef USMINHIBIT_H
 #define USMINHIBIT_H
@@ -35,9 +42,9 @@ public:
     QString inhibitorName;
 };
 
-class usminhibit
+class usminhibit : public QObject
 {
-    //Q_OBJECT
+    Q_OBJECT
 public:
 
     enum InhibitorFlag{
@@ -47,25 +54,28 @@ public:
         GSM_INHIBITOR_FLAG_IDLE        = 1 << 3
     };
     usminhibit();
-
-    int inhibitor_serial;
     ~usminhibit();
-    uint generate_cookie();
+    uint generateCookie();
     QHash<quint32 , inhibit> hash;
 
-    quint32 addinhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags);
-    uint uninhibit(quint32 cookie);
-    QStringList getinhibitor();
-    bool IsInhibited(quint32 flags);
+    quint32 addInhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags);
+    uint unInhibit(quint32 cookie);
+    QStringList getInhibitor();
+    bool isInhibited(quint32 flags);
 
+public:
+    int inhibitor_serial;
     int inhibit_logout_num;
     int inhibit_switchuser_num;
     int inhibit_suspend_num;
     int inhibit_idle_num;
-
 private:
     //QDBusInterface dbus;
     uint get_next_inhibitor_serial();
+
+Q_SIGNALS:
+    void inhibitAdd();
+    void inhibitRemove();
 };
 
 #endif // USMINHIBIT_H
