@@ -5,67 +5,56 @@
     <name>MainWindow</name>
     <message>
         <location filename="../tools/mainwindow.ui" line="14"/>
-        <location filename="../obj-x86_64-linux-gnu/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="222"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="64"/>
-        <location filename="../obj-x86_64-linux-gnu/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="224"/>
         <source>Switch User</source>
         <translation>切换用户</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="116"/>
-        <location filename="../obj-x86_64-linux-gnu/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="226"/>
         <source>Hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="242"/>
-        <location filename="../obj-x86_64-linux-gnu/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="230"/>
         <source>Suspend</source>
         <translation>睡眠</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="294"/>
-        <location filename="../obj-x86_64-linux-gnu/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="232"/>
         <source>Logout</source>
         <translation>注销</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="346"/>
-        <location filename="../obj-x86_64-linux-gnu/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="234"/>
         <source>Reboot</source>
         <translation>重启</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="398"/>
-        <location filename="../obj-x86_64-linux-gnu/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="236"/>
         <source>Shut Down</source>
         <translation>关机</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="450"/>
-        <location filename="../obj-x86_64-linux-gnu/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="238"/>
         <source>Lock Screen</source>
         <translation>锁屏</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="529"/>
-        <location filename="../obj-x86_64-linux-gnu/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="241"/>
         <source>cancel</source>
         <translation>取消</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="542"/>
-        <location filename="../obj-x86_64-linux-gnu/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="242"/>
         <source>confirm</source>
         <translation>确认</translation>
     </message>
     <message>
         <location filename="../tools/mainwindow.ui" line="559"/>
-        <location filename="../obj-x86_64-linux-gnu/tools/ukui-session-tools_autogen/include/ui_mainwindow.h" line="243"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -275,47 +264,47 @@
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1193"/>
-        <source>The following programs are running to prevent the system from hibernate!</source>
+        <location filename="../tools/mainwindow.cpp" line="1191"/>
+        <source>The following program is running to prevent the system from hibernate!</source>
         <translation>以下程序正在运行，阻止系统进入休眠！</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1195"/>
-        <source>The following programs are running to prevent the system from suspend!</source>
+        <location filename="../tools/mainwindow.cpp" line="1193"/>
+        <source>The following program is running to prevent the system from suspend!</source>
         <translation>以下程序正在运行，阻止系统进入睡眠！</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1199"/>
-        <source>The following programs are running to prevent the system from reboot!</source>
+        <location filename="../tools/mainwindow.cpp" line="1197"/>
+        <source>The following program is running to prevent the system from reboot!</source>
         <translation>以下程序正在运行，阻止系统重启！</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1201"/>
-        <source>The following programs are running to prevent the system from shutting down!</source>
+        <location filename="../tools/mainwindow.cpp" line="1199"/>
+        <source>The following program is running to prevent the system from shutting down!</source>
         <translation>以下程序正在运行，阻止系统关机！</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1289"/>
+        <location filename="../tools/mainwindow.cpp" line="1267"/>
         <source>Still Hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1291"/>
+        <location filename="../tools/mainwindow.cpp" line="1269"/>
         <source>Still Suspend</source>
         <translation>睡眠</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1295"/>
+        <location filename="../tools/mainwindow.cpp" line="1273"/>
         <source>Still Reboot</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1297"/>
+        <location filename="../tools/mainwindow.cpp" line="1275"/>
         <source>Still Shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../tools/mainwindow.cpp" line="1313"/>
+        <location filename="../tools/mainwindow.cpp" line="1291"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
