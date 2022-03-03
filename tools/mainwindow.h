@@ -151,6 +151,10 @@ private:
     bool isSwitchuserHide = true;
     bool isHibernateHide = true;
     bool isSuspendHide = true;
+    bool isLogoutHide = true;
+    bool isRebootHide = true;
+    bool isPowerOffHide = true;
+
     bool lockfile = false;
     bool lockuser = false;
     bool click_blank_space_need_to_exit = true;
@@ -161,7 +165,6 @@ private:
 
     QHash<MyPushButton*, bool> m_btnHideMap;
 
-    bool m_IsRoundBtn = true;//是否是圆形按钮
     QString m_btnImagesPath = "/usr/share/ukui/ukui-session-manager/images";
     MyPushButton *m_switchUserBtn = nullptr;
     MyPushButton *m_hibernateBtn = nullptr;
