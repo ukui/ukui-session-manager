@@ -185,7 +185,6 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         inhibitShutdown = true;
     }
 
-
     user     = getenv("USER");
     lockfile = a;
     lockuser = b;
@@ -246,7 +245,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     m_vBoxLayout->addLayout(m_dateTimeLayout, 60);
     m_vBoxLayout->addStretch();
     m_vBoxLayout->addLayout(m_judgeWidgetVLayout, 140);
-    m_vBoxLayout->addWidget(m_scrollArea,632);
+    m_vBoxLayout->addWidget(m_scrollArea, 632);
     m_vBoxLayout->addStretch(174);
     m_vBoxLayout->addLayout(m_messageVLayout, 80);
     //m_vBoxLayout->addWidget(m_systemMonitorBtn,48,Qt::AlignHCenter);
@@ -257,8 +256,8 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     qDebug() << "width..........." << m_judgeLabel->width() << m_scrollArea->width() << m_messageLabel1->width() << m_messageLabel2->width();
     //根据屏幕分辨率与鼠标位置重设界面
     //m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
-    setFixedSize(QApplication::primaryScreen()->virtualSize());
-
+    //setFixedSize(QApplication::primaryScreen()->virtualSize());
+    setGeometry(0, 0, QApplication::primaryScreen()->virtualSize().width(), QApplication::primaryScreen()->virtualSize().height());
     move(0, 0);//设置初始位置的值
 
     //设置窗体无边框，不可拖动拖拽拉伸;为顶层窗口，无法被切屏;不使用窗口管理器
@@ -668,7 +667,7 @@ void MainWindow::mouseReleaseSlots(QEvent *event, QString objName)
 {
     for (auto iter = map.begin(); iter != map.end(); iter++) {
         if (iter.value()->getIconLabel()->objectName() == objName) {
-            changePoint(iter.value(), event, iter.key());
+            changePoint(iter.value(), event);
             if (event->type() == QEvent::MouseButtonRelease) {
                 qDebug() << "mouseReleaseSlots..." << objName;
                 doEvent(objName, iter.key());
@@ -825,6 +824,7 @@ void MainWindow::showHasScrollBarBtnWidget(int hideNum)
 void MainWindow::ResizeEvent()
 {
     m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
+    setGeometry(0, 0, QApplication::primaryScreen()->virtualSize().width(), QApplication::primaryScreen()->virtualSize().height());
 
     if(m_showWarningMesg)
     {
@@ -946,7 +946,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     return QWidget::eventFilter(obj, event);
 }
 
-void MainWindow::changePoint(QWidget *widget, QEvent *event, int i)
+void MainWindow::changePoint(QWidget *widget, QEvent *event)
 {
     if (event->type() == QEvent::Enter) {
         changeBtnState(widget->objectName());
@@ -1366,8 +1366,6 @@ void MainWindow::judgeboxShow()
     }
     m_scrollArea->verticalScrollBar()->setVisible(false);
 
-    int xx = m_screen.x();
-    int yy = m_screen.y();   //取得当前鼠标所在屏幕的最左，上坐标
     setLayoutWidgetVisible(m_dateTimeLayout, false);
     setLayoutWidgetVisible(m_judgeWidgetVLayout, true);
     setLayoutWidgetVisible(m_judgeBtnHLayout, true);
