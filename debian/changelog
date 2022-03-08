@@ -1,3 +1,29 @@
+ukui-session-manager (2.0.12-16) v101.hw; urgency=medium
+
+  * Bug Fix: 85005 【电源管理】英文模式下，在拷贝大文件时，无法执行睡眠提醒界面英化不完全且语法错误
+             84996 【电源管理】在拷贝大文件时，无法执行睡眠提醒界面汉化不完全
+             54153 【hw冒烟】【用户切换】用户切换时会出现黑屏 
+             57792 【电源管理】电源管理界面点击“重启”，实际执行的是注销不是重启             
+             101175 【电源】拷贝文件时选择休眠提示为睡眠 
+             88838 【电源管理】软件商店正在装包的时候点击关机和重启按钮没反应 
+
+ -- liuliang <liuliang@kylinos.cn>  Mon, 07 Mar 2022 14:02:20 +0800
+
+ukui-session-manager (2.0.12-15) v101; urgency=medium
+
+  *  其他改动：UI界面将方形按钮改成了圆形，并适配了小屏幕；
+     影响域  ：UI界面的显示，UI界面功能执行；
+
+ -- liuliang <liuliang@kylinos.cn>  Wed, 02 Mar 2022 17:19:26 +0800
+
+ukui-session-manager (2.0.12-14) v101.hw; urgency=medium
+
+  *  107646 【CPM】【HUAWEI】【KOS】【Audio】【L2】【VN1整机】机器播放视频，做S3唤醒回来，机器不能正常重启和关机(一般+低概率+常用功能)
+  *  其他改动：UI界面将方形按钮改成了圆形，并适配了小屏幕；
+     影响域  ：UI界面的显示，UI界面功能执行；     
+
+ -- liuliang <liuliang@kylinos.cn>  Wed, 02 Mar 2022 10:25:03 +0800
+
 ukui-session-manager (2.0.12-13) v101; urgency=medium
 
   * Bug Fix:  102827 【SP2-2201整机】【同方驻场】【超翔H880-T1】【注销】点击注销/重启/关机后，在桌面停留30秒后，才能进入登录界面 
