@@ -110,6 +110,8 @@ private:
 
     void showNormalBtnWidget(int hideBtnNum);
     void showHasScrollBarBtnWidget(int hideBtnNum);
+
+    void doLockscreen();//锁屏操作
 Q_SIGNALS:
     void signalTostart();
     void confirmButtonclicked();

@@ -878,13 +878,20 @@ void MainWindow::paintEvent(QPaintEvent *e)
 }
 
 //lock screen
-void doLockscreen()
+void MainWindow::doLockscreen()
 {
     QDBusInterface *interface = new QDBusInterface("org.ukui.ScreenSaver",
                                                    "/",
                                                    "org.ukui.ScreenSaver"
                                                    );
+    /*监听锁屏起来的信号，再执行界面退出操作，规避点击锁屏后先显示桌面再打开锁屏
+    QDBusConnection::sessionBus().connect(QString("org.ukui.ScreenSaver"),
+                                         QString("/"),
+                                         QString("org.ukui.ScreenSaver"),
+                                         QString("lock"), this, SLOT(exitt()));*/
     QDBusMessage msg = interface->call("Lock");
+    //延迟界面退出操作，规避点击锁屏后先显示桌面再打开锁屏
+//    QTimer::singleShot(500, this, SLOT(exitt()));
     exit(0);
 }
 
@@ -983,10 +990,11 @@ void MainWindow::doEvent(QString test, int i)
                     qDebug() << "failure to close Grab";
                 }
             }
-            this->hide();
+            //this->hide();
             if (i == 3) {
                 doLockscreen();
             } else {
+                this->hide();
                 emit signalTostart();
             }
         } catch (QException &e) {
