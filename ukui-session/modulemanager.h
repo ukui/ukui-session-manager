@@ -32,7 +32,7 @@
 #include <QTimer>
 #include <QMediaPlayer>
 #include <QDBusInterface>
-#include <vector>
+#include <map>
 
 class XdgDesktopFile;
 class IdleWatcher;
@@ -109,7 +109,7 @@ private:
     bool mWmStarted;
     bool mTrayStarted;
 
-    static std::vector<QString> m_startupList;
+    static std::map<QString, int> m_startupMap;
     ModulesMap mNameMap;
     XdgDesktopFileList mInitialization;
     XdgDesktopFile mWindowManager;
