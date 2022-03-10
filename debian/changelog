@@ -1,3 +1,11 @@
+ukui-session-manager (2.0.12-17) v101; urgency=medium
+
+  * 其他改动：usd gsettings
+    安装确认，规避无usd或安装低版本usd时session无法启动问题
+    影响域 ： 影响输入密码后的启动桌面过程
+
+ -- liuliang <liuliang@kylinos.cn>  Thu, 10 Mar 2022 14:41:45 +0800
+
 ukui-session-manager (2.0.12-16) v101.hw; urgency=medium
 
   * Bug Fix: 85005 【电源管理】英文模式下，在拷贝大文件时，无法执行睡眠提醒界面英化不完全且语法错误
