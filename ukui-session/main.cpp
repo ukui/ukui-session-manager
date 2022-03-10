@@ -295,6 +295,12 @@ void setHightResolutionScreenZoom()
     QGSettings *settings;
     double      dpi;
     int         ScreenNum = QApplication::screens().length();
+    if (!QGSettings::isSchemaInstalled(XSETTINGS_SCHEMA) || !QGSettings::isSchemaInstalled("org.ukui.font-rendering") ||
+            !QGSettings::isSchemaInstalled(MOUSE_SCHEMA)) {
+        qDebug() << "Error: ukui-settings-daemon's Schema  is not installed, will not setting dpi!";
+        delete settings;
+        return;
+    }
     settings = new QGSettings(XSETTINGS_SCHEMA);
 
     if (isTheFirstLogin(settings)) {
