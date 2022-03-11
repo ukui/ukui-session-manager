@@ -185,16 +185,15 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         inhibitShutdown = true;
     }
 
-
     user     = getenv("USER");
     lockfile = a;
     lockuser = b;
 
     initialMessageWidget();
 
-    int hideNum = 3;
+    int hideNum = 7;
     //Make a hash-map to store tableNum-to-lastWidget
-    if (m_power->canAction(UkuiPower::PowerHibernate)) {//m_power->canAction(UkuiPower::PowerHibernate)
+    if (m_power->canAction(UkuiPower::PowerHibernate)) {
         isHibernateHide = false;
         hideNum--;
     }
@@ -204,7 +203,22 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         hideNum--;
     }
 
-    if (LockChecker::getCachedUsers() > 1) {
+    if (m_power->canAction(UkuiPower::PowerLogout)) {
+        isLogoutHide = false;
+        hideNum--;
+    }
+
+    if (m_power->canAction(UkuiPower::PowerReboot)) {
+        isRebootHide = false;
+        hideNum--;
+    }
+
+    if (m_power->canAction(UkuiPower::PowerShutdown)) {
+        isPowerOffHide = false;
+        hideNum--;
+    }
+
+    if (LockChecker::getCachedUsers() > 1 && m_power->canAction(UkuiPower::PowerSwitchUser)) {
         isSwitchuserHide = false;
         hideNum--;
     }
@@ -231,7 +245,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     m_vBoxLayout->addLayout(m_dateTimeLayout, 60);
     m_vBoxLayout->addStretch();
     m_vBoxLayout->addLayout(m_judgeWidgetVLayout, 140);
-    m_vBoxLayout->addWidget(m_scrollArea,632);
+    m_vBoxLayout->addWidget(m_scrollArea, 632);
     m_vBoxLayout->addStretch(174);
     m_vBoxLayout->addLayout(m_messageVLayout, 80);
     //m_vBoxLayout->addWidget(m_systemMonitorBtn,48,Qt::AlignHCenter);
@@ -242,8 +256,8 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     qDebug() << "width..........." << m_judgeLabel->width() << m_scrollArea->width() << m_messageLabel1->width() << m_messageLabel2->width();
     //根据屏幕分辨率与鼠标位置重设界面
     //m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
-    setFixedSize(QApplication::primaryScreen()->virtualSize());
-
+    //setFixedSize(QApplication::primaryScreen()->virtualSize());
+    setGeometry(0, 0, QApplication::primaryScreen()->virtualSize().width(), QApplication::primaryScreen()->virtualSize().height());
     move(0, 0);//设置初始位置的值
 
     //设置窗体无边框，不可拖动拖拽拉伸;为顶层窗口，无法被切屏;不使用窗口管理器
@@ -373,13 +387,13 @@ void MainWindow::initialSystemMonitor()
 
 void MainWindow::initialBtn()
 {
-    m_switchUserBtn = new MyPushButton(m_btnImagesPath+"/switchuser.svg", QApplication::tr("Switch User"), "switchuser", m_scrollArea, !m_IsRoundBtn);
-    m_hibernateBtn = new MyPushButton(m_btnImagesPath+"/hibernate.svg", QApplication::tr("Hibernate"), "hibernate", m_scrollArea, !m_IsRoundBtn);
-    m_suspendBtn = new MyPushButton(m_btnImagesPath+"/suspend.svg", QApplication::tr("Suspend"), "suspend", m_scrollArea, !m_IsRoundBtn);
-    m_logoutBtn = new MyPushButton(m_btnImagesPath+"/logout.svg", QApplication::tr("Logout"), "logout", m_scrollArea, !m_IsRoundBtn);
-    m_rebootBtn = new MyPushButton(m_btnImagesPath+"/reboot.svg", QApplication::tr("Reboot"), "reboot", m_scrollArea, !m_IsRoundBtn);
-    m_shutDownBtn = new MyPushButton(m_btnImagesPath+"/shutdown.svg", QApplication::tr("Shut Down"), "shutdown", m_scrollArea, !m_IsRoundBtn);
-    m_lockScreenBtn = new MyPushButton(m_btnImagesPath+"/lockscreen.svg", QApplication::tr("Lock Screen"), "lockscreen", m_scrollArea, !m_IsRoundBtn);
+    m_switchUserBtn = new MyPushButton(m_btnImagesPath+"/switchuser.svg", QApplication::tr("Switch User"), "switchuser", m_scrollArea);
+    m_hibernateBtn = new MyPushButton(m_btnImagesPath+"/hibernate.svg", QApplication::tr("Hibernate"), "hibernate", m_scrollArea);
+    m_suspendBtn = new MyPushButton(m_btnImagesPath+"/suspend.svg", QApplication::tr("Suspend"), "suspend", m_scrollArea);
+    m_logoutBtn = new MyPushButton(m_btnImagesPath+"/logout.svg", QApplication::tr("Logout"), "logout", m_scrollArea);
+    m_rebootBtn = new MyPushButton(m_btnImagesPath+"/reboot.svg", QApplication::tr("Reboot"), "reboot", m_scrollArea);
+    m_shutDownBtn = new MyPushButton(m_btnImagesPath+"/shutdown.svg", QApplication::tr("Shut Down"), "shutdown", m_scrollArea);
+    m_lockScreenBtn = new MyPushButton(m_btnImagesPath+"/lockscreen.svg", QApplication::tr("Lock Screen"), "lockscreen", m_scrollArea);
 
     //ui->setupUi(this);
     m_switchUserBtn->installEventFilter(this);
@@ -400,12 +414,6 @@ void MainWindow::initialBtn()
 
 void MainWindow::initialJudgeWidget()
 {
-    int margins = 0;
-    if (m_screen.width() > 1088) {
-        margins = (m_screen.width() - 60 * 6 - 140 * 7) / 2;
-    } else {
-        margins = (m_screen.width() - 60 * 2 - 140 * 3) / 2;
-    }
 //    QStringList userlist = getLoginedUsers();
     QStringList userlist = LockChecker::getLoginedUsers();
     if (userlist.count() > 1) {
@@ -416,7 +424,7 @@ void MainWindow::initialJudgeWidget()
     m_judgeLabel->setText(tips);
     m_judgeLabel->setStyleSheet("color:white;font:12pt;");
     m_judgeLabel->setObjectName("label");
-    m_judgeLabel->setGeometry(0,0,m_screen.width() - 2 * margins,50);
+    m_judgeLabel->setGeometry(0,0,m_screen.width() - 160,50);
     //m_judgeLabel->setFixedHeight(60);
 
     qDebug() << "m_judgeLabel width:" << m_judgeLabel->width() << m_judgeLabel->height();
@@ -606,15 +614,18 @@ void MainWindow::initialBtnCfg()
     m_btnCfgSetting->setValue("btn/SwitchUserBtnHide", isSwitchuserHide);
     m_btnCfgSetting->setValue("btn/HibernateBtnHide", isHibernateHide);
     m_btnCfgSetting->setValue("btn/SuspendBtnHide", isSuspendHide);
+    m_btnCfgSetting->setValue("btn/LogoutBtnHide", isLogoutHide);
+    m_btnCfgSetting->setValue("btn/RebootBtnHide", isRebootHide);
+    m_btnCfgSetting->setValue("btn/ShutDownBtnHide", isPowerOffHide);
 
     qDebug() << "isHibernateHide..." << isHibernateHide;
     m_btnHideMap.insert(m_switchUserBtn, isSwitchuserHide);
     m_btnHideMap.insert(m_hibernateBtn, isHibernateHide);
     m_btnHideMap.insert(m_suspendBtn, isSuspendHide);
     m_btnHideMap.insert(m_lockScreenBtn, m_btnCfgSetting->value("btn/LockScreenBtnHide").toBool());
-    m_btnHideMap.insert(m_logoutBtn, m_btnCfgSetting->value("btn/LogoutBtnHide").toBool());
-    m_btnHideMap.insert(m_rebootBtn, m_btnCfgSetting->value("btn/RebootBtnHide").toBool());
-    m_btnHideMap.insert(m_shutDownBtn, m_btnCfgSetting->value("btn/ShutDownBtnHide").toBool());
+    m_btnHideMap.insert(m_logoutBtn, isLogoutHide);
+    m_btnHideMap.insert(m_rebootBtn, isRebootHide);
+    m_btnHideMap.insert(m_shutDownBtn, isPowerOffHide);
 }
 
 void MainWindow::setLayoutWidgetVisible(QLayout* layout, bool show)
@@ -656,7 +667,7 @@ void MainWindow::mouseReleaseSlots(QEvent *event, QString objName)
 {
     for (auto iter = map.begin(); iter != map.end(); iter++) {
         if (iter.value()->getIconLabel()->objectName() == objName) {
-            changePoint(iter.value(), event, iter.key());
+            changePoint(iter.value(), event);
             if (event->type() == QEvent::MouseButtonRelease) {
                 qDebug() << "mouseReleaseSlots..." << objName;
                 doEvent(objName, iter.key());
@@ -723,7 +734,7 @@ void MainWindow::showNormalBtnWidget(int hideNum)
     m_scrollArea->verticalScrollBar()->setVisible(false);
     m_scrollArea->verticalScrollBar()->setDisabled(true);
 
-    m_buttonHLayout->setContentsMargins(0,0,0,160);
+    m_buttonHLayout->setContentsMargins(0,0,0,260);
 
     for (int i = 0;i < m_buttonHLayout->count(); i++) {
         QLayoutItem*item = m_buttonHLayout->layout()->itemAt(i);
@@ -813,6 +824,7 @@ void MainWindow::showHasScrollBarBtnWidget(int hideNum)
 void MainWindow::ResizeEvent()
 {
     m_screen = QApplication::desktop()->screenGeometry(QCursor::pos());
+    setGeometry(0, 0, QApplication::primaryScreen()->virtualSize().width(), QApplication::primaryScreen()->virtualSize().height());
 
     if(m_showWarningMesg)
     {
@@ -830,15 +842,14 @@ void MainWindow::ResizeEvent()
     }
 
     // Move the widget to the direction where they should be
-    int recWidth;
-    if (m_IsRoundBtn) {
-        recWidth = 128;
-    } else {
-        recWidth = 140;
-    }
     for (int i = 0; i <= 6; i++) {
-        if (m_btnHideMap.value(map.value(i))) {
+        if (m_btnHideMap.value(map.value(i)))
+        {
             map[i]->hide();
+        }
+        else
+        {
+            map[i]->show();
         }
     }
     if((m_screen.width() -160 - 128 * (7 - hideNum))/(6-hideNum) >= 16)
@@ -942,7 +953,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     return QWidget::eventFilter(obj, event);
 }
 
-void MainWindow::changePoint(QWidget *widget, QEvent *event, int i)
+void MainWindow::changePoint(QWidget *widget, QEvent *event)
 {
     if (event->type() == QEvent::Enter) {
         changeBtnState(widget->objectName());
@@ -1310,6 +1321,7 @@ void MainWindow::drawWarningWindow(QRect &rect)
 
     vBoxLayout->addWidget(tips);
     vBoxLayout->addWidget(applist, 0, Qt::AlignHCenter);
+    vBoxLayout->addSpacing(isEnoughBig ? 32 : 0);
     vBoxLayout->addLayout(hBoxLayout, Qt::AlignHCenter);
 
     //移动整个区域到指定的相对位置
@@ -1362,8 +1374,6 @@ void MainWindow::judgeboxShow()
     }
     m_scrollArea->verticalScrollBar()->setVisible(false);
 
-    int xx = m_screen.x();
-    int yy = m_screen.y();   //取得当前鼠标所在屏幕的最左，上坐标
     setLayoutWidgetVisible(m_dateTimeLayout, false);
     setLayoutWidgetVisible(m_judgeWidgetVLayout, true);
     setLayoutWidgetVisible(m_judgeBtnHLayout, true);

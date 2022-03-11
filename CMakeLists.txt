@@ -39,7 +39,7 @@ if (NOT DEFINED UPDATE_TRANSLATIONS)
     set(UPDATE_TRANSLATIONS "No")
 endif()
 
-# To create a new ts file: lupdate -recursive . -target-language en_US -ts translations/en_US.ts
+# To create a new ts file: lupdate -recursive . -target-language en_US -ts translations/en_US.ts -no-ui-lines
 file(GLOB TS_FILES "${CMAKE_CURRENT_SOURCE_DIR}/translations/*.ts")
 
 # cmake -DUPDATE_TRANSLATIONS=yes
