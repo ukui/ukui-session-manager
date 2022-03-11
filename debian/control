@@ -3,26 +3,26 @@ Section: x11
 Priority: optional
 Maintainer: Kylin Team <team+kylin@tracker.debian.org>
 Uploaders: Aron Xu <aron@debian.org>,
-           handsome_feng <jianfengli@ubuntukylin.com>,
-Build-Depends: debhelper-compat (= 12),
-               cmake,
-               libx11-dev,
-               xdg-user-dirs,
-               libkf5idletime-dev,
-               libkf5coreaddons-dev,
-               libkf5config-dev,
-               qtbase5-dev,
-               qttools5-dev,
-               qtmultimedia5-dev,
+           handsome_feng <jianfengli@ubuntukylin.com>
+Build-Depends: cmake,
+               debhelper-compat (= 12),
+               libglib2.0-dev,
                libgsettings-qt-dev,
-               libqt5x11extras5-dev,
-               libxtst-dev,
-               qttools5-dev-tools,
-               pkg-config,
-               libukui-log4qt-dev,
+               libkf5config-dev,
+               libkf5coreaddons-dev,
+               libkf5idletime-dev,
                libkf5windowsystem-dev,
+               libqt5x11extras5-dev,
                libsm-dev,
-	       libglib2.0-dev
+               libukui-log4qt-dev,
+               libx11-dev,
+               libxtst-dev,
+               pkg-config,
+               qtbase5-dev,
+               qtmultimedia5-dev,
+               qttools5-dev,
+               qttools5-dev-tools,
+               xdg-user-dirs
 Rules-Requires-Root: no
 Standards-Version: 4.5.0
 Vcs-Browser: https://github.com/ukui/ukui-session-manager
@@ -31,17 +31,17 @@ Homepage: https://github.com/ukui/ukui-session-manager
 
 Package: ukui-session-manager
 Architecture: any
-Depends: ukui-themes | ubuntukylin-theme,
-         ${misc:Depends},
-         ${shlibs:Depends},
-         libglib2.0-bin,
+Depends: libglib2.0-bin,
          libqt5multimedia5-plugins,
+         ukui-themes | ubuntukylin-theme,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Recommends: peony,
             ukui-kwin | ukwm,
             ukui-panel,
             ukui-polkit,
             ukui-screensaver,
-            ukui-settings-daemon,
+            ukui-settings-daemon
 Provides: x-session-manager
 Description: Session manager of the UKUI desktop environment
  This package contains a session that can be started from a display
