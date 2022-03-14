@@ -685,20 +685,20 @@ void UKUISMServer::restoreWM(const QString &sessionName)
 
     //以下这段是从保存的会话文件中寻找wm的重启命令，因为wm不在此处启动，所以不再需要这里的代码
 //    QList<QStringList> wmStartCommands;
-//    if (!m_wm.isEmpty()) {
-//        for (int i = 1; i <= count; i++) {
-//            QString n = QString::number(i);
-//            if (isWM(configSessionGroup.readEntry(QStringLiteral("program") + n, QString()))) {
-//                wmStartCommands << configSessionGroup.readEntry(QStringLiteral("restartCommand") + n, QStringList());
-//            }
-//        }
-//    }
+    if (!m_wm.isEmpty()) {
+        for (int i = 1; i <= count; i++) {
+            QString n = QString::number(i);
+            if (isWM(configSessionGroup.readEntry(QStringLiteral("program") + n, QString()))) {
+                m_wmStartCommands << configSessionGroup.readEntry(QStringLiteral("restartCommand") + n, QStringList());
+            }
+        }
+    }
 
 //    if (wmStartCommands.isEmpty()) {
 //        wmStartCommands << m_wmCommands;
 //    }
 
-    //launchWM(wmStartCommands);
+//    launchWM(m_wmStartCommands);
 }
 
 void UKUISMServer::startDefaultSession()
@@ -1374,6 +1374,11 @@ void UKUISMServer::executeBoxadm()
     proc->start("boxadm", QStringList{argu});
     proc->waitForFinished(-1);
     delete proc;
+}
+
+QList<QStringList> UKUISMServer::wmStartCommands() const
+{
+    return m_wmStartCommands;
 }
 
 void UKUISMServer::startLogoutTimer()
