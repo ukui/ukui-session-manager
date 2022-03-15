@@ -680,11 +680,12 @@ void MainWindow::mouseReleaseSlots(QEvent *event, QString objName)
 void MainWindow::screenCountChanged()
 {
     QDesktopWidget *desktop = QApplication::desktop();
-    qDebug() << "inside screenCountChanged,screenCount = " << desktop->screenCount();
+    qDebug() << "inside screenCountChanged,screenCount = " << desktop->screenCount() << QApplication::desktop()->screenGeometry(QCursor::pos()).width() << QApplication::desktop()->screenGeometry(QCursor::pos()).height();
     //setGeometry(desktop->geometry());
     //updateGeometry();
     //move(0,0);
-    setFixedSize(QApplication::primaryScreen()->virtualSize());
+    //setFixedSize(QApplication::primaryScreen()->virtualSize());
+    setGeometry(0, 0, QApplication::primaryScreen()->virtualSize().width(), QApplication::primaryScreen()->virtualSize().height());
     ResizeEvent();
     update();
 }
@@ -712,7 +713,7 @@ void MainWindow::showNormalBtnWidget(int hideNum)
     int margins = 0;
 
     margins = (m_screen.width() -160 - 128 * (7 - hideNum))/(6-hideNum);
-    qDebug() << "margins:" << margins;
+    qDebug() << "showNormalBtnWidget hideNum:" << hideNum << "margins:" << margins;
     int btnWidgetWidth = 0;
     if(margins > 60)
     {
@@ -734,7 +735,7 @@ void MainWindow::showNormalBtnWidget(int hideNum)
     m_scrollArea->verticalScrollBar()->setVisible(false);
     m_scrollArea->verticalScrollBar()->setDisabled(true);
 
-    m_buttonHLayout->setContentsMargins(0,0,0,260);
+    m_buttonHLayout->setContentsMargins(0,0,0,340);
 
     for (int i = 0;i < m_buttonHLayout->count(); i++) {
         QLayoutItem*item = m_buttonHLayout->layout()->itemAt(i);
@@ -762,7 +763,7 @@ void MainWindow::showHasScrollBarBtnWidget(int hideNum)
     int needHeight = (m_lineNum * 171 + (m_lineNum - 1) * 32);
     int btnWidgetHeight = 632;
 
-    qDebug() << "lineWidth:" << lineWidth << "lineMaxBtnNum:" << lineMaxBtnNum << "needHeight:" << needHeight << "lineNum:" << m_lineNum<< allBtnNum/lineMaxBtnNum << allBtnNum%lineMaxBtnNum;
+    qDebug() << "showHasScrollBarBtnWidget lineWidth:" << lineWidth << "lineMaxBtnNum:" << lineMaxBtnNum << "needHeight:" << needHeight << "lineNum:" << m_lineNum<< allBtnNum/lineMaxBtnNum << allBtnNum%lineMaxBtnNum;
 
     calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_switchUserBtn, m_switchRow, m_switchColumn);
     calculateBtnSpan(allBtnNum, lineMaxBtnNum, m_hibernateBtn, m_hibernateRow, m_hibernateColumn);
@@ -793,11 +794,11 @@ void MainWindow::showHasScrollBarBtnWidget(int hideNum)
         qDebug() << "set bar pos...";
         //m_scrollArea->verticalScrollBar()->setGeometry(QRect(lineWidth + 20, 0, 6, 100));
         m_scrollArea->setContentsMargins(0,0,0,0);
-        m_scrollArea->setGeometry(QRect(0,0,128 * lineMaxBtnNum + 60 * (lineMaxBtnNum-1)  +6,btnWidgetHeight));
+        m_scrollArea->setGeometry(QRect(0,0,128 * lineMaxBtnNum + 60 * (lineMaxBtnNum-1) + 6, btnWidgetHeight * m_screen.height()/1080));
 
         m_buttonHLayout->setContentsMargins(0,0,0,0);// (needHeight > 632 ? 0 : (632 - needHeight)) * m_screen.height()/1080);
 
-        m_btnWidget->setGeometry(QRect(0,0,128 * lineMaxBtnNum + 60 * (lineMaxBtnNum-1),needHeight));
+        m_btnWidget->setGeometry(QRect(0,0,128 * lineMaxBtnNum + 60 * (lineMaxBtnNum-1), needHeight));
         m_btnWidget->setContentsMargins(6,0,12,0);
         qDebug() << "m_btnWidget FixedHeight:" << needHeight << btnWidgetHeight << m_btnWidget->width() << m_scrollArea->width();
         qDebug() << "isSwitchuserHide:" << isSwitchuserHide << "isHibernateHide:" << isHibernateHide << "isSuspendHide:" << isSuspendHide;
@@ -867,6 +868,11 @@ void MainWindow::ResizeEvent()
     m_scrollArea->setWidget(m_btnWidget);
     m_scrollArea->setStyleSheet("QScrollArea#scrollArea{background-color: transparent;}");
     m_scrollArea->setAlignment(Qt::AlignHCenter);
+    qDebug() << "m_scrollArea geometry:" << m_scrollArea->geometry();
+    qDebug() << "m_btnWidget geometry:" << m_btnWidget->geometry();
+
+    m_vBoxLayout->setContentsMargins((m_screen.width() - m_scrollArea->width() - 20)/2,0,(m_screen.width() - m_scrollArea->width() - 20)/2,0);
+
     //m_scrollArea->adjustSize();
     //m_scrollArea->setWidgetResizable(true);
     m_toolWidget->setGeometry(m_screen);
