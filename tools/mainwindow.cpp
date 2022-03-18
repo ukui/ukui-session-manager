@@ -241,16 +241,33 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
 
     ResizeEvent();
 
+    //使按钮控件上下比例均衡
+    QVBoxLayout *spaceLayout = new QVBoxLayout();
+    QLabel spaceLabel1;
+    QLabel spaceLabel2;
+    spaceLabel1.setFont(QFont("Noto Sans CJK SC", 28, 50));
+    spaceLabel2.setFont(QFont("Noto Sans CJK SC", 12, 50));
+    spaceLabel1.setStyleSheet("color: white; font: 28pt");
+    spaceLabel2.setStyleSheet("color: white; font: 12pt");
+    spaceLabel1.setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    spaceLabel2.setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    spaceLabel1.setObjectName("date_label");
+    spaceLabel2.setObjectName("time_lable");
+    spaceLayout->addStretch();
+    spaceLayout->addWidget(&spaceLabel1);
+    spaceLayout->addSpacing(10);
+    spaceLayout->addWidget(&spaceLabel2);
+    setLayoutWidgetVisible(spaceLayout, false);
+
     m_vBoxLayout->addStretch(20);
-    m_vBoxLayout->addLayout(m_dateTimeLayout, 60);
-    m_vBoxLayout->addStretch();
-    m_vBoxLayout->addLayout(m_judgeWidgetVLayout, 140);
-    m_vBoxLayout->addWidget(m_scrollArea, 632);
-    m_vBoxLayout->addStretch(174);
-    m_vBoxLayout->addLayout(m_messageVLayout, 80);
-    //m_vBoxLayout->addWidget(m_systemMonitorBtn,48,Qt::AlignHCenter);
-    m_vBoxLayout->addStretch(58);
-    //m_vBoxLayout->setContentsMargins(0,0,0,0);
+    m_vBoxLayout->addLayout(m_dateTimeLayout, 80);
+    m_vBoxLayout->addLayout(m_judgeWidgetVLayout, 120);
+    m_vBoxLayout->addWidget(m_scrollArea, 640);
+    m_vBoxLayout->addLayout(m_messageVLayout, 120);
+    m_vBoxLayout->addLayout(spaceLayout, 80);
+    m_vBoxLayout->addStretch(20);
+    m_vBoxLayout->setSpacing(0);
+
     m_vBoxLayout->setContentsMargins((m_screen.width() - m_scrollArea->width() - 20)/2,0,(m_screen.width() - m_scrollArea->width() - 20)/2,0);
 
     qDebug() << "width..........." << m_judgeLabel->width() << m_scrollArea->width() << m_messageLabel1->width() << m_messageLabel2->width();
@@ -424,11 +441,11 @@ void MainWindow::initialJudgeWidget()
     m_judgeLabel->setText(tips);
     m_judgeLabel->setStyleSheet("color:white;font:12pt;");
     m_judgeLabel->setObjectName("label");
-    m_judgeLabel->setGeometry(0,0,m_screen.width() - 160,50);
+    //m_judgeLabel->setGeometry(0,0,m_screen.width(),50);
     //m_judgeLabel->setFixedHeight(60);
 
     qDebug() << "m_judgeLabel width:" << m_judgeLabel->width() << m_judgeLabel->height();
-    m_judgeLabel->setAlignment(Qt::AlignHCenter| Qt::AlignBottom);
+    m_judgeLabel->setAlignment(Qt::AlignCenter);
     m_judgeLabel->setWordWrap(true);
 
     m_cancelBtn = new QPushButton(QApplication::tr("cancel"));
@@ -446,7 +463,7 @@ void MainWindow::initialJudgeWidget()
 
     m_judgeWidgetVLayout->addStretch();
     m_judgeWidgetVLayout->addWidget(m_judgeLabel);
-    m_judgeWidgetVLayout->addSpacing(0);
+    m_judgeWidgetVLayout->addSpacing(10);
     m_judgeWidgetVLayout->addLayout(m_judgeBtnHLayout);
     m_judgeWidgetVLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
@@ -466,8 +483,8 @@ void MainWindow::initialMessageWidget()
         margins = (m_screen.width() - 60 * 2 - 140 * 3) / 2;
     }
 
-    m_messageLabel1->setGeometry(QRect(0, 0, 700, 40));
-    m_messageLabel2->setGeometry(QRect(0, 0, 700, 40));
+    m_messageLabel1->setGeometry(0, 0, m_screen.width() - 160, 40);
+    m_messageLabel2->setGeometry(0, 0, m_screen.width() - 160, 40);
     m_messageLabel1->setStyleSheet("color:white;font:12pt;");
     m_messageLabel2->setStyleSheet("color:white;font:12pt;");
     m_messageLabel1->setObjectName("messagelabel1");
@@ -476,16 +493,19 @@ void MainWindow::initialMessageWidget()
 //    m_messageLabel2->setFixedWidth(m_screen.width() - 20);
     m_messageLabel1->setWordWrap(true);
     m_messageLabel2->setWordWrap(true);
-    m_messageLabel2->setAlignment(Qt::AlignCenter);
-    m_messageLabel1->setAlignment(Qt::AlignCenter);
+    m_messageLabel2->setAlignment(Qt::AlignHCenter);
+    m_messageLabel1->setAlignment(Qt::AlignHCenter);
     m_messageLabel1->setMargin(0);
     m_messageLabel2->setMargin(0);
+    m_messageLabel1->setWordWrap(true);
+    m_messageLabel2->setWordWrap(true);
 
+    m_messageVLayout->addStretch();
     m_messageVLayout->addWidget(m_messageLabel1);
     m_messageVLayout->addSpacing(10);
     m_messageVLayout->addWidget(m_messageLabel2);
     //m_messageVLayout->setAlignment(Qt::AlignHCenter);
-    m_messageVLayout->setContentsMargins(0,0,0,0);
+    //m_messageVLayout->setContentsMargins(0,0,0,0);
 
     if (lockfile) {
         QFile   file_update("/tmp/lock/kylin-update.lock");
@@ -572,10 +592,12 @@ void MainWindow::initialDateTimeWidget()
     m_dateLabel->setObjectName("date_label");
     m_timeLabel->setObjectName("time_lable");
 
+    m_dateTimeLayout->addStretch();
     m_dateTimeLayout->addWidget(m_timeLabel);
-    m_dateTimeLayout->setStretch(0,1);
+    m_messageVLayout->addSpacing(10);
+    //m_dateTimeLayout->setStretch(0,1);
     m_dateTimeLayout->addWidget(m_dateLabel);
-    m_dateTimeLayout->setStretch(1,2);
+    //m_dateTimeLayout->setStretch(1,2);
 }
 
 void MainWindow::initialBtnCfg()
@@ -726,16 +748,16 @@ void MainWindow::showNormalBtnWidget(int hideNum)
         btnWidgetWidth = 128 * (7 - hideNum) + margins * (6 - hideNum);
         m_buttonHLayout->setHorizontalSpacing(margins);
     }
-    m_btnWidget->setGeometry(QRect(0,0,btnWidgetWidth+ 24, 632));
-    m_btnWidget->setContentsMargins(0,0,0,0);
+    m_btnWidget->setGeometry(QRect(0,0,btnWidgetWidth+ 24, 632 * m_screen.height()/1080));
+    m_btnWidget->setContentsMargins(0,0,0,100);
 
-    m_scrollArea->setGeometry(QRect(0,0,btnWidgetWidth + 24, 632));
+    m_scrollArea->setGeometry(QRect(0,0,btnWidgetWidth + 24, 632 * m_screen.height()/1080));
 
     m_scrollArea->setContentsMargins(0,0,0,0);
     m_scrollArea->verticalScrollBar()->setVisible(false);
     m_scrollArea->verticalScrollBar()->setDisabled(true);
 
-    m_buttonHLayout->setContentsMargins(0,0,0,340);
+    //m_buttonHLayout->setContentsMargins(0,0,0,(m_scrollArea->height() - m_switchUserBtn->height()) * 3/5);
 
     for (int i = 0;i < m_buttonHLayout->count(); i++) {
         QLayoutItem*item = m_buttonHLayout->layout()->itemAt(i);
@@ -863,6 +885,7 @@ void MainWindow::ResizeEvent()
     }
     m_btnWidget->setStyleSheet("QWidget#btnWidget{background-color: transparent;}");
     m_btnWidget->setLayout(m_buttonHLayout);
+
     m_scrollArea->horizontalScrollBar()->setVisible(false);
     m_scrollArea->horizontalScrollBar()->setDisabled(true);
     m_scrollArea->setWidget(m_btnWidget);
@@ -870,6 +893,7 @@ void MainWindow::ResizeEvent()
     m_scrollArea->setAlignment(Qt::AlignHCenter);
     qDebug() << "m_scrollArea geometry:" << m_scrollArea->geometry();
     qDebug() << "m_btnWidget geometry:" << m_btnWidget->geometry();
+    qDebug() << "m_buttonHLayout geometry:" << m_buttonHLayout->geometry();
 
     m_vBoxLayout->setContentsMargins((m_screen.width() - m_scrollArea->width() - 20)/2,0,(m_screen.width() - m_scrollArea->width() - 20)/2,0);
 
