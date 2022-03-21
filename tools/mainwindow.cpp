@@ -749,7 +749,7 @@ void MainWindow::showNormalBtnWidget(int hideNum)
         m_buttonHLayout->setHorizontalSpacing(margins);
     }
     m_btnWidget->setGeometry(QRect(0,0,btnWidgetWidth+ 24, 632 * m_screen.height()/1080));
-    m_btnWidget->setContentsMargins(0,0,0,100);
+    m_btnWidget->setContentsMargins(0,0,0,100 * m_screen.height()/1080);
 
     m_scrollArea->setGeometry(QRect(0,0,btnWidgetWidth + 24, 632 * m_screen.height()/1080));
 
