@@ -47,10 +47,33 @@ public:
     MainWindow(bool a , bool b ,QWidget *parent = nullptr);
     ~MainWindow();
 
+    /**
+     * @brief 响应按钮事件
+     * @param test2 按钮名字
+     * @param i 按钮序号
+     */
     void doEvent(QString test2,int i);
-    void changePoint(QWidget *widget ,QEvent *event ,int i);
+
+    /**
+     * @brief 响应鼠标事件后改变按钮状态
+     * @param widget 指定按钮对象
+     * @param widget 鼠标事件
+     */
+    void changePoint(QWidget *widget ,QEvent *event);
+
+    /**
+     * @brief 调整界面显示的控件
+     */
     void judgeboxShow();
+
+    /**
+     * @brief 模拟按键
+     */
     void keyPressEmulate();
+
+    /**
+     * @brief 消息过滤
+     */
     virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
     //void closeEvent(QCloseEvent *event);
 
@@ -97,30 +120,106 @@ public:
     void changeBtnState(QString btnName, bool isEnterKey = false);
 
 private:
-    QString getAppLocalName(QString desktopfp);//获取应用名
-    void ResizeEvent();
-    void showInhibitWarning();//当有inhibitor存在时显示提醒界面
-    void drawWarningWindow(QRect &rect);//画出提醒界面
-    QMap<QString, QString> findNameAndIcon(QString &basename);//根据inhibitor的名称获取对应desktop文件中的应用名和icon路径
+    /**
+     * @brief 获取应用名
+     */
+    QString getAppLocalName(QString desktopfp);
 
-    void calculateBtnSpan(int allNum, int lineMaxNum, MyPushButton*, int& row, int& colum);
+    /**
+     * @brief 重新计算界面大小及控件位置布局
+     */
+    void ResizeEvent();
+
+    /**
+     * @brief 当有inhibitor存在时显示提醒界面
+     */
+    void showInhibitWarning();
+
+    /**
+     * @brief 画出提醒界面
+     */
+    void drawWarningWindow(QRect &rect);
+
+    /**
+     * @brief 根据inhibitor的名称获取对应desktop文件中的应用名和icon路径
+     */
+    QMap<QString, QString> findNameAndIcon(QString &basename);
+
+    /**
+     * @brief 根据inhibitor的名称获取对应desktop文件中的应用名和icon路径
+     * @param allNum 共显示的按钮数
+     * @param lineMaxNum 一行最多显示的按钮数
+     * @param btn 指定按钮
+     */
+    void calculateBtnSpan(int allNum, int lineMaxNum, MyPushButton* btn, int& row, int& colum);
+
+    /**
+     * @brief 计算键盘左右键对应的按钮
+     * @param key 按键名字
+     */
     void calculateKeyBtn(const QString &key);
+
+    /**
+     * @brief 按钮是否可用
+     * @param index 按钮序号
+     */
     bool judgeBtnIsEnable(int index);
+
+    /**
+     * @brief 打开监视器
+     */
     //void doSystemMonitor();
 
+    /**
+     * @brief 显示常规的按钮界面
+     * @param hideBtnNum 隐藏的按钮数
+     */
     void showNormalBtnWidget(int hideBtnNum);
+
+    /**
+     * @brief 显示需要换行的按钮界面
+     * @param hideBtnNum 隐藏的按钮数
+     */
     void showHasScrollBarBtnWidget(int hideBtnNum);
 
     void doLockscreen();//锁屏操作
 Q_SIGNALS:
+    /**
+     * @brief 按钮点击后的事件信号
+     */
     void signalTostart();
+
+    /**
+     * @brief 点击提示界面的确认按钮信号
+     */
     void confirmButtonclicked();
 
 private Q_SLOTS:
+    /**
+     * @brief 退出
+     */
     bool exitt();
+
+    /**
+     * @brief 按键按下事件
+     * @param key 键名
+     */
     void onGlobalKeyPress(const QString &key);
+
+    /**
+     * @brief 按键弹起事件
+     * @param key 键名
+     */
     void onGlobalkeyRelease(const QString &key);
+
+    /**
+     * @brief 屏幕变化
+     */
     void screenCountChanged();
+
+    /**
+     * @brief 点击按钮事件
+     */
     void mouseReleaseSlots(QEvent *event, QString objName);
 
 protected:
@@ -150,9 +249,15 @@ private:
     XEventMonitor *xEventMonitor;
     int tableNum;
     bool flag = false;
+
+    /// 各按钮是否隐藏 默认隐藏
     bool isSwitchuserHide = true;
     bool isHibernateHide = true;
     bool isSuspendHide = true;
+    bool isLogoutHide = true;
+    bool isRebootHide = true;
+    bool isPowerOffHide = true;
+
     bool lockfile = false;
     bool lockuser = false;
     bool click_blank_space_need_to_exit = true;
@@ -160,10 +265,8 @@ private:
     bool inhibitSleep = false;
     bool inhibitShutdown = false;
 
-
     QHash<MyPushButton*, bool> m_btnHideMap;
 
-    bool m_IsRoundBtn = true;//是否是圆形按钮
     QString m_btnImagesPath = "/usr/share/ukui/ukui-session-manager/images";
     MyPushButton *m_switchUserBtn = nullptr;
     MyPushButton *m_hibernateBtn = nullptr;
@@ -201,6 +304,7 @@ private:
     //QLabel *m_systemMonitorLabel = nullptr;
     //QPixmap m_systemMonitorIcon;
 
+    /// 计算各按钮的行列位置
     int m_switchRow = 0, m_switchColumn = 0;
     int m_hibernateRow = 0, m_hibernateColumn = 0;
     int m_suspendRow = 0, m_suspendColumn = 0;
@@ -212,8 +316,8 @@ private:
 
     QSettings *m_btnCfgSetting = nullptr;
     QRect m_screen;
-    QWidget *m_showWarningArea = nullptr;
-    bool m_btnWidgetNeedScrollbar = false;
-    bool m_showWarningMesg = false;
+    QWidget *m_showWarningArea = nullptr; /// 阻止列表
+    bool m_btnWidgetNeedScrollbar = false; /// 是否需要滑动条显示
+    bool m_showWarningMesg = false; /// 是否显示阻止列表
 };
 #endif // MAINWINDOW_H

@@ -22,20 +22,16 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include <QEvent>
-MyPushButton::MyPushButton(QString iconPath, QString buttonLable, QString objName, QWidget *parent, bool isRecBtn, int x, int y,
+MyPushButton::MyPushButton(QString iconPath, QString buttonLable, QString objName, QWidget *parent, int x, int y,
                            int width, int height, int iconWidth, int labelWidth)
-    : m_isRecBtn(isRecBtn)
-    , QWidget(parent)
+    : QWidget(parent)
 {
-    if (m_isRecBtn) {
-        this->setFixedSize(width, width);
-    } else {
-        this->setFixedSize(labelWidth, height);
-    }
+    this->setFixedSize(labelWidth, height);
+
     this->setObjectName(objName);
     QVBoxLayout *vBoxLayout = new QVBoxLayout();
     vBoxLayout->setContentsMargins(0, 0, 0, 10);
-    m_iconLabel = new MyIconLabel(labelWidth, iconWidth, iconPath, !isRecBtn);
+    m_iconLabel = new MyIconLabel(labelWidth, iconWidth, iconPath);
     m_iconLabel->setObjectName(objName + "_button");
     m_iconLabel->installEventFilter(this);
 
@@ -46,10 +42,6 @@ MyPushButton::MyPushButton(QString iconPath, QString buttonLable, QString objNam
     m_buttonLabel->setStyleSheet("color: white; font: 12pt");
     m_buttonLabel->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 
-    if (m_isRecBtn) {
-        this->setStyleSheet("QWidget#" + this->objectName() + "{background-color: transparent;border-radius: 6px;}");
-        this->setAttribute(Qt::WA_StyledBackground);
-    }
     vBoxLayout->addWidget(m_iconLabel, 0, Qt::AlignHCenter);
     vBoxLayout->addWidget(m_buttonLabel, 0, Qt::AlignHCenter);
     this->setLayout(vBoxLayout);
