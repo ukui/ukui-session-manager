@@ -24,11 +24,12 @@
 #include "ukuipower.h"
 #include "powerprovider.h"
 #include <QDebug>
+#include <QDBusInterface>
+#include <QDBusReply>
 
 UkuiPower::UkuiPower(QObject *parent) : QObject(parent)
 {
-    mProviders.append(new SystemdProvider(this));
-    mProviders.append(new UKUIProvider(this));
+    m_systemdProvider = new SystemdProvider(this);
 }
 
 UkuiPower::~UkuiPower()
@@ -37,28 +38,93 @@ UkuiPower::~UkuiPower()
 
 bool UkuiPower::canAction(UkuiPower::Action action) const
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
-    foreach(const PowerProvider *provider, mProviders) {
-#else
-    for (const PowerProvider *provider : qAsConst(mProviders)) {
-#endif
-        if (provider->canAction(action))
-            return true;
+    //以下为代码结构调整
+    QString command;
+    switch (action) {
+    case PowerSwitchUser:
+        command = QLatin1String("canSwitch");
+        break;
+    case PowerHibernate:
+        command = QLatin1String("canHibernate");
+        break;
+    case PowerSuspend:
+        command = QLatin1String("canSuspend");
+        break;
+    case PowerLogout:
+        command = QLatin1String("canLogout");
+        break;
+    case PowerReboot:
+        command = QLatin1String("canReboot");
+        break;
+    case PowerShutdown:
+        command = QLatin1String("canPowerOff");
+        break;
+    default:
+        break;
     }
 
-    return false;
+    QDBusInterface *sessionInterface = new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
+                                                          "org.gnome.SessionManager", QDBusConnection::sessionBus());
+
+    if (!sessionInterface->isValid()) {
+        qWarning() << "dbusCall: Session QDBusInterface is invalid";
+        return false;
+    }
+
+    QDBusReply<bool> reply = sessionInterface->call(command);
+    if (!reply.isValid()) {
+        //解决老版本升级到新版本接口不兼容的问题，在session接口不存在的情况下，调用systemd的接口
+        QDBusError error =  reply.error();
+        if (error.type() == QDBusError::UnknownMethod) {
+            return m_systemdProvider->canAction(action);
+
+        }
+        return false;
+    }
+
+    return reply.value();
 }
 
 bool UkuiPower::doAction(UkuiPower::Action action)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
-    foreach(PowerProvider *provider, mProviders) {
-#else
-    for (PowerProvider *provider : qAsConst(mProviders)) {
-#endif
-        if (provider->canAction(action) && provider->doAction(action))
-            return true;
+    QString command;
+    switch (action) {
+    case PowerSwitchUser:
+        command = QLatin1String("switchUser");
+        break;
+    case PowerHibernate:
+        command = QLatin1String("hibernate");
+        break;
+    case PowerSuspend:
+        command = QLatin1String("suspend");
+        break;
+    case PowerLogout:
+        command = QLatin1String("logout");
+        break;
+    case PowerReboot:
+        command = QLatin1String("reboot");
+        break;
+    case PowerShutdown:
+        command = QLatin1String("powerOff");
+        break;
+    default:
+        break;
     }
 
-    return false;
+    QDBusInterface *sessionInterface = new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
+                                                          "org.gnome.SessionManager", QDBusConnection::sessionBus());
+
+    if (!sessionInterface->isValid()) {
+        qWarning() << "dbusCall: Session QDBusInterface is invalid";
+        return false;
+    }
+
+    QDBusMessage mes = sessionInterface->call(command);
+
+    if (!(mes.errorName().isEmpty())) {
+        //本来应该判断错误类别，考虑到运行效率，不做该判断
+        return m_systemdProvider->doAction(action);
+    }
+
+    return true;
 }

@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) Copyright 2021 KylinSoft Co., Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+**/
+
 #include "lockchecker.h"
 #include "loginedusers.h"
 #include <sys/file.h>
@@ -20,49 +38,50 @@ LockChecker::~LockChecker()
 {
 }
 
-int LockChecker::checkLock(){
+int LockChecker::checkLock()
+{
     bool lockfile = false;
     bool lockuser = false;
 
     QFile file_backup("/tmp/lock/kylin-backup.lock");
     QFile file_update("/tmp/lock/kylin-update.lock");
-    if(file_backup.exists()) {
+    if (file_backup.exists()) {
         int fd_backup = open(QString("/tmp/lock/kylin-backup.lock").toUtf8().data(), O_RDONLY);
         int b = flock(fd_backup, LOCK_EX|LOCK_NB);
         qDebug() << "b" << b;
-        if(b < 0){
+        if (b < 0) {
             lockfile = true;
             QString file_user = getName(&file_backup);
-            if(file_user == qgetenv("USER")){
+            if (file_user == qgetenv("USER")) {
                 lockuser = true;
             }
         }
         file_backup.close();
-        if(flock(fd_backup, LOCK_UN) == 0){
-            qDebug()<<"unlock sucess.";
-        }else{
-            qDebug()<<"unlock fail.";
-        }
-    }
-    if(file_update.exists()) {
-        int fd_update = open(QString("/tmp/lock/kylin-update.lock").toUtf8().data(), O_RDONLY);
-        int c = flock(fd_update, LOCK_EX|LOCK_NB);
-        qDebug() << "c" << c;
-        if(c < 0){
-            lockfile = true;
-            QString file_user = getName(&file_update);
-            if(file_user == qgetenv("USER")){
-                lockuser = true;
-            }
-        }
-        file_backup.close();
-        if(flock(fd_update, LOCK_UN) == 0){
+        if (flock(fd_backup, LOCK_UN) == 0) {
             qDebug() << "unlock sucess.";
-        }else{
+        } else {
             qDebug() << "unlock fail.";
         }
     }
-    if(lockfile) {
+    if (file_update.exists()) {
+        int fd_update = open(QString("/tmp/lock/kylin-update.lock").toUtf8().data(), O_RDONLY);
+        int c = flock(fd_update, LOCK_EX|LOCK_NB);
+        qDebug() << "c" << c;
+        if (c < 0) {
+            lockfile = true;
+            QString file_user = getName(&file_update);
+            if (file_user == qgetenv("USER")) {
+                lockuser = true;
+            }
+        }
+        file_backup.close();
+        if (flock(fd_update, LOCK_UN) == 0) {
+            qDebug() << "unlock sucess.";
+        } else {
+            qDebug() << "unlock fail.";
+        }
+    }
+    if (lockfile) {
         if(lockuser)
             return 2;
         return 1;
@@ -70,7 +89,8 @@ int LockChecker::checkLock(){
     return 0;
 }
 
-QStringList LockChecker::getLoginedUsers(){
+QStringList LockChecker::getLoginedUsers()
+{
     QStringList loginedUser;
     qRegisterMetaType<LoginedUsers>("LoginedUsers");
     qDBusRegisterMetaType<LoginedUsers>();
@@ -119,7 +139,8 @@ QStringList LockChecker::getLoginedUsers(){
 }
 
 /*只获取mode为block的inhibitors*/
-QVector<Inhibitor> LockChecker::getInhibitors(){
+QVector<Inhibitor> LockChecker::getInhibitors()
+{
     QVector<Inhibitor> inhibitors;
     qRegisterMetaType<Inhibitor>("Inhibitorss");
     qDBusRegisterMetaType<Inhibitor>();
@@ -209,7 +230,8 @@ void LockChecker::getShutdownInhibitors(QStringList &shutdownInhibitors, QString
     }
 }
 
-QString LockChecker::getName(QFile *a){
+QString LockChecker::getName(QFile *a)
+{
     QString user = getenv("USER");
     if (a->exists()) {
         a->open(QIODevice::ReadOnly|QIODevice::Text);
@@ -262,28 +284,16 @@ int LockChecker::getCachedUsers()
     return userNum;
 }
 
-bool LockChecker::hasMultipleUsers()
+QDBusArgument &operator<<(QDBusArgument &argument, const Inhibitor &mystruct)
 {
-    QDBusInterface interface("org.freedesktop.Accounts",
-                             "/org/freedesktop/Accounts",
-                             "org.freedesktop.DBus.Properties",
-                             QDBusConnection::systemBus());
-    if (!interface.isValid()) {
-        qCritical() << QDBusConnection::systemBus().lastError().message();
-    }
-
-    QDBusReply<QVariant> reply = interface.call("Get","org.freedesktop.Accounts","HasMultipleUsers");
-    return reply.value().toBool();
-}
-
-QDBusArgument &operator<<(QDBusArgument &argument, const Inhibitor &mystruct){
     argument.beginStructure();
     argument << mystruct.action << mystruct.name << mystruct.reason << mystruct.mode << mystruct.uid << mystruct.pid;
     argument.endStructure();
     return argument;
 }
 
-const QDBusArgument &operator>>(const QDBusArgument &argument, Inhibitor &mystruct){
+const QDBusArgument &operator>>(const QDBusArgument &argument, Inhibitor &mystruct)
+{
     argument.beginStructure();
     argument >> mystruct.action >> mystruct.name >> mystruct.reason >> mystruct.mode >> mystruct.uid >> mystruct.pid;
     argument.endStructure();

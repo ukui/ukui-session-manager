@@ -50,53 +50,6 @@
 
 #define PROPERTIES_INTERFACE    "org.freedesktop.DBus.Properties"
 
-// QStringList getLoginedUsers() {
-//    QStringList m_loginedUser;
-//    qRegisterMetaType<LoginedUsers>("LoginedUsers");
-//    qDBusRegisterMetaType<LoginedUsers>();
-//    QDBusInterface loginInterface(SYSTEMD_SERVICE,
-//                                  SYSTEMD_PATH,
-//                                  SYSTEMD_INTERFACE,
-//                                  QDBusConnection::systemBus());
-
-//    if (loginInterface.isValid()) {
-//        qDebug() << "create interface success";
-//    }
-
-//    QDBusMessage result = loginInterface.call("ListUsers");
-//    QList<QVariant> outArgs = result.arguments();
-//    QVariant first = outArgs.at(0);
-//    QDBusArgument dbvFirst = first.value<QDBusArgument>();
-//    QVariant vFirst = dbvFirst.asVariant();
-//    const QDBusArgument &dbusArgs = vFirst.value<QDBusArgument>();
-
-//    QVector<LoginedUsers> loginedUsers;
-
-//    dbusArgs.beginArray();
-//    while (!dbusArgs.atEnd()) {
-//        LoginedUsers user;
-//        dbusArgs >> user;
-//        loginedUsers.push_back(user);
-//    }
-//    dbusArgs.endArray();
-
-//    for (LoginedUsers user : loginedUsers) {
-
-//        QDBusInterface userPertyInterface("org.freedesktop.login1",
-//                                          user.objpath.path(),
-//                                          "org.freedesktop.DBus.Properties",
-//                                          QDBusConnection::systemBus());
-
-//        QDBusReply<QVariant> reply = userPertyInterface.call("Get", "org.freedesktop.login1.User", "State");
-//        if (reply.isValid()) {
-//            QString status = reply.value().toString();
-//            if ("closing" != status) {
-//                m_loginedUser.append(user.userName);
-//            }
-//        }
-//    }
-//    return m_loginedUser;
-//}
 
 bool messageBoxCheck()
 {
@@ -124,8 +77,9 @@ bool messageBoxCheck()
     } else if (msgBox.clickedButton() == giveupButton) {
         qDebug() << "give up";
         return false;
-    } else
+    } else {
         return false;
+    }
 }
 
 static bool dbusCall(const QString &service,
@@ -165,14 +119,22 @@ static bool dbusCallSystemd(const QString &service,
         return false;
     }
 
-    QDBusMessage msg = dbus.call(method, needBoolArg ? QVariant(true) : QVariant());
+    // QDBusMessage msg = dbus.call(method, needBoolArg ? QVariant(true) : QVariant());
+    // 在华为相关的机器上，如果调用的method没有参数，但仍传入一个空值，会调用失败
+    QDBusMessage msg;
+    if (needBoolArg) {
+        msg = dbus.call(method, QVariant(true));
+    } else {
+        msg = dbus.call(method);
+    }
 
     if (!msg.errorName().isEmpty()) {
         qWarning() << "Debus error: " << msg;
     }
 
-    if (msg.arguments().isEmpty() || msg.arguments().constFirst().isNull())
-        return true;
+    if (msg.arguments().isEmpty() || msg.arguments().constFirst().isNull()) {
+        return false;
+    }
 
     QString response = msg.arguments().constFirst().toString();
     qDebug() << "systemd:" << method << "=" << response;
@@ -238,44 +200,6 @@ SystemdProvider::~SystemdProvider()
 
 bool SystemdProvider::canSwitchUser() const
 {
-    /*
-    char *seat_id = nullptr;
-    char *session_id = nullptr;
-    int ret = 0;
-
-    sd_pid_get_session(getpid(), &session_id);
-    sd_session_get_seat(session_id, &seat_id);
-    ret = sd_seat_can_multi_session(seat_id);
-
-    return ret>0;
-    */
-
-    //    bool isinhibited =false;
-    //    QDBusInterface *interface = new QDBusInterface(
-    //                "org.gnome.SessionManager",
-    //                "/org/gnome/SessionManager",
-    //                "org.gnome.SessionManager",
-    //                QDBusConnection::sessionBus());
-    //    quint32 inhibit_switchuser = 2;
-    //    QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_switchuser);
-    //    if (reply.isValid()){
-    //        // use the returned value
-    //        qDebug()<<"Is inhibit by someone: "<<reply.value();
-    //        isinhibited = reply.value();
-    //    }
-    //    else{
-    //        qDebug()<<reply.value();
-    //    }
-
-    //    if(isinhibited == true){
-    //        isinhibited = !messageboxcheck();
-    //    }
-
-    //    if(isinhibited == false){
-
-    //    }
-    //    return true;
-
     QString property      = "CanSwitch";
     QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
     return dbusGetProperty(QLatin1String(LIGHTDM_SERVICE),
@@ -283,8 +207,6 @@ bool SystemdProvider::canSwitchUser() const
                            QLatin1String(LIGTHDM_INTERFACE),
                            QDBusConnection::systemBus(),
                            property);
-
-    //    return messageboxcheck();
 }
 
 bool SystemdProvider::canAction(UkuiPower::Action action) const
@@ -336,7 +258,7 @@ bool SystemdProvider::doSwitchUser()
                 QDBusConnection::sessionBus());
     quint32 inhibit_switchuser = 2;
     QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_switchuser);
-    if (reply.isValid()){
+    if (reply.isValid()) {
         // use the returned value
         qDebug() << "Is inhibit by someone: " << reply.value();
         isinhibited = reply.value();
@@ -349,6 +271,16 @@ bool SystemdProvider::doSwitchUser()
     }
 
     if (isinhibited == false) {
+
+//        QDBusInterface dbus("org.ukui.KWin", "/Compositor", "org.ukui.kwin.Compositing", QDBusConnection::sessionBus());
+
+//        if (!dbus.isValid()) {
+//            qWarning() << "dbusCall: QDBusInterface is invalid";
+//            return false;
+//        }
+
+//        dbus.call("suspend");
+
         QString command       = "SwitchToGreeter";
         QString xdg_seat_path = qgetenv("XDG_SEAT_PATH");
         return dbusCall(QLatin1String(LIGHTDM_SERVICE),
@@ -397,52 +329,31 @@ UKUIProvider::UKUIProvider(QObject *parent): PowerProvider (parent)
 }
 
 UKUIProvider::~UKUIProvider()
-{}
+{
+}
 
 bool UKUIProvider::canAction(UkuiPower::Action action) const
 {
-    QString command;
-    switch (action) {
-    case UkuiPower::PowerLogout:
-        command = QLatin1String("canLogout");
-        break;
-    case UkuiPower::PowerReboot:
-        command = QLatin1String("canReboot");
-        break;
-    case UkuiPower::PowerShutdown:
-        command = QLatin1String("canPowerOff");
-        break;
-    default:
-        return false;
-    }
+    //这里是调用ukui-session注册的d-bus检测是否有inhibitor存在
+        bool isinhibited = false;
+        QDBusInterface *interface = new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager",
+                                                       "org.gnome.SessionManager", QDBusConnection::sessionBus());
+        quint32 inhibit_logout = 1;
+        QDBusReply<bool> reply = interface->call("IsInhibited", inhibit_logout);
+        if (reply.isValid()) {
+            // use the returned value
+            qDebug() << "Is inhibit by someone: " << reply.value();
+            isinhibited = reply.value();
+        } else {
+            qDebug() << reply.value();
+        }
 
-    bool isinhibited =false;
-    QDBusInterface *interface = new QDBusInterface(
-                "org.gnome.SessionManager",
-                "/org/gnome/SessionManager",
-                "org.gnome.SessionManager",
-                QDBusConnection::sessionBus());
-    quint32 inhibit_logout = 1;
-    QDBusReply<bool> reply = interface->call("IsInhibited",inhibit_logout);
-    if (reply.isValid()){
-        // use the returned value
-        qDebug() << "Is inhibit by someone: " << reply.value();
-        isinhibited = reply.value();
-    } else {
-        qDebug() << reply.value();
-    }
+        if (isinhibited == true) {
+            isinhibited = !messageBoxCheck();
+        }
 
-    if(isinhibited == true){
-        isinhibited = !messageBoxCheck();
-    }
+        return !isinhibited;
 
-    if (isinhibited == false) {
-        return dbusCall(QLatin1String(UKUI_SERVICE),
-                        QLatin1String(UKUI_PATH),
-                        QLatin1String(UKUI_INTERFACE),
-                        QDBusConnection::sessionBus(),
-                        command);
-    }
 }
 
 bool UKUIProvider::doAction(UkuiPower::Action action)
@@ -462,11 +373,9 @@ bool UKUIProvider::doAction(UkuiPower::Action action)
         return false;
     }
 
-    return dbusCall(QLatin1String(UKUI_SERVICE),
-             QLatin1String(UKUI_PATH),
-             QLatin1String(UKUI_INTERFACE),
-             QDBusConnection::sessionBus(),
-             command);
+    qDebug() << "ukuipowerprovider call D-Bus session";
+    return dbusCall(QLatin1String(UKUI_SERVICE), QLatin1String(UKUI_PATH),
+                    QLatin1String(UKUI_INTERFACE), QDBusConnection::sessionBus(), command);
 }
 
 

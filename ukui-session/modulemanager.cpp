@@ -20,6 +20,8 @@
 #include "modulemanager.h"
 #include "ukuimodule.h"
 #include "idlewatcher.h"
+#include "ukuismserver.h"
+#include "ukuisessiondebug.h"
 
 #include <QCoreApplication>
 #include "xdgautostart.h"
@@ -44,54 +46,45 @@
 #define SESSION_REQUIRED_COMPONENTS "org.ukui.session.required-components"
 #define SESSION_REQUIRED_COMPONENTS_PATH "/org/ukui/desktop/session/required-components/"
 
-void ModuleManager::playBootMusic(bool arg){
+extern UKUISMServer*& getGlobalServer();
+
+std::map<QString, int> ModuleManager::m_startupMap = {};
+
+void ModuleManager::playBootMusic(bool arg)
+{
     //set default value of whether boot-music is opened
     bool play_music = true;
-    if (QGSettings::isSchemaInstalled("org.ukui.session")){
-        QGSettings *gset = new QGSettings("org.ukui.session","/org/ukui/desktop/session/",this);
-        if(gset == NULL){
-            qDebug()<<"QGSettings init error";
+    if (QGSettings::isSchemaInstalled("org.ukui.session")) {
+        QGSettings *gset = new QGSettings("org.ukui.session", "/org/ukui/desktop/session/", this);
+        if (gset == NULL) {
+            qDebug() << "QGSettings init error";
             free(gset);
             return;
         }
-//        player = new QMediaPlayer;
-//        connect(player,SIGNAL(stateChanged(QMediaPlayer::State)),this,SLOT(stateChanged(QMediaPlayer::State)));
-//        player->setVolume(40);
         QString xdg_session_type = qgetenv("XDG_SESSION_TYPE");
-        if(arg){
+        if (arg) {
             play_music = gset->get("startup-music").toBool();
             if (play_music) {
-                if (xdg_session_type == "wayland"){
+                if (xdg_session_type == "wayland") {
                     QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/startup.wav");
-                }else
+                } else {
                     QProcess::startDetached("aplay  /usr/share/ukui/ukui-session-manager/startup.wav");
-//                player->setMedia(QUrl("qrc:/startup.wav"));
-//                player->play();
+                }
             }
-        }else{
+        } else {
             play_music = gset->get("weakup-music").toBool();
             if (play_music) {
                 if (xdg_session_type == "wayland") {
                     QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/weakup.wav");
-                } else
+                } else {
                     QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/weakup.wav");
-//                player->setMedia(QUrl("qrc:/weakup.wav"));
-//                player->play();
+                }
             }
         }
     }
 }
 
-//void ModuleManager::stateChanged(QMediaPlayer::State state){
-//    qDebug()<<"Player state: "<<state;
-//    if(state == QMediaPlayer::StoppedState){
-//        player->deleteLater();
-//        qDebug()<<"delete player";
-//    }
-//}
-
-ModuleManager::ModuleManager( QObject* parent)
-    : QObject(parent)
+ModuleManager::ModuleManager( QObject* parent) : QObject(parent)
 {
     QDBusConnection::systemBus().connect(QString("org.freedesktop.login1"),
                                          QString("/org/freedesktop/login1"),
@@ -100,12 +93,12 @@ ModuleManager::ModuleManager( QObject* parent)
     constructStartupList();
 }
 
-void ModuleManager::weakup(bool arg){
-    if(arg){
-        qDebug()<<"准备执行睡眠休眠";
-    }
-    else{
-        qDebug()<<"从睡眠休眠中唤醒";
+void ModuleManager::weakup(bool arg)
+{
+    if (arg) {
+        qDebug() << "准备执行睡眠休眠";
+    } else {
+        qDebug() << "从睡眠休眠中唤醒";
         playBootMusic(false);
     }
 }
@@ -113,8 +106,7 @@ void ModuleManager::weakup(bool arg){
 ModuleManager::~ModuleManager()
 {
     ModulesMapIterator i(mNameMap);
-    while (i.hasNext())
-    {
+    while (i.hasNext()) {
         i.next();
 
         auto p = i.value();
@@ -133,9 +125,9 @@ void ModuleManager::constructStartupList()
     QString file_manager;
     QString wm_notfound;
     if (QGSettings::isSchemaInstalled(id)) {
-        const QGSettings* gs = new QGSettings(SESSION_REQUIRED_COMPONENTS,SESSION_REQUIRED_COMPONENTS_PATH,this);
-        if(gs == NULL){
-            qDebug()<<"QGSettings init error";
+        const QGSettings *gs = new QGSettings(SESSION_REQUIRED_COMPONENTS, SESSION_REQUIRED_COMPONENTS_PATH, this);
+        if (gs == NULL) {
+            qDebug() << "QGSettings init error";
             return;
         }
         window_manager = gs->get("windowmanager").toString() + ".desktop";
@@ -165,8 +157,7 @@ void ModuleManager::constructStartupList()
     //const auto files = XdgAutoStart::desktopFileList(desktop_paths, false);
     for (const QString &dirName : const_cast<const QStringList&>(desktop_paths)) {
         QDir dir(dirName);
-        if (!dir.exists())
-            continue;
+        if (!dir.exists()) continue;
         const QFileInfoList files = dir.entryInfoList(QStringList(QLatin1String("*.desktop")), QDir::Files | QDir::Readable);
         for (const QFileInfo &fi : files) {
             if (fi.fileName() == panel) {
@@ -190,15 +181,18 @@ void ModuleManager::constructStartupList()
         }
     }
 
-    if(!panel_found || !fm_found || !wm_found) isDirectInstall = true;
+    if (!panel_found || !fm_found || !wm_found) isDirectInstall = true;
+    if (isDirectInstall) {
+        wmFound = wm_found;
+    }
 
     if (wm_found == false) {
         QFileInfo check_ukwm("/usr/share/applications/ukwm.desktop");
         QFileInfo check_ukuikwin("/usr/share/applications/ukui-kwin.desktop");
-        if(check_ukwm.exists()) {
+        if (check_ukwm.exists()) {
             window_manager = "ukwm.desktop";
             mWindowManager.load("/usr/share/applications/ukwm.desktop");
-        }else if(check_ukuikwin.exists()) {
+        } else if (check_ukuikwin.exists()) {
             window_manager = "ukui-kwin.desktop";
             mWindowManager.load("/usr/share/applications/ukui-kwin.desktop");
         }
@@ -215,15 +209,14 @@ void ModuleManager::constructStartupList()
     QString desktop_type = "Type";
     //设置excludeHidden为true，判断所有desktop文件的Hidden值，若为true，则将其从自启列表中去掉
     const XdgDesktopFileList all_file_list = XdgAutoStart::desktopFileList(true);
-    for (XdgDesktopFileList::const_iterator i = all_file_list.constBegin(); i != all_file_list.constEnd(); ++i)
-    {
+    for (XdgDesktopFileList::const_iterator i = all_file_list.constBegin(); i != all_file_list.constEnd(); ++i) {
         QString filename = QFileInfo(i->fileName()).fileName();
-        if(filename == panel || filename == file_manager || filename == window_manager){
+        if (filename == panel || filename == file_manager || filename == window_manager) {
             continue;
         }
         const XdgDesktopFile file = *i;
         if (i->contains(desktop_phase)) {
-            QStringList s1 =file.value(desktop_phase).toString().split(QLatin1Char(';'));
+            QStringList s1 = file.value(desktop_phase).toString().split(QLatin1Char(';'));
             if (s1.contains("Initialization")) {
                 mInitialization << file;
             } else if (s1.contains("Desktop")) {
@@ -242,8 +235,7 @@ void ModuleManager::constructStartupList()
     QStringList force_app_paths;
     force_app_paths << "/usr/share/ukui/applications";
     const XdgDesktopFileList force_file_list = XdgAutoStart::desktopFileList(force_app_paths, true);
-    for (XdgDesktopFileList::const_iterator i = force_file_list.constBegin(); i != force_file_list.constEnd(); ++i)
-    {
+    for (XdgDesktopFileList::const_iterator i = force_file_list.constBegin(); i != force_file_list.constEnd(); ++i) {
         qDebug() << (*i).fileName();
         mForceApplication << *i;
     }
@@ -259,33 +251,35 @@ void ModuleManager::constructStartupList()
  *
  */
 
-bool ModuleManager::start_module_Timer(QTimer *timer,int i){
+bool ModuleManager::startModuleTimer(QTimer *timer, int i)
+{
     timer->setSingleShot(true);
-    connect(timer,SIGNAL(timeout()),this,SLOT(timeup()));
-    timer->start(i*1000);
+    connect(timer, SIGNAL(timeout()), this, SLOT(timeup()));
+    timer->start(i * 1000);
     return true;
 }
 
-void ModuleManager::startupfinished(const QString& appName , const QString& string ){
+void ModuleManager::startupfinished(const QString &appName, const QString &string)
+{
     qDebug() << "moudle :" + appName + " startup finished, and it want to say " + string;
-    if(appName == "ukui-settings-daemon"){
+    if (appName == "ukui-settings-daemon") {
         tusd->stop();
         emit usdfinished();
         return;
     }
-    if(appName == "ukui-kwin"){
+    if (appName == "ukui-kwin") {
         twm->stop();
         isWMStarted = true;
         emit wmfinished();
         return;
     }
-    if(appName == "ukui-panel"){
+    if (appName == "ukui-panel") {
         tpanel->stop();
         isPanelStarted = true;
         emit panelfinished();
         return;
     }
-    if(appName == "peony-qt-desktop"){
+    if (appName == "peony-qt-desktop") {
         tdesktop->stop();
         isDesktopStarted = true;
         emit desktopfinished();
@@ -293,60 +287,75 @@ void ModuleManager::startupfinished(const QString& appName , const QString& stri
     }
 }
 
-void ModuleManager::timeup(){
+void ModuleManager::timeup()
+{
     QTimer *time_out = qobject_cast<QTimer*>(sender());
-    if(time_out == tusd){
-        qDebug() <<"usd超时";
+    if (time_out == tusd) {
+        qDebug() << "usd超时";
         emit usdfinished();
         return;
     }
-    if(time_out == twm){
+    if (time_out == twm) {
         qDebug() <<"wm超时";
         isWMStarted = true;
         emit wmfinished();
         return;
     }
-    if(time_out == tpanel){
-        qDebug() <<"panel超时";
+    if (time_out == tpanel) {
+        qDebug() << "panel超时";
         isPanelStarted = true;
         emit panelfinished();
         return;
     }
-    if(time_out == tdesktop){
-        qDebug() <<"peony-qt-desktop超时";
+    if (time_out == tdesktop) {
+        qDebug() << "peony-qt-desktop超时";
         isDesktopStarted = true;
         emit desktopfinished();
         return;
     }
 }
 
-void ModuleManager::startCompsite(){
+void ModuleManager::startCompsite()
+{
     if (isWayland) return;
 
     qDebug() << "Enter:: startCompsite";
-    if(!isPanelStarted || !isDesktopStarted || !isWMStarted) return;
+    if (!isPanelStarted || !isDesktopStarted || !isWMStarted) return;//  || !isWMStarted
 
-    if(isCompsiteStarted) return;
+    if (isCompsiteStarted) return;
     isCompsiteStarted = true;
 
     // start composite
     QDBusInterface dbus("org.ukui.KWin", "/Compositor", "org.ukui.kwin.Compositing", QDBusConnection::sessionBus());
 
     if (!dbus.isValid()) {
-        qWarning() << "dbusCall: QDBusInterface is invalid";
+        qWarning() << "dbusCall: QDBusInterface is invalid ; kwin do not exit!";
+        timerUpdate();
+    } else {
+        qDebug() << "Start composite";
+        dbus.call("resume");
+
         timerUpdate();
     }
-    qDebug() << "Start composite";
-    dbus.call("resume");
-
-    timerUpdate();
 }
 
 void ModuleManager::startup()
 {
+    //直接安装进入的流程
     const QFile file_installer("/etc/xdg/autostart/kylin-os-installer.desktop");
-    if(file_installer.exists() && isDirectInstall){
-        timerUpdate();
+    if (file_installer.exists() && isDirectInstall) {
+        if (wmFound) {
+            isPanelStarted   = true;
+            isDesktopStarted = true;
+            connect(this, &ModuleManager::wmfinished, [=](){ startCompsite(); });
+
+            startProcess(mWindowManager, false);
+            startModuleTimer(twm, 18);
+        } else {
+            timerUpdate();
+        }
+
+        return;
     }
 
     if (isWayland) {
@@ -367,39 +376,46 @@ void ModuleManager::startup()
     for (XdgDesktopFileList::const_iterator i = mInitialization.constBegin(); i != mInitialization.constEnd(); ++i) {
         startProcess(*i, true);
     }
-    start_module_Timer(tusd,5);
+    startModuleTimer(tusd,5);
 
     startProcess(mPanel, true);
-    start_module_Timer(tpanel,5);
+    startModuleTimer(tpanel,5);
 
     startProcess(mFileManager, true);
-    start_module_Timer(tdesktop,5);
+    startModuleTimer(tdesktop,5);
 
-    qDebug() << "Start desktop: ";
-    for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
-        startProcess(*i, true);
+    if (!isWayland) {
+        qDebug() << "Start desktop: ";
+        for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
+            startProcess(*i, true);
+        }
     }
 }
 
-void ModuleManager::dostartwm(){
-    qDebug() << "Start window manager: " << mWindowManager.name();
-    if(mWindowManager.name() == "UKUI-KWin"){
+void ModuleManager::dostartwm()
+{
+    if (mWindowManager.name() != "UKUI-KWin") {
+        qDebug() << "Start window manager: " << mWindowManager.name();
         startProcess(mWindowManager, false);
-        start_module_Timer(twm,18);
-    }else{
+        startModuleTimer(twm, 18);
+    } else {
         startProcess(mWindowManager, false);
         isWMStarted = true;
     }
 }
 
-void ModuleManager::timerUpdate(){
+void ModuleManager::timerUpdate()
+{
     playBootMusic(true);
     QTimer::singleShot(500, this, [&](){
         emit finished();
     });
-    qDebug() << "Start desktop: ";
-    for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
-        startProcess(*i, true);
+
+    if (isWayland) {
+        qDebug() << "Start desktop: ";
+        for (XdgDesktopFileList::const_iterator i = mDesktop.constBegin(); i != mDesktop.constEnd(); ++i) {
+            startProcess(*i, true);
+        }
     }
 
     qDebug() << "Start application: ";
@@ -407,11 +423,11 @@ void ModuleManager::timerUpdate(){
     QFile file_sogou("/usr/bin/sogouImeService");
     for (XdgDesktopFileList::const_iterator i = mApplication.constBegin(); i != mApplication.constEnd(); ++i) {
         qDebug() << i->fileName();
-        if(i->fileName()=="/etc/xdg/autostart/nm-applet.desktop" && file_nm.exists()){
+        if (i->fileName() == "/etc/xdg/autostart/nm-applet.desktop" && file_nm.exists()) {
             qDebug() << "the kylin-nm exist so the nm-applet will not start";
             continue;
         }
-        if(i->fileName()=="/etc/xdg/autostart/fcitx-qimpanel-autostart.desktop" && file_sogou.exists()){
+        if (i->fileName() == "/etc/xdg/autostart/fcitx-qimpanel-autostart.desktop" && file_sogou.exists()) {
             qDebug() << "the sogouImeService exist so the fcitx-ui-qimpanel will not start";
             continue;
         }
@@ -421,13 +437,23 @@ void ModuleManager::timerUpdate(){
     qDebug() << "Start force application: ";
     const QString ws = "ukui-window-switch";
     XdgDesktopFile ukui_ws = XdgDesktopFile(XdgDesktopFile::ApplicationType, "ukui-window-switch", ws);
-    startProcess(ukui_ws,true);
-    for (XdgDesktopFileList::const_iterator i = mForceApplication.constBegin(); i != mForceApplication.constEnd(); ++i){
+    startProcess(ukui_ws, true);
+    for (XdgDesktopFileList::const_iterator i = mForceApplication.constBegin(); i != mForceApplication.constEnd(); ++i) {
         startProcess(*i, true);
+    }
+
+    if (QGSettings::isSchemaInstalled("org.ukui.session")) {
+        QGSettings *gset = new QGSettings("org.ukui.session", "/org/ukui/desktop/session/", this);
+        bool restoreSession = gset->get("restore-session").toBool();
+        if (restoreSession) {
+            //加上恢复会话的部分
+            qDebug(UKUI_SESSION) << "began restore session";
+            getGlobalServer()->restoreSession();
+        }
     }
 }
 
-void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
+void ModuleManager::startProcess(const XdgDesktopFile &file, bool required)
 {
     QStringList args = file.expandExecString();
     if (args.isEmpty()) {
@@ -437,7 +463,7 @@ void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
 
     QString name = QFileInfo(file.fileName()).fileName();
     if (!mNameMap.contains(name)) {
-        UkuiModule* proc = new UkuiModule(file, this);
+        UkuiModule *proc = new UkuiModule(file, this);
         connect(proc, &UkuiModule::moduleStateChanged, this, &ModuleManager::moduleStateChanged);
         proc->start();
 
@@ -445,7 +471,7 @@ void ModuleManager::startProcess(const XdgDesktopFile& file, bool required)
 
         if (required || autoRestart(file)) {
             connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
-                this, SLOT(restartModules(int, QProcess::ExitStatus)));
+                    this, SLOT(restartModules(int, QProcess::ExitStatus)));
         }
     }
 }
@@ -467,14 +493,33 @@ void ModuleManager::startProcess(const QString& name, bool required)
 
 void ModuleManager::stopProcess(const QString& name)
 {
-     if (mNameMap.contains(name))
+     if (mNameMap.contains(name)) {
          mNameMap[name]->terminate();
+     }
 }
 
 bool ModuleManager::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
 {
     if (eventType != "xcb_generic_event_t") // We only want to handle XCB events
         return false;
+
+    return false;
+}
+
+void ModuleManager::insertStartupList(QString &&str)
+{
+    if (!str.isEmpty()) {
+        m_startupMap[std::forward<QString>(str)] = 1;
+    }
+}
+
+bool ModuleManager::isProgramStarted(QString &&str)
+{
+    auto it = m_startupMap.find(std::forward<QString>(str));
+
+    if (it != m_startupMap.end()) {
+        return true;
+    }
 
     return false;
 }
@@ -487,13 +532,19 @@ bool ModuleManager::autoRestart(const XdgDesktopFile &file)
 
 void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitStatus)
 {
-    UkuiModule* proc = qobject_cast<UkuiModule*>(sender());
+    if (getGlobalServer()->prepareForShutdown()) {
+        qDebug() << "Logout phase, don't Restart";
+        return;
+    }
+
+    UkuiModule *proc = qobject_cast<UkuiModule*>(sender());
 
     if (nullptr == proc) {
         qWarning() << "Got an invalid (null) module to restart, Ignoring it";
         return;
     }
 
+    //需要做出修改
     if (proc->restartNum > 10) {
         mNameMap.remove(proc->fileName);
         disconnect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), nullptr, nullptr);
@@ -504,10 +555,10 @@ void ModuleManager::restartModules(int /*exitCode*/, QProcess::ExitStatus exitSt
     if (!proc->isTerminating()) {
         //根据退出码来判断程序是否属于异常退出。
         QString procName = proc->file.name();
-        if(proc->exitCode() == 0){
-            qDebug() << "Process" << procName << "(" << proc << ") exited correctly. "<<"With the exitcode = "<<proc->exitCode()<<",exitStatus = "<<exitStatus;
-        }else{
-            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted. "<<"With the exitcode = "<<proc->exitCode()<<",exitStatus = "<<exitStatus;
+        if (proc->exitCode() == 0) {
+            qDebug() << "Process" << procName << "(" << proc << ") exited correctly. " << "With the exitcode = " << proc->exitCode() << ",exitStatus = " << exitStatus;
+        } else {
+            qDebug() << "Process" << procName << "(" << proc << ") has to be restarted. " << "With the exitcode = " << proc->exitCode() << ",exitStatus = " << exitStatus;
             proc->start();
             proc->restartNum++;
             return;
@@ -525,35 +576,9 @@ void ModuleManager::logout(bool doExit)
                         "/org/freedesktop/login1/session/self",\
                         "org.freedesktop.login1.Session",\
                         QDBusConnection::systemBus());
-    ModulesMapIterator i(mNameMap);
-//    UkuiModule *winman;
-    while (i.hasNext()) {
-        i.next();
-        qDebug() << "Module logout" << i.key();
-        UkuiModule *p = i.value();
-//        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
-//            winman = p;
-//            continue;
-//        }
-        p->terminate();
-    }
-    i.toFront();
-    while (i.hasNext()) {
-        i.next();
-        UkuiModule *p = i.value();
-//        if(p->file.name() == QFileInfo(mWindowManager.name()).fileName()){
-//            continue;
-//        }
-        if (p->state() != QProcess::NotRunning && !p->waitForFinished(200)) {
-            qWarning() << "Module " << qPrintable(i.key()) << " won't termiante .. killing.";
-            p->kill();
-        }
-    }
-    //winman->terminate();
 
     if (doExit) {
         face.call("Terminate");
-        //QCoreApplication::exit(0);
         exit(0);
     }
 }

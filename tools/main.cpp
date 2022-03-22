@@ -36,7 +36,6 @@
 
 #include "ukuipower.h"
 #include "mainwindow.h"
-#include "window.h"
 #include "loginedusers.h"
 #include "lockchecker.h"
 #include <QPushButton>
@@ -52,7 +51,8 @@
 #endif
 
 /*菜单栏调用睡眠且有inhibitor阻塞时调用此函数进行消息提示*/
-bool sleepInhibitorCheck(){
+bool sleepInhibitorCheck(int doaction)
+{
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
@@ -65,10 +65,20 @@ bool sleepInhibitorCheck(){
     for (int i = 0; i < Inhibitors.length(); ++i) {
         QString num            = QString("%1").arg(Inhibitors.at(i));
         QString reason         = QString("%1 \n").arg(Reason.at(i));
-        QString inhibitMessage = num + QObject::tr(" is block system into sleep for reason ") + reason;
+        QString inhibitMessage = "";
+        if(doaction == 1)//主要是为了睡眠、休眠中午翻译上作区分
+            inhibitMessage = num + QObject::tr(" is block system") + QObject::tr(" into sleep for reason ") + reason;//休眠
+        else
+            inhibitMessage = num + QObject::tr(" is block system ") + QObject::tr("into sleep for reason ") + reason;//睡眠
+
         message.append(std::move(inhibitMessage));
     }
-    message.append(std::move(QObject::tr("Are you sure you want to get system into slepp?")));
+    QString messageStr = "";
+    if(doaction == 1)
+        messageStr = QObject::tr("Are you sure") + QObject::tr(" you want to get system into sleep?");//休眠
+    else
+        messageStr = QObject::tr("Are you sure you want to get system into sleep?");//睡眠
+    message.append(std::move(messageStr));
     msgBox.setText(message);
     QPushButton *cancelButton = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
     QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
@@ -85,7 +95,8 @@ bool sleepInhibitorCheck(){
 }
 
 /*菜单栏调用重启或关机且有inhibitor阻塞时调用此函数进行消息提示*/
-bool shutdownInhibitorCheck(){
+bool shutdownInhibitorCheck(int doaction)
+{
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Warning);
     msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
@@ -98,10 +109,21 @@ bool shutdownInhibitorCheck(){
     for(int i = 0; i < Inhibitors.length(); ++i) {
         QString num            = QString("%1").arg(Inhibitors.at(i));
         QString reason         = QString("%1 \n").arg(Reason.at(i));
-        QString inhibitMessage = num + QObject::tr(" is block system into sleep for reason ") + reason;
+        QString inhibitMessage = "";
+        if(doaction == 5)
+            inhibitMessage = num + QObject::tr(" is block system into reboot for reason ") + reason;//重启
+        else
+            inhibitMessage = num + QObject::tr(" is block system into shutdown for reason ") + reason;//关机
+
         message.append(std::move(inhibitMessage));
     }
-    message.append(std::move(QObject::tr("Are you sure you want to shutdown?")));
+    QString messageStr = "";
+    if(doaction == 5)
+        messageStr = QObject::tr("Are you sure you want to reboot?");//重启
+    else
+        messageStr = QObject::tr("Are you sure you want to shutdown?");//关机
+
+    message.append(std::move(messageStr));
     msgBox.setText(message);
     QPushButton *cancelButton = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
     QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
@@ -117,7 +139,8 @@ bool shutdownInhibitorCheck(){
     }
 }
 
-bool messageboxCheck(){
+bool messageboxCheck()
+{
     QMessageBox msgBox;
 //    msgBox.setWindowTitle(QObject::tr("conform"));
     msgBox.setIcon(QMessageBox::Warning);
@@ -140,9 +163,11 @@ bool messageboxCheck(){
     }
 }
 
-void messagecheck(){
+void messagecheck()
+{
     QMessageBox msgBox;
-    msgBox.setWindowTitle(QObject::tr("notice"));
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setWindowFlags(Qt::WindowStaysOnTopHint);
     QString t1 = QObject::tr("System update or package installation in progress,this function is temporarily unavailable.");
     QString t2 = QObject::tr("System backup or restore in progress,this function is temporarily unavailable.");
 
@@ -156,10 +181,16 @@ void messagecheck(){
         msgBox.setText(t2);
     }
 
+    QPushButton *cancelButton = msgBox.addButton(QObject::tr("OK"), QMessageBox::RejectRole);
+
     msgBox.exec();
+
+    if (msgBox.clickedButton() == cancelButton) {
+        qDebug() << "OK!";
+    }
 }
 
-bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_time)
+bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_time)
 {
     if (cc == 1) {
         if (num == 1 || num == 5 || num == 6) {
@@ -197,9 +228,9 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_ti
         }
 
         QDBusMessage msg;
-        if (num == 4) {
-            msg = dbus.call("emitStartLogout");
-        }
+//        if (num == 4) {
+//            msg = dbus.call("emitStartLogout");
+//        }
 
         if (num == 0) {
             msg = dbus.call("emitPrepareForSwitchuser");
@@ -215,7 +246,9 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_ti
         // otherwise run ukui-session-tools --suspend with segmente error.
         // because they will be delate at the end of the playShutdownMusic().
         QObject::connect(up_to_time, &QTimer::timeout, [&]() {
-            powermanager.doAction(UkuiPower::Action(action));
+            if (powermanager.canAction(UkuiPower::Action(action))) {
+                powermanager.doAction(UkuiPower::Action(action));
+            }
             exit(0);
         });
 
@@ -223,20 +256,25 @@ bool playShutdownMusic(UkuiPower &powermanager, int num ,int cc,QTimer *up_to_ti
         if (num == 5 || num == 6) {
             if (xdg_session_type == "wayland") {
                 QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/shutdown.wav");
-            } else
+            } else {
                 QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/shutdown.wav");
+            }
+            up_to_time->start(5000);
         } else if (num == 4) {
             if (xdg_session_type == "wayland") {
                 QProcess::startDetached("paplay --volume=23456 /usr/share/ukui/ukui-session-manager/logout.wav");
-            } else
+            } else {
                 QProcess::startDetached("aplay /usr/share/ukui/ukui-session-manager/logout.wav");
+            }
+            up_to_time->start(2000);
         } else {
             qDebug() << "error num";
             return false;
         }
-        up_to_time->start(1200);
     } else {
-        powermanager.doAction(UkuiPower::Action(action));
+        if (powermanager.canAction(UkuiPower::Action(action))) {
+            powermanager.doAction(UkuiPower::Action(action));
+        }
         exit(0);
     }
     return false;
@@ -264,15 +302,14 @@ int main(int argc, char* argv[])
 
 //    int cc = check_lock();
     int cc = LockChecker::checkLock();
-    qDebug() << cc <<"   cc";
+    qDebug() << cc << "   cc";
 
     // Load ts files
     const QString locale = QLocale::system().name();
     QTranslator   translator;
     qDebug() << "local: " << locale;
     qDebug() << "path: " << QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager");
-    if (translator.load(locale,
-                        QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
+    if (translator.load(locale, QStringLiteral(UKUI_TRANSLATIONS_DIR) + QStringLiteral("/ukui-session-manager"))) {
         a.installTranslator(&translator);
     } else {
         qDebug() << "Load translations file failed!";
@@ -325,9 +362,6 @@ int main(int argc, char* argv[])
     QCommandLineOption shutdownOption(QStringLiteral("shutdown"),
                                       QApplication::tr("Shutdown this computer."));
     parser.addOption(shutdownOption);
-    QCommandLineOption windowOption(QStringLiteral("window"),
-                                    QApplication::tr("A window above the desktop."));
-    parser.addOption(windowOption);
 
     parser.process(a);
 
@@ -336,7 +370,7 @@ int main(int argc, char* argv[])
     }
     if (parser.isSet(hibernateOption)) {
         if (LockChecker::isSleepBlocked()) {
-            if (sleepInhibitorCheck()) {
+            if (sleepInhibitorCheck(1)) {
                 flag = playShutdownMusic(powermanager, 1, cc, up_to_time);
             } else {
                 return 0;
@@ -347,7 +381,7 @@ int main(int argc, char* argv[])
     }
     if (parser.isSet(suspendOption)) {
         if (LockChecker::isSleepBlocked()) {
-            if (sleepInhibitorCheck()) {
+            if (sleepInhibitorCheck(2)) {
                 flag = playShutdownMusic(powermanager, 2, cc, up_to_time);
             } else {
                 return 0;
@@ -361,7 +395,7 @@ int main(int argc, char* argv[])
     }
     if (parser.isSet(rebootOption)) {
         if (LockChecker::isShutdownBlocked()) {//有inhibitor的情况下
-            if (shutdownInhibitorCheck()) {//先提醒inhibitor
+            if (shutdownInhibitorCheck(5)) {//先提醒inhibitor
                 if (LockChecker::getLoginedUsers().count() > 1) {//再提醒多个用户登录的情况
                     if (messageboxCheck()) {
                         flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
@@ -390,7 +424,7 @@ int main(int argc, char* argv[])
     }
     if (parser.isSet(shutdownOption)) {
         if (LockChecker::isShutdownBlocked()) {
-            if (shutdownInhibitorCheck()) {
+            if (shutdownInhibitorCheck(6)) {
                 if (LockChecker::getLoginedUsers().count() > 1) {
                     if (messageboxCheck()) {
                         flag = playShutdownMusic(powermanager, 6, cc, up_to_time);
@@ -406,21 +440,17 @@ int main(int argc, char* argv[])
         } else {
             if (LockChecker::getLoginedUsers().count() > 1) {//提醒多个用户登录的情况
                 if (messageboxCheck()) {
-                    flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
+                    flag = playShutdownMusic(powermanager, 6, cc, up_to_time);
                 } else {
                     return 0;
                 }
             } else {
-                flag = playShutdownMusic(powermanager, 5, cc, up_to_time);
+                flag = playShutdownMusic(powermanager, 6, cc, up_to_time);
             }
         }
 
     }
-    if (parser.isSet(windowOption)) {
-        flag        = false;
-        window *win = new window();
-        win->showFullScreen();
-    }
+
     if (flag) {
         // Load qss file
         MainWindow *w = new MainWindow(lock_file, lock_user);

@@ -1,3 +1,28 @@
+/*****************************************************************
+ukuismserver - the UKUI session management server
+
+Copyright 2000 Matthias Ettrich <ettrich@kde.org>
+Copyright 2021 KylinSoft Co., Ltd.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+******************************************************************/
+
 #include "usminhibit.h"
 #include "QDBusConnection"
 #include <QRandomGenerator>
@@ -14,7 +39,9 @@ inhibit::inhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 f
     this->inhibitorName = inhibitorName;
 }
 
-inhibit::~inhibit(){}
+inhibit::~inhibit()
+{
+}
 
 
 uint usminhibit::get_next_inhibitor_serial()
@@ -44,31 +71,33 @@ usminhibit::usminhibit()
     inhibit_idle_num = 0;
 }
 
-usminhibit::~usminhibit(){}
+usminhibit::~usminhibit()
+{
+}
 
-bool usminhibit::IsInhibited(quint32 flags)
+bool usminhibit::isInhibited(quint32 flags)
 {
     bool isinhib = false;
     if ((flags & GSM_INHIBITOR_FLAG_LOGOUT) == GSM_INHIBITOR_FLAG_LOGOUT) {
-        if(inhibit_logout_num > 0)
+        if (inhibit_logout_num > 0)
             isinhib = true;
     }
     if ((flags & GSM_INHIBITOR_FLAG_SWITCH_USER) == GSM_INHIBITOR_FLAG_SWITCH_USER) {
-        if(inhibit_switchuser_num > 0)
+        if (inhibit_switchuser_num > 0)
             isinhib = true;
     }
     if ((flags & GSM_INHIBITOR_FLAG_SUSPEND) == GSM_INHIBITOR_FLAG_SUSPEND) {
-        if(inhibit_suspend_num > 0)
+        if (inhibit_suspend_num > 0)
             isinhib = true;
     }
     if ((flags & GSM_INHIBITOR_FLAG_IDLE) == GSM_INHIBITOR_FLAG_IDLE) {
-        if(inhibit_idle_num > 0)
+        if (inhibit_idle_num > 0)
             isinhib = true;
     }
     return isinhib;
 }
 
-quint32 usminhibit::addinhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
+quint32 usminhibit::addInhibit(QString app_id, quint32 toplevel_xid, QString reason, quint32 flags)
 {
     if (app_id.isEmpty()) {
         return -1;
@@ -109,7 +138,8 @@ quint32 usminhibit::addinhibit(QString app_id, quint32 toplevel_xid, QString rea
     return cookie;
 }
 
-uint usminhibit::generateCookie(){
+uint usminhibit::generateCookie()
+{
     quint32 cookie;
     do {
         cookie = QRandomGenerator::global()->bounded(1, 4294967295);//std::numeric_limits<quint32>::max()
@@ -117,7 +147,7 @@ uint usminhibit::generateCookie(){
     return cookie;
 }
 
-uint usminhibit::uninhibit(quint32 cookie)
+uint usminhibit::unInhibit(quint32 cookie)
 {
     uint flags = 0;
     QHash<quint32, inhibit>::iterator i = hash.find(cookie);
@@ -144,7 +174,7 @@ uint usminhibit::uninhibit(quint32 cookie)
     return flags;
 }
 
-QStringList usminhibit::getinhibitor()
+QStringList usminhibit::getInhibitor()
 {
     //do not show inhibitorName to user
     //in case we don't know who is inhibiting
@@ -153,7 +183,7 @@ QStringList usminhibit::getinhibitor()
     while (i.hasNext()) {
         i.next();
         QString messagelist;
-        messagelist = i.value().app_id + "/" + QString::number(i.value().toplevel_xid)+ "/" \
+        messagelist = i.value().app_id + "/" + QString::number(i.value().toplevel_xid) + "/"
                     + i.value().reason + "/" + QString::number(i.value().flags) + "/" + QString::number(i.value().cookie);
         inhibitors << messagelist;
     }
