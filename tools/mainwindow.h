@@ -80,7 +80,7 @@ public:
     /**
      * @brief 初始化系统监视器按钮
      */
-    //void initialSystemMonitor();
+    void initialSystemMonitor();
 
     /**
      * @brief 初始化按钮
@@ -168,7 +168,7 @@ private:
     /**
      * @brief 打开监视器
      */
-    //void doSystemMonitor();
+    void doSystemMonitor();
 
     /**
      * @brief 显示常规的按钮界面
@@ -275,7 +275,7 @@ private:
     MyPushButton *m_logoutBtn = nullptr;
     MyPushButton *m_rebootBtn = nullptr;
     MyPushButton *m_shutDownBtn = nullptr;
-    //QWidget *m_systemMonitorBtn = nullptr;
+    QWidget *m_systemMonitorBtn = nullptr;
 
     QLabel *m_dateLabel = nullptr;
     QLabel *m_timeLabel = nullptr;
@@ -298,11 +298,11 @@ private:
     QVBoxLayout *m_messageVLayout = nullptr;
     QVBoxLayout *m_vBoxLayout = nullptr;
     QScrollArea *m_scrollArea = nullptr;
-    //QHBoxLayout *m_systemMonitorHLayout = nullptr;
+    QHBoxLayout *m_systemMonitorHLayout = nullptr;
 
-    //QLabel *m_systemMonitorIconLabel = nullptr;
-    //QLabel *m_systemMonitorLabel = nullptr;
-    //QPixmap m_systemMonitorIcon;
+    QLabel *m_systemMonitorIconLabel = nullptr;
+    QLabel *m_systemMonitorLabel = nullptr;
+    QPixmap m_systemMonitorIcon;
 
     /// 计算各按钮的行列位置
     int m_switchRow = 0, m_switchColumn = 0;
