@@ -48,7 +48,7 @@
 
 extern UKUISMServer*& getGlobalServer();
 
-std::vector<QString> ModuleManager::m_startupList = {};
+std::map<QString, int> ModuleManager::m_startupMap = {};
 
 void ModuleManager::playBootMusic(bool arg)
 {
@@ -508,14 +508,16 @@ bool ModuleManager::nativeEventFilter(const QByteArray &eventType, void *message
 
 void ModuleManager::insertStartupList(QString &&str)
 {
-    m_startupList.push_back(std::forward<QString>(str));
+    if (!str.isEmpty()) {
+        m_startupMap[std::forward<QString>(str)] = 1;
+    }
 }
 
 bool ModuleManager::isProgramStarted(QString &&str)
 {
-    auto it = std::find(m_startupList.begin(), m_startupList.end(), std::forward<QString>(str));
+    auto it = m_startupMap.find(std::forward<QString>(str));
 
-    if (it != m_startupList.end()) {
+    if (it != m_startupMap.end()) {
         return true;
     }
 
