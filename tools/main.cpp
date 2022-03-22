@@ -280,6 +280,32 @@ bool playShutdownMusic(UkuiPower &powermanager, int num, int cc, QTimer *up_to_t
     return false;
 }
 
+/**
+ * @brief 判断当前是否处于锁屏
+ */
+bool screensaverIsActive()
+{
+    QDBusMessage message = QDBusMessage::createMethodCall("org.ukui.ScreenSaver",
+                                                          "/",
+                                                          "org.ukui.ScreenSaver",
+                                                          "GetLockState");
+    QDBusMessage response = QDBusConnection::sessionBus().call(message);
+    //判断method是否被正确返回
+    if (response.type() == QDBusMessage::ReplyMessage)
+    {
+        //从返回参数获取返回值
+        bool isActive = response.arguments()[0].toBool();
+        qDebug() << "screensaver isActive:" << isActive;
+        return isActive;
+    }
+    else
+    {
+        qDebug() << "QDBusMessage failed!";
+        return false;
+    }
+}
+
+
 int main(int argc, char* argv[])
 {
     initUkuiLog4qt("ukui-session-tools");
@@ -451,7 +477,7 @@ int main(int argc, char* argv[])
 
     }
 
-    if (flag) {
+    if (flag && !screensaverIsActive()) {
         // Load qss file
         MainWindow *w = new MainWindow(lock_file, lock_user);
         QFile qss(":/powerwin.qss");
