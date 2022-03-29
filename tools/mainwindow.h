@@ -319,5 +319,7 @@ private:
     QWidget *m_showWarningArea = nullptr; /// 阻止列表
     bool m_btnWidgetNeedScrollbar = false; /// 是否需要滑动条显示
     bool m_showWarningMesg = false; /// 是否显示阻止列表
+    QWidget *m_judgeWidget = nullptr; /// 提示
+
 };
 #endif // MAINWINDOW_H

@@ -165,6 +165,9 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     m_btnWidget = new QWidget();
     m_btnWidget->setObjectName("btnWidget");
 
+    m_judgeWidget = new QWidget(this);
+    m_judgeWidget->setObjectName("judgeWidget");
+
     //m_showWarningArea 作为该界面所有组件的父指针，方便排版
     m_showWarningArea = new QWidget(this);
     m_showWarningArea->setObjectName(QString::fromUtf8("area"));
@@ -261,7 +264,8 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
 
     m_vBoxLayout->addStretch(20);
     m_vBoxLayout->addLayout(m_dateTimeLayout, 80);
-    m_vBoxLayout->addLayout(m_judgeWidgetVLayout, 120);
+    m_vBoxLayout->addStretch(120);
+    //m_vBoxLayout->addLayout(m_judgeWidgetVLayout, 120);
     m_vBoxLayout->addWidget(m_scrollArea, 640);
     m_vBoxLayout->addLayout(m_messageVLayout, 120);
     m_vBoxLayout->addLayout(spaceLayout, 80);
@@ -445,7 +449,7 @@ void MainWindow::initialJudgeWidget()
     //m_judgeLabel->setFixedHeight(60);
 
     qDebug() << "m_judgeLabel width:" << m_judgeLabel->width() << m_judgeLabel->height();
-    m_judgeLabel->setAlignment(Qt::AlignCenter);
+    m_judgeLabel->setAlignment(Qt::AlignHCenter);
     m_judgeLabel->setWordWrap(true);
 
     m_cancelBtn = new QPushButton(QApplication::tr("cancel"));
@@ -465,13 +469,20 @@ void MainWindow::initialJudgeWidget()
     m_judgeWidgetVLayout->addWidget(m_judgeLabel);
     m_judgeWidgetVLayout->addSpacing(10);
     m_judgeWidgetVLayout->addLayout(m_judgeBtnHLayout);
-    m_judgeWidgetVLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    m_judgeWidgetVLayout->setAlignment(Qt::AlignCenter);
+
+    m_judgeWidgetVLayout->setContentsMargins(0,0,0,0);
 
     connect(m_cancelBtn, &QPushButton::clicked, this, &MainWindow::exitt);
     connect(m_confirmBtn, &QPushButton::clicked, [&]() { emit confirmButtonclicked(); });
     //ui->judgeWidget->hide();
-    setLayoutWidgetVisible(m_judgeWidgetVLayout, false);
-    setLayoutWidgetVisible(m_judgeBtnHLayout, false);
+//    setLayoutWidgetVisible(m_judgeWidgetVLayout, false);
+    m_judgeWidget->setLayout(m_judgeWidgetVLayout);
+    m_judgeWidget->setStyleSheet("QWidget#judgeWidget{background-color: transparent;}");
+    m_judgeWidget->setVisible(false);
+    m_judgeWidget->setGeometry(m_screen.x() + (m_screen.width() - 800 * m_screen.width()/1920)/2,
+                                     m_screen.y() + (m_screen.height() - 100)/2 - 10,
+                               800 * m_screen.width()/1920, 100);
 }
 
 void MainWindow::initialMessageWidget()
@@ -856,6 +867,12 @@ void MainWindow::ResizeEvent()
         return;
     }
 
+    m_judgeWidget->setGeometry(m_screen.x() + (m_screen.width() - 800 * m_screen.width()/1920)/2,
+                               m_screen.y() + (m_screen.height() - 100)/2 - 10,800 * m_screen.width()/1920, 100);
+
+
+    if(m_judgeWidget->isVisible())
+        return;
     qDebug() << "ResizeEvent moveWidget  m_screen:" << m_screen.width() << m_screen.height();
     int hideNum = 0;
     for (int i = 0; i < m_btnHideMap.count(); i++) {
@@ -1406,7 +1423,7 @@ void MainWindow::judgeboxShow()
 
     setLayoutWidgetVisible(m_dateTimeLayout, false);
     setLayoutWidgetVisible(m_judgeWidgetVLayout, true);
-    setLayoutWidgetVisible(m_judgeBtnHLayout, true);
+    m_judgeWidget->setVisible(true);
 }
 
 void MainWindow::keyPressEmulate()
