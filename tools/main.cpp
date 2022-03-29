@@ -73,23 +73,28 @@ bool sleepInhibitorCheck(int doaction)
 
         message.append(std::move(inhibitMessage));
     }
-    QString messageStr = "";
-    if(doaction == 1)
-        messageStr = QObject::tr("Are you sure") + QObject::tr(" you want to get system into sleep?");//休眠
-    else
-        messageStr = QObject::tr("Are you sure you want to get system into sleep?");//睡眠
-    message.append(std::move(messageStr));
+//    QString messageStr = "";
+//    if(doaction == 1)
+//        messageStr = QObject::tr("Are you sure") + QObject::tr(" you want to get system into sleep?");//休眠
+//    else
+//        messageStr = QObject::tr("Are you sure you want to get system into sleep?");//睡眠
+//    message.append(std::move(messageStr));
     msgBox.setText(message);
     QPushButton *cancelButton = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
-    QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
+    //QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
 
     msgBox.exec();
 
-    if (msgBox.clickedButton() == cancelButton) {
+    if (msgBox.clickedButton() == cancelButton)
+    {
         return false;
-    } else if (msgBox.clickedButton() == confirmButton) {
-        return true;
-    } else {
+    }
+//    else if (msgBox.clickedButton() == confirmButton)
+//    {
+//        return true;
+//    }
+    else
+    {
         return false;
     }
 }
@@ -117,6 +122,7 @@ bool shutdownInhibitorCheck(int doaction)
 
         message.append(std::move(inhibitMessage));
     }
+    /*
     QString messageStr = "";
     if(doaction == 5)
         messageStr = QObject::tr("Are you sure you want to reboot?");//重启
@@ -124,17 +130,25 @@ bool shutdownInhibitorCheck(int doaction)
         messageStr = QObject::tr("Are you sure you want to shutdown?");//关机
 
     message.append(std::move(messageStr));
+    */
     msgBox.setText(message);
     QPushButton *cancelButton = msgBox.addButton(QObject::tr("cancel"), QMessageBox::ActionRole);
-    QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
+    //QPushButton *confirmButton = msgBox.addButton(QObject::tr("confirm"), QMessageBox::RejectRole);
 
     msgBox.exec();
 
-    if (msgBox.clickedButton() == cancelButton) {
+    if (msgBox.clickedButton() == cancelButton)
+    {
+        qDebug() << "cancelButton";
         return false;
-    } else if (msgBox.clickedButton() == confirmButton) {
-        return true;
-    } else {
+    }
+//    else if (msgBox.clickedButton() == confirmButton)
+//    {
+//        qDebug() << "confirmButton";
+//        return true;
+//    }
+    else
+    {
         return false;
     }
 }
