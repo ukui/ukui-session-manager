@@ -491,7 +491,12 @@ int main(int argc, char* argv[])
 
     }
 
-    if (flag && !screensaverIsActive()) {
+    if(screensaverIsActive())
+    {
+        exit(0);
+    }
+
+    if (flag) {
         // Load qss file
         MainWindow *w = new MainWindow(lock_file, lock_user);
         QFile qss(":/powerwin.qss");
