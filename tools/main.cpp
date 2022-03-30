@@ -66,7 +66,7 @@ bool sleepInhibitorCheck(int doaction)
         QString num            = QString("%1").arg(Inhibitors.at(i));
         QString reason         = QString("%1 \n").arg(Reason.at(i));
         QString inhibitMessage = "";
-        if(doaction == 1)//主要是为了睡眠、休眠中午翻译上作区分
+        if(doaction == 1)//主要是为了睡眠、休眠中文翻译上作区分
             inhibitMessage = num + QObject::tr(" is block system") + QObject::tr(" into sleep for reason ") + reason;//休眠
         else
             inhibitMessage = num + QObject::tr(" is block system ") + QObject::tr("into sleep for reason ") + reason;//睡眠
