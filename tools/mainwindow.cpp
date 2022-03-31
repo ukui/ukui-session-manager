@@ -452,20 +452,16 @@ void MainWindow::initialJudgeWidget()
     m_judgeLabel->setAlignment(Qt::AlignHCenter);
     m_judgeLabel->setWordWrap(true);
 
-    m_cancelBtn = new QPushButton(QApplication::tr("cancel"));
-    m_confirmBtn = new QPushButton(QApplication::tr("confirm"));
-    m_cancelBtn->setObjectName("cancelButton");
-    m_confirmBtn->setObjectName("confirmButton");
-    m_cancelBtn->setGeometry(QRect(0, 0, 96, 36));
-    m_confirmBtn->setGeometry(QRect(0, 0, 96, 36));
+    m_cancelBtn = new CommonPushButton(QApplication::tr("cancel"), QString::fromUtf8("cancelButton"), 120, 48, 8);
+    m_confirmBtn = new CommonPushButton(QApplication::tr("confirm"), QString::fromUtf8("confirmButton"), 120, 48, 8);
 
-    m_judgeBtnHLayout->setAlignment(Qt::AlignHCenter| Qt::AlignBottom);
+    m_judgeBtnHLayout->setAlignment(Qt::AlignHCenter);
     m_judgeBtnHLayout->setSpacing(0);
     m_judgeBtnHLayout->addWidget(m_cancelBtn);
-    m_judgeBtnHLayout->addSpacing(54);
+    m_judgeBtnHLayout->addSpacing(24);
     m_judgeBtnHLayout->addWidget(m_confirmBtn);
 
-    m_judgeWidgetVLayout->addStretch();
+    m_judgeWidgetVLayout->addSpacing(10);
     m_judgeWidgetVLayout->addWidget(m_judgeLabel);
     m_judgeWidgetVLayout->addSpacing(10);
     m_judgeWidgetVLayout->addLayout(m_judgeBtnHLayout);
@@ -473,16 +469,16 @@ void MainWindow::initialJudgeWidget()
 
     m_judgeWidgetVLayout->setContentsMargins(0,0,0,0);
 
-    connect(m_cancelBtn, &QPushButton::clicked, this, &MainWindow::exitt);
-    connect(m_confirmBtn, &QPushButton::clicked, [&]() { emit confirmButtonclicked(); });
+    connect(m_cancelBtn, &CommonPushButton::clicked, this, &MainWindow::exitt);
+    connect(m_confirmBtn, &CommonPushButton::clicked, [&]() { emit confirmButtonclicked(); });
     //ui->judgeWidget->hide();
 //    setLayoutWidgetVisible(m_judgeWidgetVLayout, false);
     m_judgeWidget->setLayout(m_judgeWidgetVLayout);
     m_judgeWidget->setStyleSheet("QWidget#judgeWidget{background-color: transparent;}");
     m_judgeWidget->setVisible(false);
     m_judgeWidget->setGeometry(m_screen.x() + (m_screen.width() - 800 * m_screen.width()/1920)/2,
-                                     m_screen.y() + (m_screen.height() - 100)/2 - 10,
-                               800 * m_screen.width()/1920, 100);
+                                     m_screen.y() + (m_screen.height() - 200)/2 - 10,
+                               800 * m_screen.width()/1920, 200);
 }
 
 void MainWindow::initialMessageWidget()
@@ -868,7 +864,7 @@ void MainWindow::ResizeEvent()
     }
 
     m_judgeWidget->setGeometry(m_screen.x() + (m_screen.width() - 800 * m_screen.width()/1920)/2,
-                               m_screen.y() + (m_screen.height() - 100)/2 - 10,800 * m_screen.width()/1920, 100);
+                               m_screen.y() + (m_screen.height() - 200)/2 - 10,800 * m_screen.width()/1920, 200);
 
 
     if(m_judgeWidget->isVisible())
@@ -1340,7 +1336,7 @@ void MainWindow::drawWarningWindow(QRect &rect)
         else if(defaultnum ==6)
             confirBTnText = (QObject::tr("Still Shutdown"));
     }
-    CommonPushButton *confirmBtn = new CommonPushButton(confirBTnText, QString::fromUtf8("confirmBtn"), 120, 48, m_showWarningArea);
+    CommonPushButton *confirmBtn = new CommonPushButton(confirBTnText, QString::fromUtf8("confirmBtn"), 120, 48, 24, m_showWarningArea);
 
     connect(confirmBtn, &CommonPushButton::clicked, [this]() {
         gs->set("win-key-release", false);
@@ -1354,7 +1350,7 @@ void MainWindow::drawWarningWindow(QRect &rect)
     });
 
     //取消按钮
-    CommonPushButton *cancelBtn = new CommonPushButton(QObject::tr("Cancel"), QString::fromUtf8("cancelBtn"), 120, 48, m_showWarningArea);
+    CommonPushButton *cancelBtn = new CommonPushButton(QObject::tr("Cancel"), QString::fromUtf8("cancelBtn"), 120, 48, 24, m_showWarningArea);
 
     connect(cancelBtn, &CommonPushButton::clicked, this, &MainWindow::exitt);
 

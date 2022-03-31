@@ -22,8 +22,9 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include <QEvent>
-CommonPushButton::CommonPushButton(QString buttonText, QString objName, int width, int height, QWidget *parent)
+CommonPushButton::CommonPushButton(QString buttonText, QString objName, int width, int height, int radius, QWidget *parent)
 {
+    m_radius = radius;
     m_label = new QLabel(this);
     m_label->setText(buttonText);
     this->setFixedSize(width, height);
@@ -31,7 +32,7 @@ CommonPushButton::CommonPushButton(QString buttonText, QString objName, int widt
     m_label->setAlignment(Qt::AlignCenter);
     m_label->setGeometry(0, 0, width, height);
     m_label->setStyleSheet("font:12pt;color:white");
-    this->setStyleSheet("QWidget#" + this->objectName() + "{background-color: rgb(255,255,255,40);border-radius: " + QString::number(this->height()/2) + "px;}");
+    this->setStyleSheet("QWidget#" + this->objectName() + "{background-color: rgb(255,255,255,40);border-radius: " + QString::number(m_radius) + "px;}");
     this->setAttribute(Qt::WA_StyledBackground);
 }
 
@@ -47,11 +48,11 @@ void CommonPushButton::setText(QString str)
 bool CommonPushButton::event(QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress) {
-        QString str = "QWidget#" + this->objectName() +"{background-color: rgb(255,255,255,100);border-radius: " + QString::number(this->height()/2) + "px;}";
+        QString str = "QWidget#" + this->objectName() +"{background-color: rgb(255,255,255,100);border-radius: " + QString::number(m_radius) + "px;}";
         this->setStyleSheet(str);
         this->setAttribute(Qt::WA_StyledBackground);
     } else if (event->type() == QEvent::MouseButtonRelease) {
-        QString str = "QWidget#" + this->objectName() + "{background-color: rgb(255,255,255,80);border-radius: " + QString::number(this->height()/2) + "px;}";
+        QString str = "QWidget#" + this->objectName() + "{background-color: rgb(255,255,255,80);border-radius: " + QString::number(m_radius) + "px;}";
         this->setStyleSheet(str);
         this->setAttribute(Qt::WA_StyledBackground);
         emit clicked();
@@ -62,7 +63,7 @@ bool CommonPushButton::event(QEvent *event)
 
 void CommonPushButton::enterEvent(QEvent *event)
 {
-    QString str = "QWidget#" + this->objectName() + "{background-color: rgb(255,255,255,80);border-radius: " + QString::number(this->height()/2) + "px;}";
+    QString str = "QWidget#" + this->objectName() + "{background-color: rgb(255,255,255,80);border-radius: " + QString::number(m_radius) + "px;}";
 
     this->setStyleSheet(str);
     this->setAttribute(Qt::WA_StyledBackground);
@@ -70,7 +71,7 @@ void CommonPushButton::enterEvent(QEvent *event)
 
 void CommonPushButton::leaveEvent(QEvent *event)
 {
-    QString str = "QWidget#" + this->objectName() + "{background-color: rgb(255,255,255,40);border-radius: " + QString::number(this->height()/2) + "px;}";
+    QString str = "QWidget#" + this->objectName() + "{background-color: rgb(255,255,255,40);border-radius: " + QString::number(m_radius) + "px;}";
     this->setStyleSheet(str);
     this->setAttribute(Qt::WA_StyledBackground);
 }
