@@ -1,0 +1,32 @@
+--- tools/mainwindow.cpp
++++ tools/mainwindow.cpp
+@@ -115,16 +115,21 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
+         QString     fullstr = gset->get("picture-filename").toString();
+         qDebug() << "picture path = " << fullstr;
+         QFileInfo fileInfo(fullstr);
+-        if (fileInfo.isFile() && pix.load(fullstr)) {
+-            pix = blurPixmap(pix);
++        if (fileInfo.isFile()) {
++            pix.load(fullstr);
++            //增加对pix的判断，有些图片格式qt不支持，无法读取，导致pix为null,引起程序崩溃 #bug75856
++            if (pix.isNull()) {
++                pix.load(":/images/background-ukui.png");
++                pix = blurPixmap(pix);
++            } else {
++                pix = blurPixmap(pix);
++            }
++
+         } else {
+-            QString   imagefile = "/usr/share/backgrounds/warty-final-ubuntukylin.jpg";
++            QString   imagefile = "/usr/share/backgrounds/1-warty-final-ubuntukylin.jpg";
+             QFileInfo fileimage(imagefile);
+-            if (fileimage.isFile() && fileimage.exists() && pix.load(imagefile)) {
+-                pix = blurPixmap(pix);
+-            }
+-            else{
+-                pix.load("/usr/share/ukui/ukui-session-manager/images/background-ukui.png");
++            if (fileimage.isFile() && fileimage.exists()) {
++                pix.load(imagefile);
+                 pix = blurPixmap(pix);
+             }
+         }

@@ -33,6 +33,7 @@
 #include <QSettings>
 #include <QScrollArea>
 #include "mypushbutton.h"
+#include "commonpushbutton.h"
 class XEventMonitor;
 
 QT_BEGIN_NAMESPACE
@@ -281,8 +282,8 @@ private:
     QLabel *m_timeLabel = nullptr;
 
     QLabel *m_judgeLabel = nullptr;
-    QPushButton *m_cancelBtn = nullptr;
-    QPushButton *m_confirmBtn = nullptr;
+    CommonPushButton *m_cancelBtn = nullptr;
+    CommonPushButton *m_confirmBtn = nullptr;
 
     QLabel *m_messageLabel1 = nullptr;
     QLabel *m_messageLabel2 = nullptr;
@@ -319,5 +320,7 @@ private:
     QWidget *m_showWarningArea = nullptr; /// 阻止列表
     bool m_btnWidgetNeedScrollbar = false; /// 是否需要滑动条显示
     bool m_showWarningMesg = false; /// 是否显示阻止列表
+    QWidget *m_judgeWidget = nullptr; /// 提示
+
 };
 #endif // MAINWINDOW_H

@@ -35,7 +35,7 @@ class CommonPushButton : public QWidget
     Q_OBJECT
 
 public:
-    CommonPushButton(QString buttonText, QString objName, int width = 120, int height = 48, QWidget *parent = nullptr);
+    CommonPushButton(QString buttonText, QString objName, int width = 120, int height = 48, int radius = 24, QWidget *parent = nullptr);
     ~CommonPushButton();
 
     void setText(QString str);
@@ -53,6 +53,6 @@ public slots:
 
 private:
     QLabel *m_label = nullptr;
-
+    int m_radius;
 };
 #endif // COMMONPUSHBUTTON_H
