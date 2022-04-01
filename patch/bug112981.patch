@@ -1,8 +1,38 @@
 diff --git a/tools/mainwindow.cpp b/tools/mainwindow.cpp
-index 9bdf665..469e5af 100644
+index 60a4eab..0d73b04 100644
 --- a/tools/mainwindow.cpp
 +++ b/tools/mainwindow.cpp
-@@ -168,7 +168,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
+@@ -115,21 +115,16 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
+         QString     fullstr = gset->get("picture-filename").toString();
+         qDebug() << "picture path = " << fullstr;
+         QFileInfo fileInfo(fullstr);
+-        if (fileInfo.isFile()) {
+-            pix.load(fullstr);
+-            //增加对pix的判断，有些图片格式qt不支持，无法读取，导致pix为null,引起程序崩溃 #bug75856
+-            if (pix.isNull()) {
+-                pix.load(":/images/background-ukui.png");
+-                pix = blurPixmap(pix);
+-            } else {
+-                pix = blurPixmap(pix);
+-            }
+-
++        if (fileInfo.isFile() && pix.load(fullstr)) {
++            pix = blurPixmap(pix);
+         } else {
+-            QString   imagefile = "/usr/share/backgrounds/1-warty-final-ubuntukylin.jpg";
++            QString   imagefile = "/usr/share/backgrounds/warty-final-ubuntukylin.jpg";
+             QFileInfo fileimage(imagefile);
+-            if (fileimage.isFile() && fileimage.exists()) {
+-                pix.load(imagefile);
++            if (fileimage.isFile() && fileimage.exists() && pix.load(imagefile)) {
++                pix = blurPixmap(pix);
++            }
++            else{
++                pix.load("/usr/share/ukui/ukui-session-manager/images/background-ukui.png");
+                 pix = blurPixmap(pix);
+             }
+         }
+@@ -171,7 +166,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
      //m_showWarningArea 作为该界面所有组件的父指针，方便排版
      m_showWarningArea = new QWidget(this);
      m_showWarningArea->setObjectName(QString::fromUtf8("area"));
@@ -11,8 +41,8 @@ index 9bdf665..469e5af 100644
  
      initialBtn();
  
-@@ -264,7 +264,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
-     m_vBoxLayout->addLayout(m_judgeWidgetVLayout, 120);
+@@ -268,7 +263,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
+     //m_vBoxLayout->addLayout(m_judgeWidgetVLayout, 120);
      m_vBoxLayout->addWidget(m_scrollArea, 640);
      m_vBoxLayout->addLayout(m_messageVLayout, 120);
 -    m_vBoxLayout->addLayout(spaceLayout, 80);
@@ -20,7 +50,7 @@ index 9bdf665..469e5af 100644
      m_vBoxLayout->addStretch(20);
      m_vBoxLayout->setSpacing(0);
  
-@@ -358,7 +358,6 @@ MainWindow::~MainWindow()
+@@ -362,7 +357,6 @@ MainWindow::~MainWindow()
      delete ui;
  }
  
@@ -28,7 +58,7 @@ index 9bdf665..469e5af 100644
  void MainWindow::initialSystemMonitor()
  {
      m_systemMonitorHLayout = new QHBoxLayout();
-@@ -400,7 +399,6 @@ void MainWindow::initialSystemMonitor()
+@@ -404,7 +398,6 @@ void MainWindow::initialSystemMonitor()
      qDebug() << "m_systemMonitorBtn:" << m_systemMonitorBtn->height();
  
  }
@@ -36,7 +66,7 @@ index 9bdf665..469e5af 100644
  
  void MainWindow::initialBtn()
  {
-@@ -936,19 +934,16 @@ void MainWindow::doLockscreen()
+@@ -949,19 +942,16 @@ void MainWindow::doLockscreen()
      exit(0);
  }
  
@@ -56,7 +86,7 @@ index 9bdf665..469e5af 100644
      if (obj->objectName() == "systemMonitor") {
             if (event->type() == QEvent::MouseButtonRelease) {
                 doSystemMonitor();
-@@ -959,18 +954,18 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+@@ -972,18 +962,18 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
                     m_systemMonitorBtn->setStyleSheet(str);
                     m_systemMonitorBtn->setAttribute(Qt::WA_StyledBackground);
  
@@ -81,7 +111,7 @@ index 9bdf665..469e5af 100644
                 }
                 else if(event->type() == QEvent::MouseButtonPress){
                     QString str = "QWidget#systemMonitor{background-color: rgb(255,255,255,80);border-radius: " + QString::number(m_systemMonitorBtn->height()/2) + "px;}";
-@@ -979,7 +974,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+@@ -992,7 +982,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
                 }
             }
         }
@@ -90,7 +120,7 @@ index 9bdf665..469e5af 100644
      return QWidget::eventFilter(obj, event);
  }
  
-@@ -1048,7 +1043,7 @@ void MainWindow::doEvent(QString test, int i)
+@@ -1061,7 +1051,7 @@ void MainWindow::doEvent(QString test, int i)
  void MainWindow::mousePressEvent(QMouseEvent *event)
  {
      if (click_blank_space_need_to_exit) {
@@ -99,7 +129,7 @@ index 9bdf665..469e5af 100644
          QRect rect(m_systemMonitorBtn->geometry());
          const qreal radius = m_systemMonitorBtn->height()/2;
          path.moveTo(rect.topRight() - QPointF(radius, 0));
-@@ -1060,7 +1055,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
+@@ -1073,7 +1063,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
          path.quadTo(rect.bottomRight(), rect.bottomRight() + QPointF(0, -radius));
          path.lineTo(rect.topRight() + QPointF(0, radius));
          path.quadTo(rect.topRight(), rect.topRight() + QPointF(-radius, -0));
@@ -107,7 +137,7 @@ index 9bdf665..469e5af 100644
  
          qDebug() << "mousePressEvent" << m_switchUserBtn->geometry() << m_scrollArea->mapFromGlobal(event->pos());
  
-@@ -1070,7 +1064,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
+@@ -1083,7 +1072,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
              && !m_switchUserBtn->getIconLabel()->containsPoint(m_switchUserBtn->getIconLabel()->mapFromGlobal(event->pos()))
              && !m_logoutBtn->getIconLabel()->containsPoint(m_logoutBtn->getIconLabel()->mapFromGlobal(event->pos()))
              && !m_rebootBtn->getIconLabel()->containsPoint(m_rebootBtn->getIconLabel()->mapFromGlobal(event->pos()))
@@ -118,10 +148,10 @@ index 9bdf665..469e5af 100644
          }
  
 diff --git a/tools/mainwindow.h b/tools/mainwindow.h
-index e0b4e37..a12f492 100644
+index a169c37..c3539e4 100644
 --- a/tools/mainwindow.h
 +++ b/tools/mainwindow.h
-@@ -80,7 +80,7 @@ public:
+@@ -81,7 +81,7 @@ public:
      /**
       * @brief 初始化系统监视器按钮
       */
@@ -130,7 +160,7 @@ index e0b4e37..a12f492 100644
  
      /**
       * @brief 初始化按钮
-@@ -168,7 +168,7 @@ private:
+@@ -169,7 +169,7 @@ private:
      /**
       * @brief 打开监视器
       */
@@ -139,7 +169,7 @@ index e0b4e37..a12f492 100644
  
      /**
       * @brief 显示常规的按钮界面
-@@ -275,7 +275,7 @@ private:
+@@ -276,7 +276,7 @@ private:
      MyPushButton *m_logoutBtn = nullptr;
      MyPushButton *m_rebootBtn = nullptr;
      MyPushButton *m_shutDownBtn = nullptr;
@@ -148,7 +178,7 @@ index e0b4e37..a12f492 100644
  
      QLabel *m_dateLabel = nullptr;
      QLabel *m_timeLabel = nullptr;
-@@ -298,11 +298,11 @@ private:
+@@ -299,11 +299,11 @@ private:
      QVBoxLayout *m_messageVLayout = nullptr;
      QVBoxLayout *m_vBoxLayout = nullptr;
      QScrollArea *m_scrollArea = nullptr;

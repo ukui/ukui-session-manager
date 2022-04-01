@@ -115,16 +115,21 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
         QString     fullstr = gset->get("picture-filename").toString();
         qDebug() << "picture path = " << fullstr;
         QFileInfo fileInfo(fullstr);
-        if (fileInfo.isFile() && pix.load(fullstr)) {
-            pix = blurPixmap(pix);
-        } else {
-            QString   imagefile = "/usr/share/backgrounds/warty-final-ubuntukylin.jpg";
-            QFileInfo fileimage(imagefile);
-            if (fileimage.isFile() && fileimage.exists() && pix.load(imagefile)) {
+        if (fileInfo.isFile()) {
+            pix.load(fullstr);
+            //增加对pix的判断，有些图片格式qt不支持，无法读取，导致pix为null,引起程序崩溃 #bug75856
+            if (pix.isNull()) {
+                pix.load(":/images/background-ukui.png");
+                pix = blurPixmap(pix);
+            } else {
                 pix = blurPixmap(pix);
             }
-            else{
-                pix.load("/usr/share/ukui/ukui-session-manager/images/background-ukui.png");
+
+        } else {
+            QString   imagefile = "/usr/share/backgrounds/1-warty-final-ubuntukylin.jpg";
+            QFileInfo fileimage(imagefile);
+            if (fileimage.isFile() && fileimage.exists()) {
+                pix.load(imagefile);
                 pix = blurPixmap(pix);
             }
         }
@@ -166,7 +171,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     //m_showWarningArea 作为该界面所有组件的父指针，方便排版
     m_showWarningArea = new QWidget(this);
     m_showWarningArea->setObjectName(QString::fromUtf8("area"));
-    initialSystemMonitor();
+    //initialSystemMonitor();
 
     initialBtn();
 
@@ -263,7 +268,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     //m_vBoxLayout->addLayout(m_judgeWidgetVLayout, 120);
     m_vBoxLayout->addWidget(m_scrollArea, 640);
     m_vBoxLayout->addLayout(m_messageVLayout, 120);
-    m_vBoxLayout->addWidget(m_systemMonitorBtn, 80, Qt::AlignHCenter);
+    m_vBoxLayout->addLayout(spaceLayout, 80);
     m_vBoxLayout->addStretch(20);
     m_vBoxLayout->setSpacing(0);
 
@@ -357,6 +362,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+/*
 void MainWindow::initialSystemMonitor()
 {
     m_systemMonitorHLayout = new QHBoxLayout();
@@ -398,6 +404,7 @@ void MainWindow::initialSystemMonitor()
     qDebug() << "m_systemMonitorBtn:" << m_systemMonitorBtn->height();
 
 }
+*/
 
 void MainWindow::initialBtn()
 {
@@ -942,16 +949,19 @@ void MainWindow::doLockscreen()
     exit(0);
 }
 
+/*
 void MainWindow::doSystemMonitor()
 {
     qDebug() << "doSystemMonitor....";
     QProcess::startDetached("ukui-system-monitor", QStringList());
     exitt();
 }
+*/
 
 // handle mouse-clicked event
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
+    /*
     if (obj->objectName() == "systemMonitor") {
            if (event->type() == QEvent::MouseButtonRelease) {
                doSystemMonitor();
@@ -962,18 +972,18 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
                    m_systemMonitorBtn->setStyleSheet(str);
                    m_systemMonitorBtn->setAttribute(Qt::WA_StyledBackground);
 
-                   //tableNum   = -1;
-                   flag = false;
-                   changeBtnState("empty");
+//                   tableNum   = -1;
+//                   flag = false;
+//                   changeBtnState("empty");
                }
                else if(event->type() == QEvent::Enter){
                    QString str = "QWidget#systemMonitor{background-color: rgb(255,255,255,40);border-radius: " + QString::number(m_systemMonitorBtn->height()/2) + "px;}";
                    m_systemMonitorBtn->setStyleSheet(str);
                    m_systemMonitorBtn->setAttribute(Qt::WA_StyledBackground);
 
-                   //tableNum   = -1;
-                   flag = true;
-                   changeBtnState("empty");
+//                   tableNum   = -1;
+//                   flag = true;
+//                   changeBtnState("empty");
                }
                else if(event->type() == QEvent::MouseButtonPress){
                    QString str = "QWidget#systemMonitor{background-color: rgb(255,255,255,80);border-radius: " + QString::number(m_systemMonitorBtn->height()/2) + "px;}";
@@ -982,7 +992,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
                }
            }
        }
-
+    */
     return QWidget::eventFilter(obj, event);
 }
 
@@ -1051,7 +1061,7 @@ void MainWindow::doEvent(QString test, int i)
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     if (click_blank_space_need_to_exit) {
-        QPainterPath path;
+        /*QPainterPath path;
         QRect rect(m_systemMonitorBtn->geometry());
         const qreal radius = m_systemMonitorBtn->height()/2;
         path.moveTo(rect.topRight() - QPointF(radius, 0));
@@ -1063,6 +1073,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         path.quadTo(rect.bottomRight(), rect.bottomRight() + QPointF(0, -radius));
         path.lineTo(rect.topRight() + QPointF(0, radius));
         path.quadTo(rect.topRight(), rect.topRight() + QPointF(-radius, -0));
+*/
 
         qDebug() << "mousePressEvent" << m_switchUserBtn->geometry() << m_scrollArea->mapFromGlobal(event->pos());
 
@@ -1072,8 +1083,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             && !m_switchUserBtn->getIconLabel()->containsPoint(m_switchUserBtn->getIconLabel()->mapFromGlobal(event->pos()))
             && !m_logoutBtn->getIconLabel()->containsPoint(m_logoutBtn->getIconLabel()->mapFromGlobal(event->pos()))
             && !m_rebootBtn->getIconLabel()->containsPoint(m_rebootBtn->getIconLabel()->mapFromGlobal(event->pos()))
-            && !m_shutDownBtn->getIconLabel()->containsPoint(m_shutDownBtn->getIconLabel()->mapFromGlobal(event->pos()))
-            && !path.contains(m_toolWidget->mapFromGlobal(event->pos()))) {
+            && !m_shutDownBtn->getIconLabel()->containsPoint(m_shutDownBtn->getIconLabel()->mapFromGlobal(event->pos()))) {
             exitt();
         }
 
