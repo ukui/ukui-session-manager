@@ -98,6 +98,11 @@ void SessionApplication::initialEnvironment()
     if (xdg_session_type == "wayland") {
         QProcess::startDetached("dbus-update-activation-environment", QStringList() << "--systemd" << "DISPLAY" << "QT_QPA_PLATFORM");
     }
+
+    qDebug() << "usd save-param process start";
+    QString user_name = qgetenv("USER");
+    QProcess::startDetached("save-param", QStringList() << "-u" << user_name );
+
     //restart user's gvfs-daemon.service
     //QProcess::startDetached("systemctl", QStringList() << "--user" << "restart" << "gvfs-daemon.service");
 }
