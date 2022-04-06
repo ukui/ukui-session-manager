@@ -566,27 +566,36 @@ void MainWindow::initialDateTimeWidget()
     const QByteArray id_control("org.ukui.control-center.panel.plugins");
     QString          current_date;
     QString          current_time;
+    QString language = QLocale::system().name();
+    QString day;
+    QString time;
+    QLocale locale = QLocale::English;
+
+    if(language == "zh_CN")
+    {
+        locale= QLocale::Chinese;
+    }
+    day = locale.toString(current_date_time, "dddd");
+    time = locale.toString(current_date_time, "A ");
+
     if (QGSettings::isSchemaInstalled(id_control)) {
         QGSettings *controlSetting = new QGSettings(id_control, QByteArray(), this);
         QString     formate_a      = controlSetting->get("date").toString();
         QString     formate_b      = controlSetting->get("hoursystem").toString();
-        if (formate_a == "en") {
-            current_date = current_date_time.toString("yyyy-MM-dd ddd");
-        } else if (formate_a == "cn") {
-            current_date = current_date_time.toString("yyyy/MM/dd ddd");
+        qDebug() << "formate_a..." << formate_a;
+        if (formate_a == "cn") {
+            current_date = current_date_time.toString("yyyy/MM/dd ") + day;
         } else {
-            current_date = current_date_time.toString("yyyy-MM-dd ddd");
+            current_date = current_date_time.toString("yyyy-MM-dd ") + day;
         }
 
         if (formate_b == "12") {
-            current_time = current_date_time.toString("A hh:mm");
-        } else if (formate_b == "24") {
-            current_time = current_date_time.toString("hh:mm");
+            current_time = time + current_date_time.toString("hh:mm");
         } else {
             current_time = current_date_time.toString("hh:mm");
         }
     } else {
-        current_date = current_date_time.toString("yyyy-MM-dd ddd");
+        current_date = current_date_time.toString("yyyy-MM-dd ") + day;
         current_time = current_date_time.toString("hh:mm");
     }
 
