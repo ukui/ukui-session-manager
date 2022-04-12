@@ -163,6 +163,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
 
     m_scrollArea = new QScrollArea;
     m_scrollArea->setObjectName("scrollArea");
+    m_scrollArea->removeEventFilter(this);
 
     m_btnWidget = new QWidget();
     m_btnWidget->setObjectName("btnWidget");
@@ -293,14 +294,6 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     qDebug() << "m_toolWidget...." << m_toolWidget->geometry();
     qDebug() << "pos..." << QCursor::pos() << this->geometry();
     qDebug() << "m_screen..." << m_screen;
-
-    rowMap.insert(0, m_switchRow);
-    rowMap.insert(1, m_hibernateRow);
-    rowMap.insert(2, m_suspendRow);
-    rowMap.insert(3, m_lockScreenRow);
-    rowMap.insert(4, m_logoutRow);
-    rowMap.insert(5, m_rebootRow);
-    rowMap.insert(6, m_shutDownRow);
 
     /*捕获键盘，如果捕获失败，那么模拟一次esc按键来退出菜单，如果仍捕获失败，则放弃捕获*/
     if (establishGrab()) {
@@ -755,6 +748,7 @@ void MainWindow::showNormalBtnWidget(int hideNum)
 
     margins = (m_screen.width() -160 - 128 * (7 - hideNum))/(6-hideNum);
     qDebug() << "showNormalBtnWidget hideNum:" << hideNum << "margins:" << margins;
+    m_lineNum = 1;
     int btnWidgetWidth = 0;
     if(margins > 60)
     {
@@ -924,6 +918,26 @@ void MainWindow::ResizeEvent()
 
     //m_scrollArea->adjustSize();
     //m_scrollArea->setWidgetResizable(true);
+    //行
+    rowMap.clear();
+    rowMap.insert(0, m_switchRow);
+    rowMap.insert(1, m_hibernateRow);
+    rowMap.insert(2, m_suspendRow);
+    rowMap.insert(3, m_lockScreenRow);
+    rowMap.insert(4, m_logoutRow);
+    rowMap.insert(5, m_rebootRow);
+    rowMap.insert(6, m_shutDownRow);
+
+    //列
+    columMap.clear();
+    columMap.insert(0, m_switchColumn);
+    columMap.insert(1, m_hibernateColumn);
+    columMap.insert(2, m_suspendColumn);
+    columMap.insert(3, m_lockScreenColumn);
+    columMap.insert(4, m_logoutColumn);
+    columMap.insert(5, m_rebootColumn);
+    columMap.insert(6, m_shutDownColumn);
+
     m_toolWidget->setGeometry(m_screen);
 }
 
@@ -1123,6 +1137,19 @@ bool MainWindow::judgeBtnIsEnable(int index)
     return false;
 }
 
+bool MainWindow::matchKeyBtn(int row, int colum)
+{
+    for(int j = 6; j >= 0; j--)
+    {
+        if(rowMap.value(j) == row && columMap.value(j) == colum && judgeBtnIsEnable(j))
+        {
+            tableNum = j;
+            return true;
+        }
+    }
+    return false;
+}
+
 void MainWindow::calculateKeyBtn(const QString &key)
 {
     if (key == "Left") {
@@ -1148,7 +1175,7 @@ void MainWindow::calculateKeyBtn(const QString &key)
             }
         }
     }
-    if (key == "Right") {
+    else if (key == "Right") {
         if (tableNum == 6 || tableNum == -1) {
             for (int i = 0; i <= 6; i++) {
                 if (judgeBtnIsEnable(i)) {
@@ -1171,6 +1198,54 @@ void MainWindow::calculateKeyBtn(const QString &key)
             }
         }
     }
+    else if(m_lineNum > 1 && key == "Up")
+    {
+        if(tableNum == -1)
+        {
+            for(int i = m_lineNum - 1; i >= 0; i--)
+            {
+                if(matchKeyBtn(i, 0))
+                    return;
+            }
+        }
+
+        int tableRow = rowMap.value(tableNum);
+        int tableColum = columMap.value(tableNum);
+        for(int i = 1; i < tableRow + 1; i++)
+        {
+            if(matchKeyBtn(tableRow - i, tableColum))
+                return;
+        }
+        for(int i = m_lineNum - 1; i > tableRow; i--)
+        {
+            if(matchKeyBtn(i, tableColum))
+                return;
+        }
+    }
+    else if(m_lineNum > 1 && key == "Down")
+    {
+        if(tableNum == -1)
+        {
+            for(int i = 0; i < m_lineNum; i++)
+            {
+                if(matchKeyBtn(i, 0))
+                    return;
+            }
+        }
+
+        int tableRow = rowMap.value(tableNum);
+        int tableColum = columMap.value(tableNum);
+        for(int i = tableRow + 1; i < m_lineNum; i++)
+        {
+            if(matchKeyBtn(i, tableColum))
+                return;
+        }
+        for(int i = 0; i < tableRow + 1; i++)
+        {
+            if(matchKeyBtn(i, tableColum))
+                return;
+        }
+    }
 }
 
 void MainWindow::onGlobalKeyPress(const QString &key)
@@ -1188,9 +1263,13 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
 
     if (key == "Escape") {
         exitt();
-    } else if (key == "Left" || key == "Right") {
+    } else if (key == "Left" || key == "Right" || key == "Up" || key == "Down") {
         //if (flag) return;
+        int oldNum = tableNum;
         calculateKeyBtn(key);
+        qDebug() << "key...." << oldNum << tableNum;
+        if(oldNum == tableNum)
+            return;
         QString button = map[tableNum]->objectName();
 
         if(m_btnWidgetNeedScrollbar)
