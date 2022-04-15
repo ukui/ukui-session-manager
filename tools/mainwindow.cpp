@@ -769,6 +769,12 @@ void MainWindow::showNormalBtnWidget(int hideNum)
     m_scrollArea->setContentsMargins(0,0,0,0);
     m_scrollArea->verticalScrollBar()->setVisible(false);
     m_scrollArea->verticalScrollBar()->setDisabled(true);
+    m_scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar{ background: transparent; margin-top:0px;margin-bottom:0px ; }"\
+                                                     "QScrollBar:vertical{width: 0px;background: transparent;border-radius:3px;}"\
+                                                     "QScrollBar::handle:vertical{width: 0px; background: rgba(255,255,255, 40); border-radius:3px;}"\
+                                                     "QScrollBar::handle:vertical:hover{width: 0px; background: rgba(255,255,255, 60); border-radius:3px;}"\
+                                                     "QScrollBar::add-line:vertical{width:0px;height:0px}"\
+                                                     "QScrollBar::sub-line:vertical{width:0px;height:0px}");
 
     //m_buttonHLayout->setContentsMargins(0,0,0,(m_scrollArea->height() - m_switchUserBtn->height()) * 3/5);
 

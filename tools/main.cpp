@@ -504,7 +504,7 @@ int main(int argc, char* argv[])
         a.setStyleSheet(qss.readAll());
         qss.close();
 
-        w->showFullScreen();
+        w->show();
         QObject::connect(w, &MainWindow::signalTostart, [&]() {
             // 从界面点击 切换用户 按钮，则等待界面隐藏再执行命令
             if (w->defaultnum == 0) {
