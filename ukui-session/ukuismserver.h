@@ -134,6 +134,7 @@ private:
     OrgKdeKWinSessionInterface *m_kwinInterface;
     UKUISMClient *m_clientInteracting;
 
+    QList<QStringList> m_wmStartCommands;
     QList<UKUISMListener*> m_listener;
     QList<UKUISMClient*> m_clients;
     QTimer m_restoreTimer;
@@ -149,13 +150,13 @@ private:
 
 public:
     bool prepareForShutdown();
-
     bool isCancelLogout() const;
     void setIsCancelLogout(bool isCancelLogout);
     bool isCancelShutdown() const;
     void setIsCancelShutdown(bool isCancelShutdown);
     bool isCancelReboot() const;
     void setIsCancelReboot(bool isCancelReboot);
+    QList<QStringList> wmStartCommands() const;
 };
 
 #endif // UKUISMSERVER_H

@@ -19,10 +19,13 @@
  *
  * END_COMMON_COPYRIGHT_HEADER */
 #include "ukuimodule.h"
+#include "ukuismserver.h"
 
 #include <QFileInfo>
 #include <QDebug>
 #include <modulemanager.h>
+
+extern UKUISMServer*& getGlobalServer();
 
 UkuiModule::UkuiModule(const XdgDesktopFile& file, QObject* parent) : QProcess(parent)
                                                                     , file(file)
@@ -39,8 +42,14 @@ void UkuiModule::start()
     mIsTerminating = false;
     QStringList args = file.expandExecString();
     QString command = args.takeFirst();
-    qDebug() << "Start ukui module: " << command << "args: " << args;
-    QProcess::start(command, args);
+
+    if (command == "ukui-kwin_x11") {
+        startWM(command, args);
+    } else {
+        qDebug() << "Start ukui module: " << command << "args: " << args;
+        QProcess::start(command, args);
+    }
+
     ModuleManager::insertStartupList(std::move(command));
 }
 
@@ -53,6 +62,24 @@ void UkuiModule::terminate()
 bool UkuiModule::isTerminating()
 {
     return mIsTerminating;
+}
+
+void UkuiModule::startWM(QString &command, QStringList &args)
+{
+    QList<QStringList> wmStartCommand = getGlobalServer()->wmStartCommands();
+
+    if (!wmStartCommand.empty()) {
+        QStringList fullCommand = wmStartCommand[0];
+        QString app = fullCommand[0];
+        QStringList argList;
+        for (int i = 1; i < fullCommand.count(); i++) {
+            argList.append(fullCommand[i]);
+        }
+
+        QProcess::start(app, argList);
+    } else {
+        QProcess::start(command, args);
+    }
 }
 
 void UkuiModule::updateState(QProcess::ProcessState newState)
