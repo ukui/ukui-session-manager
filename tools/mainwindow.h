@@ -167,6 +167,13 @@ private:
     bool judgeBtnIsEnable(int index);
 
     /**
+     * @brief 匹配上下按键按钮
+     * @param row 行号
+     * @param colum 列号
+     */
+    bool matchKeyBtn(int row, int colum);
+
+    /**
      * @brief 打开监视器
      */
     //void doSystemMonitor();
@@ -240,6 +247,7 @@ private:
     QWidget *lastWidget;
     QHash<int, MyPushButton*> map;
     QHash<int, int> rowMap;
+    QHash<int, int> columMap;
 
     QStringList shutdownInhibitors;//阻止shutdown的inhibitors
     QStringList shutdownInhibitorsReason;//阻止shutdown的inhibitor对应的原因

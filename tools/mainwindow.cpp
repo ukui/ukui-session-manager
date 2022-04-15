@@ -163,6 +163,7 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
 
     m_scrollArea = new QScrollArea;
     m_scrollArea->setObjectName("scrollArea");
+    m_scrollArea->removeEventFilter(this);
 
     m_btnWidget = new QWidget();
     m_btnWidget->setObjectName("btnWidget");
@@ -293,14 +294,6 @@ MainWindow::MainWindow(bool a, bool b, QWidget *parent) : QMainWindow(parent)
     qDebug() << "m_toolWidget...." << m_toolWidget->geometry();
     qDebug() << "pos..." << QCursor::pos() << this->geometry();
     qDebug() << "m_screen..." << m_screen;
-
-    rowMap.insert(0, m_switchRow);
-    rowMap.insert(1, m_hibernateRow);
-    rowMap.insert(2, m_suspendRow);
-    rowMap.insert(3, m_lockScreenRow);
-    rowMap.insert(4, m_logoutRow);
-    rowMap.insert(5, m_rebootRow);
-    rowMap.insert(6, m_shutDownRow);
 
     /*捕获键盘，如果捕获失败，那么模拟一次esc按键来退出菜单，如果仍捕获失败，则放弃捕获*/
     if (establishGrab()) {
@@ -566,27 +559,36 @@ void MainWindow::initialDateTimeWidget()
     const QByteArray id_control("org.ukui.control-center.panel.plugins");
     QString          current_date;
     QString          current_time;
+    QString language = QLocale::system().name();
+    QString day;
+    QString time;
+    QLocale locale = QLocale::English;
+
+    if(language == "zh_CN")
+    {
+        locale= QLocale::Chinese;
+    }
+    day = locale.toString(current_date_time, "dddd");
+    time = locale.toString(current_date_time, "A ");
+
     if (QGSettings::isSchemaInstalled(id_control)) {
         QGSettings *controlSetting = new QGSettings(id_control, QByteArray(), this);
         QString     formate_a      = controlSetting->get("date").toString();
         QString     formate_b      = controlSetting->get("hoursystem").toString();
-        if (formate_a == "en") {
-            current_date = current_date_time.toString("yyyy-MM-dd ddd");
-        } else if (formate_a == "cn") {
-            current_date = current_date_time.toString("yyyy/MM/dd ddd");
+        qDebug() << "formate_a..." << formate_a;
+        if (formate_a == "cn") {
+            current_date = current_date_time.toString("yyyy/MM/dd ") + day;
         } else {
-            current_date = current_date_time.toString("yyyy-MM-dd ddd");
+            current_date = current_date_time.toString("yyyy-MM-dd ") + day;
         }
 
         if (formate_b == "12") {
-            current_time = current_date_time.toString("A hh:mm");
-        } else if (formate_b == "24") {
-            current_time = current_date_time.toString("hh:mm");
+            current_time = time + current_date_time.toString("hh:mm");
         } else {
             current_time = current_date_time.toString("hh:mm");
         }
     } else {
-        current_date = current_date_time.toString("yyyy-MM-dd ddd");
+        current_date = current_date_time.toString("yyyy-MM-dd ") + day;
         current_time = current_date_time.toString("hh:mm");
     }
 
@@ -746,6 +748,7 @@ void MainWindow::showNormalBtnWidget(int hideNum)
 
     margins = (m_screen.width() -160 - 128 * (7 - hideNum))/(6-hideNum);
     qDebug() << "showNormalBtnWidget hideNum:" << hideNum << "margins:" << margins;
+    m_lineNum = 1;
     int btnWidgetWidth = 0;
     if(margins > 60)
     {
@@ -766,6 +769,12 @@ void MainWindow::showNormalBtnWidget(int hideNum)
     m_scrollArea->setContentsMargins(0,0,0,0);
     m_scrollArea->verticalScrollBar()->setVisible(false);
     m_scrollArea->verticalScrollBar()->setDisabled(true);
+    m_scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar{ background: transparent; margin-top:0px;margin-bottom:0px ; }"\
+                                                     "QScrollBar:vertical{width: 0px;background: transparent;border-radius:3px;}"\
+                                                     "QScrollBar::handle:vertical{width: 0px; background: rgba(255,255,255, 40); border-radius:3px;}"\
+                                                     "QScrollBar::handle:vertical:hover{width: 0px; background: rgba(255,255,255, 60); border-radius:3px;}"\
+                                                     "QScrollBar::add-line:vertical{width:0px;height:0px}"\
+                                                     "QScrollBar::sub-line:vertical{width:0px;height:0px}");
 
     //m_buttonHLayout->setContentsMargins(0,0,0,(m_scrollArea->height() - m_switchUserBtn->height()) * 3/5);
 
@@ -915,6 +924,26 @@ void MainWindow::ResizeEvent()
 
     //m_scrollArea->adjustSize();
     //m_scrollArea->setWidgetResizable(true);
+    //行
+    rowMap.clear();
+    rowMap.insert(0, m_switchRow);
+    rowMap.insert(1, m_hibernateRow);
+    rowMap.insert(2, m_suspendRow);
+    rowMap.insert(3, m_lockScreenRow);
+    rowMap.insert(4, m_logoutRow);
+    rowMap.insert(5, m_rebootRow);
+    rowMap.insert(6, m_shutDownRow);
+
+    //列
+    columMap.clear();
+    columMap.insert(0, m_switchColumn);
+    columMap.insert(1, m_hibernateColumn);
+    columMap.insert(2, m_suspendColumn);
+    columMap.insert(3, m_lockScreenColumn);
+    columMap.insert(4, m_logoutColumn);
+    columMap.insert(5, m_rebootColumn);
+    columMap.insert(6, m_shutDownColumn);
+
     m_toolWidget->setGeometry(m_screen);
 }
 
@@ -1114,6 +1143,19 @@ bool MainWindow::judgeBtnIsEnable(int index)
     return false;
 }
 
+bool MainWindow::matchKeyBtn(int row, int colum)
+{
+    for(int j = 6; j >= 0; j--)
+    {
+        if(rowMap.value(j) == row && columMap.value(j) == colum && judgeBtnIsEnable(j))
+        {
+            tableNum = j;
+            return true;
+        }
+    }
+    return false;
+}
+
 void MainWindow::calculateKeyBtn(const QString &key)
 {
     if (key == "Left") {
@@ -1139,7 +1181,7 @@ void MainWindow::calculateKeyBtn(const QString &key)
             }
         }
     }
-    if (key == "Right") {
+    else if (key == "Right") {
         if (tableNum == 6 || tableNum == -1) {
             for (int i = 0; i <= 6; i++) {
                 if (judgeBtnIsEnable(i)) {
@@ -1162,6 +1204,54 @@ void MainWindow::calculateKeyBtn(const QString &key)
             }
         }
     }
+    else if(m_lineNum > 1 && key == "Up")
+    {
+        if(tableNum == -1)
+        {
+            for(int i = m_lineNum - 1; i >= 0; i--)
+            {
+                if(matchKeyBtn(i, 0))
+                    return;
+            }
+        }
+
+        int tableRow = rowMap.value(tableNum);
+        int tableColum = columMap.value(tableNum);
+        for(int i = 1; i < tableRow + 1; i++)
+        {
+            if(matchKeyBtn(tableRow - i, tableColum))
+                return;
+        }
+        for(int i = m_lineNum - 1; i > tableRow; i--)
+        {
+            if(matchKeyBtn(i, tableColum))
+                return;
+        }
+    }
+    else if(m_lineNum > 1 && key == "Down")
+    {
+        if(tableNum == -1)
+        {
+            for(int i = 0; i < m_lineNum; i++)
+            {
+                if(matchKeyBtn(i, 0))
+                    return;
+            }
+        }
+
+        int tableRow = rowMap.value(tableNum);
+        int tableColum = columMap.value(tableNum);
+        for(int i = tableRow + 1; i < m_lineNum; i++)
+        {
+            if(matchKeyBtn(i, tableColum))
+                return;
+        }
+        for(int i = 0; i < tableRow + 1; i++)
+        {
+            if(matchKeyBtn(i, tableColum))
+                return;
+        }
+    }
 }
 
 void MainWindow::onGlobalKeyPress(const QString &key)
@@ -1179,9 +1269,13 @@ void MainWindow::onGlobalkeyRelease(const QString &key)
 
     if (key == "Escape") {
         exitt();
-    } else if (key == "Left" || key == "Right") {
+    } else if (key == "Left" || key == "Right" || key == "Up" || key == "Down") {
         //if (flag) return;
+        int oldNum = tableNum;
         calculateKeyBtn(key);
+        qDebug() << "key...." << oldNum << tableNum;
+        if(oldNum == tableNum)
+            return;
         QString button = map[tableNum]->objectName();
 
         if(m_btnWidgetNeedScrollbar)
