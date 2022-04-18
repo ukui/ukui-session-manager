@@ -54,6 +54,7 @@ extern "C" {
 #include <QPalette>
 #include <QDesktopWidget>
 #include <QDBusInterface>
+#include <QDir>
 
 #include <KProcess>
 #include <KSharedConfig>
@@ -721,8 +722,44 @@ void UKUISMServer::shutdown()
     performLogout();
 }
 
+QStringList listFileList()
+{
+    QDir dir("/etc/ukui/ukui-session/logout/");
+    if (!dir.exists()) {
+          qWarning("Cannot find the example directory");
+          return QStringList();
+    }
+    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    dir.setSorting(QDir::Size | QDir::Reversed);
+
+    QFileInfoList list = dir.entryInfoList();
+    QStringList filelist;
+
+    for (int i = list.size() - 1 ; i >= 0 ; --i) {
+        QFileInfo fileInfo = list.at(i);
+        filelist<<fileInfo.fileName();
+    }
+    return filelist;
+}
+
+void execPro(QStringList proList)
+{
+    for (int i = 0 ; i < proList.size(); ++i){
+        qDebug() << "script name is " << proList.at(i);
+        QString pro = "/etc/ukui/ukui-session/logout/" + proList.at(i);
+        QProcess::startDetached(pro ,QStringList());
+    }
+}
+
 bool UKUISMServer::performLogout()
 {
+    //注销前执行指定目录脚本
+    QStringList list = listFileList();
+    if(list.isEmpty())
+        qDebug() << "logouting file list is empty or dir is not exits.";
+    else
+        execPro(list);
+
     qCDebug(UKUI_SESSION) << "begin logout";
     //已经在执行关机，直接返回
     if (m_state >= Shutdown) {
