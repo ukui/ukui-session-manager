@@ -506,8 +506,8 @@ int main(int argc, char* argv[])
 
         w->show();
         QObject::connect(w, &MainWindow::signalTostart, [&]() {
-            // 从界面点击 切换用户 按钮，则等待界面隐藏再执行命令
-            if (w->defaultnum == 0) {
+            // 从界面点击 切换用户、睡眠和休眠 按钮，则等待界面隐藏再执行命令
+            if (w->defaultnum < 3) {
                 w->hide();
                 QTimer::singleShot(500, [&]() {
                     playShutdownMusic(powermanager, w->defaultnum, cc, up_to_time);
