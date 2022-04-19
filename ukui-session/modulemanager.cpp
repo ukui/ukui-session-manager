@@ -84,6 +84,24 @@ void ModuleManager::playBootMusic(bool arg)
     }
 }
 
+//睡眠转休眠判断
+bool isSuspendToHibernate()
+{
+    QString path = "/sys/power/weakup_reason";
+    if (!QFile::exists(path)) {
+        return false;
+    }
+    QFile wakeup_reason_file(path);
+    wakeup_reason_file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString wakeupReason = wakeup_reason_file.readAll().simplified();
+    wakeup_reason_file.close();
+    if (QString::compare(wakeupReason,"0xaa") == 0) {
+        qDebug()<< "Suspend to Hibernate, wakeup_reason is "<<wakeupReason;
+        return true;
+    }
+    return false;
+}
+
 ModuleManager::ModuleManager( QObject* parent) : QObject(parent)
 {
     QDBusConnection::systemBus().connect(QString("org.freedesktop.login1"),
@@ -99,7 +117,10 @@ void ModuleManager::weakup(bool arg)
         qDebug() << "准备执行睡眠休眠";
     } else {
         qDebug() << "从睡眠休眠中唤醒";
-        playBootMusic(false);
+        if (!isSuspendToHibernate()) {
+            qDebug() << "播放唤醒音乐";
+            playBootMusic(false);
+        }
     }
 }
 
