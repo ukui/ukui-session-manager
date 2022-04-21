@@ -87,7 +87,7 @@ void ModuleManager::playBootMusic(bool arg)
 //睡眠转休眠判断
 bool isSuspendToHibernate()
 {
-    QString path = "/sys/power/weakup_reason";
+    QString path = "/sys/power/wakeup_reason";
     if (!QFile::exists(path)) {
         return false;
     }
