@@ -1286,7 +1286,7 @@ void UKUISMServer::tryRestoreNext()
     KConfigGroup config(KSharedConfig::openConfig(), m_sessionGroup);
 
     while (m_appRestored < m_appsToStart) {
-        QString n = QString::number(++m_appRestored);
+        QString n = QString::number(m_appRestored++);
         QString clientId = config.readEntry(QLatin1String("clientId") + n, QString());
         QString clientName = config.readEntry(QLatin1String("program") + n, QString());
 
