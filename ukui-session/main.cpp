@@ -380,7 +380,8 @@ int main(int argc, char **argv)
     app.setQuitOnLastWindowClosed(false);
 
     IceSetIOErrorHandler(IoErrorHandler);
-    getGlobalServer()->restoreWM(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
+    getGlobalServer();
+//    getGlobalServer()->restoreWM(QStringLiteral("saved at previous logout"));//恢复会话启动的窗管包含命令行参数
 
     // Load ts files
     const QString locale = QLocale::system().name();

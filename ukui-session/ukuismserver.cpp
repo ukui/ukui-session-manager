@@ -685,21 +685,21 @@ void UKUISMServer::restoreWM(const QString &sessionName)
     m_appsToStart = count;
 
     //以下这段是从保存的会话文件中寻找wm的重启命令，因为wm不在此处启动，所以不再需要这里的代码
-//    QList<QStringList> wmStartCommands;
+    QList<QStringList> wmStartCommands;
     if (!m_wm.isEmpty()) {
         for (int i = 1; i <= count; i++) {
             QString n = QString::number(i);
             if (isWM(configSessionGroup.readEntry(QStringLiteral("program") + n, QString()))) {
-                m_wmStartCommands << configSessionGroup.readEntry(QStringLiteral("restartCommand") + n, QStringList());
+                wmStartCommands << configSessionGroup.readEntry(QStringLiteral("restartCommand") + n, QStringList());
             }
         }
     }
 
-//    if (wmStartCommands.isEmpty()) {
-//        wmStartCommands << m_wmCommands;
-//    }
+    if (wmStartCommands.isEmpty()) {
+        wmStartCommands << m_wmCommands;
+    }
 
-//    launchWM(m_wmStartCommands);
+    launchWM(wmStartCommands);
 }
 
 void UKUISMServer::startDefaultSession()
