@@ -134,7 +134,6 @@ private:
     OrgKdeKWinSessionInterface *m_kwinInterface;
     UKUISMClient *m_clientInteracting;
 
-    QList<QStringList> m_wmStartCommands;
     QList<UKUISMListener*> m_listener;
     QList<UKUISMClient*> m_clients;
     QTimer m_restoreTimer;

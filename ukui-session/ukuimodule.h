@@ -40,9 +40,6 @@ public:
     const XdgDesktopFile file;
     const QString fileName;
 
-private:
-    void startWM(QString &command, QStringList &args);
-
 Q_SIGNALS:
     void moduleStateChanged(QString name, bool state);
 

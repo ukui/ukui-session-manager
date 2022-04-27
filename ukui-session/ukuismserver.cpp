@@ -1413,11 +1413,6 @@ void UKUISMServer::executeBoxadm()
     delete proc;
 }
 
-QList<QStringList> UKUISMServer::wmStartCommands() const
-{
-    return m_wmStartCommands;
-}
-
 void UKUISMServer::startLogoutTimer()
 {
     m_systemdLogoutTimer.setSingleShot(true);

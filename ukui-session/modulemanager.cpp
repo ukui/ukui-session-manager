@@ -466,13 +466,16 @@ void ModuleManager::timerUpdate()
     if (QGSettings::isSchemaInstalled("org.ukui.session")) {
         QGSettings *gset = new QGSettings("org.ukui.session", "/org/ukui/desktop/session/", this);
         QStringList keyList = gset->keys();
-        if (keyList.contains("restore-session")) {
+        //keyList中的值是restoreSession而不是restore-session
+        if (keyList.contains("restoreSession")) {
             QVariant res = gset->get("restore-session");
             bool restoreSession = res.toBool();
             if (restoreSession) {
-                //加上恢复会话的部分
-                qDebug(UKUI_SESSION) << "began restore session";
-                getGlobalServer()->restoreSession();
+                //此处加上一个半秒的延迟可以更快的加速恢复会话，实验发现如果不加延迟，在此处直接开始恢复会话，反而会更慢
+                QTimer::singleShot(500, [](){
+                    qDebug(UKUI_SESSION) << "began restore session";
+                    getGlobalServer()->restoreSession();
+                });
             }
         } else {
             qDebug() << "lack of required QGsettings";
