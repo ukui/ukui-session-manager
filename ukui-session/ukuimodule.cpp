@@ -45,7 +45,6 @@ void UkuiModule::start()
 
     if (command == "ukui-kwin_x11") {
         getGlobalServer()->restoreWM(QStringLiteral("saved at previous logout"));
-//        startWM(command, args);
     } else {
         qDebug() << "Start ukui module: " << command << "args: " << args;
         QProcess::start(command, args);

@@ -48,7 +48,8 @@
 
 extern UKUISMServer*& getGlobalServer();
 
-std::map<QString, int> ModuleManager::m_startupMap = {};
+//kylin-kmre-manager在ukui-session之前已经被启动，在执行恢复会话的时候，其还未注册到ukui-session中，所以需要对其进行特殊处理
+std::map<QString, int> ModuleManager::m_startupMap = {{QString("/usr/bin/kylin-kmre-manager"), 1}};
 
 void ModuleManager::playBootMusic(bool arg)
 {

@@ -1282,14 +1282,21 @@ void UKUISMServer::tryRestoreNext()
         return;
     }
 
-    m_restoreTimer.stop();
+//    m_restoreTimer.stop();
     KConfigGroup config(KSharedConfig::openConfig(), m_sessionGroup);
 
     while (m_appRestored < m_appsToStart) {
         QString n = QString::number(m_appRestored++);
         QString clientId = config.readEntry(QLatin1String("clientId") + n, QString());
-        QString clientName = config.readEntry(QLatin1String("program") + n, QString());
+        QString clientFullName = config.readEntry(QLatin1String("program") + n, QString());
 
+        //判断绝对路径名称
+        if (ModuleManager::isProgramStarted(std::move(clientFullName))) {
+            qCDebug(UKUI_SESSION) << clientFullName << " already started";
+            continue;
+        }
+        //判断程序名
+        QString clientName = clientFullName.split("/").last();
         if (ModuleManager::isProgramStarted(std::move(clientName))) {
             qCDebug(UKUI_SESSION) << clientName << " already started";
             continue;
@@ -1298,10 +1305,10 @@ void UKUISMServer::tryRestoreNext()
         bool alreadyStarted = false;
         foreach (UKUISMClient *c, m_clients) {
             if (QString::fromLocal8Bit(c->clientId()) == clientId) {
-                qCDebug(UKUI_SESSION) << c->program() << " is already started";
+                qCDebug(UKUI_SESSION) << c->clientId() << " is already started";
                 alreadyStarted = true;
                 break;
-            } else if (c->program() == clientName) {
+            } else if (c->program() == clientFullName) {
                 qCDebug(UKUI_SESSION) << c->program() << " already started";
                 alreadyStarted = true;
                 break;
@@ -1326,16 +1333,17 @@ void UKUISMServer::tryRestoreNext()
         }
         startApplication(restartCommand);
 
-        m_lastIdRestore = clientId;
-        if (!m_lastIdRestore.isEmpty()) {
-            m_restoreTimer.setSingleShot(true);
-            m_restoreTimer.start(2000);
-            return;
-        }
+        //注视这段意味着所有需要恢复的应用都会在这里一次性启动完，而不是KDE那种等到前一个恢复的应用启动完才启动下一个的模式
+//        m_lastIdRestore = clientId;
+//        if (!m_lastIdRestore.isEmpty()) {
+//            m_restoreTimer.setSingleShot(true);
+//            m_restoreTimer.start(2000);
+//            return;
+//        }
     }
 
     m_appRestored = 0;
-    m_lastIdRestore.clear();
+//    m_lastIdRestore.clear();
 
     m_state = Idle;
 }
@@ -1439,7 +1447,7 @@ void UKUISMServer::removeConnection(UKUISMConnection *conn)
 void UKUISMServer::restoreSession()
 {
     m_appRestored = 0;
-    m_lastIdRestore.clear();
+//    m_lastIdRestore.clear();
     m_state = Restoring;
 
     tryRestoreNext();
