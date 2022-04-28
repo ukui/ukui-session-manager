@@ -1381,6 +1381,10 @@ void UKUISMServer::changeClientOrder()
         } else if (programName == QLatin1String("ukui-menu")) {
             m_clients.removeAll(c);
             m_clients.append(c);
+        } else if (programName == QLatin1String("wps")) {
+            //这样调整可以保证wps每次第一个被发送信号，可以部分解决当wps未保存弹窗时，任务栏右侧图标会先退出的问题
+            m_clients.removeAll(c);
+            m_clients.prepend(c);
         }
     }
 }
