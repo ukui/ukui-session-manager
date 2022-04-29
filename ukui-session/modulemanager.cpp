@@ -48,7 +48,8 @@
 
 extern UKUISMServer*& getGlobalServer();
 
-std::map<QString, int> ModuleManager::m_startupMap = {};
+//kylin-kmre-manager在ukui-session之前已经被启动，在执行恢复会话的时候，其还未注册到ukui-session中，所以需要对其进行特殊处理
+std::map<QString, int> ModuleManager::m_startupMap = {{QString("/usr/bin/kylin-kmre-manager"), 1}};
 
 void ModuleManager::playBootMusic(bool arg)
 {
@@ -465,11 +466,20 @@ void ModuleManager::timerUpdate()
 
     if (QGSettings::isSchemaInstalled("org.ukui.session")) {
         QGSettings *gset = new QGSettings("org.ukui.session", "/org/ukui/desktop/session/", this);
-        bool restoreSession = gset->get("restore-session").toBool();
-        if (restoreSession) {
-            //加上恢复会话的部分
-            qDebug(UKUI_SESSION) << "began restore session";
-            getGlobalServer()->restoreSession();
+        QStringList keyList = gset->keys();
+        //keyList中的值是restoreSession而不是restore-session
+        if (keyList.contains("restoreSession")) {
+            QVariant res = gset->get("restore-session");
+            bool restoreSession = res.toBool();
+            if (restoreSession) {
+                //此处加上一个半秒的延迟可以更快的加速恢复会话，实验发现如果不加延迟，在此处直接开始恢复会话，反而会更慢
+                QTimer::singleShot(500, [](){
+                    qDebug(UKUI_SESSION) << "began restore session";
+                    getGlobalServer()->restoreSession();
+                });
+            }
+        } else {
+            qDebug() << "lack of required QGsettings";
         }
     }
 }

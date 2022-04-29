@@ -44,7 +44,7 @@ void UkuiModule::start()
     QString command = args.takeFirst();
 
     if (command == "ukui-kwin_x11") {
-        startWM(command, args);
+        getGlobalServer()->restoreWM(QStringLiteral("saved at previous logout"));
     } else {
         qDebug() << "Start ukui module: " << command << "args: " << args;
         QProcess::start(command, args);
@@ -62,24 +62,6 @@ void UkuiModule::terminate()
 bool UkuiModule::isTerminating()
 {
     return mIsTerminating;
-}
-
-void UkuiModule::startWM(QString &command, QStringList &args)
-{
-    QList<QStringList> wmStartCommand = getGlobalServer()->wmStartCommands();
-
-    if (!wmStartCommand.empty()) {
-        QStringList fullCommand = wmStartCommand[0];
-        QString app = fullCommand[0];
-        QStringList argList;
-        for (int i = 1; i < fullCommand.count(); i++) {
-            argList.append(fullCommand[i]);
-        }
-
-        QProcess::start(app, argList);
-    } else {
-        QProcess::start(command, args);
-    }
 }
 
 void UkuiModule::updateState(QProcess::ProcessState newState)

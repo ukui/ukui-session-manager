@@ -103,7 +103,8 @@ void UKUISMClient::registerClient(const char *previousId)
     //此处向应用发出保存自身信号，应用收到信号后，调用SmcSetProperties将应用的名称等信息注册到server
     SmsSaveYourself(m_smsConn, SmSaveLocal, false, SmInteractStyleNone, false);
     SmsSaveComplete(m_smsConn);
-    getGlobalServer()->clientRegistered(previousId);
+    //由于恢复会话的方式改为一次性启动所有需要恢复的应用，所以在此处，每次一个应用注册完后，不需要再根据previousId判断是否要继续恢复下一个应用
+//    getGlobalServer()->clientRegistered(previousId);
 }
 
 QString UKUISMClient::program() const
