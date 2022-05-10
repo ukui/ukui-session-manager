@@ -100,6 +100,11 @@ void IdleWatcher::timeoutReached(int identifier, int timeout)
     }
 
     if (isinhibited == false) {
+        //判断腾讯会议是否在进行
+        if (isTencentMeetRunning()) {
+            return;
+        }
+
         //Inactive user do not send StatusChanged signal.
         QDBusMessage mesg = QDBusMessage::createMethodCall(SYSTEMD_SERVICE,SYSTEMD_PATH, "org.freedesktop.DBus.Properties", "Get");
         mesg.setArguments(args);
@@ -135,5 +140,37 @@ void IdleWatcher::reset(int idle)
         mSecsidle = idle;
         setup();
     }
+}
+
+bool IdleWatcher::isTencentMeetRunning()
+{
+    bool result = false;
+    FILE *fp;
+    const char *command;
+    char output[1024] = {};
+    char c;
+
+    //反斜杠注意前面还要加一个反斜杠转义
+    command = "lsof -i -P -n | grep wemeetapp|grep 'UDP\\s\\*:'";
+    fp = popen(command, "r");
+
+    int i = 0;
+    while (1) {
+        c = fgetc(fp);
+        output[i] = c;
+        ++i;
+
+        if (c == '\n' | c == EOF) {
+            break;
+        } else {
+            qDebug() << "TencentMeeting is running";
+            result = true;
+            break;
+        }
+    }
+
+    fclose(fp);
+
+    return result;
 }
 

@@ -40,6 +40,9 @@ public:
     void reset(int idle);
     QDBusInterface *interface;
 
+private:
+    bool isTencentMeetRunning();
+
 private slots:
     void resumingFromIdle();
     void timeoutReached(int identifier, int timeout);
