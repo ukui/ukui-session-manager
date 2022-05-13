@@ -41,7 +41,7 @@ public:
     QDBusInterface *interface;
 
 private:
-    bool isTencentMeetRunning();
+    bool isWemeetappRunning();
 
 private slots:
     void resumingFromIdle();
