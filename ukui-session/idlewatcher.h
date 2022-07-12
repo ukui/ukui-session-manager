@@ -40,6 +40,9 @@ public:
     void reset(int idle);
     QDBusInterface *interface;
 
+private:
+    bool isWemeetappRunning();
+
 private slots:
     void resumingFromIdle();
     void timeoutReached(int identifier, int timeout);

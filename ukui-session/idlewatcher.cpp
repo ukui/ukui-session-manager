@@ -100,6 +100,11 @@ void IdleWatcher::timeoutReached(int identifier, int timeout)
     }
 
     if (isinhibited == false) {
+        //判断腾讯会议是否在进行
+        if (isWemeetappRunning()) {
+            return;
+        }
+
         //Inactive user do not send StatusChanged signal.
         QDBusMessage mesg = QDBusMessage::createMethodCall(SYSTEMD_SERVICE,SYSTEMD_PATH, "org.freedesktop.DBus.Properties", "Get");
         mesg.setArguments(args);
@@ -135,5 +140,50 @@ void IdleWatcher::reset(int idle)
         mSecsidle = idle;
         setup();
     }
+}
+
+bool IdleWatcher::isWemeetappRunning()
+{
+    bool result = false;
+    FILE *fp;
+    const char *command;
+    char *output = new char[4096];
+    char c;
+
+    //这条命令的含义是查询腾讯会议打开的端口，经过实验发现，腾讯会议在进行会议的时候，会存在一个特殊的UDP连接，
+    //lsof命令会打印出该连接的详细信息，输出信息中用来标识的字符是"UDP *:"，通过这个特殊标识符来过滤我们需要的信息
+    //进而用来判断腾讯会议是否在会议中
+    //反斜杠注意前面还要加一个反斜杠转义,grep用\s\来表示空格，而\在字符串中是转义符号，所以为了能够在字符串中正确使用\，需要对\使用转义符\。
+    command = "lsof -i -P -n | grep wemeetapp|grep 'UDP\\s\\*:'";
+    //执行command并通过fp获取输出
+    fp = popen(command, "r");
+
+    //将command的输出存入outpur数组
+    int i = 0;
+    while (1) {
+        c = fgetc(fp);
+        output[i] = c;
+        ++i;
+
+        if (c == '\n' || c == EOF) {
+            break;
+        }
+    }
+
+    QString str(output);
+    if (output[0] == '\n' || c == EOF) {
+        //此处我们根据lsof命令的执行结果来判断，如果输出为空，那么读到的第一个字符就是换行符或者结束符，那就代表腾讯会议没有在进行会议
+        result = false;
+    } else {
+        //str有值也不代表一定是我们需要的输出，需要根据str的内容来判断，但现在无法得知会存在什么样的错误输出，只能以后出现bug再做判断
+//        qDebug() << str;
+        qDebug() << "wemeetapp is running";
+        result = true;
+    }
+
+    delete[] output;
+    fclose(fp);
+
+    return result;
 }
 

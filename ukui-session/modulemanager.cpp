@@ -457,9 +457,6 @@ void ModuleManager::timerUpdate()
     }
 
     qDebug() << "Start force application: ";
-    const QString ws = "ukui-window-switch";
-    XdgDesktopFile ukui_ws = XdgDesktopFile(XdgDesktopFile::ApplicationType, "ukui-window-switch", ws);
-    startProcess(ukui_ws, true);
     for (XdgDesktopFileList::const_iterator i = mForceApplication.constBegin(); i != mForceApplication.constEnd(); ++i) {
         startProcess(*i, true);
     }
